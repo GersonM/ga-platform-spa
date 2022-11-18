@@ -11,6 +11,7 @@ const menuItems: ItemType[] = [
   {
     label: 'Mi cuenta',
     key: 'account',
+    disabled: true,
   },
   {
     label: 'Cerrar sesión',
@@ -52,19 +53,13 @@ const Navigation = () => {
           <li>
             <NavLink to={'/'}>
               <span className="icon icon-icons2"></span>
-              <span className="label">Dasboard</span>
+              <span className="label">Dashboard</span>
             </NavLink>
           </li>
           <li>
             <NavLink to={'/file-management'}>
               <span className="icon icon-server"></span>
               <span className={'label'}>Gestor de Archivos</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to={'/commercial'}>
-              <span className="icon icon-store"></span>
-              <span className="label">Comercial</span>
             </NavLink>
           </li>
         </ul>
