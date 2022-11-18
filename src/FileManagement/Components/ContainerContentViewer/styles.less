@@ -1,0 +1,130 @@
+.content-viewer-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.file-navigator-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.container-header-wrapper {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dfdfdf;
+  padding-bottom: 15px;
+  margin-bottom: 10px;
+
+  .name {
+    flex: 1;
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+  }
+}
+
+.drop-active-zone {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  bottom: 2px;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 1px 5px rgba(0, 0, 0, 0.1);
+  font-family: "Maven Pro", sans-serif;
+  align-items: center;
+  justify-content: center;
+  color: #146a9f;
+  font-size: 22px;
+  background: rgba(255, 255, 255, 0.8);
+  outline: 2px dotted #3f81b0;
+  border-radius: 6px;
+  z-index: 1;
+
+  .upload-icon {
+    font-size: 60px;
+    color: #999999;
+    margin-bottom: 10px;
+  }
+
+  small {
+    font-size: 13px;
+    color: #555;
+  }
+}
+
+.files-container {
+  flex: 1;
+  display: grid;
+  overflow: auto;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(90px, 1fr));
+  grid-gap: 10px;
+  padding-right: 10px;
+  position: relative;
+
+  &.mode-list {
+    display: flex;
+    flex-direction: column;
+
+    .file-item {
+      flex-direction: row;
+      padding: 10px 10px;
+      align-items: center;
+
+      .icon {
+        font-size: 25px;
+      }
+
+      .file-name {
+        margin: 0 0 0 10px;
+        padding: 2px;
+        text-align: left;
+      }
+    }
+  }
+
+  .file-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background: #dfdfdf;
+    }
+
+    &.selected {
+      background: #d4e1e8;
+    }
+
+    .icon {
+      font-size: 35px;
+    }
+
+    .file-name {
+      margin-top: 5px;
+      font-size: 13px;
+      line-height: 16px;
+      text-align: center;
+      line-break: anywhere;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  }
+}

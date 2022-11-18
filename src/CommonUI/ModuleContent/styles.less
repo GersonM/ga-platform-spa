@@ -1,0 +1,13 @@
+.module-content-wrapper {
+  flex: 1;
+  padding: 15px;
+  height: 100%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 500px) {
+  .module-content-wrapper {
+    flex-direction: column;
+    height: calc(100vh - 50px);
+  }
+}

@@ -1,0 +1,39 @@
+.upload-information-wrapper {
+  position: fixed;
+  bottom: 0;
+  right: 30px;
+  width: 300px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h4{
+      font-weight: 600;
+      margin: 0;
+      font-size: 13px;
+    }
+  }
+
+  .files-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 10px;
+    border-radius: 6px;
+    background: #efefef;
+    max-height: 130px;
+    overflow: auto;
+    border-bottom: 1px solid #dfdfdf;
+
+    li {
+      padding: 5px 0;
+      border-top: 1px solid #dfdfdf;
+    }
+  }
+
+}

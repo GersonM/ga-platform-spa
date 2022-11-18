@@ -1,0 +1,76 @@
+.login-wrapper {
+  background: #778899 url(./../../../Assets/bg_app.jpg) no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.login-block {
+  width: 40%;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:0 10px 20px rgba(0,0,0,.2);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  .form-block {
+    padding: 30px;
+    width: 300px;
+
+    .login-form-input {
+      background: #ffffff;
+      box-shadow:2px 3px 3px rgba(0,0,0,.1);
+    }
+  }
+
+  .logo-label {
+    display: block;
+    color: #000;
+  }
+
+  .logo {
+    width: 150px;
+    margin: 25px auto;
+  }
+
+  .version-info {
+    color: #000000;
+    opacity: 0.3;
+    font-size: 11px;
+    line-height: 11px;
+    display: block;
+    margin-top: 25px;
+  }
+}
+
+.zoom-in {
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  -webkit-animation-timing-function: cubic-bezier(.02, .41, .03, 1);
+  animation-timing-function: cubic-bezier(.02, .41, .03, 1);
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(1.2, 1.2, 1.2);
+  }
+
+  70% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  to {
+    opacity: 1;
+  }
+}
