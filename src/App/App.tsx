@@ -12,7 +12,6 @@ import AppAuthenticated from './AppAuthenticated';
 import CompanyContainers from '../FileManagement/Screens/CompanyContainers';
 import DashboardHome from '../Dashboard/Screens/DashboardHome';
 import CommercialHome from '../Commercial/Screens/CommercialHome';
-import VideoDashboardScreen from '../Modules/Video/Screens/VideoDashboardScreen';
 
 const token = Cookies.get('session_token');
 
@@ -79,7 +78,6 @@ const App = () => {
         <Route path={'file-management/'} element={<CompanyContainers />} />
         <Route path={'file-management/containers/:uuid'} element={<CompanyContainers />} />
         <Route path={'commercial/*'} element={<CommercialHome />} />
-        <Route path={'video/*'} element={<VideoDashboardScreen />} />
       </Route>
     </Routes>
   );

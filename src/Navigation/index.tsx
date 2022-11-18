@@ -35,10 +35,7 @@ const Navigation = () => {
           onClick={() => {
             setOpen(!open);
           }}>
-          <img
-            src={config?.favicon_white ? config.favicon_white : logo}
-            alt="Logo"
-          />
+          <img src={config?.favicon_white ? config.favicon_white : logo} alt="Logo" />
         </div>
         <Dropdown
           arrow={true}
@@ -68,12 +65,6 @@ const Navigation = () => {
             <NavLink to={'/commercial'}>
               <span className="icon icon-store"></span>
               <span className="label">Comercial</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to={'/video'}>
-              <span className="icon icon-clapboard-play"></span>
-              <span className="label">Video</span>
             </NavLink>
           </li>
         </ul>

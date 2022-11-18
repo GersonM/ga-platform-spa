@@ -1,11 +1,11 @@
 import {notification} from 'antd';
 
 class ErrorHandler {
-  description:string;
-  type:string;
-  errors:string;
+  description: string;
+  type: string;
+  errors: string;
 
-  constructor(error:any) {
+  constructor(error: any) {
     let message;
     let errors = null;
     let type = 'info';
@@ -49,13 +49,13 @@ class ErrorHandler {
     this.errors = errors;
   }
 
-  async getBlobError(error:any) {
+  async getBlobError(error: any) {
     const status = await error.response.data.text();
     const st = JSON.parse(status);
     this.description = st.status?.error;
   }
 
-  static showNotification(error, time = 3) {
+  static showNotification(error: any, time = 3) {
     if (error.message === undefined) return;
     const handler = new ErrorHandler(error);
     if (error.response) {
@@ -71,14 +71,15 @@ class ErrorHandler {
     }
   }
 
-  showNotification(time:number) {
+  showNotification(time: number) {
     notification.open({
+      // @ts-ignore
       type: this.type,
       duration: this.errors ? 15 : time,
       message: this.description,
-      description: this.errors ? (
+      /*description: this.errors ? (
         <>
-          {Object.keys(this.errors).map((key, indexA) => {
+          {Object.keys(this.errors).map((key:string, indexA) => {
             return (
               <div key={'p_' + indexA}>
                 <strong>{key}</strong>
@@ -91,7 +92,7 @@ class ErrorHandler {
             );
           })}
         </>
-      ) : null,
+      ) : null,*/
     });
   }
 }
