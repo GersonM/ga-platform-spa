@@ -141,9 +141,11 @@ const FileInformation = ({file, onDelete}: FileInformationProps) => {
           </div>
           <Divider />
           <div className={'image-preview'}>
-            <a href={file.source} target="_blank" rel="noreferrer">
-              <img src={file.thumbnail} alt="" />
-            </a>
+            <a
+              href={file.source}
+              style={{backgroundImage: `url('${file.thumbnail}')`}}
+              target="_blank"
+              rel="noreferrer"></a>
           </div>
           <Button
             href={file.source}
