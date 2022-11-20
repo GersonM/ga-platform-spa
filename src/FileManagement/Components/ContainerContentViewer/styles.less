@@ -15,10 +15,9 @@
 
 .container-header-wrapper {
   display: flex;
-  align-items: center;
   border-bottom: 1px solid #dfdfdf;
   padding-bottom: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 
   .name {
     flex: 1;
@@ -126,5 +125,11 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .container-header-wrapper {
+    flex-direction: column;
   }
 }

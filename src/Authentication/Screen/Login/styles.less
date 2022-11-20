@@ -7,10 +7,10 @@
 }
 
 .login-block {
+  min-width: 400px;
   width: 40%;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(9px);
   box-shadow:0 10px 20px rgba(0,0,0,.2);
   text-align: center;
   align-items: center;
@@ -72,5 +72,17 @@
 
   to {
     opacity: 1;
+  }
+}
+
+@media screen and (max-width:600px){
+  .login-wrapper {
+    align-items: center;
+    justify-content: center;
+  }
+  .login-block {
+    width: 280px;
+    border-radius: 12px;
+    min-width: auto;
   }
 }

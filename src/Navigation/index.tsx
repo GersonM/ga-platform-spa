@@ -6,6 +6,7 @@ import './styles.less';
 import logo from '../Assets/logo_square.png';
 import AuthContext from '../Context/AuthContext';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
+import Package from '../../package.json';
 
 const menuItems: ItemType[] = [
   {
@@ -40,9 +41,8 @@ const Navigation = () => {
         </div>
         <Dropdown
           arrow={true}
-          placement={'bottomRight'}
           trigger={['click']}
-          overlay={<Menu onClick={logout} items={menuItems}></Menu>}>
+          overlay={<Menu style={{margin: '0 10px', width: 120}} onClick={logout} items={menuItems}></Menu>}>
           <div className="logged-user">
             <Avatar>{user?.name.substring(0, 1)}</Avatar>
           </div>
@@ -64,6 +64,7 @@ const Navigation = () => {
           </li>
         </ul>
       </nav>
+      <div className={'version-info'}>v{Package.version}</div>
     </div>
   );
 };
