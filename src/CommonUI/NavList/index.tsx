@@ -15,16 +15,8 @@ interface NavItemProps {
   menuItems?: ItemType[];
 }
 
-const NavListItem = ({
-  name,
-  caption,
-  icon,
-  onClick,
-  path,
-  menuItems,
-}: NavItemProps) => {
+const NavListItem = ({name, caption, icon, onClick, path, menuItems}: NavItemProps) => {
   const handleMenuClick = (element: any) => {
-    console.log(element.key);
     switch (element.key) {
       case 'delete':
         break;
@@ -41,10 +33,7 @@ const NavListItem = ({
         </span>
       </NavLink>
       {menuItems && (
-        <Dropdown
-          trigger={['click']}
-          overlay={<Menu onClick={handleMenuClick} items={menuItems} />}
-          arrow={true}>
+        <Dropdown trigger={['click']} overlay={<Menu onClick={handleMenuClick} items={menuItems} />} arrow={true}>
           <Button type={'link'} icon={<FiMoreVertical />} />
         </Dropdown>
       )}
