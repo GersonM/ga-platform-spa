@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Popover, Radio, Space, Tooltip} from 'antd';
+import {Button, Popover, Segmented, Space, Tooltip} from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
+import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 
 import CreateContainer from '../../Components/CreateContainer/index.';
 import {Container} from '../../../Types/api';
@@ -10,7 +11,7 @@ interface ContainerHeaderProps {
   onChange?: () => void;
   onToggleInformation?: (enabled: boolean) => void;
   upLevel?: () => void;
-  onChangeViewMode?: (viewMode: string) => void;
+  onChangeViewMode?: (viewMode: string | number) => void;
   onOpenUpload?: () => void;
 }
 
@@ -22,7 +23,7 @@ const ContainerHeader = ({
   onChangeViewMode,
   onOpenUpload,
 }: ContainerHeaderProps) => {
-  const [viewMode, setViewMode] = useState('grid');
+  const [viewMode, setViewMode] = useState<string | number>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
 
   useEffect(() => {
@@ -73,20 +74,20 @@ const ContainerHeader = ({
             </Popover>
           </Tooltip>
         </ButtonGroup>
-        <Tooltip title={'Cambiar tipo de vista'} placement={'bottomRight'}>
-          <Radio.Group
-            size={'small'}
-            buttonStyle={'solid'}
-            onChange={({target}) => setViewMode(target.value)}
-            value={viewMode}>
-            <Radio.Button value="list">
-              <span className="icon-list4"></span>
-            </Radio.Button>
-            <Radio.Button value="grid">
-              <span className="icon-icons2"></span>
-            </Radio.Button>
-          </Radio.Group>
-        </Tooltip>
+        <Segmented
+          options={[
+            {
+              value: 'list',
+              icon: <BarsOutlined />,
+            },
+            {
+              value: 'grid',
+              icon: <AppstoreOutlined />,
+            },
+          ]}
+          value={viewMode}
+          onChange={setViewMode}
+        />
       </Space>
     </div>
   );

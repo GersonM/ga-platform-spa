@@ -25,7 +25,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
-  const [viewMode, setViewMode] = useState<string>();
+  const [viewMode, setViewMode] = useState<string | number>();
   const [loadingInformation, setLoadingInformation] = useState<AxiosProgressEvent>();
   const [uploadingFiles, setUploadingFiles] = useState<Array<any>>();
 

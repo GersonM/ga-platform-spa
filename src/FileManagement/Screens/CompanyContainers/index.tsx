@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
-import {Button, Empty, Popover, Tooltip} from 'antd';
+import {Button, Empty, Popover, Segmented, Tooltip} from 'antd';
 
 import './styles.less';
 import ErrorHandler from '../../../Utils/ErrorHandler';
