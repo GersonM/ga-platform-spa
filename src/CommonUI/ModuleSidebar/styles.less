@@ -5,20 +5,20 @@
   max-width: 350px;
   min-width: 280px;
   overflow: auto;
+}
 
-  .toggle-button {
-    display: none;
-    border: 1px solid #B1D4EE;
-    border-radius: 0 5px 5px 0;
-    padding: 5px 0;
-    border-left: none;
-    position: absolute;
-    right: -25px;
-    text-align: center;
-    top: 50px;
-    width: 25px;
-    background: #ffffff;
-  }
+.toggle-button {
+  display: none;
+  border: 1px solid #B1D4EE;
+  border-radius: 0 5px 5px 0;
+  padding: 5px 0;
+  border-left: none;
+  position: fixed;
+  left: 0;
+  text-align: center;
+  top: 160px;
+  width: 25px;
+  background: #ffffff;
 }
 
 .module-nav-header {
@@ -29,7 +29,7 @@
   align-items: center;
   margin: -15px -15px 0 -15px;
   padding: 10px 10px 10px 10px;
-  background: linear-gradient(rgba(255,255,255,0.1), rgba(231, 235, 243, 0.02));
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(231, 235, 243, 0.02));
   border: solid var(--ant-primary-color);
   backdrop-filter: blur(6px);
   border-width: 0 0 0.5px 0;
@@ -58,21 +58,27 @@
 }
 
 @media screen and (max-width: 500px) {
+  .toggle-button {
+    display: block;
+    transition: all 0.7s;
+      z-index: 2;
+
+    &.open {
+      left: 304px;
+    }
+  }
+
   .module-sidebar-wrapper {
     position: fixed;
     z-index: 1;
     bottom: 0;
-    top: 50px;
+    top: 52px;
     transform: translateX(-100%);
     transition: all 0.7s;
 
-    .toggle-button{
-      display: block;
-    }
-
     &.open {
       transform: translateX(0%);
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
   }
 }

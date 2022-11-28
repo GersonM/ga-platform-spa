@@ -36,8 +36,7 @@ const CreateContainer = ({containerUuid, onCompleted}: CreateContainerProps) => 
 
   return (
     <div style={{width: 240, padding: 5}}>
-      <h4>Nuevo {containerUuid ? 'folder' : 'contenedor'}</h4>
-      <Form form={form} onFinish={submitForm} layout={'vertical'}>
+      <Form form={form} onFinish={submitForm} layout={'vertical'} initialValues={{visibility: 'public'}}>
         <Form.Item name={'name'} label={'Nombre'}>
           <Input placeholder={'Nombre'} />
         </Form.Item>
@@ -45,8 +44,10 @@ const CreateContainer = ({containerUuid, onCompleted}: CreateContainerProps) => 
           name={'visibility'}
           label={'Visibilidad'}
           extra={<small>Se aplicará a todos los archivos dentro de este contenedor</small>}>
-          <Radio.Group defaultValue={'private'}>
-            <Radio value={'private'}>Privado</Radio>
+          <Radio.Group>
+            <Radio disabled value={'private'}>
+              Privado
+            </Radio>
             <Radio value={'public'}>Público</Radio>
           </Radio.Group>
         </Form.Item>

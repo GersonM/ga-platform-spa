@@ -18,17 +18,19 @@ const ModuleSidebar = ({title, children, actions, footer}: ModuleSidebarProps) =
   }, [pathname]);
 
   return (
-    <div className={`module-sidebar-wrapper ${open ? 'open' : ''}`}>
-      <a className={'toggle-button'} onClick={() => setOpen(!open)} href="#toggle">
+    <>
+      <a className={`toggle-button ${open ? 'open' : ''}`} onClick={() => setOpen(!open)} href="#toggle">
         {open ? <span className="icon-chevron-left"></span> : <span className="icon-chevron-right"></span>}
       </a>
-      <div className={'module-nav-header'}>
-        <h4>{title}</h4>
-        {actions && <div>{actions}</div>}
+      <div className={`module-sidebar-wrapper ${open ? 'open' : ''}`}>
+        <div className={'module-nav-header'}>
+          <h4>{title}</h4>
+          {actions && <div>{actions}</div>}
+        </div>
+        {children}
+        {footer && <div className={'module-nav-footer'}>{footer}</div>}
       </div>
-      {children}
-      {footer && <div className={'module-nav-footer'}>{footer}</div>}
-    </div>
+    </>
   );
 };
 
