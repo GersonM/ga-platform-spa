@@ -18,6 +18,7 @@ const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [openContainerCreator, setOpenContainerCreator] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
 
@@ -55,14 +56,28 @@ const CompanyContainers = () => {
       <ModuleSidebar
         title={'Gestor de archivos'}
         actions={
-          <Popover content={<CreateContainer onCompleted={() => setReload(!reload)} />} trigger={'click'}>
+          <Popover
+            open={openContainerCreator}
+            content={
+              <CreateContainer
+                onCompleted={() => {
+                  setReload(!reload);
+                  setOpenContainerCreator(false);
+                }}
+              />
+            }
+            onOpenChange={value => {
+              setOpenContainerCreator(value);
+            }}
+            trigger={'click'}>
             <Tooltip title={'Crear contenedor'} placement={'left'}>
               <Button type={'primary'} shape={'circle'} size={'small'} ghost>
                 <span className="icon-plus"></span>
               </Button>
             </Tooltip>
           </Popover>
-        }>
+        }
+        footer={<ServiceStatus />}>
         <ul className="list-items">
           <LoadingIndicator visible={loading} />
           {containers?.length === 0 && (
@@ -87,7 +102,6 @@ const CompanyContainers = () => {
             </>
           )}
         </ul>
-        <ServiceStatus />
       </ModuleSidebar>
       <ModuleContent>
         {params.uuid ? (

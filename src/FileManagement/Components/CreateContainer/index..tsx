@@ -1,19 +1,16 @@
 import React, {useState} from 'react';
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, Radio} from 'antd';
+import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {useForm} from 'antd/lib/form/Form';
 
 interface CreateContainerProps {
   containerUuid?: string;
   onCompleted?: (container: any) => void;
 }
 
-const CreateContainer = ({
-  containerUuid,
-  onCompleted,
-}: CreateContainerProps) => {
+const CreateContainer = ({containerUuid, onCompleted}: CreateContainerProps) => {
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
@@ -38,19 +35,29 @@ const CreateContainer = ({
   };
 
   return (
-    <div>
+    <div style={{width: 240, padding: 5}}>
       <h4>Nuevo {containerUuid ? 'folder' : 'contenedor'}</h4>
-      <Form form={form} onFinish={submitForm} layout={'inline'}>
-        <Form.Item name={'name'}>
+      <Form form={form} onFinish={submitForm} layout={'vertical'}>
+        <Form.Item name={'name'} label={'Nombre'}>
           <Input placeholder={'Nombre'} />
         </Form.Item>
+        <Form.Item
+          name={'visibility'}
+          label={'Visibilidad'}
+          extra={<small>Se aplicará a todos los archivos dentro de este contenedor</small>}>
+          <Radio.Group defaultValue={'private'}>
+            <Radio value={'private'}>Privado</Radio>
+            <Radio value={'public'}>Público</Radio>
+          </Radio.Group>
+        </Form.Item>
         <Button
+          block
           shape={'round'}
-          icon={<span className="button-icon icon-plus"></span>}
+          icon={<span className="button-icon icon-check"></span>}
           loading={loading}
           type={'primary'}
           htmlType={'submit'}>
-          Crear
+          Enviar
         </Button>
       </Form>
     </div>

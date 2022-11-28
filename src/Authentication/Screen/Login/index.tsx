@@ -58,6 +58,7 @@ const Login = () => {
   return (
     <div className={'login-wrapper'}>
       <div className="login-block zoom-in">
+        <div className="page"></div>
         <div className="form-block">
           <img src={config?.logo ? config.logo : logo} alt="Logo" className={'logo'} />
           <Form onFinish={login}>

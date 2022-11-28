@@ -4,6 +4,7 @@
   border-right: 1px solid #B1D4EE;
   max-width: 350px;
   min-width: 280px;
+  overflow: auto;
 
   .toggle-button {
     display: none;
@@ -23,13 +24,17 @@
 .module-nav-header {
   display: flex;
   justify-content: space-between;
+  position: sticky;
+  top: -16px;
   align-items: center;
-  margin: -5px -15px 10px -15px;
+  margin: -15px -15px 0 -15px;
   padding: 10px 10px 10px 10px;
-  background: linear-gradient(#ffffff, #e7ebf3);
+  background: linear-gradient(rgba(255,255,255,0.1), rgba(231, 235, 243, 0.02));
   border: solid var(--ant-primary-color);
-  border-width: 0.5px 0;
+  backdrop-filter: blur(6px);
+  border-width: 0 0 0.5px 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 
   h4 {
     font-size: 15px;
@@ -45,6 +50,11 @@
     font-size: 12px;
     line-height: 11px;
   }
+}
+
+.module-nav-footer {
+  position: sticky;
+  bottom: 0;
 }
 
 @media screen and (max-width: 500px) {
