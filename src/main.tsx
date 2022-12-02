@@ -12,7 +12,7 @@ import AntConfig from './Context/AntConfig';
 const tenantID = window.location.hostname.split('.')[0];
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;
-axios.defaults.headers.common['X-Tenant'] = 'demo'; //tenantID;
+axios.defaults.headers.common['X-Tenant'] = tenantID;
 
 axios
   .get('/version')
