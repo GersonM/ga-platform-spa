@@ -1,5 +1,5 @@
 .module-sidebar-wrapper {
-  background: #ffffff;
+  background: var(--backgroung-color);
   padding: 15px;
   border-right: 1px solid #B1D4EE;
   max-width: 350px;
@@ -80,5 +80,10 @@
       transform: translateX(0%);
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .module-sidebar-wrapper {
+    border-color: #000000;
   }
 }

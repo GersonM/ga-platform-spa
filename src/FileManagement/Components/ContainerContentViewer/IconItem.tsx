@@ -1,12 +1,14 @@
 import React from 'react';
-import {Dropdown, Menu} from 'antd';
+import {Dropdown} from 'antd';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
 
 interface IconItemProps {
   size?: 'large' | 'small';
   name: string;
+  caption?: string;
   selected?: boolean;
   icon?: React.ReactNode;
+  image?: string;
   onClick?: (selected: boolean) => void;
   onDoubleClick?: () => void;
 }
@@ -32,7 +34,7 @@ const menuItems: ItemType[] = [
   },
 ];
 
-const IconItem = ({name, icon, selected = false, onClick, onDoubleClick}: IconItemProps) => {
+const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoubleClick}: IconItemProps) => {
   const onItemClick = () => {
     if (onClick) {
       onClick(!selected);
@@ -40,10 +42,17 @@ const IconItem = ({name, icon, selected = false, onClick, onDoubleClick}: IconIt
   };
 
   return (
-    <Dropdown overlay={<Menu items={menuItems} />} trigger={['contextMenu']}>
+    <Dropdown menu={{items: menuItems}} trigger={['contextMenu']}>
       <div className={`file-item ${selected ? 'selected' : ''}`} onDoubleClick={onDoubleClick} onClick={onItemClick}>
-        {icon ? icon : <span className="icon icon-file-empty"></span>}
+        {image ? (
+          <div className={'file-image'} style={{backgroundImage: `url(${image})`}}></div>
+        ) : icon ? (
+          icon
+        ) : (
+          <span className="icon icon-file-empty"></span>
+        )}
         <span className={'file-name'}>{name}</span>
+        {caption && <span className={'file-caption'}>{caption}</span>}
       </div>
     </Dropdown>
   );

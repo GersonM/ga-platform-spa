@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useLocation} from 'react-router-dom';
-import {Avatar, Dropdown, Menu} from 'antd';
+import {Avatar, Dropdown} from 'antd';
 
 import './styles.less';
 import logo from '../Assets/logo_square.png';
@@ -39,10 +39,7 @@ const Navigation = () => {
           }}>
           <img src={config?.favicon_white ? config.favicon_white : logo} alt="Logo" />
         </div>
-        <Dropdown
-          arrow={true}
-          trigger={['click']}
-          overlay={<Menu style={{margin: '0 10px', width: 120}} onClick={logout} items={menuItems}></Menu>}>
+        <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
           <div className="logged-user">
             <Avatar>{user?.name.substring(0, 1)}</Avatar>
           </div>

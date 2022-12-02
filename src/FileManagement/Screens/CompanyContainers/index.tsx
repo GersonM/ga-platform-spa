@@ -5,7 +5,7 @@ import {Button, Empty, Popover, Segmented, Tooltip} from 'antd';
 
 import './styles.less';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import CreateContainer from '../../Components/CreateContainer/index.';
+import CreateContainer from '../../Components/CreateContainer';
 import ContainerNavItem from './ContainerNavItem';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ContainerContentViewer from '../../Components/ContainerContentViewer';
@@ -107,7 +107,7 @@ const CompanyContainers = () => {
         {params.uuid ? (
           <ContainerContentViewer containerUuid={params.uuid} onChange={navigateToFolder} />
         ) : (
-          <Empty description={'Seleccionar un contenedor para ver su contenido'} />
+          <Empty description={'Seleccionar un contenedor para ver su contenido'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </ModuleContent>
     </>

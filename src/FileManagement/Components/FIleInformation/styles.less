@@ -1,6 +1,6 @@
 .file-information-wrapper {
   width: 270px;
-  background: #fff;
+  background: var(--backgroung-color);
   margin-left: 15px;
   border-radius: 8px;
   padding: 20px;
@@ -43,7 +43,7 @@
 
     .activity {
       padding: 5px 0 10px 0;
-      border-top: 1px dashed #dfdfdf;
+      border-top: 1px dashed var(--border-color);
 
       &.verify {
         background: #d9ffcc;
@@ -73,7 +73,7 @@
   }
 
   .image-preview {
-    border: 1px solid #dfdfdf;
+    border: 1px solid var(--border-color);
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     margin-bottom: 15px;
@@ -96,11 +96,11 @@
     }
 
     pre {
-      background: #efefef;
+      background: var(--backgroung-color-body);
       padding: 1px 5px;
       border-radius: 6px;
-      color: #555555;
       font-size: 12px;
+      opacity: 0.7;
       font-family: monospace;
     }
   }
@@ -114,5 +114,13 @@
     right: 0;
     z-index: 2;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .file-information-wrapper {
+    .file-name {
+      background: #323232;
+    }
   }
 }

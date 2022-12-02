@@ -3,8 +3,9 @@ import {Button, Popover, Segmented, Space, Tooltip} from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 
-import CreateContainer from '../../Components/CreateContainer/index.';
+import CreateContainer from '../../Components/CreateContainer';
 import {Container} from '../../../Types/api';
+import {BsFolderPlus, BsInfoLg, TiArrowBackOutline} from 'react-icons/all';
 
 interface ContainerHeaderProps {
   container: Container;
@@ -58,23 +59,25 @@ const ContainerHeader = ({
             <Button
               type={informationEnabled ? 'primary' : 'default'}
               onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<span className="button-icon-alone icon-notification-circle"></span>}
+              icon={<BsInfoLg />}
             />
           </Tooltip>
         </ButtonGroup>
         <ButtonGroup>
           <Tooltip title={'Subir un nivel'}>
-            <Button onClick={upLevel} icon={<span className="button-icon-alone icon-folder-upload"></span>} />
+            <Button onClick={upLevel} icon={<TiArrowBackOutline />} />
           </Tooltip>
           <Tooltip title={'Nuevo folder'}>
             <Popover
               content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
               trigger={'click'}>
-              <Button icon={<span className="button-icon-alone icon-folder-plus"></span>} />
+              <Button icon={<BsFolderPlus />} />
             </Popover>
           </Tooltip>
         </ButtonGroup>
         <Segmented
+          onResize={() => {}}
+          onResizeCapture={() => {}}
           options={[
             {
               value: 'list',

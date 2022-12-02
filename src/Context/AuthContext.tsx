@@ -1,8 +1,10 @@
-import React, {createContext, useState} from 'react';
-import axios from 'axios';
-
-import {TenantConfig, User} from '../Types/api';
+import React, {createContext, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import {version} from '../../package.json';
+import {TenantConfig, User} from '../Types/api';
+import {notification} from 'antd';
+import {BiRocket, IoRocketOutline} from 'react-icons/all';
 
 interface AuthContextDefaults {
   user: User | null;
@@ -26,6 +28,29 @@ const AuthContext = createContext<AuthContextDefaults>({
 
 const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const localVersion = localStorage.getItem('version');
+    if (localVersion !== version) {
+      notification.open({
+        message: `¡Nueva versión ${version}!`,
+        placement: 'bottomLeft',
+        icon: <IoRocketOutline />,
+        description: (
+          <div>
+            <ul style={{padding: '0 0 0 20px'}}>
+              <li>Modo oscuro automático</li>
+              <li>Previsualización de imágenes en el navegador</li>
+              <li>Mejoras en la interface</li>
+            </ul>
+          </div>
+        ),
+        duration: 0,
+      });
+      localStorage.setItem('version', version);
+    }
+    console.log({version}, {localVersion});
+  }, []);
 
   const logout = async () => {
     await axios.get('authentication/logout');

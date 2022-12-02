@@ -29,14 +29,12 @@ const Login = () => {
     axios(requestConfig)
       .then(({data}) => {
         setLoading(false);
-        //axios.defaults.baseURL = process.env.REACT_APP_API;
         axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
         Cookies.set('session_token', data.token);
         document.location.href = '/';
       })
       .catch(error => {
         if (error.response && error.response.data.error === 'pending_verification') {
-          //axios.defaults.baseURL = process.env.REACT_APP_API;
           Cookies.set('2fa', error.response.data.hint);
           navigate('/two-factor-verify');
         } else {

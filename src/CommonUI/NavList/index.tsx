@@ -1,8 +1,7 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import {Button, Dropdown, Menu} from 'antd';
+import {Button, Dropdown, MenuProps} from 'antd';
 import {FiMoreVertical} from 'react-icons/fi';
-import {ItemType} from 'antd/lib/menu/hooks/useItems';
 
 import './styles.less';
 
@@ -12,7 +11,7 @@ interface NavItemProps {
   path: string;
   icon?: React.ReactNode;
   onClick?: () => void;
-  menuItems?: ItemType[];
+  menuItems?: MenuProps;
 }
 
 const NavListItem = ({name, caption, icon, onClick, path, menuItems}: NavItemProps) => {
@@ -33,7 +32,7 @@ const NavListItem = ({name, caption, icon, onClick, path, menuItems}: NavItemPro
         </span>
       </NavLink>
       {menuItems && (
-        <Dropdown trigger={['click']} overlay={<Menu onClick={handleMenuClick} items={menuItems} />} arrow={true}>
+        <Dropdown trigger={['click']} menu={menuItems} arrow={true}>
           <Button type={'link'} icon={<FiMoreVertical />} />
         </Dropdown>
       )}

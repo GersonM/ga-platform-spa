@@ -86,14 +86,16 @@ const FileInformation = ({file, onDelete}: FileInformationProps) => {
       <h3>Información del archivo</h3>
       {!file ? (
         <>
-          <Empty description={'Seleccionar un archivo para ver su información'} />
+          <Empty description={'Seleccionar un archivo para ver su información'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         </>
       ) : (
         <>
           <div className={'file-name'}>
             <FileIcon file={file} />
             <span className={'label'}>
-              {file.name}
+              <span contentEditable style={{display: 'inline-block'}}>
+                {file.name}
+              </span>
               <small>
                 <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
               </small>

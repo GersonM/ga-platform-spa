@@ -1,8 +1,7 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import {Button, Dropdown, Menu} from 'antd';
+import {Button, Dropdown, MenuProps} from 'antd';
 import {FiMoreVertical} from 'react-icons/fi';
-import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import axios from 'axios';
 
 import {Container} from '../../../Types/api';
@@ -14,7 +13,7 @@ interface ContainerNavItemProps {
   onChange?: (container: Container) => void;
 }
 
-const menuItems: ItemType[] = [
+const items: MenuProps['items'] = [
   {
     label: 'Mover a otro contenedor',
     key: 'move',
@@ -35,7 +34,7 @@ const menuItems: ItemType[] = [
 ];
 
 const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
-  const handleMenuClick = (element: any) => {
+  const handleMenuClick: MenuProps['onClick'] = (element: any) => {
     console.log(element.key);
     switch (element.key) {
       case 'delete':
@@ -68,10 +67,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
           </small>
         </span>
       </NavLink>
-      <Dropdown
-        trigger={['click']}
-        overlay={<Menu onClick={handleMenuClick} items={menuItems} />}
-        arrow={true}>
+      <Dropdown trigger={['click']} menu={{items, onClick: handleMenuClick}} arrow={true}>
         <Button type={'link'} icon={<FiMoreVertical />} />
       </Dropdown>
     </>
