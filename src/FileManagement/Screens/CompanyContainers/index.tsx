@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
-import {Button, Empty, Popover, Segmented, Tooltip} from 'antd';
+import {Button, Empty, Popover, Tooltip} from 'antd';
+import {BiPlus} from 'react-icons/all';
 
 import './styles.less';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -13,6 +14,7 @@ import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
+import EmptyMessage from '../../../CommonUI/EmptyMessage';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -72,7 +74,7 @@ const CompanyContainers = () => {
             trigger={'click'}>
             <Tooltip title={'Crear contenedor'} placement={'left'}>
               <Button type={'primary'} shape={'circle'} size={'small'} ghost>
-                <span className="icon-plus"></span>
+                <BiPlus />
               </Button>
             </Tooltip>
           </Popover>
@@ -81,7 +83,7 @@ const CompanyContainers = () => {
         <ul className="list-items">
           <LoadingIndicator visible={loading} />
           {containers?.length === 0 && (
-            <Empty description={'No tienes contenedores creados, haz clic en el + para crear uno'} />
+            <EmptyMessage message={'No tienes contenedores creados, haz clic en el + para crear uno'} />
           )}
           {containers && (
             <>

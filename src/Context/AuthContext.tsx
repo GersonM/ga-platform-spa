@@ -1,10 +1,10 @@
 import React, {createContext, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import {notification} from 'antd';
+
 import {version} from '../../package.json';
 import {TenantConfig, User} from '../Types/api';
-import {notification} from 'antd';
-import {BiRocket, IoRocketOutline} from 'react-icons/all';
 
 interface AuthContextDefaults {
   user: User | null;
@@ -32,21 +32,20 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   useEffect(() => {
     const localVersion = localStorage.getItem('version');
     if (localVersion !== version) {
-      notification.open({
-        message: `¡Nueva versión ${version}!`,
-        placement: 'bottomLeft',
-        icon: <IoRocketOutline />,
-        description: (
-          <div>
+      setTimeout(() => {
+        notification.open({
+          message: `¡Nueva versión v${version}!`,
+          placement: 'bottomLeft',
+          className: 'deploy-alert-wrapper',
+          description: (
             <ul style={{padding: '0 0 0 20px'}}>
-              <li>Modo oscuro automático</li>
-              <li>Previsualización de imágenes en el navegador</li>
-              <li>Mejoras en la interface</li>
+              <li>Edición nombre de archivos, contenedores y carpetas</li>
+              <li>Eliminar carpetas</li>
             </ul>
-          </div>
-        ),
-        duration: 0,
-      });
+          ),
+          duration: 0,
+        });
+      }, 1000);
       localStorage.setItem('version', version);
     }
     console.log({version}, {localVersion});
