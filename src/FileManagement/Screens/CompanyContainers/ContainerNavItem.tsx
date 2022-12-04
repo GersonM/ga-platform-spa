@@ -67,6 +67,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
           </small>
         </span>
       </NavLink>
+      <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
       <Dropdown trigger={['click']} menu={{items, onClick: handleMenuClick}} arrow={true}>
         <Button type={'link'} icon={<FiMoreVertical />} />
       </Dropdown>

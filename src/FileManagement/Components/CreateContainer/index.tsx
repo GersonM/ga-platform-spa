@@ -37,17 +37,22 @@ const CreateContainer = ({containerUuid, onCompleted}: CreateContainerProps) => 
   return (
     <div style={{width: 240, padding: 5}}>
       <Form form={form} onFinish={submitForm} layout={'vertical'} initialValues={{visibility: 'public'}}>
-        <Form.Item name={'name'} label={'Nombre'}>
+        <Form.Item
+          name={'name'}
+          label={'Nombre'}
+          tooltip={'Puedes usar caracteres especiales, tildes, etc. Esto no afectar a la accesibilidad del archivo'}>
           <Input placeholder={'Nombre'} />
         </Form.Item>
         <Form.Item
           name={'visibility'}
           label={'Visibilidad'}
-          extra={<small>Se aplicará a todos los archivos dentro de este contenedor</small>}>
+          help={
+            <div style={{lineHeight: '16px', fontSize: 13, marginBottom: 10}}>
+              Se aplicará a todos los archivos dentro de este contenedor
+            </div>
+          }>
           <Radio.Group>
-            <Radio disabled value={'private'}>
-              Privado
-            </Radio>
+            <Radio value={'private'}>Privado</Radio>
             <Radio value={'public'}>Público</Radio>
           </Radio.Group>
         </Form.Item>

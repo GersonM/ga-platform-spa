@@ -12,7 +12,7 @@ import AntConfig from './Context/AntConfig';
 const tenantID = window.location.hostname.split('.')[0];
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;
-axios.defaults.headers.common['X-Tenant'] = tenantID;
+axios.defaults.headers.common['X-Tenant'] = 't1'; //tenantID;
 
 axios
   .get('/version')
@@ -31,6 +31,6 @@ axios
     const el = document.getElementById('root');
     if (el) {
       el.innerHTML =
-        '<div class="error-name">Este cliente no está activo o aún no está registra  <br/> <small>Por favor revisar tu correo para saber </small></div>';
+        '<div class="error-name">Este cliente aún no está activo o no ha sido registrado<br/> <small>Revisa tu correo para saber el estado de tu cuenta</small></div>';
     }
   });

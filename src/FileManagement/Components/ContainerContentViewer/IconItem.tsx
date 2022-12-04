@@ -1,6 +1,5 @@
 import React from 'react';
-import {Dropdown} from 'antd';
-import {ItemType} from 'antd/lib/menu/hooks/useItems';
+import FileDropdownActions from '../FileDropdownActions';
 
 interface IconItemProps {
   size?: 'large' | 'small';
@@ -13,27 +12,6 @@ interface IconItemProps {
   onDoubleClick?: () => void;
 }
 
-const menuItems: ItemType[] = [
-  {
-    label: 'Mover a otro contenedor',
-    key: 'move',
-    disabled: true,
-  },
-  {
-    label: 'Renombrar',
-    key: 'rename',
-    disabled: true,
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: 'Borrar',
-    key: 'delete',
-    disabled: true,
-  },
-];
-
 const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoubleClick}: IconItemProps) => {
   const onItemClick = () => {
     if (onClick) {
@@ -42,7 +20,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
   };
 
   return (
-    <Dropdown menu={{items: menuItems}} trigger={['contextMenu']}>
+    <FileDropdownActions trigger={['contextMenu']}>
       <div className={`file-item ${selected ? 'selected' : ''}`} onDoubleClick={onDoubleClick} onClick={onItemClick}>
         {image ? (
           <div className={'file-image'} style={{backgroundImage: `url(${image})`}}></div>
@@ -54,7 +32,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
         <span className={'file-name'}>{name}</span>
         {caption && <span className={'file-caption'}>{caption}</span>}
       </div>
-    </Dropdown>
+    </FileDropdownActions>
   );
 };
 
