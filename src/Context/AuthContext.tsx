@@ -39,8 +39,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           className: 'deploy-alert-wrapper',
           description: (
             <ul style={{padding: '0 0 0 20px'}}>
-              <li>Edición nombre de archivos, contenedores y carpetas</li>
-              <li>Eliminar carpetas</li>
+              <li>Click derechos sobre los archivos para acceder a opciones</li>
+              <li>La opción para eliminar archivos de cambio de lugar</li>
             </ul>
           ),
           duration: 0,
