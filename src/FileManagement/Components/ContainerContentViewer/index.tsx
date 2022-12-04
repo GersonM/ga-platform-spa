@@ -169,8 +169,9 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
             {showFileInformation && (
               <FileInformation
                 file={selectedFile}
-                onDelete={() => {
-                  setSelectedFile(undefined);
+                onChange={() => {
+                  //  setSelectedFile(undefined);
+                  //TODO: Check if the selected file exist
                   setReload(!reload);
                 }}
               />

@@ -7,7 +7,7 @@ import 'antd/dist/reset.css';
 import './index.less';
 import {AuthContextProvider} from './Context/AuthContext';
 import App from './App/App';
-import AntConfig from './Context/AntConfig';
+import TenantAppConfig from './Context/TenantAppConfig';
 
 const tenantID = window.location.hostname.split('.')[0];
 axios.defaults.withCredentials = true;
@@ -19,11 +19,11 @@ axios
   .then(response => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthContextProvider config={response.data.config}>
-        <AntConfig color={response.data.config.color}>
+        <TenantAppConfig tenant={response.data.config}>
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </AntConfig>
+        </TenantAppConfig>
       </AuthContextProvider>,
     );
   })

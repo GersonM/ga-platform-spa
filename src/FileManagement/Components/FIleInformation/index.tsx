@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Dropdown, Form, message, Row, Select} from 'antd';
+import {Button, Col, Divider, Form, message, Row, Select} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/all';
@@ -17,10 +17,10 @@ import FileDropdownActions from '../FileDropdownActions';
 
 interface FileInformationProps {
   file?: File;
-  onDelete?: () => void;
+  onChange?: () => void;
 }
 
-const FileInformation = ({file, onDelete}: FileInformationProps) => {
+const FileInformation = ({file, onChange}: FileInformationProps) => {
   const [fileActivity, setFileActivity] = useState<Array<FileActivity>>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -67,9 +67,7 @@ const FileInformation = ({file, onDelete}: FileInformationProps) => {
     axios
       .delete(`file-management/files/${file?.uuid}`)
       .then(() => {
-        if (onDelete) {
-          onDelete();
-        }
+        if (onChange) onChange();
       })
       .catch(error => {
         ErrorHandler.showNotification(error);
@@ -86,17 +84,22 @@ const FileInformation = ({file, onDelete}: FileInformationProps) => {
 
   return (
     <div className={'file-information-wrapper'}>
-      <div className={'information-header'}>
-        <h4>Información del archivo</h4>
-        <FileDropdownActions trigger={['click']}>
-          <BsThreeDotsVertical className={'icon'} />
-        </FileDropdownActions>
-      </div>
-      <div className="information-content">
-        {!file ? (
-          <EmptyMessage message={'Seleccionar un archivo para ver su información'} />
-        ) : (
-          <>
+      {!file ? (
+        <EmptyMessage message={'Seleccionar un archivo para ver su información'} />
+      ) : (
+        <>
+          <div className={'information-header'}>
+            <h4>Información del archivo</h4>
+            <FileDropdownActions
+              onChange={() => {
+                if (onChange) onChange();
+              }}
+              trigger={['click']}
+              file={file}>
+              <BsThreeDotsVertical className={'icon'} />
+            </FileDropdownActions>
+          </div>
+          <div className="information-content">
             <div className={'file-name'}>
               <FileIcon file={file} />
               <span className={'label'}>
@@ -172,9 +175,9 @@ const FileInformation = ({file, onDelete}: FileInformationProps) => {
               </span>
               <pre>{file.thumbnail}</pre>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
