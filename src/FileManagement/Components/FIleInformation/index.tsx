@@ -63,17 +63,6 @@ const FileInformation = ({file, onChange}: FileInformationProps) => {
       });
   };
 
-  const deleteFile = () => {
-    axios
-      .delete(`file-management/files/${file?.uuid}`)
-      .then(() => {
-        if (onChange) onChange();
-      })
-      .catch(error => {
-        ErrorHandler.showNotification(error);
-      });
-  };
-
   const copyText = (text?: string) => {
     if (text) {
       navigator.clipboard.writeText(text).then(() => {
@@ -108,9 +97,6 @@ const FileInformation = ({file, onChange}: FileInformationProps) => {
                   <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
                 </small>
               </span>
-              <Button size={'small'} type={'link'} className={'button-delete'} onClick={deleteFile}>
-                <span className="icon icon-trash2" />
-              </Button>
             </div>
             <div className={'activities-wrapper'}>
               <h3>Actividad</h3>

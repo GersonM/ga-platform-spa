@@ -17,15 +17,17 @@ const FileItem = ({file, onDoubleClick, onClick, selected}: FileItemProps) => {
   const isImage = file.type.includes('image');
   return (
     <FileDropdownActions file={file} trigger={['contextMenu']}>
-      <IconItem
-        selected={selected}
-        caption={dayjs(file.created_at).format(' D/MM/YYYY H:mm')}
-        name={file.name}
-        image={isImage ? file.thumbnail : undefined}
-        icon={<FileIcon file={file} />}
-        onClick={onClick}
-        onDoubleClick={onDoubleClick}
-      />
+      <div>
+        <IconItem
+          selected={selected}
+          caption={dayjs(file.created_at).format(' D/MM/YYYY H:mm')}
+          name={file.name}
+          image={isImage ? file.thumbnail : undefined}
+          icon={<FileIcon file={file} />}
+          onClick={onClick}
+          onDoubleClick={onDoubleClick}
+        />
+      </div>
     </FileDropdownActions>
   );
 };

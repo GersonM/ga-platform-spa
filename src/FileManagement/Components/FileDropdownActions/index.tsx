@@ -2,11 +2,13 @@ import React, {useState} from 'react';
 import {Dropdown, Modal} from 'antd';
 import RenameFile from './RenameFile';
 import {File} from '../../../Types/api';
+import axios from 'axios';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 
 const items = [
-  {label: 'Mover archivo', key: 'move', icon: <span className={'icon icon-move'} />},
   {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />},
-  {label: 'Actualizar', key: 'update', icon: <span className={'icon icon-repeat'} />},
+  {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
+  {label: 'Actualizar', key: 'update', icon: <span className={'icon icon-repeat'} />, disabled: true},
   {type: 'divider', label: '', key: 'divider'},
   {label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} />},
 ];
@@ -22,8 +24,26 @@ const FileDropdownActions = ({children, trigger, file, onChange}: FileDropdownAc
   const [activeAction, setActiveAction] = useState<string>();
 
   const onClick = (option: any) => {
-    console.log(option);
-    setActiveAction(option.key);
+    if (option.key === 'delete') {
+      Modal.confirm({
+        okText: 'Si, borrar',
+        content: '¿Seguro que quieres borrar este archivo?',
+        onOk: () => deleteFile(),
+      });
+    } else {
+      setActiveAction(option.key);
+    }
+  };
+
+  const deleteFile = () => {
+    axios
+      .delete(`file-management/files/${file.uuid}`)
+      .then(() => {
+        if (onChange) onChange();
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
   };
 
   const onComplete = () => {
@@ -32,8 +52,6 @@ const FileDropdownActions = ({children, trigger, file, onChange}: FileDropdownAc
   };
   const getContent = () => {
     switch (activeAction) {
-      case 'delete':
-        return <RenameFile file={file} onCompleted={onComplete} />;
       case 'move':
         return <RenameFile file={file} onCompleted={onComplete} />;
       case 'rename':
@@ -43,12 +61,12 @@ const FileDropdownActions = ({children, trigger, file, onChange}: FileDropdownAc
 
   return (
     <>
-      <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
-        {getContent()}
-      </Modal>
       <Dropdown menu={{items, onClick}} arrow trigger={trigger}>
         {children}
       </Dropdown>
+      <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
+        {getContent()}
+      </Modal>
     </>
   );
 };
