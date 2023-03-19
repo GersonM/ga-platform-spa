@@ -42,7 +42,7 @@ const Navigation = () => {
         <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
           <div className="logged-user">
             <Avatar>{user?.name.substring(0, 1)}</Avatar>
-            &gt;
+            <span className={'icon icon-chevron-down'}></span>
           </div>
         </Dropdown>
       </div>
