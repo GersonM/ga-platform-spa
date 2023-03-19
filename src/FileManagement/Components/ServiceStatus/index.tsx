@@ -37,15 +37,12 @@ const ServiceStatus = () => {
   return (
     <div className={'service-usage-wrapper'}>
       <LoadingIndicator visible={loading} />
-      <span
-        onClick={() => setReload(!reload)}
-        className="icon icon-pie-chart"></span>
+      <span onClick={() => setReload(!reload)} className="icon icon-pie-chart"></span>
       <div>
-        <small>Uso de disco</small>
+        <small>Espacio utilizado</small>
         {serviceStatus && (
           <>
-            <FileSize size={serviceStatus.usage} /> (
-            {((serviceStatus.usage / serviceStatus.total) * 100).toFixed(2)}%)
+            <FileSize size={serviceStatus.usage} /> ({((serviceStatus.usage / serviceStatus.total) * 100).toFixed(2)}%)
           </>
         )}
       </div>

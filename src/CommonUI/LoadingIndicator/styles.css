@@ -30,8 +30,8 @@
   animation-name: loadingFadeIn;
 }
 .loader-container.overlay {
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .loader-container span {
   display: block;

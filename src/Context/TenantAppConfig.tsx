@@ -8,12 +8,12 @@ interface AntConfigProps {
   tenant: TenantConfig;
 }
 
+const defaultColor = '#186dc0';
+
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    const r = document.querySelector(':root');
-
     if (tenant.favicon) {
       let link = document.querySelector("link[rel~='icon']");
       if (!link) {
@@ -26,8 +26,9 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
       link.href = tenant.favicon;
     }
 
+    const r = document.querySelector(':root');
     //@ts-ignore
-    r.style.setProperty('--primary-color', tenant.color);
+    r.style.setProperty('--primary-color', tenant.color ? tenant.color : defaultColor);
   }, [tenant]);
 
   useEffect(() => {
@@ -42,11 +43,17 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
     };
   }, []);
 
+  if (darkMode === undefined && !tenant) {
+    return null;
+  }
+
+  console.log('tenant config');
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: tenant.color,
+          colorPrimary: tenant.color ? tenant.color : defaultColor,
+          colorLink: tenant.color ? tenant.color : defaultColor,
           fontFamily: 'Barlow, Helvetica, Arial, sans-serif',
           fontSize: 15,
           fontWeightStrong: 400,

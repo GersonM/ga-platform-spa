@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Popover, Segmented, Space, Tooltip} from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 import CreateContainer from '../../Components/CreateContainer';
 import {Container} from '../../../Types/api';
@@ -48,7 +49,13 @@ const ContainerHeader = ({
   return (
     <div className={'container-header-wrapper'}>
       <div className={'name'}>
-        <h1>{container.name}</h1>
+        <h1>
+          {container.name}
+          <small>
+            Última modificación: <br />
+            {dayjs(container.updated_at).format(' D/MM/YYYY [a las] H:mm')}
+          </small>
+        </h1>
       </div>
       <Space>
         <Button type={'primary'} onClick={onOpenUpload} icon={<span className="button-icon icon-upload2" />}>

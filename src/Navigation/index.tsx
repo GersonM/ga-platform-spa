@@ -42,13 +42,14 @@ const Navigation = () => {
         <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
           <div className="logged-user">
             <Avatar>{user?.name.substring(0, 1)}</Avatar>
+            &gt;
           </div>
         </Dropdown>
       </div>
       <nav>
         <ul className="navigation-list">
           <li>
-            <NavLink to={'/'}>
+            <NavLink end to={'/'}>
               <span className="icon icon-icons2"></span>
               <span className="label">Dashboard</span>
             </NavLink>

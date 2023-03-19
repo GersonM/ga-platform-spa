@@ -1,5 +1,7 @@
 import React from 'react';
 import {Spin} from 'antd';
+import {LoadingOutlined} from '@ant-design/icons';
+
 import './styles.css';
 
 interface LoadingIndicatorProps {
@@ -9,17 +11,9 @@ interface LoadingIndicatorProps {
   message?: string;
 }
 
-const LoadingIndicator = ({
-  overlay,
-  size,
-  message,
-  visible = true,
-}: LoadingIndicatorProps) => (
-  <div
-    className={`loader-container ${overlay ? 'overlay' : ''} ${
-      visible ? 'show' : 'hide'
-    }`}>
-    <Spin size={size} />
+const LoadingIndicator = ({overlay, size, message, visible = true}: LoadingIndicatorProps) => (
+  <div className={`loader-container ${overlay ? 'overlay' : ''} ${visible ? 'show' : 'hide'}`}>
+    <Spin size={size} indicator={<LoadingOutlined style={{fontSize: 20, color: '#ffffff'}} spin />} />
     {message ? null : <span>{message}</span>}
   </div>
 );

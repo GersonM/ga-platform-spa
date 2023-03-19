@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Form, message, Row, Select} from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
+import {Button, Col, Divider, Form, Input, message, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/all';
 import dayjs from 'dayjs';
@@ -115,7 +114,7 @@ const FileInformation = ({file, onChange}: FileInformationProps) => {
                 <Row gutter={[10, 10]}>
                   <Col md={24}>
                     <Form.Item name={'comment'} noStyle>
-                      <TextArea placeholder="Ingresa un comentario"></TextArea>
+                      <Input.TextArea placeholder="Ingresa un comentario"></Input.TextArea>
                     </Form.Item>
                   </Col>
                   <Col md={14}>

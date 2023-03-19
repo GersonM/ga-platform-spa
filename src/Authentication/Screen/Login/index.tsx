@@ -66,16 +66,14 @@ const Login = () => {
             <Form.Item name={'password'}>
               <Input.Password className={'login-form-input'} bordered={false} placeholder={'Contraseña'} />
             </Form.Item>
-            <Button
-              type={'primary'}
-              shape={'round'}
-              icon={<span className="button-icon icon-lock"></span>}
-              loading={loading}
-              htmlType={'submit'}>
+            <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
               Ingresar
             </Button>
           </Form>
-          <span className={'version-info'}>Geek Advice Platform v{Package.version}</span>
+          <Button type={'link'} href={'/auth/recovery'}>
+            Recuperar contraseña
+          </Button>
+          <span className={'version-info'}>Geek Advice v{Package.version}</span>
         </div>
       </div>
     </div>

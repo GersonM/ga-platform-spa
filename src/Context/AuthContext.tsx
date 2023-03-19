@@ -5,6 +5,7 @@ import {notification} from 'antd';
 
 import {version} from '../../package.json';
 import {TenantConfig, User} from '../Types/api';
+import ErrorHandler from '../Utils/ErrorHandler';
 
 interface AuthContextDefaults {
   user: User | null;
@@ -25,9 +26,30 @@ const AuthContext = createContext<AuthContextDefaults>({
   setUser(): void {},
   user: null,
 });
+const token = Cookies.get('session_token');
 
 const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (token) {
+      console.log({token});
+      axios
+        .get('/authentication/session')
+        .then(userResponse => {
+          if (userResponse) {
+            setUser(userResponse.data);
+          } else {
+            if (window.location.pathname.indexOf('/login') === -1) {
+              //window.location.href = '/login';
+            }
+          }
+        })
+        .catch(error => {
+          ErrorHandler.showNotification(error);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     const localVersion = localStorage.getItem('version');
@@ -48,16 +70,15 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
       }, 1000);
       localStorage.setItem('version', version);
     }
-    console.log({version}, {localVersion});
   }, []);
 
   const logout = async () => {
     await axios.get('authentication/logout');
     setUser(null);
-    Cookies.remove('token');
+    Cookies.remove('session_token');
     window.location.href = '/login';
   };
-
+  console.log('Auth context');
   return (
     <AuthContext.Provider
       value={{

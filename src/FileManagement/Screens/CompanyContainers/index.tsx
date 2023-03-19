@@ -95,10 +95,7 @@ const CompanyContainers = () => {
               <li>
                 <NavLink to={`/file-management/containers/trash`}>
                   <span className="icon icon-trash3"></span>
-                  <span className="label">
-                    Elementos borrados
-                    <small>10 elementos</small>
-                  </span>
+                  <span className="label">Elementos borrados</span>
                 </NavLink>
               </li>
             </>

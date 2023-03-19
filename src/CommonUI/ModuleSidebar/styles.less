@@ -28,9 +28,8 @@
   top: -16px;
   align-items: center;
   margin: -15px -15px 0 -15px;
-  padding: 10px 10px 10px 10px;
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(231, 235, 243, 0.02));
-  border: solid var(--ant-primary-color);
+  padding: 10px 15px;
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(231, 235, 243, 0.5));
   backdrop-filter: blur(6px);
   border-width: 0 0 0.5px 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -38,9 +37,6 @@
 
   h4 {
     font-size: 15px;
-    line-height: 15px;
-    color: var(--ant-primary-color);
-    font-weight: 600;
     margin: 0;
     padding: 0;
   }
@@ -85,5 +81,10 @@
 @media (prefers-color-scheme: dark) {
   .module-sidebar-wrapper {
     border-color: #000000;
+  }
+
+
+  .module-nav-header {
+    background: linear-gradient(rgba(103, 103, 103, 0.1), rgba(35, 35, 35, 0.5));
   }
 }

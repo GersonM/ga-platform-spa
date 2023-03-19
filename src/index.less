@@ -1,15 +1,16 @@
 :root {
-  color: #f5f5f5;
+  color: #444;
   background-color: #242424;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  --backgroung-color: #121212;
-  --backgroung-color-input: #252525;
-  --backgroung-color-body: #222222;
-  --border-color: #262626;
+
+  --backgroung-color: #ffffff;
+  --backgroung-color-input: #f2f2f2;
+  --backgroung-color-body: #f3f3f3;
+  --border-color: #eaeaea;
 }
 
 body {
@@ -71,26 +72,21 @@ code {
 }
 
 .deploy-alert-wrapper {
-  background:#ffffff url("Assets/bg_deploy@2x.png") no-repeat;
+  background: #ffffff url("Assets/bg_deploy@2x.png") no-repeat;
   background-size: contain;
   padding-left: 140px;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #222222;
+  background: #dcdcdc;
   border-radius: 10px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #343434;
+  background: #bebebe;
   border-radius: 10px;
 }
 
@@ -99,24 +95,30 @@ code {
   background: var(--ant-primary-color);
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #444;
-    --backgroung-color: #ffffff;
-    --backgroung-color-input: #f2f2f2;
-    --backgroung-color-body: #f3f3f3;
-    --border-color: #eaeaea;
+    color: #e5e5e5;
+    --backgroung-color: #121212;
+    --backgroung-color-input: #252525;
+    --backgroung-color-body: #222222;
+    --border-color: #262626;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #dcdcdc;
+    background: #222222;
     border-radius: 10px;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #bebebe;
+    background: #343434;
     border-radius: 10px;
   }
 
