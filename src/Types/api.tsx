@@ -51,6 +51,7 @@ export type File = {
   container?: Container;
   activity?: Array<FileActivity>;
   source: string;
+  public: string;
   thumbnail?: string;
   download?: string;
 };

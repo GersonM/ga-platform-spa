@@ -146,6 +146,13 @@ const FileInformation = ({file, onChange}: FileInformationProps) => {
             <Divider />
             <div className={'links-container'}>
               <span className="label">
+                Enlace el archivo:{' '}
+                <Button type={'link'} size={'small'} onClick={() => copyText(file.public)}>
+                  Copiar
+                </Button>
+              </span>
+              <pre>{file.public}</pre>
+              <span className="label">
                 URL pública:{' '}
                 <Button type={'link'} size={'small'} onClick={() => copyText(file.source)}>
                   Copiar
