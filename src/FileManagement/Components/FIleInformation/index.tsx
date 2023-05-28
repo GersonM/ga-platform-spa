@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import './styles.less';
 import FileIcon from '../FileIcon';
-import {File, FileActivity} from '../../../Types/api';
+import {Container, File, FileActivity} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';
@@ -16,10 +16,11 @@ import FileDropdownActions from '../FileDropdownActions';
 
 interface FileInformationProps {
   file?: File;
+  fileContainer?: Container;
   onChange?: () => void;
 }
 
-const FileInformation = ({file, onChange}: FileInformationProps) => {
+const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) => {
   const [fileActivity, setFileActivity] = useState<Array<FileActivity>>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -151,13 +152,17 @@ const FileInformation = ({file, onChange}: FileInformationProps) => {
                   Copiar
                 </Button>
               </span>
-              <pre>{file.public}</pre>
-              <span className="label">
-                URL pública:{' '}
-                <Button type={'link'} size={'small'} onClick={() => copyText(file.source)}>
-                  Copiar
-                </Button>
-              </span>
+              {fileContainer?.is_public && (
+                <>
+                  <pre>{file.public}</pre>
+                  <span className="label">
+                    URL pública:{' '}
+                    <Button type={'link'} size={'small'} onClick={() => copyText(file.source)}>
+                      Copiar
+                    </Button>
+                  </span>
+                </>
+              )}
               <pre>{file.source}</pre>
               <span className="label">
                 URL miniatura:{' '}

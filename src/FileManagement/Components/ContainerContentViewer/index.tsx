@@ -62,6 +62,10 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   });
 
   useEffect(() => {
+    setSelectedFile(undefined);
+  }, [containerUuid]);
+
+  useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {cancelToken: cancelTokenSource.token};
     setLoading(true);
@@ -152,13 +156,19 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
               <div className={`files-container mode-${viewMode}`}>
                 <LoadingIndicator visible={loading} />
                 {containerContent.containers.map(c => (
-                  <FolderItem key={c.uuid} container={c} onDoubleClick={() => navigateToFolder(c)} />
+                  <FolderItem
+                    key={c.uuid}
+                    container={c}
+                    onDoubleClick={() => navigateToFolder(c)}
+                    onChange={() => setReload(!reload)}
+                  />
                 ))}
                 {containerContent.files.map(file => (
                   <FileItem
                     key={file.uuid}
                     selected={selectedFile && file.uuid === selectedFile.uuid}
                     file={file}
+                    onChange={() => setReload(!reload)}
                     onDoubleClick={() => downloadFile(file)}
                     onClick={() => setSelectedFile(file)}
                   />
@@ -168,6 +178,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
 
             {showFileInformation && (
               <FileInformation
+                fileContainer={containerContent.container}
                 file={selectedFile}
                 onChange={() => {
                   //  setSelectedFile(undefined);

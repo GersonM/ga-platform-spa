@@ -1,18 +1,18 @@
 import React from 'react';
 import {Button, Form, Input} from 'antd';
-import {File} from '../../../Types/api';
+import {Container} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface RenameFileProps {
-  file: File;
+  container: Container;
   onCompleted?: () => void;
 }
 
-const RenameFile = ({file, onCompleted}: RenameFileProps) => {
+const RenameContainer = ({container, onCompleted}: RenameFileProps) => {
   const sendForm = (values: any) => {
     axios
-      .put(`file-management/files/${file.uuid}`, values)
+      .put(`file-management/files/${container.uuid}`, values)
       .then(() => {
         if (onCompleted) {
           onCompleted();
@@ -23,7 +23,7 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
       });
   };
   return (
-    <Form layout={'vertical'} onFinish={sendForm} initialValues={{name: file.name}}>
+    <Form layout={'vertical'} onFinish={sendForm} initialValues={{name: container.name}}>
       <h3>Cambiar nombre</h3>
       <Form.Item
         name={'name'}
@@ -36,4 +36,4 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
   );
 };
 
-export default RenameFile;
+export default RenameContainer;

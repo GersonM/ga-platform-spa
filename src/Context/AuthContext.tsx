@@ -33,7 +33,6 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
 
   useEffect(() => {
     if (token) {
-      console.log({token});
       axios
         .get('/authentication/session')
         .then(userResponse => {
@@ -61,7 +60,9 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           className: 'deploy-alert-wrapper',
           description: (
             <ul style={{padding: '0 0 0 20px'}}>
-              <li>Mejoras en la interface y la navegación</li>
+              <li>Se agrego la opción para borrar contenedores y carpetas</li>
+              <li>Nueva opción para cambiar visibilidad de contenedores y carpetas</li>
+              <li>Haz clic derecho sobre una carpeta para nuevas opciones</li>
             </ul>
           ),
           duration: 0,

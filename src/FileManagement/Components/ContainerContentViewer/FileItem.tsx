@@ -11,12 +11,13 @@ interface FileItemProps {
   selected?: boolean;
   onDoubleClick?: () => void;
   onClick?: (selected: boolean) => void;
+  onChange?: () => void;
 }
 
-const FileItem = ({file, onDoubleClick, onClick, selected}: FileItemProps) => {
+const FileItem = ({file, onDoubleClick, onClick, selected, onChange}: FileItemProps) => {
   const isImage = file.type.includes('image');
   return (
-    <FileDropdownActions file={file} trigger={['contextMenu']}>
+    <FileDropdownActions file={file} trigger={['contextMenu']} onChange={onChange}>
       <div>
         <IconItem
           selected={selected}

@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import {Container} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
 
 interface ContainerNavItemProps {
   container: Container;
@@ -34,28 +35,6 @@ const items: MenuProps['items'] = [
 ];
 
 const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
-  const handleMenuClick: MenuProps['onClick'] = (element: any) => {
-    console.log(element.key);
-    switch (element.key) {
-      case 'delete':
-        deleteContainer();
-        break;
-    }
-  };
-
-  const deleteContainer = () => {
-    axios
-      .delete(`file-management/containers/${container.uuid}`, {})
-      .then(response => {
-        if (onChange) {
-          onChange(response.data);
-        }
-      })
-      .catch(error => {
-        ErrorHandler.showNotification(error);
-      });
-  };
-
   return (
     <>
       <NavLink to={`/file-management/containers/${container.uuid}`}>
@@ -68,9 +47,16 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
         </span>
       </NavLink>
       <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
-      <Dropdown trigger={['click']} menu={{items, onClick: handleMenuClick}} arrow={true}>
+      <ContainerDropdownActions
+        container={container}
+        trigger={['click']}
+        onChange={() => {
+          if (onChange) {
+            onChange(container);
+          }
+        }}>
         <Button type={'link'} icon={<FiMoreVertical />} />
-      </Dropdown>
+      </ContainerDropdownActions>
     </>
   );
 };
