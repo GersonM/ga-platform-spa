@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Popover, Segmented, Space, Tooltip} from 'antd';
-import ButtonGroup from 'antd/lib/button/button-group';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 import CreateContainer from '../../Components/CreateContainer';
 import {Container} from '../../../Types/api';
-import {BsFolderPlus, BsInfoLg, TiArrowBackOutline} from 'react-icons/all';
+import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
 
 interface ContainerHeaderProps {
   container: Container;
@@ -61,27 +60,24 @@ const ContainerHeader = ({
         <Button type={'primary'} onClick={onOpenUpload} icon={<span className="button-icon icon-upload2" />}>
           Cargar archivos
         </Button>
-        <ButtonGroup>
-          <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
-            <Button
-              type={informationEnabled ? 'primary' : 'default'}
-              onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<BsInfoLg />}
-            />
-          </Tooltip>
-        </ButtonGroup>
-        <ButtonGroup>
-          <Tooltip title={'Subir un nivel'}>
-            <Button onClick={upLevel} icon={<TiArrowBackOutline />} />
-          </Tooltip>
-          <Tooltip title={'Nuevo folder'}>
-            <Popover
-              content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
-              trigger={'click'}>
-              <Button icon={<BsFolderPlus />} />
-            </Popover>
-          </Tooltip>
-        </ButtonGroup>
+        <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
+          <Button
+            type={informationEnabled ? 'primary' : 'default'}
+            onClick={() => setInformationEnabled(!informationEnabled)}
+            icon={<InformationCircleIcon height={24} />}
+          />
+        </Tooltip>
+        <Tooltip title={'Subir un nivel'}>
+          <Button type={'text'} onClick={upLevel} icon={<ArrowUpIcon height={24} />} />
+        </Tooltip>
+        <Tooltip title={'Nuevo folder'}>
+          <Popover
+            placement={'bottomRight'}
+            content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
+            trigger={'click'}>
+            <Button type={'text'} icon={<FolderPlusIcon height={23} />} />
+          </Popover>
+        </Tooltip>
         <Segmented
           onResize={() => {}}
           onResizeCapture={() => {}}

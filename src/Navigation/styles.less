@@ -1,12 +1,15 @@
-.pop-up{
+.pop-up {
   max-width: 20px;
 }
+
 .navigation-wrapper {
-  background: var(--primary-color);
+  background: var(--backgroung-color-body);
   min-width: 80px;
   max-width: 80px;
   overflow: auto;
   transition: all 0.5s;
+  display: flex;
+  flex-direction: column;
 
   .head {
     margin: 15px 0 0 0;
@@ -24,28 +27,34 @@
       }
     }
 
-    .logged-user {
-      cursor: pointer;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 10px 0;
-      color: #ffffff;
+  }
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
+  .logged-user {
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 10px;
 
-      .icon {
-        margin-left: 7px;
-        font-size: 10px;
-      }
+    .avatar {
+      border: 4px solid #7EA2E6;
+      box-sizing: content-box;
+      transition: all 0.3s;
+    }
+
+    &:hover .avatar {
+      transform: scale(1.2);
+      border-color: #3f79a9;
     }
   }
 
+  nav {
+    flex: 1;
+  }
+
   .version-info {
-    color: rgba(0, 0, 0, 0.5);
+    color: #555555;
     font-size: 12px;
     text-align: center;
+    margin-bottom: 10px;
   }
 }
 
@@ -54,52 +63,72 @@
   margin: 0;
   padding: 0;
 
-  a {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 10px 5px 10px;
-    margin: 5px;
-    border-radius: 9px;
-    color: #fff;
-    opacity: 0.8;
-    text-align: center;
-    transition: all 0.3s;
+  li {
+    margin: 5px 0;
 
-    .label {
-      display: block;
-      font-size: 12px;
-      line-height: 14px;
-      margin-top: 5px;
-    }
-
-    .icon {
-      font-size: 24px;
-      line-height: 24px;
-      display: inline-block;
-      transform: scale(1);
+    a {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 10px 8px 10px;
+      color: #777;
+      opacity: 0.8;
+      text-align: center;
       transition: all 0.3s;
-    }
 
-    &.active {
-      opacity: 1;
-      background: rgba(0, 0, 0, 0.3);
+      .label {
+        font-weight: 500;
+        display: block;
+        font-size: 12px;
+        line-height: 14px;
+        margin-top: 5px;
+      }
 
       .icon {
+        font-size: 24px;
+        line-height: 24px;
+        display: inline-block;
+        transform: scale(1);
       }
-    }
 
-    &:hover {
-      opacity: 1;
-      background: rgba(0, 0, 0, 0.2);
+      &:hover {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.07);
+      }
+
+      &.active {
+        opacity: 1;
+        background: var(--primary-color);
+        border-radius: 0 10px 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        margin-right: 5px;
+        color: #ffffff;
+        position: relative;
+
+        &:after {
+          content: '';
+          position: absolute;
+          height: 100%;
+          top: 0;
+          left: 0;
+          width: 7px;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+        }
+
+        .icon {
+        }
+      }
     }
   }
 }
-
 
 @media screen and (max-width: 500px) {
   .navigation-wrapper {
     max-width: none;
     overflow: visible;
+    justify-content: space-between;
+    flex-direction: row;
+    z-index: 3;
+    background: #ffffff;
 
     &.open {
       nav {
@@ -112,37 +141,45 @@
       align-items: center;
       margin: 0;
       z-index: 1;
-      justify-content: space-between;
+      flex: 1;
 
       .logo-square {
         margin: 0 0 0 15px;
+        height: 50px;
       }
 
-      .logged-user {
-        padding: 10px;
-        background: none;
-      }
+    }
+    .logged-user {
+      padding: 5px 5px 0 0;
+      height: 50px;
+      background: none;
     }
 
     nav {
-      background: var(--primary-color);
+      background: #ffffff;
       width: 100%;
-      z-index: 2;
       display: none;
       position: absolute;
-      box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
+      top: 50px;
+      box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
 
       .navigation-list {
         display: flex;
         flex-wrap: wrap;
-        padding: 10px 5px;
 
         li {
           width: 25%;
 
           a {
+            display: flex;
+            justify-content: center;
             height: 100%;
+            border-radius: 10px;
             margin: 0 5px;
+
+            &:after {
+              display: none;
+            }
           }
         }
       }

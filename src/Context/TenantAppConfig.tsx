@@ -47,7 +47,6 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
     return null;
   }
 
-  console.log('tenant config');
   return (
     <ConfigProvider
       theme={{

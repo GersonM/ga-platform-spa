@@ -1,7 +1,6 @@
 .module-sidebar-wrapper {
   background: var(--backgroung-color);
   padding: 15px;
-  border-right: 1px solid #B1D4EE;
   max-width: 350px;
   min-width: 280px;
   overflow: auto;
@@ -27,16 +26,14 @@
   position: sticky;
   top: -16px;
   align-items: center;
-  margin: -15px -15px 0 -15px;
-  padding: 10px 15px;
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(231, 235, 243, 0.5));
-  backdrop-filter: blur(6px);
-  border-width: 0 0 0.5px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+  margin-top: -6px;
+  border-bottom: 1px solid #efefef;
   z-index: 1;
 
   h4 {
     font-size: 15px;
+    font-weight: 600;
     margin: 0;
     padding: 0;
   }
@@ -57,7 +54,7 @@
   .toggle-button {
     display: block;
     transition: all 0.7s;
-      z-index: 2;
+    z-index: 2;
 
     &.open {
       left: 304px;
@@ -78,6 +75,7 @@
     }
   }
 }
+
 @media (prefers-color-scheme: dark) {
   .module-sidebar-wrapper {
     border-color: #000000;
@@ -85,6 +83,6 @@
 
 
   .module-nav-header {
-    background: linear-gradient(rgba(103, 103, 103, 0.1), rgba(35, 35, 35, 0.5));
+    border-bottom-color: #333333;
   }
 }

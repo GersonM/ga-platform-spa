@@ -2,16 +2,17 @@ import React from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
+import Cookies from 'js-cookie';
 import 'antd/dist/reset.css';
 
-import './index.less';
 import {AuthContextProvider} from './Context/AuthContext';
-import App from './App/App';
 import TenantAppConfig from './Context/TenantAppConfig';
-import Cookies from 'js-cookie';
+import App from './App/App';
+import './index.less';
 
 const token = Cookies.get('session_token');
-const tenantID = window.location.hostname.split('.')[0];
+//const tenantID = window.location.hostname.split('.')[0];
+const tenantID = 'app';
 
 if (!token) {
   if (window.location.pathname.indexOf('/login') === -1) {

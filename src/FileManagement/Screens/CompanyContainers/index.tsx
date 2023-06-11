@@ -15,6 +15,7 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
+import {PlusCircleIcon} from '@heroicons/react/24/outline';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -73,8 +74,8 @@ const CompanyContainers = () => {
             }}
             trigger={'click'}>
             <Tooltip title={'Crear contenedor'} placement={'left'}>
-              <Button type={'primary'} shape={'circle'} size={'small'} ghost>
-                <BiPlus />
+              <Button type={'text'} shape={'circle'} title={'asdfasdf'}>
+                <PlusCircleIcon height={24} />
               </Button>
             </Tooltip>
           </Popover>

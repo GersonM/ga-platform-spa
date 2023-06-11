@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useLocation} from 'react-router-dom';
+import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Dropdown} from 'antd';
 
 import './styles.less';
 import logo from '../Assets/logo_square.png';
 import AuthContext from '../Context/AuthContext';
-import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import Package from '../../package.json';
 
 const menuItems: ItemType[] = [
@@ -39,12 +39,6 @@ const Navigation = () => {
           }}>
           <img src={config?.favicon_white ? config.favicon_white : logo} alt="Logo" />
         </div>
-        <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
-          <div className="logged-user">
-            <Avatar>{user?.name.substring(0, 1)}</Avatar>
-            <span className={'icon icon-chevron-down'}></span>
-          </div>
-        </Dropdown>
       </div>
       <nav>
         <ul className="navigation-list">
@@ -60,8 +54,33 @@ const Navigation = () => {
               <span className={'label'}>Gestor de Archivos</span>
             </NavLink>
           </li>
+          <li>
+            <NavLink to={'/email'}>
+              <span className="icon icon-envelope-open"></span>
+              <span className={'label'}>E-mail</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={'/users'}>
+              <span className="icon icon-users2"></span>
+              <span className={'label'}>Usuarios</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={'/config'}>
+              <span className="icon icon-cog"></span>
+              <span className={'label'}>Opciones</span>
+            </NavLink>
+          </li>
         </ul>
       </nav>
+      <Dropdown arrow={true} placement={'topLeft'} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
+        <div className="logged-user">
+          <Avatar size={'large'} className={'avatar'}>
+            {user?.name.substring(0, 1)}
+          </Avatar>
+        </div>
+      </Dropdown>
       <div className={'version-info'}>v{Package.version}</div>
     </div>
   );
