@@ -11,8 +11,8 @@ import App from './App/App';
 import './index.less';
 
 const token = Cookies.get('session_token');
-const tenantID = window.location.hostname.split('.')[0];
-//const tenantID = 'app';
+//const tenantID = window.location.hostname.split('.')[0];
+const tenantID = 'app';
 
 if (!token) {
   if (window.location.pathname.indexOf('/login') === -1) {

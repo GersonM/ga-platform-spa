@@ -5,19 +5,31 @@
   position: relative;
 
   .nav-list-item {
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
 
     a {
       flex: 1;
-      padding: 10px 0;
+      padding: 8px 15px;
       display: flex;
       align-items: center;
-      color: #999999;
+      color: #555555;
 
       &.active {
-        color: var(--ant-primary-color);
+        background: var(--border-color);
+        color: var(--primary-color);
+
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          right: 0;
+          width: 4px;
+          height: 30px;
+          background: var(--primary-color);
+          border-radius: 4px 0 0 4px;
+        }
       }
 
       span.icon {
@@ -35,11 +47,11 @@
       span.label {
         display: flex;
         flex-direction: column;
+        font-weight: 500;
 
-        small {
+        .caption {
           display: block;
-          font-size: 10px;
-          line-height: 10px;
+          font-size: 13px;
           opacity: 0.7;
         }
       }

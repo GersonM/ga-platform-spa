@@ -28,7 +28,7 @@ const NavListItem = ({name, caption, icon, onClick, path, menuItems}: NavItemPro
         {icon && <span className={'icon'}>{icon}</span>}
         <span className="label">
           {name}
-          {caption && <small>{caption}</small>}
+          {caption && <span className={'caption'}>{caption}</span>}
         </span>
       </NavLink>
       {menuItems && (

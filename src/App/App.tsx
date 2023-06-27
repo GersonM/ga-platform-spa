@@ -9,6 +9,8 @@ import AppAuthenticated from './AppAuthenticated';
 import CompanyContainers from '../FileManagement/Screens/CompanyContainers';
 import DashboardHome from '../Dashboard/Screens/DashboardHome';
 import CommercialHome from '../Commercial/Screens/CommercialHome';
+import ListEmailAccounts from '../EmailManager/Screens/ListEmailAccounts';
+import MailAccountInformation from '../EmailManager/Components/MailAccountInformation';
 
 const App = () => {
   useEffect(() => {
@@ -42,8 +44,15 @@ const App = () => {
       <Route path={'/login'} element={<Login />} />
       <Route path={'/'} element={<AppAuthenticated />}>
         <Route index element={<DashboardHome />} />
-        <Route path={'file-management/'} element={<CompanyContainers />} />
-        <Route path={'file-management/containers/:uuid'} element={<CompanyContainers />} />
+        <Route path={'file-management'} element={<CompanyContainers />}>
+          <Route path={':uuid'} element={<CompanyContainers />} />
+          <Route path={':uuid/containers/:child_uuid'} element={<CompanyContainers />} />
+        </Route>
+        <Route path={'mail-management'} element={<ListEmailAccounts />}>
+          <Route path={'accounts/:uuid'}>
+            <Route path={':tab'} />
+          </Route>
+        </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
       </Route>
     </Routes>

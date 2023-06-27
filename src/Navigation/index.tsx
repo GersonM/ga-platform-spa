@@ -55,7 +55,7 @@ const Navigation = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to={'/email'}>
+            <NavLink to={'/mail-management'}>
               <span className="icon icon-envelope-open"></span>
               <span className={'label'}>E-mail</span>
             </NavLink>

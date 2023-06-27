@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
 import {Button, Empty, Popover, Tooltip} from 'antd';
-import {BiPlus} from 'react-icons/all';
+import {PlusCircleIcon} from '@heroicons/react/24/outline';
 
 import './styles.less';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -15,7 +15,6 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
-import {PlusCircleIcon} from '@heroicons/react/24/outline';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -51,8 +50,10 @@ const CompanyContainers = () => {
   }, [reload]);
 
   const navigateToFolder = (uuid: string) => {
-    navigate(`/file-management/containers/${uuid}`);
+    navigate(`/file-management/${params.uuid}/containers/${uuid}`);
   };
+
+  const currentContainer = params.child_uuid ? params.child_uuid : params.uuid;
 
   return (
     <>
@@ -74,7 +75,7 @@ const CompanyContainers = () => {
             }}
             trigger={'click'}>
             <Tooltip title={'Crear contenedor'} placement={'left'}>
-              <Button type={'text'} shape={'circle'} title={'asdfasdf'}>
+              <Button type={'text'} shape={'circle'}>
                 <PlusCircleIcon height={24} />
               </Button>
             </Tooltip>
@@ -89,12 +90,12 @@ const CompanyContainers = () => {
           {containers && (
             <>
               {containers.map(c => (
-                <li key={c.uuid}>
+                <li key={c.uuid} className={params.uuid === c.uuid ? 'active' : ''}>
                   <ContainerNavItem container={c} onChange={() => setReload(!reload)} />
                 </li>
               ))}
               <li>
-                <NavLink to={`/file-management/containers/trash`}>
+                <NavLink to={`/file-management/trash`}>
                   <span className="icon icon-trash3"></span>
                   <span className="label">Elementos borrados</span>
                 </NavLink>
@@ -104,8 +105,8 @@ const CompanyContainers = () => {
         </ul>
       </ModuleSidebar>
       <ModuleContent>
-        {params.uuid ? (
-          <ContainerContentViewer containerUuid={params.uuid} onChange={navigateToFolder} />
+        {currentContainer ? (
+          <ContainerContentViewer containerUuid={currentContainer} onChange={navigateToFolder} />
         ) : (
           <Empty description={'Seleccionar un contenedor para ver su contenido'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
