@@ -3,12 +3,16 @@ import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 import Cookies from 'js-cookie';
+import 'dayjs/locale/es.js';
 import 'antd/dist/reset.css';
 
 import {AuthContextProvider} from './Context/AuthContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
+import dayjs from 'dayjs';
+
+dayjs.locale('es');
 
 const token = Cookies.get('session_token');
 //const tenantID = window.location.hostname.split('.')[0];

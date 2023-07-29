@@ -79,3 +79,47 @@ export type FileManagementStatus = {
   total: number;
   payment: number;
 };
+
+export type MailAccount = {
+  uuid: string;
+  contact_name: string;
+  address: string;
+  created_at: string;
+  provider?: MailProvider;
+  folders?: MailFolder[];
+  is_disabled: boolean;
+  space_assigned: number;
+};
+
+export type MailFolder = {
+  uuid: number;
+  name: string;
+  path: string;
+};
+
+export type MailProvider = {
+  uuid: number;
+  name: string;
+  host: string;
+};
+
+export type MailFolderPageContent = {
+  page: number;
+  total: number;
+  total_pages: number;
+  messages: MailMessage[];
+};
+
+export type MailMessage = {
+  message_id: string;
+  subject: string;
+  from: any[];
+  to: any[];
+  bcc?: any[];
+  cc?: any[];
+  is_read: boolean;
+  number_attachments: number;
+  excerpt: string;
+  delivery_date: string;
+  body?: string;
+};

@@ -54,7 +54,6 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
           colorPrimary: tenant.color ? tenant.color : defaultColor,
           colorLink: tenant.color ? tenant.color : defaultColor,
           fontFamily: 'Barlow, Helvetica, Arial, sans-serif',
-          fontSize: 15,
           fontWeightStrong: 400,
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,

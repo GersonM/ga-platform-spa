@@ -1,8 +1,11 @@
 .module-sidebar-wrapper {
   background: var(--backgroung-color);
   max-width: 350px;
-  min-width: 280px;
+  min-width: 100px;
   overflow: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 9px;
 }
 
 .toggle-button {
@@ -63,9 +66,10 @@
     position: fixed;
     z-index: 1;
     bottom: 0;
-    top: 52px;
+    top: 55px;
     transform: translateX(-100%);
     transition: all 0.7s;
+    border-radius: 0 9px 9px 0;
 
     &.open {
       transform: translateX(0%);

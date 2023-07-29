@@ -10,11 +10,12 @@ interface NavItemProps {
   caption?: string;
   path: string;
   icon?: React.ReactNode;
+  height?: number;
   onClick?: () => void;
   menuItems?: MenuProps;
 }
 
-const NavListItem = ({name, caption, icon, onClick, path, menuItems}: NavItemProps) => {
+const NavListItem = ({name, caption, icon, onClick, path, menuItems, height}: NavItemProps) => {
   const handleMenuClick = (element: any) => {
     switch (element.key) {
       case 'delete':
@@ -24,7 +25,7 @@ const NavListItem = ({name, caption, icon, onClick, path, menuItems}: NavItemPro
 
   return (
     <li className={'nav-list-item'}>
-      <NavLink to={path} onClick={onClick}>
+      <NavLink to={path} onClick={onClick} style={{height}}>
         {icon && <span className={'icon'}>{icon}</span>}
         <span className="label">
           {name}

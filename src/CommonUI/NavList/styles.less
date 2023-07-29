@@ -8,16 +8,27 @@
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
+    margin: 0 15px;
+
+    &:first-child {
+      border-top: 1px solid var(--border-color);
+    }
 
     a {
       flex: 1;
+      margin: 0 -15px;
       padding: 8px 15px;
       display: flex;
       align-items: center;
       color: #555555;
+      transition: all 0.3s;
+
+      &:hover {
+        background: var(--backgroung-active-color);
+      }
 
       &.active {
-        background: var(--border-color);
+        background: var(--backgroung-active-color);
         color: var(--primary-color);
 
         &:after {
@@ -36,6 +47,7 @@
         display: inline-block;
         margin-right: 10px;
         vertical-align: middle;
+        width: 20px;
 
         & > * {
           vertical-align: middle;

@@ -40,6 +40,7 @@ const ListEmailAccounts = () => {
   return (
     <>
       <ModuleSidebar
+        width={230}
         title={'Cuentas de correo'}
         actions={
           <>

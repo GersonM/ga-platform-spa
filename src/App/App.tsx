@@ -11,6 +11,8 @@ import DashboardHome from '../Dashboard/Screens/DashboardHome';
 import CommercialHome from '../Commercial/Screens/CommercialHome';
 import ListEmailAccounts from '../EmailManager/Screens/ListEmailAccounts';
 import MailAccountInformation from '../EmailManager/Components/MailAccountInformation';
+import InboxManager from '../EmailManager/Screens/InboxManager';
+import MailMessagesViewer from '../EmailManager/Screens/InboxManager/MailMessagesViewer';
 
 const App = () => {
   useEffect(() => {
@@ -48,8 +50,13 @@ const App = () => {
           <Route path={':uuid'} element={<CompanyContainers />} />
           <Route path={':uuid/containers/:child_uuid'} element={<CompanyContainers />} />
         </Route>
+        <Route path={'inbox-management'} element={<InboxManager />}>
+          <Route path={':uuid'} element={<MailMessagesViewer />}>
+            <Route path={':tab'} />
+          </Route>
+        </Route>
         <Route path={'mail-management'} element={<ListEmailAccounts />}>
-          <Route path={'accounts/:uuid'}>
+          <Route path={'accounts/:uuid'} element={<MailMessagesViewer />}>
             <Route path={':tab'} />
           </Route>
         </Route>
