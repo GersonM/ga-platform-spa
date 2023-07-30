@@ -9,10 +9,11 @@ import AppAuthenticated from './AppAuthenticated';
 import CompanyContainers from '../FileManagement/Screens/CompanyContainers';
 import DashboardHome from '../Dashboard/Screens/DashboardHome';
 import CommercialHome from '../Commercial/Screens/CommercialHome';
-import ListEmailAccounts from '../EmailManager/Screens/ListEmailAccounts';
-import MailAccountInformation from '../EmailManager/Components/MailAccountInformation';
-import InboxManager from '../EmailManager/Screens/InboxManager';
-import MailMessagesViewer from '../EmailManager/Screens/InboxManager/MailMessagesViewer';
+import InboxManager from '../InboxManagement/Screens/InboxManager';
+import MailMessagesViewer from '../InboxManagement/Screens/InboxManager/MailMessagesViewer';
+import MailAccountStats from '../InboxManagement/Screens/InboxManager/MailAccountStats';
+import ModuleConfiguration from '../ConfigManagement/Screens/ModuelConfiguration';
+import ConfigOptions from '../InboxManagement/Screens/ConfigOptions';
 
 const App = () => {
   useEffect(() => {
@@ -51,13 +52,14 @@ const App = () => {
           <Route path={':uuid/containers/:child_uuid'} element={<CompanyContainers />} />
         </Route>
         <Route path={'inbox-management'} element={<InboxManager />}>
+          <Route path={'storage/:uuid'} element={<MailAccountStats />} />
           <Route path={':uuid'} element={<MailMessagesViewer />}>
             <Route path={':tab'} />
           </Route>
         </Route>
-        <Route path={'mail-management'} element={<ListEmailAccounts />}>
-          <Route path={'accounts/:uuid'} element={<MailMessagesViewer />}>
-            <Route path={':tab'} />
+        <Route path={'config'} element={<ModuleConfiguration />}>
+          <Route path={'inbox-management'} element={<ConfigOptions />}>
+            <Route path={':tab'} element={null} />
           </Route>
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />

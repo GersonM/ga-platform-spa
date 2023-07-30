@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
-import {Dropdown} from 'antd';
+import {Button, Dropdown, Empty} from 'antd';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import './styles.less';
 import {MailAccount} from '../../../Types/api';
+import './styles.less';
 
 interface MailAccountSelectorProps {
   onSelect?: (account: MailAccount) => void;
@@ -24,14 +24,13 @@ const MailAccountSelector = ({onSelect}: MailAccountSelectorProps) => {
     axios
       .get(`inbox-management/accounts`, config)
       .then(response => {
-        if (response) {
-          setAccounts(response.data);
-          if (response.data[0]) {
-            setSelectedAccount(response.data[0]);
-          }
+        setAccounts(response.data);
+        if (response.data[0]) {
+          setSelectedAccount(response.data[0]);
         }
       })
       .catch(e => {
+        console.log('error');
         ErrorHandler.showNotification(e);
       });
 
@@ -50,27 +49,35 @@ const MailAccountSelector = ({onSelect}: MailAccountSelectorProps) => {
 
   return (
     <div className={'mail-account-selector-wrapper'}>
-      <Dropdown
-        menu={{
-          items: accounts?.map((a: MailAccount) => {
-            return {
-              key: a.uuid,
-              label: a.address,
-            };
-          }),
-          activeKey: selectedAccount?.uuid,
-          onClick: onItemSelected,
-        }}>
-        <div className={'selector'}>
-          {selectedAccount && (
+      {accounts && accounts.length === 0 && (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No tienes cuentas asignadas'}>
+          <Button type={'primary'}>
+            <span className={'button-icon icon-plus'}></span>
+            Agregar
+          </Button>
+        </Empty>
+      )}
+      {accounts && accounts.length > 0 && (
+        <Dropdown
+          menu={{
+            items: accounts?.map((a: MailAccount) => {
+              return {
+                key: a.uuid,
+                label: a.address,
+              };
+            }),
+            activeKey: selectedAccount?.uuid,
+            onClick: onItemSelected,
+          }}>
+          <div className={'selector'}>
             <div>
-              <span className={'name'}>{selectedAccount.contact_name}</span>
-              <span className={'address'}>{selectedAccount.address}</span>
+              <span className={'name'}>{selectedAccount?.contact_name}</span>
+              <span className={'address'}>{selectedAccount?.address}</span>
             </div>
-          )}
-          <ChevronDownIcon width={20} />
-        </div>
-      </Dropdown>
+            <ChevronDownIcon width={20} />
+          </div>
+        </Dropdown>
+      )}
     </div>
   );
 };

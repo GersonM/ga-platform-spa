@@ -6,6 +6,7 @@ dayjs.extend(relativeTime);
 
 import './styles.less';
 import {MailFolderPageContent} from '../../../Types/api';
+import {Segmented} from 'antd';
 
 interface ListMailMessagesProps {
   messages: MailFolderPageContent;
@@ -16,12 +17,21 @@ const ListMailMessages = ({messages}: ListMailMessagesProps) => {
 
   return (
     <div className={'list-mail-messages-wrapper'}>
+      <div>
+        <Segmented
+          options={['Ambos', 'Respaldados', 'Sin respaldo']}
+          onResize={undefined}
+          onResizeCapture={undefined}
+        />
+      </div>
       {messages.messages.map(m => {
         return (
           <div key={m.message_id} className={'mail-message-item'}>
             <div className={'sender'}>{m.from[0].mail}</div>
-            <div className={'subject'}>{m.subject}</div>
-            <div className={'excerpt'}>{m.excerpt}</div>
+            <div className={'subject'}>
+              <h4>{m.subject}</h4>
+              <small className={'excerpt'}>{m.excerpt.substring(0, 120)}</small>
+            </div>
             <span className={'date'}>{dayjs(m.delivery_date).fromNow()}</span>
           </div>
         );

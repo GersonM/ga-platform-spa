@@ -89,6 +89,7 @@ export type MailAccount = {
   folders?: MailFolder[];
   is_disabled: boolean;
   space_assigned: number;
+  space_used: number;
 };
 
 export type MailFolder = {
@@ -98,9 +99,12 @@ export type MailFolder = {
 };
 
 export type MailProvider = {
-  uuid: number;
+  uuid: string;
   name: string;
+  username: string;
   host: string;
+  type: string;
+  num_accounts?: number;
 };
 
 export type MailFolderPageContent = {

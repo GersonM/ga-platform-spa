@@ -1,26 +1,31 @@
 .list-mail-messages-wrapper {
-  background: #ffffff;
+  background: var(--backgroung-color);
   border-radius: 12px;
+  padding: 0 15px;
 
   .mail-message-item {
     display: flex;
     flex-direction: row;
-    padding: 10px 10px;
-    border-bottom: 1px solid #dcdcdc;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
 
     .sender {
       width: 250px;
-      font-family: var(--font-title);
+      font-size: 14px;
     }
 
     .subject {
-      width: 300px;
+      flex: 1;
+      font-weight: 500;
     }
 
     .excerpt {
+      font-weight: 400;
+      margin-top: 5px;
       opacity: 0.5;
       flex: 1;
       font-size: 13px;
+      display: block;
     }
 
     .date {

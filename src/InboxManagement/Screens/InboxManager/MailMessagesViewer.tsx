@@ -31,12 +31,7 @@ const MailMessagesViewer = () => {
     }
   }, [params.uuid]);
 
-  return (
-    <div>
-      <p>Folder: {params.uuid}</p>
-      {folderContent && <ListMailMessages messages={folderContent} />}
-    </div>
-  );
+  return <div>{folderContent && <ListMailMessages messages={folderContent} />}</div>;
 };
 
 export default MailMessagesViewer;
