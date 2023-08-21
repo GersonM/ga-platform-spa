@@ -17,11 +17,9 @@ const ConfigOptions = () => {
       <Tabs
         animated={{inkBar: true, tabPane: true}}
         onChange={tab => {
-          console.log('change', tab);
           navigate(`/config/inbox-management/${tab}`);
         }}
         activeKey={params.tab}
-        centered
         items={[
           {
             label: 'Proveedores',
@@ -29,7 +27,7 @@ const ConfigOptions = () => {
             children: <ConfigProviders />,
           },
           {
-            label: 'Cuentas de correo',
+            label: 'Cuentas y usuarios',
             key: 'accounts',
             children: <ConfigAccounts />,
           },

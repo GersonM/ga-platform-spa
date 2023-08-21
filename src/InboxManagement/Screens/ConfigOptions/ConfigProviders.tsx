@@ -1,18 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {Badge, Button, Card, Empty, Form, Input, Popover, Select, Space, Tag} from 'antd';
+import {Button, Drawer, Empty, Popover, Select, Space, Table} from 'antd';
 import {SiCpanel, SiGmail} from 'react-icons/si';
+import {ChartPieIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
 import {MailAccount, MailProvider} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateProvider from './CreateProvider';
 import FileSize from '../../../CommonUI/FileSize';
+import MailBackupManager from '../../Components/MailBackupManager';
 
 const ConfigProviders = () => {
   const [providers, setProviders] = useState<MailProvider[]>();
   const [reload, setReload] = useState(false);
+  const [reloadAccounts, setReloadAccounts] = useState(false);
   const [accounts, setAccounts] = useState<MailAccount[]>();
   const [selectedProvider, setSelectedProvider] = useState<MailProvider>();
+  const [selectedAccount, setSelectedAccount] = useState<MailAccount>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -46,6 +50,9 @@ const ConfigProviders = () => {
         .then(response => {
           if (response) {
             setAccounts(response.data);
+            if (selectedAccount) {
+              setSelectedAccount(response.data.find((a: any) => a.uuid === selectedAccount.uuid));
+            }
           }
         })
         .catch(e => {
@@ -54,7 +61,7 @@ const ConfigProviders = () => {
 
       return cancelTokenSource.cancel;
     }
-  }, [selectedProvider]);
+  }, [selectedProvider, reloadAccounts]);
 
   const syncProvider = () => {
     if (!selectedProvider) {
@@ -65,6 +72,7 @@ const ConfigProviders = () => {
       .then(response => {
         if (response) {
           setReload(!reload);
+          setReloadAccounts(!reloadAccounts);
         }
       })
       .catch(e => {
@@ -76,6 +84,46 @@ const ConfigProviders = () => {
     setSelectedProvider(providers?.find(p => p.uuid === item));
   };
 
+  const columns = [
+    {title: 'Nombre de contact', dataIndex: 'contact_name'},
+    {title: 'Dirección de correo', dataIndex: 'address'},
+    {
+      title: 'Configurado',
+      dataIndex: 'setup_completed',
+      render: (value: boolean) => (value ? 'Si' : 'No'),
+    },
+    {
+      title: 'Mensajes',
+      dataIndex: 'space_assigned',
+    },
+    {
+      title: 'Tamaño respaldo',
+      dataIndex: 'space_used',
+      render: (value: any) => <FileSize size={value} binary={true} />,
+    },
+    {
+      title: 'Bandeja de entrada',
+      dataIndex: 'space_assigned',
+      render: (value: any, r: any) => (
+        <>
+          <FileSize size={r.space_used} binary={true} /> / <FileSize size={value} binary={true} />
+        </>
+      ),
+    },
+    {
+      title: '',
+      render: (id: any, account: any) => (
+        <Button
+          size={'small'}
+          type={'primary'}
+          ghost
+          onClick={() => setSelectedAccount(account)}
+          icon={<ChartPieIcon className={'button-icon'} />}>
+          Liberar espacio
+        </Button>
+      ),
+    },
+  ];
   return (
     <>
       <Space>
@@ -99,34 +147,47 @@ const ConfigProviders = () => {
           onClick={syncProvider}>
           Sincronizar
         </Button>
+        <Button
+          type={'primary'}
+          icon={<span className={'icon-redo2 button-icon'} />}
+          disabled={!selectedProvider}
+          ghost
+          onClick={() => setReloadAccounts(!reloadAccounts)}>
+          Actualizar
+        </Button>
       </Space>
       {selectedProvider && (
-        <div className={'item-mail-provider'}>
-          <div className="logo">
-            {selectedProvider.type === 'cpanel' && <SiCpanel className={'icon cpanel'} />}
-            {selectedProvider.type === 'gmail' && <SiGmail className={'icon gmail'} />}
-          </div>
-          <div>
-            <h3 className={'title'}>{selectedProvider.name}</h3>({selectedProvider.username}) - {selectedProvider.host}{' '}
-            | {selectedProvider.num_accounts} Accounts
-          </div>
-        </div>
-      )}
-      {accounts &&
-        accounts.map(p => {
-          const percent = p.space_assigned === 0 ? 0 : (p.space_used / p.space_assigned) * 100;
-          return (
-            <div key={p.uuid} className={'item-mail-provider'}>
-              <Tag color={percent > 80 ? 'orange' : 'blue'}>
-                <FileSize size={p.space_used} /> de <FileSize size={p.space_assigned} />
-              </Tag>
-              {p.contact_name} :: {p.address}
+        <>
+          <div className={'item-mail-provider'}>
+            <div className="logo">
+              {selectedProvider.type === 'cpanel' && <SiCpanel className={'icon cpanel'} />}
+              {selectedProvider.type === 'gmail' && <SiGmail className={'icon gmail'} />}
             </div>
-          );
-        })}
-      {accounts && accounts.length === 0 && (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay cuentas registradas en este proveedor'} />
+            <div>
+              <h3 className={'title'}>{selectedProvider.name}</h3>({selectedProvider.username}) -{' '}
+              {selectedProvider.host} | {selectedProvider.num_accounts} Accounts
+            </div>
+          </div>
+          <Table pagination={false} rowKey={'uuid'} size={'small'} dataSource={accounts} columns={columns} />
+        </>
       )}
+      {!selectedProvider && (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'Seleccionar un proveedor para ver las cuentas'} />
+      )}
+      <Drawer
+        destroyOnClose
+        open={!!selectedAccount}
+        title={'Backup de cuenta'}
+        onClose={() => setSelectedAccount(undefined)}>
+        {selectedAccount && (
+          <MailBackupManager
+            onChange={() => {
+              setReloadAccounts(!reloadAccounts);
+            }}
+            mailAccount={selectedAccount}
+          />
+        )}
+      </Drawer>
     </>
   );
 };

@@ -3,9 +3,10 @@ import './styles.less';
 
 interface ModuleContentProps {
   children?: React.ReactNode;
+  opaque?: boolean;
 }
-const ModuleContent = ({children}: ModuleContentProps) => {
-  return <div className={'module-content-wrapper'}>{children}</div>;
+const ModuleContent = ({children, opaque}: ModuleContentProps) => {
+  return <div className={'module-content-wrapper' + (opaque ? ' opaque' : '')}>{children}</div>;
 };
 
 export default ModuleContent;

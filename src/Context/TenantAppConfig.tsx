@@ -9,6 +9,7 @@ interface AntConfigProps {
 }
 
 const defaultColor = '#186dc0';
+const defaultColorLight = '#52b5ff';
 
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
   const [darkMode, setDarkMode] = useState(false);
@@ -51,7 +52,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: tenant.color ? tenant.color : defaultColor,
+          colorPrimary: tenant.color ? tenant.color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.color ? tenant.color : defaultColor,
           fontFamily: 'Barlow, Helvetica, Arial, sans-serif',
           fontWeightStrong: 400,

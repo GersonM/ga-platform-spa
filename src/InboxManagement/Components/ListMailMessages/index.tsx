@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -6,7 +6,6 @@ dayjs.extend(relativeTime);
 
 import './styles.less';
 import {MailFolderPageContent} from '../../../Types/api';
-import {Segmented} from 'antd';
 
 interface ListMailMessagesProps {
   messages: MailFolderPageContent;
@@ -14,19 +13,13 @@ interface ListMailMessagesProps {
 
 const ListMailMessages = ({messages}: ListMailMessagesProps) => {
   const params = useParams();
+  const [content, setContent] = useState<string>();
 
   return (
     <div className={'list-mail-messages-wrapper'}>
-      <div>
-        <Segmented
-          options={['Ambos', 'Respaldados', 'Sin respaldo']}
-          onResize={undefined}
-          onResizeCapture={undefined}
-        />
-      </div>
       {messages.messages.map(m => {
         return (
-          <div key={m.message_id} className={'mail-message-item'}>
+          <div key={m.message_id} className={'mail-message-item'} onClick={() => setContent(m.body)}>
             <div className={'sender'}>{m.from[0].mail}</div>
             <div className={'subject'}>
               <h4>{m.subject}</h4>
@@ -36,6 +29,7 @@ const ListMailMessages = ({messages}: ListMailMessagesProps) => {
           </div>
         );
       })}
+      {content && <div dangerouslySetInnerHTML={{__html: content}} />}
     </div>
   );
 };

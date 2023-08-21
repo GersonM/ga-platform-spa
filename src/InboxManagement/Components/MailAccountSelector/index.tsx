@@ -9,9 +9,10 @@ import './styles.less';
 
 interface MailAccountSelectorProps {
   onSelect?: (account: MailAccount) => void;
+  refresh?: boolean;
 }
 
-const MailAccountSelector = ({onSelect}: MailAccountSelectorProps) => {
+const MailAccountSelector = ({onSelect, refresh}: MailAccountSelectorProps) => {
   const [accounts, setAccounts] = useState<MailAccount[]>();
   const [selectedAccount, setSelectedAccount] = useState<MailAccount>();
 
@@ -25,8 +26,12 @@ const MailAccountSelector = ({onSelect}: MailAccountSelectorProps) => {
       .get(`inbox-management/accounts`, config)
       .then(response => {
         setAccounts(response.data);
-        if (response.data[0]) {
-          setSelectedAccount(response.data[0]);
+        if (selectedAccount) {
+          setSelectedAccount(response.data.find((a: MailAccount) => a.uuid === selectedAccount.uuid));
+        } else {
+          if (response.data[0]) {
+            setSelectedAccount(response.data[0]);
+          }
         }
       })
       .catch(e => {
@@ -35,7 +40,7 @@ const MailAccountSelector = ({onSelect}: MailAccountSelectorProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     if (onSelect && selectedAccount) {

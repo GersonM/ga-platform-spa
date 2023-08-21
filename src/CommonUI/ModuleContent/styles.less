@@ -1,13 +1,18 @@
 .module-content-wrapper {
   flex: 1;
-  padding: 15px;
-  height: 100%;
+  margin: 15px;
   overflow: auto;
+  position: relative;
+  border-radius: 11px;
+
+  &.opaque {
+    background: var(--backgroung-color);
+  }
 }
 
 @media screen and (max-width: 500px) {
   .module-content-wrapper {
     flex-direction: column;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 90px);
   }
 }

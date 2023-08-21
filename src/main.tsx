@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
+import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
 import 'dayjs/locale/es.js';
 import 'antd/dist/reset.css';
@@ -10,13 +11,12 @@ import {AuthContextProvider} from './Context/AuthContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
-import dayjs from 'dayjs';
 
 dayjs.locale('es');
 
 const token = Cookies.get('session_token');
-const tenantID = window.location.hostname.split('.')[0];
-//const tenantID = 'app';
+const isDevMode = window.location.hostname.includes('localhost');
+const tenantID = isDevMode ? 'app' : window.location.hostname.split('.')[0];
 
 if (!token) {
   if (window.location.pathname.indexOf('/login') === -1) {
@@ -46,6 +46,6 @@ axios
     const el = document.getElementById('root');
     if (el) {
       el.innerHTML =
-        '<div class="error-name">Este cliente aún no está activo o no ha sido registrado<br/> <small>Revisa tu correo para saber el estado de tu cuenta</small></div>';
+        '<div class="error-name">La cuenta no se encuentra activa<br/> <span>Revisa tu correo para saber el estado de tu cuenta</span></div>';
     }
   });

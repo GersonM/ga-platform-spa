@@ -146,9 +146,13 @@
       .logo-square {
         margin: 0 0 0 15px;
         height: 50px;
-      }
 
+        img {
+          filter: saturate(0) contrast(0) brightness(1.5);
+        }
+      }
     }
+
     .logged-user {
       padding: 5px 5px 0 0;
       height: 50px;
@@ -213,3 +217,14 @@
   background: #818181;
 }
 
+@media (prefers-color-scheme: dark) {
+  .navigation-wrapper {
+    .head {
+      .logo-square {
+        img {
+          filter: saturate(0) contrast(0) brightness(1.5);
+        }
+      }
+    }
+  }
+}

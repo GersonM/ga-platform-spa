@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Col, Divider, Form, Input, message, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
-import {BsThreeDotsVertical} from 'react-icons/all';
+import {BsThreeDotsVertical} from 'react-icons/bs';
 import dayjs from 'dayjs';
 import axios from 'axios';
 

@@ -12,7 +12,7 @@ import CommercialHome from '../Commercial/Screens/CommercialHome';
 import InboxManager from '../InboxManagement/Screens/InboxManager';
 import MailMessagesViewer from '../InboxManagement/Screens/InboxManager/MailMessagesViewer';
 import MailAccountStats from '../InboxManagement/Screens/InboxManager/MailAccountStats';
-import ModuleConfiguration from '../ConfigManagement/Screens/ModuelConfiguration';
+import ModuleConfiguration from '../ConfigManagement/Screens/ModuleConfiguration';
 import ConfigOptions from '../InboxManagement/Screens/ConfigOptions';
 
 const App = () => {

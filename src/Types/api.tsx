@@ -88,8 +88,17 @@ export type MailAccount = {
   provider?: MailProvider;
   folders?: MailFolder[];
   is_disabled: boolean;
+  setup_completed: boolean;
   space_assigned: number;
   space_used: number;
+};
+
+export type MailAccountStats = {
+  folder: MailFolder;
+  folder_path: string;
+  messages_stats: {2021: number; 2022: number; 2023: number; oldest: number};
+  old_date: number;
+  total_messages: number;
 };
 
 export type MailFolder = {
