@@ -6,7 +6,7 @@ import axios, {AxiosProgressEvent} from 'axios';
 import './styles.less';
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
-import FileInformation from '../FIleInformation';
+import FileInformation from '../FileInformation';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import {Container, ContainerContent, File} from '../../../Types/api';

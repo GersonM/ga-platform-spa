@@ -27,32 +27,41 @@ const MailBackupManager = ({mailAccount, onChange}: MailBackupManagerProps) => {
   }, [mailAccount.space_used]);
 
   useEffect(() => {
-    setLoading(true);
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
+    if (mailAccount.setup_completed) {
+      setLoading(true);
+      const cancelTokenSource = axios.CancelToken.source();
+      const config = {
+        cancelToken: cancelTokenSource.token,
+      };
 
-    axios
-      .get(`inbox-management/accounts/${mailAccount.uuid}/stats`, config)
-      .then(response => {
-        setLoading(false);
-        if (response) {
-          setStats(response.data);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
+      axios
+        .get(`inbox-management/accounts/${mailAccount.uuid}/stats`, config)
+        .then(response => {
+          setLoading(false);
+          if (response) {
+            setStats(response.data);
+          }
+        })
+        .catch(e => {
+          setLoading(false);
+          ErrorHandler.showNotification(e);
+        });
 
-    return cancelTokenSource.cancel;
+      return cancelTokenSource.cancel;
+    }
   }, []);
 
   const freeSpace = (folderPath: string, time: string) => {
+    setLoading(true);
     axios
-      .post(`inbox-management/accounts/${mailAccount.uuid}/free-space`, {folder_path: folderPath, time})
-      .then(() => {});
+      .post(`inbox-management/accounts/${mailAccount.uuid}/backup-messages`, {folder_path: folderPath, time})
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      });
   };
 
   return (
@@ -91,7 +100,7 @@ const MailBackupManager = ({mailAccount, onChange}: MailBackupManagerProps) => {
           <MailSetupForm onChange={onChange} mailAccount={mailAccount} />
         </>
       )}
-      <LoadingIndicator visible={loading} overlay={false} />
+      <LoadingIndicator visible={loading} overlay={false} size={'small'} message={'asdadsf'} />
       {stats &&
         stats.map((s, index) => (
           <div key={index} className={'stats-wrapper'}>
@@ -100,46 +109,21 @@ const MailBackupManager = ({mailAccount, onChange}: MailBackupManagerProps) => {
             </div>
             {s.total_messages > 0 && (
               <ul>
-                <li>
-                  2023 ({s.messages_stats['2023']} mensajes)
-                  <Button
-                    type={'primary'}
-                    size={'small'}
-                    onClick={() => freeSpace(s.folder_path, '2023')}
-                    disabled={s.messages_stats['2023'] === 0}>
-                    Respaldar
-                  </Button>
-                </li>
-                <li>
-                  2022 ({s.messages_stats['2022']})
-                  <Button
-                    type={'primary'}
-                    size={'small'}
-                    onClick={() => freeSpace(s.folder_path, '2022')}
-                    disabled={s.messages_stats['2022'] === 0}>
-                    Respaldar
-                  </Button>
-                </li>
-                <li>
-                  2021 ({s.messages_stats['2021']})
-                  <Button
-                    type={'primary'}
-                    size={'small'}
-                    onClick={() => freeSpace(s.folder_path, '2021')}
-                    disabled={s.messages_stats['2021'] === 0}>
-                    Respaldar
-                  </Button>
-                </li>
-                <li>
-                  Más antiguos ({s.messages_stats.oldest})
-                  <Button
-                    type={'primary'}
-                    size={'small'}
-                    onClick={() => freeSpace(s.folder_path, '2020+')}
-                    disabled={s.messages_stats.oldest === 0}>
-                    Respaldar
-                  </Button>
-                </li>
+                {Object.keys(s.messages_stats).map((k, index) => {
+                  return (
+                    <li key={index}>
+                      {k === 'oldest' ? 'Mas antiguos' : k} ({s.messages_stats[k]} mensajes)
+                      <Button
+                        type={'primary'}
+                        size={'small'}
+                        ghost
+                        onClick={() => freeSpace(s.folder_path, k)}
+                        disabled={s.messages_stats[k] === 0}>
+                        Respaldar
+                      </Button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

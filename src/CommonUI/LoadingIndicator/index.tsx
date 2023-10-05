@@ -13,7 +13,7 @@ interface LoadingIndicatorProps {
 
 const LoadingIndicator = ({overlay, size, message, visible = true}: LoadingIndicatorProps) => (
   <div className={`loader-container ${overlay ? 'overlay' : ''} ${visible ? 'show' : 'hide'}`}>
-    <Spin size={size} indicator={<LoadingOutlined style={{fontSize: 20, color: '#ffffff'}} spin />} />
+    <Spin size={size} indicator={<LoadingOutlined style={{fontSize: 20}} spin />} />
     {message ? null : <span>{message}</span>}
   </div>
 );
