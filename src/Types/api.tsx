@@ -96,7 +96,7 @@ export type MailAccount = {
 export type MailAccountStats = {
   folder: MailFolder;
   folder_path: string;
-  messages_stats: {2021: number; 2022: number; 2023: number; oldest: number};
+  messages_stats: any;
   old_date: number;
   total_messages: number;
 };
