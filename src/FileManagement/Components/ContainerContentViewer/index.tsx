@@ -179,27 +179,9 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
       'https://' + import.meta.env.VITE_WEB + '/' + tenant + `/storage/file-management/files/${file.uuid}/download`;
     const element = document.getElementById('my_iframe');
     if (element) {
+      // @ts-ignore
       element.src = link;
     }
-    /*axios
-      .get(link)
-      .then(response => {
-        setLoading(false);
-        if (response) {
-          const aElement = document.createElement('a');
-          aElement.setAttribute('download', 'download.png');
-          const href = URL.createObjectURL(response.data);
-          aElement.href = href;
-          aElement.setAttribute('target', '_blank');
-          aElement.click();
-          URL.revokeObjectURL(href);
-          //setContainerContent(response.data);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });*/
   };
 
   const navigateToParent = () => {

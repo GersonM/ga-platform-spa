@@ -52,16 +52,15 @@
   top: 2px;
   left: 2px;
   right: 2px;
-  box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.2);
-  text-shadow: 2px 1px 5px rgba(0, 0, 0, 0.1);
   font-family: "Maven Pro", sans-serif;
   align-items: center;
   justify-content: center;
   color: #146a9f;
   font-size: 22px;
-  background: rgba(255, 255, 255, 0.8);
-  outline: 2px dotted #3f81b0;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px);
+  outline: 1px dashed #cbcbcb;
+  transition: all 0.4s;
   z-index: 1;
 
   .upload-icon {
@@ -183,6 +182,12 @@
 @media (prefers-color-scheme: dark) {
   .container-header-wrapper {
     border-bottom: 1px solid #454545;
+  }
+
+  .drop-active-zone {
+    color: #5aaad9;
+    background: rgba(0, 0, 0, 0.2);
+    outline-color: #444444;
   }
 
   .files-container {
