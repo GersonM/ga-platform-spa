@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {ConfigProvider, theme} from 'antd';
-import Helmet from 'react-helmet';
+import tinyColor from 'tinycolor2';
+
 import {TenantConfig} from '../Types/api';
+import MetaTitle from '../CommonUI/MetaTitle';
 
 interface AntConfigProps {
   children: React.ReactNode;
@@ -27,9 +29,15 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
       link.href = tenant.favicon;
     }
 
+    const primaryColor = tenant.color || defaultColor;
+    const tColor = tinyColor(primaryColor);
+    tColor.brighten(40);
+    tColor.setAlpha(0.1);
     const r = document.querySelector(':root');
     //@ts-ignore
-    r.style.setProperty('--primary-color', tenant.color ? tenant.color : defaultColor);
+    r.style.setProperty('--primary-color', primaryColor);
+    //@ts-ignore
+    r.style.setProperty('--primary-color-glass', tColor);
   }, [tenant]);
 
   useEffect(() => {
@@ -55,13 +63,11 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
           colorPrimary: tenant.color ? tenant.color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.color ? tenant.color : defaultColor,
           fontFamily: 'Barlow, Helvetica, Arial, sans-serif',
-          fontWeightStrong: 400,
+          fontWeightStrong: 600,
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
       }}>
-      <Helmet>
-        <title>Plataforma :. {tenant.name}</title>
-      </Helmet>
+      <MetaTitle />
       {children}
     </ConfigProvider>
   );

@@ -18,6 +18,7 @@ const Users = () => {
   const [reload, setReload] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [openCreateUser, setOpenCreateUser] = useState(false);
 
   useEffect(() => {
@@ -25,15 +26,17 @@ const Users = () => {
     const config = {
       cancelToken: cancelTokenSource.token,
     };
-
+    setLoading(true);
     axios
       .get(`hr-management/profiles`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           setProfiles(response.data);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 
@@ -42,6 +45,7 @@ const Users = () => {
   return (
     <>
       <ModuleSidebar
+        loading={loading}
         actions={
           <Popover
             open={openCreateUser}

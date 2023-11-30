@@ -1,15 +1,18 @@
 .module-sidebar-wrapper {
   background: var(--backgroung-color);
+  position: relative;
   max-width: 350px;
   min-width: 280px;
-  overflow: auto;
   margin: 15px 0;
   border-radius: 9px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
 
   .module-nav-header {
-    background: var(--backgroung-color);
+    background-color: var(--primary-color-glass);
+    backdrop-filter: blur(6px);
     display: flex;
     justify-content: space-between;
     position: sticky;
@@ -39,7 +42,8 @@
   .module-nav-footer {
     position: sticky;
     bottom: 0;
-    background: var(--backgroung-color-input);
+    background-color: var(--primary-color-glass);
+    backdrop-filter: blur(6px);
     padding: 5px 10px;
   }
 }

@@ -11,10 +11,10 @@ interface LoadingIndicatorProps {
   message?: string;
 }
 
-const LoadingIndicator = ({overlay, size, message, visible = true}: LoadingIndicatorProps) => (
+const LoadingIndicator = ({overlay, size, message, visible}: LoadingIndicatorProps) => (
   <div className={`loader-container ${overlay ? 'overlay' : ''} ${visible ? 'show' : 'hide'}`}>
     <Spin size={size} indicator={<LoadingOutlined style={{fontSize: 20}} spin />} />
-    {message ? null : <span>{message}</span>}
+    {message && <span>{message}</span>}
   </div>
 );
 

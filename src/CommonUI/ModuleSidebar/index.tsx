@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useLocation} from 'react-router-dom';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import './styles.less';
+import LoadingIndicator from '../LoadingIndicator';
 
 interface ModuleSidebarProps {
   children?: React.ReactNode;
@@ -9,9 +10,11 @@ interface ModuleSidebarProps {
   footer?: React.ReactNode;
   width?: number;
   title?: string;
+  loadingMessage?: string;
+  loading?: boolean;
 }
 
-const ModuleSidebar = ({title, children, actions, footer, width}: ModuleSidebarProps) => {
+const ModuleSidebar = ({title, children, actions, footer, width, loading, loadingMessage}: ModuleSidebarProps) => {
   const [open, setOpen] = useState(false);
   const {pathname} = useLocation();
 
@@ -25,6 +28,7 @@ const ModuleSidebar = ({title, children, actions, footer, width}: ModuleSidebarP
         {open ? <span className="icon-chevron-left"></span> : <span className="icon-chevron-right"></span>}
       </a>
       <div className={`module-sidebar-wrapper ${open ? 'open' : ''}`} style={{width: width}}>
+        <LoadingIndicator visible={loading} message={loadingMessage} />
         <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
           {(title || actions) && (
             <div className={'module-nav-header'}>
