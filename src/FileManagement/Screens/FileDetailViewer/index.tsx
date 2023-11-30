@@ -1,16 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import {Button, Col, Divider, Image, Row, Space} from 'antd';
+import {Button, Col, Divider, Image, Row, Space, Timeline} from 'antd';
 import {BiDownload} from 'react-icons/bi';
 import dayjs from 'dayjs';
+import {Player} from 'video-react';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {File} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 
+import 'video-react/dist/video-react.css';
 import './styles.less';
+import logo from '../../../Assets/logo_full.png';
+import {ChatBubbleBottomCenterIcon, ClockIcon} from '@heroicons/react/24/outline';
 
 const FileDetailViewer = () => {
   const params = useParams();
@@ -37,43 +41,68 @@ const FileDetailViewer = () => {
     return cancelTokenSource.cancel;
   }, []);
 
+  const showAnnotations = file?.activity && file?.activity?.filter(a => a.action !== 'created').length > 0;
+
   return (
-    <>
+    <div className={'file-detail-wrapper'}>
       <div className={'file-detail-container'}>
-        <h1>{file?.name}</h1>
-        <small>
-          {dayjs(file?.created_at).fromNow()} | {file?.type}
-        </small>
+        <Space size={'large'} align={'start'}>
+          <img src={config?.logo ? config.logo : logo} alt="Logo" className={'logo'} />
+          <div>
+            <h2 className={'title'}>{file?.name}</h2>
+            <small>{dayjs(file?.created_at).fromNow()}</small>
+          </div>
+        </Space>
         <Divider />
-        <div>
-          {file?.type.includes('image') && <Image src={file?.thumbnail} preview={{src: file?.source}} />}
-          {file?.type.includes('vid') && <video className={'video-player'} controls src={file?.source} />}
-          {file?.type.includes('aud') && <audio className={'audio-player'} controls src={file?.source} />}
-        </div>
-        <div className={'time-line-container'}>
-          <Row gutter={[15, 15]} style={{margin: '15px 0'}}>
-            {file?.activity
-              ?.filter(a => a.action !== 'created')
-              ?.map(a => {
-                return (
-                  <Col style={{textAlign: 'left'}}>
-                    {a.comment} <br />
-                    <small>{dayjs(a.created_at).format('h:m')}</small>
-                  </Col>
-                );
-              })}
-          </Row>
-        </div>
-        <Button icon={<BiDownload className={'button-icon'} />} type={'primary'} href={file?.download}>
-          Descargar
-        </Button>
+        <Row gutter={10}>
+          {showAnnotations && (
+            <Col md={5}>
+              <div className={'time-line-container'}>
+                <h3>Anotaciones</h3>
+                <br />
+                <Timeline
+                  items={file?.activity
+                    ?.filter(a => a.action !== 'created')
+                    ?.map(a => {
+                      return {
+                        dot: a.time ? <ClockIcon width={16} /> : <ChatBubbleBottomCenterIcon width={16} />,
+                        children: (
+                          <div>
+                            {a.comment} <br />
+                            <small>
+                              {a.time ? 'Ir a segundo ' + a.time : dayjs(a.created_at).format('D/M/YY [a las] h:m a')}
+                            </small>
+                          </div>
+                        ),
+                      };
+                    })}
+                />
+              </div>
+            </Col>
+          )}
+
+          <Col md={showAnnotations ? 19 : 24}>
+            <div className={'file-container'}>
+              {file?.type.includes('image') && <Image src={file?.source} />}
+              {file?.type.includes('vid') && <Player startTime={file?.start_from} src={file?.source} />}
+              {file?.type.includes('aud') && <audio className={'audio-player'} controls src={file?.source} />}
+            </div>
+            <Button
+              shape={'round'}
+              icon={<BiDownload className={'button-icon'} />}
+              type={'primary'}
+              href={file?.download}>
+              Descargar
+            </Button>
+          </Col>
+        </Row>
         <Divider />
         <p>{file?.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
       </div>
-      <small style={{textAlign: 'center', opacity: 0.6, paddingBottom: 20}}>
-        {config?.id} | V{version}
-      </small>
-    </>
+      <div className={'footer'}>
+        {config?.name} | V{version}
+      </div>
+    </div>
   );
 };
 

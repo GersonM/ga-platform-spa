@@ -42,6 +42,7 @@ export type FileActivity = {
   comment: string;
   requested_at?: string;
   created_at: string;
+  time?: number;
   verified_at?: string;
   action: string;
   file?: File;
@@ -62,6 +63,7 @@ export type File = {
   public: string;
   thumbnail?: string;
   download?: string;
+  start_from?: number;
 };
 
 export type Container = {

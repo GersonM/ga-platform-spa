@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useLocation} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Dropdown} from 'antd';
+import {SmoothCorners} from 'react-smooth-corners';
 
 import './styles.less';
 import logo from '../Assets/logo_square.png';

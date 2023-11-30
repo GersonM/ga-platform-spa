@@ -1,6 +1,6 @@
 import React from 'react';
 import {Outlet} from 'react-router-dom';
-import {EnvelopeIcon, InboxIcon, ServerStackIcon} from '@heroicons/react/24/outline';
+import {EnvelopeIcon, PaintBrushIcon, ServerStackIcon} from '@heroicons/react/24/outline';
 
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -18,6 +18,7 @@ const ModuleConfiguration = () => {
             path={'/config/file-management'}
           />
           <NavListItem icon={<EnvelopeIcon />} height={45} name={'E-mail'} path={'/config/inbox-management'} />
+          <NavListItem icon={<PaintBrushIcon />} height={45} name={'Preferencias'} path={'/config/preferences'} />
         </NavList>
       </ModuleSidebar>
       <ModuleContent>

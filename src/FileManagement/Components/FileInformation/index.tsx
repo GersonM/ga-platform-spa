@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
+import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import './styles.less';
 import FileIcon from '../FileIcon';
 import {Container, File, FileActivity} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -13,7 +13,8 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
+import './styles.less';
+import {CloudArrowDownIcon, EyeIcon} from '@heroicons/react/24/outline';
 
 interface FileInformationProps {
   file?: File;
@@ -102,18 +103,28 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                   </small>
                 </span>
               </div>
-              <Button.Group>
-                <Button href={detailImageLink} target="_blank" icon={<span className="button-icon icon-eye"></span>}>
-                  Ver
-                </Button>
-                <Button
-                  href={file.download}
-                  target="_blank"
-                  icon={<span className="button-icon icon-cloud-download"></span>}>
-                  Descargar
-                </Button>
-              </Button.Group>
-              <Divider />
+              <Row gutter={10}>
+                <Col md={12}>
+                  <Button
+                    size={'small'}
+                    block
+                    href={detailImageLink}
+                    target="_blank"
+                    icon={<EyeIcon width={17} className={'button-icon'} />}>
+                    Ver
+                  </Button>
+                </Col>
+                <Col md={12}>
+                  <Button
+                    size={'small'}
+                    block
+                    href={file.download}
+                    target="_blank"
+                    icon={<CloudArrowDownIcon className={'button-icon'} width={17} />}>
+                    Descargar
+                  </Button>
+                </Col>
+              </Row>
               <div className={'links-container'}>
                 <span className="label">
                   Información de archivo:{' '}
@@ -148,9 +159,8 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                 </span>
                 <pre>{file.thumbnail}</pre>
               </div>
-              <Divider />
+              <Divider>Anotaciones</Divider>
               <div className={'activities-wrapper'}>
-                <h3>Actividad</h3>
                 <LoadingIndicator visible={loading} message={'Cargando actividad'} />
                 {fileActivity &&
                   fileActivity.map(a => (
@@ -174,11 +184,6 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                         <Col md={24}>
                           <Form.Item name={'time'} noStyle>
                             <InputNumber placeholder="Tiempo" addonAfter={'segundos'} />
-                          </Form.Item>
-                        </Col>
-                        <Col md={24}>
-                          <Form.Item name={'time'} noStyle>
-                            <InputNumber placeholder="Tiempo" addonBefore={'Iniciar'} />
                           </Form.Item>
                         </Col>
                       </>

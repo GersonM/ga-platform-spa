@@ -31,6 +31,14 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
         tooltip={'Puedes usar caracteres especiales, tildes, etc. Esto no afectar a la accesibilidad del archivo'}>
         <Input placeholder={'Nombre'} />
       </Form.Item>
+      {(file.type.includes('vid') || file.type.includes('aud')) && (
+        <Form.Item
+          name={'start_from'}
+          label={'Inicio de reproducción'}
+          tooltip={'Marca el segundo en el que se iniciar la reproducción'}>
+          <Input placeholder={'Segundo'} />
+        </Form.Item>
+      )}
       <Form.Item name={'description'} label={'Descripción'}>
         <Input.TextArea />
       </Form.Item>

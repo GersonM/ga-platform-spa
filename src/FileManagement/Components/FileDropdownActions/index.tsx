@@ -6,7 +6,7 @@ import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 const items = [
-  {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />},
+  {label: 'Editar', key: 'rename', icon: <span className={'icon icon-pencil-line'} />},
   {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
   {label: 'Actualizar', key: 'update', icon: <span className={'icon icon-repeat'} />, disabled: true},
   {type: 'divider', label: '', key: 'divider'},
