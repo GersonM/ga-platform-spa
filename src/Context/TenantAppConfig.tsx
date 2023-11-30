@@ -60,7 +60,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
       }}>
       <Helmet>
-        <title>Gestor de archivos :. {tenant.id}</title>
+        <title>Plataforma :. {tenant.name}</title>
       </Helmet>
       {children}
     </ConfigProvider>

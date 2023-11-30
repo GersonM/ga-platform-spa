@@ -1,6 +1,7 @@
 export type TenantConfig = {
   id: string;
   color?: string;
+  name?: string;
   favicon?: string;
   favicon_white?: string;
   logo?: string;
