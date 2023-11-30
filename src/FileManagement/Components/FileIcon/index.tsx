@@ -1,6 +1,7 @@
 import React from 'react';
 import {File} from '../../../Types/api';
 import {BsFileEarmarkPdf} from 'react-icons/bs';
+import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
 
 interface FileIconProps {
   file: File;
@@ -17,9 +18,11 @@ const FileIcon = ({file}: FileIconProps) => {
     case file.type.includes('text'):
       return <span className="icon icon-document"></span>;
     case file.type.includes('video'):
-      return <span className="icon icon-file-video"></span>;
+      return <VideoCameraIcon height={45} width={28} />;
     case file.type.includes('message'):
       return <span className="icon icon-envelope-open"></span>;
+    case file.type.includes('aud'):
+      return <SpeakerWaveIcon className={'icon'} height={34} width={28} />;
     default:
       return <span className="icon icon-file-empty"></span>;
   }

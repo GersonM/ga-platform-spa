@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation} from 'react-router-dom';
+import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import './styles.less';
 
 interface ModuleSidebarProps {
@@ -24,14 +25,16 @@ const ModuleSidebar = ({title, children, actions, footer, width}: ModuleSidebarP
         {open ? <span className="icon-chevron-left"></span> : <span className="icon-chevron-right"></span>}
       </a>
       <div className={`module-sidebar-wrapper ${open ? 'open' : ''}`} style={{width: width}}>
-        {(title || actions) && (
-          <div className={'module-nav-header'}>
-            <h4>{title}</h4>
-            {actions && <div>{actions}</div>}
-          </div>
-        )}
-        {children}
-        {footer && <div className={'module-nav-footer'}>{footer}</div>}
+        <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
+          {(title || actions) && (
+            <div className={'module-nav-header'}>
+              <h4>{title}</h4>
+              {actions && <div>{actions}</div>}
+            </div>
+          )}
+          <div className={'module-nav-content'}>{children}</div>
+          {footer && <div className={'module-nav-footer'}>{footer}</div>}
+        </OverlayScrollbarsComponent>
       </div>
     </>
   );

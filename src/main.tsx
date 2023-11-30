@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
 import 'dayjs/locale/es.js';
 import 'antd/dist/reset.css';
+import 'overlayscrollbars/overlayscrollbars.css';
 
 import {AuthContextProvider} from './Context/AuthContext';
 import TenantAppConfig from './Context/TenantAppConfig';
@@ -20,13 +21,14 @@ const tenantID = isDevMode ? 'app' : window.location.hostname.split('.')[0];
 
 if (!token) {
   if (window.location.pathname.indexOf('/login') === -1) {
-    window.location.href = '/login';
+    //window.location.href = '/login';
   }
 }
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;
-axios.defaults.headers.common['X-Tenant'] = tenantID;
+//axios.defaults.headers.common['X-Tenant'] = tenantID;
+axios.defaults.headers.common['X-Tenant'] = 'app';
 axios.defaults.headers.common.Authorization = 'Bearer ' + token;
 
 axios

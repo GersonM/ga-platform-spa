@@ -1451,6 +1451,16 @@ object.assign@^4.1.4:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
+overlayscrollbars-react@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/overlayscrollbars-react/-/overlayscrollbars-react-0.5.3.tgz#6e6d8b5bdd763f486f526f091ca619c66c7b3870"
+  integrity sha512-mq9D9tbfSeq0cti1kKMf3B3AzsEGwHcRIDX/K49CvYkHz/tKeU38GiahDkIPKTMEAp6lzKCo4x1eJZA6ZFYOxQ==
+
+overlayscrollbars@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/overlayscrollbars/-/overlayscrollbars-2.4.5.tgz#d0b72b2a12acddaff324f76e64c59d3b27d98d85"
+  integrity sha512-4OLCPuZPVdd1HnDLYS4o+kAsOCZwVz6dDA212m8ki/u3isltKyWGVjIv2aqpVHkDRf/P2K98m9Su8pdhihtAIQ==
+
 parse-node-version@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parse-node-version/-/parse-node-version-1.0.1.tgz#e2b5dbede00e7fa9bc363607f53327e8b073189b"

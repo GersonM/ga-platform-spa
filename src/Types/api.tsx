@@ -16,7 +16,13 @@ export type Profile = {
   uuid: number;
   name: string;
   last_name: string;
+  birthday?: string;
   email: string;
+  doc_number?: string;
+  doc_type?: string;
+  gender?: string;
+  phone?: string;
+  address?: string;
   user?: User;
   avatar?: File;
 };
@@ -51,6 +57,7 @@ export type File = {
   container?: Container;
   activity?: Array<FileActivity>;
   source: string;
+  details: string;
   public: string;
   thumbnail?: string;
   download?: string;

@@ -3,12 +3,14 @@ import {Outlet} from 'react-router-dom';
 import Navigation from '../Navigation';
 import AuthContext from '../Context/AuthContext';
 
-const AppAuthenticated = () => {
-  const {user} = useContext(AuthContext);
+const AuthenticatedLayout = () => {
+  const {user, sessionToken} = useContext(AuthContext);
 
   if (!user) {
+    if (!sessionToken) {
+      window.location.href = '/login';
+    }
     return null;
-    //TODO: Think on show a loader here
   }
 
   return (
@@ -21,4 +23,4 @@ const AppAuthenticated = () => {
   );
 };
 
-export default AppAuthenticated;
+export default AuthenticatedLayout;

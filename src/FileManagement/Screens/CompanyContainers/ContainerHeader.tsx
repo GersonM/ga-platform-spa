@@ -5,7 +5,13 @@ import dayjs from 'dayjs';
 
 import CreateContainer from '../../Components/CreateContainer';
 import {Container} from '../../../Types/api';
-import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
+import {
+  ArrowPathIcon,
+  ArrowUpIcon,
+  FolderOpenIcon,
+  FolderPlusIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/24/outline';
 
 interface ContainerHeaderProps {
   container: Container;
@@ -14,6 +20,7 @@ interface ContainerHeaderProps {
   upLevel?: () => void;
   onChangeViewMode?: (viewMode: string | number) => void;
   onOpenUpload?: () => void;
+  onReload?: () => void;
 }
 
 const ContainerHeader = ({
@@ -23,6 +30,7 @@ const ContainerHeader = ({
   upLevel,
   onChangeViewMode,
   onOpenUpload,
+  onReload,
 }: ContainerHeaderProps) => {
   const [viewMode, setViewMode] = useState<string | number>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
@@ -47,14 +55,26 @@ const ContainerHeader = ({
 
   return (
     <div className={'container-header-wrapper'}>
+      <FolderOpenIcon className={'icon'} width={35} />
       <div className={'name'}>
-        <h1>
-          {container.name}
-          <small>
-            Última modificación: <br />
-            {dayjs(container.updated_at).format(' D/MM/YYYY [a las] H:mm')}
-          </small>
-        </h1>
+        <h4>
+          {container.parent_container && (
+            <>
+              <Button type={'text'} size={'small'} className={'parent'} onClick={upLevel}>
+                {container.parent_container?.name}
+              </Button>
+              {'/'}
+            </>
+          )}
+          <span className={'current'}>{container.name}</span>
+          <Button type={'text'} size={'small'} shape={'circle'} onClick={onReload}>
+            <ArrowPathIcon width={12} />
+          </Button>
+        </h4>
+        <small>
+          Última modificación:
+          {dayjs(container.updated_at).format(' D/MM/YYYY [a las] H:mm')}
+        </small>
       </div>
       <Space>
         <Button type={'primary'} onClick={onOpenUpload} icon={<span className="button-icon icon-upload2" />}>

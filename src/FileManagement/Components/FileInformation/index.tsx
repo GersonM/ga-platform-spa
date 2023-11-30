@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Form, Input, message, Row, Select} from 'antd';
+import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import dayjs from 'dayjs';
@@ -13,6 +13,7 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
+import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 
 interface FileInformationProps {
   file?: File;
@@ -71,6 +72,8 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
     }
   };
 
+  const detailImageLink = location.origin + '/storage/files/' + file?.uuid;
+
   return (
     <div className={'file-information-wrapper'}>
       {!file ? (
@@ -88,91 +91,117 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
               <BsThreeDotsVertical className={'icon'} />
             </FileDropdownActions>
           </div>
-          <div className="information-content">
-            <div className={'file-name'}>
-              <FileIcon file={file} />
-              <span className={'label'}>
-                {file.name}
-                <small>
-                  <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
-                </small>
-              </span>
-            </div>
-            <div className={'activities-wrapper'}>
-              <h3>Actividad</h3>
-              <LoadingIndicator visible={loading} message={'Cargando actividad'} />
-              {fileActivity &&
-                fileActivity.map(a => (
-                  <div key={a.uuid} className={`activity ${a.action}`}>
-                    <span className={'message'}>{a.comment}</span>
-                    <small>
-                      {a.action} by {a.user.name}
-                    </small>
-                    <span className={'date'}>{dayjs(a.created_at).format(' D/MM/YYYY [a las] H:mm')}</span>
-                  </div>
-                ))}
-              <Form form={commentForm} onFinish={sendComment}>
-                <Row gutter={[10, 10]}>
-                  <Col md={24}>
-                    <Form.Item name={'comment'} noStyle>
-                      <Input.TextArea placeholder="Ingresa un comentario"></Input.TextArea>
-                    </Form.Item>
-                  </Col>
-                  <Col md={14}>
-                    <Form.Item name={'action'} noStyle initialValue={'comment'}>
-                      <Select size={'small'} style={{width: '100%'}}>
-                        <Select.Option value={'comment'}>Comentar</Select.Option>
-                        <Select.Option value={'verified'}>Verificar</Select.Option>
-                        <Select.Option value={'rejected'}>Rechazar</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col md={10}>
-                    <Button block size={'small'} type={'primary'} htmlType={'submit'} ghost>
-                      Enviar
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-            <Divider />
-            <Button
-              href={file.source}
-              block
-              size={'small'}
-              target="_blank"
-              icon={<span className="button-icon icon-cloud-download"></span>}>
-              Descargar
-            </Button>
-            <Divider />
-            <div className={'links-container'}>
-              <span className="label">
-                Enlace el archivo:{' '}
-                <Button type={'link'} size={'small'} onClick={() => copyText(file.public)}>
-                  Copiar
+          <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
+            <div className="information-content">
+              <div className={'file-name'}>
+                <FileIcon file={file} />
+                <span className={'label'}>
+                  {file.name}
+                  <small>
+                    <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
+                  </small>
+                </span>
+              </div>
+              <Button.Group>
+                <Button href={detailImageLink} target="_blank" icon={<span className="button-icon icon-eye"></span>}>
+                  Ver
                 </Button>
-              </span>
-              {fileContainer?.is_public && (
-                <>
-                  <pre>{file.public}</pre>
-                  <span className="label">
-                    URL pública:{' '}
-                    <Button type={'link'} size={'small'} onClick={() => copyText(file.source)}>
-                      Copiar
-                    </Button>
-                  </span>
-                </>
-              )}
-              <pre>{file.source}</pre>
-              <span className="label">
-                URL miniatura:{' '}
-                <Button size={'small'} type={'link'} onClick={() => copyText(file.thumbnail)}>
-                  Copiar
+                <Button
+                  href={file.download}
+                  target="_blank"
+                  icon={<span className="button-icon icon-cloud-download"></span>}>
+                  Descargar
                 </Button>
-              </span>
-              <pre>{file.thumbnail}</pre>
+              </Button.Group>
+              <Divider />
+              <div className={'links-container'}>
+                <span className="label">
+                  Información de archivo:{' '}
+                  <Button size={'small'} type={'link'} onClick={() => copyText(detailImageLink)}>
+                    Copiar
+                  </Button>
+                </span>
+                <pre>{detailImageLink}</pre>
+                <span className="label">
+                  Enlace el archivo:{' '}
+                  <Button type={'link'} size={'small'} onClick={() => copyText(file.public)}>
+                    Copiar
+                  </Button>
+                </span>
+                {fileContainer?.is_public && (
+                  <>
+                    <pre>{file.public}</pre>
+                    <span className="label">
+                      URL pública:{' '}
+                      <Button type={'link'} size={'small'} onClick={() => copyText(file.source)}>
+                        Copiar
+                      </Button>
+                    </span>
+                  </>
+                )}
+                <pre>{file.source}</pre>
+                <span className="label">
+                  URL miniatura:{' '}
+                  <Button size={'small'} type={'link'} onClick={() => copyText(file.thumbnail)}>
+                    Copiar
+                  </Button>
+                </span>
+                <pre>{file.thumbnail}</pre>
+              </div>
+              <Divider />
+              <div className={'activities-wrapper'}>
+                <h3>Actividad</h3>
+                <LoadingIndicator visible={loading} message={'Cargando actividad'} />
+                {fileActivity &&
+                  fileActivity.map(a => (
+                    <div key={a.uuid} className={`activity ${a.action}`}>
+                      <span className={'message'}>{a.comment}</span>
+                      <small>
+                        {a.action} by {a.user.name}
+                      </small>
+                      <span className={'date'}>{dayjs(a.created_at).format(' D/MM/YYYY [a las] H:mm')}</span>
+                    </div>
+                  ))}
+                <Form form={commentForm} onFinish={sendComment} size={'small'}>
+                  <Row gutter={[10, 10]}>
+                    <Col md={24}>
+                      <Form.Item name={'comment'} noStyle>
+                        <Input.TextArea placeholder="Ingresa un comentario"></Input.TextArea>
+                      </Form.Item>
+                    </Col>
+                    {(file.type.includes('vid') || file.type.includes('aud')) && (
+                      <>
+                        <Col md={24}>
+                          <Form.Item name={'time'} noStyle>
+                            <InputNumber placeholder="Tiempo" addonAfter={'segundos'} />
+                          </Form.Item>
+                        </Col>
+                        <Col md={24}>
+                          <Form.Item name={'time'} noStyle>
+                            <InputNumber placeholder="Tiempo" addonBefore={'Iniciar'} />
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )}
+                    <Col md={14}>
+                      <Form.Item name={'action'} noStyle initialValue={'comment'}>
+                        <Select style={{width: '100%'}}>
+                          <Select.Option value={'comment'}>Comentario</Select.Option>
+                          <Select.Option value={'verified'}>Verificar</Select.Option>
+                          <Select.Option value={'rejected'}>Rechazar</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col md={10}>
+                      <Button block type={'primary'} htmlType={'submit'} ghost>
+                        Enviar
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </div>
             </div>
-          </div>
+          </OverlayScrollbarsComponent>
         </>
       )}
     </div>

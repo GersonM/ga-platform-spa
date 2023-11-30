@@ -23,15 +23,20 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
       });
   };
   return (
-    <Form layout={'vertical'} onFinish={sendForm} initialValues={{name: file.name}}>
-      <h3>Cambiar nombre</h3>
+    <Form layout={'vertical'} onFinish={sendForm} initialValues={file}>
+      <h3>Cambiar nombre de archivo</h3>
       <Form.Item
         name={'name'}
         label={'Nombre'}
         tooltip={'Puedes usar caracteres especiales, tildes, etc. Esto no afectar a la accesibilidad del archivo'}>
         <Input placeholder={'Nombre'} />
       </Form.Item>
-      <Button htmlType={'submit'}>Guardar</Button>
+      <Form.Item name={'description'} label={'Descripción'}>
+        <Input.TextArea />
+      </Form.Item>
+      <Button type={'primary'} htmlType={'submit'}>
+        Guardar
+      </Button>
     </Form>
   );
 };

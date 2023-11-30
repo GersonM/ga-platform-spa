@@ -1,10 +1,47 @@
 .module-sidebar-wrapper {
   background: var(--backgroung-color);
   max-width: 350px;
-  min-width: 100px;
+  min-width: 280px;
   overflow: auto;
   margin: 15px 0;
   border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+
+  .module-nav-header {
+    background: var(--backgroung-color);
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    align-items: center;
+    padding: 10px 15px;
+    z-index: 1;
+
+    h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0;
+      padding: 0;
+    }
+
+    small {
+      color: #888888;
+      font-size: 12px;
+      line-height: 11px;
+    }
+  }
+
+  .module-nav-content {
+    flex: 1;
+  }
+
+  .module-nav-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--backgroung-color-input);
+    padding: 5px 10px;
+  }
 }
 
 .toggle-button {
@@ -21,35 +58,6 @@
   background: #ffffff;
 }
 
-.module-nav-header {
-  background: var(--backgroung-color);
-  display: flex;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  align-items: center;
-  padding: 10px 15px;
-  z-index: 1;
-
-  h4 {
-    font-size: 15px;
-    font-weight: 600;
-    margin: 0;
-    padding: 0;
-  }
-
-  small {
-    color: #888888;
-    font-size: 12px;
-    line-height: 11px;
-  }
-}
-
-.module-nav-footer {
-  position: sticky;
-  bottom: 0;
-}
-
 @media screen and (max-width: 500px) {
   .toggle-button {
     display: block;
@@ -57,7 +65,7 @@
     z-index: 2;
 
     &.open {
-      left: 304px;
+      left: 290px;
     }
   }
 

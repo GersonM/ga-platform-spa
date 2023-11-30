@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import './App.less';
 import Login from '../Authentication/Screen/Login';
-import AppAuthenticated from './AppAuthenticated';
+import AuthenticatedLayout from './AuthenticatedLayout';
 import CompanyContainers from '../FileManagement/Screens/CompanyContainers';
 import DashboardHome from '../Dashboard/Screens/DashboardHome';
 import CommercialHome from '../Commercial/Screens/CommercialHome';
@@ -14,6 +14,8 @@ import MailMessagesViewer from '../InboxManagement/Screens/InboxManager/MailMess
 import MailAccountStats from '../InboxManagement/Screens/InboxManager/MailAccountStats';
 import ModuleConfiguration from '../ConfigManagement/Screens/ModuleConfiguration';
 import ConfigOptions from '../InboxManagement/Screens/ConfigOptions';
+import Users from '../AccountManagement/Screens/Users';
+import FileDetailViewer from '../FileManagement/Screens/FileDetailViewer';
 
 const App = () => {
   useEffect(() => {
@@ -45,7 +47,8 @@ const App = () => {
   return (
     <Routes>
       <Route path={'/login'} element={<Login />} />
-      <Route path={'/'} element={<AppAuthenticated />}>
+      <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
+      <Route path={'/'} element={<AuthenticatedLayout />}>
         <Route index element={<DashboardHome />} />
         <Route path={'file-management'} element={<CompanyContainers />}>
           <Route path={':uuid'} element={<CompanyContainers />} />
@@ -54,6 +57,11 @@ const App = () => {
         <Route path={'inbox-management'} element={<InboxManager />}>
           <Route path={'storage/:uuid'} element={<MailAccountStats />} />
           <Route path={':uuid'} element={<MailMessagesViewer />}>
+            <Route path={':tab'} />
+          </Route>
+        </Route>
+        <Route path={'accounts'} element={<Users />}>
+          <Route path={':uuid'}>
             <Route path={':tab'} />
           </Route>
         </Route>

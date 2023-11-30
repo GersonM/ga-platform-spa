@@ -15,25 +15,31 @@
 
 .container-header-wrapper {
   display: flex;
-  border-bottom: 1px solid #dfdfdf;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding-bottom: 15px;
   margin-bottom: 15px;
 
+  .icon {
+  }
   .name {
     flex: 1;
 
-    h1 {
+    h4 {
       margin: 0;
-      font-size: 20px;
+      font-size: 16px;
       align-items: center;
-      display: flex;
 
-      small {
-        margin-left: 10px;
-        display: inline-block;
-        font-size: 12px;
+      .parent {
         opacity: 0.6;
       }
+      .current {
+        margin-left: 10px;
+      }
+
+    }
+    small {
+      opacity: 0.6;
+      margin-left: 10px;
     }
   }
 }
@@ -120,6 +126,7 @@
     padding: 10px;
     cursor: pointer;
     transition: background 0.3s;
+    max-height: 120px;
 
     &:hover {
       background: #dfdfdf;

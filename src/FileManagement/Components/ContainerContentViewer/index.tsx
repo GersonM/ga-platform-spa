@@ -13,6 +13,7 @@ import {Container, ContainerContent, File} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
+import {sendFileToServer} from '../../../Utils/FileUploader';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -28,19 +29,99 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   const [viewMode, setViewMode] = useState<string | number>();
   const [loadingInformation, setLoadingInformation] = useState<AxiosProgressEvent>();
   const [uploadingFiles, setUploadingFiles] = useState<Array<any>>();
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (uploadingFiles) {
+      const current = uploadingFiles[0];
+      console.log(current);
+    }
+  }, [uploadingFiles]);
+
+  const uploadFile = (file: any) => {
+    handleFileUpload(file);
+  };
+
+  const handleFileUpload = (selectedFile: any) => {
+    if (!selectedFile) {
+      alert('Please select a file to upload.');
+      return;
+    }
+
+    const chunkSize = 10 * 1024 * 1024; // 5MB (adjust based on your requirements)
+    const totalChunks = Math.ceil(selectedFile.size / chunkSize);
+    const chunkProgress = 100 / totalChunks;
+    let chunkNumber = 0;
+    let start = 0;
+    let end = 0;
+
+    const uploadNextChunk = async () => {
+      if (end <= selectedFile.size) {
+        const chunk = selectedFile.slice(start, end);
+        const formData = new FormData();
+        formData.append('file', chunk);
+        formData.append('chunkNumber', chunkNumber.toString());
+        formData.append('totalChunks', totalChunks.toString());
+        formData.append('originalname', selectedFile.name);
+        formData.append('container_uuid', containerUuid);
+
+        const config = {
+          onUploadProgress: (r: AxiosProgressEvent) => {
+            setLoadingInformation(r);
+          },
+          baseURL: import.meta.env.VITE_API_UPLOAD,
+        };
+        axios
+          .post('file-management/chunked-files', formData, config)
+
+          /*fetch(import.meta.env.VITE_API_UPLOAD + 'file-management/chunked-files', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                  'X-Tenant': 'app',
+                  Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
+                },
+              })*/
+          //.then(response => response.json())
+          .then(data => {
+            console.log({data});
+            const temp = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
+            //setStatus(temp);
+            setProgress(Number((chunkNumber + 1) * chunkProgress));
+            console.log(temp);
+            chunkNumber++;
+            start = end;
+            end = start + chunkSize;
+            uploadNextChunk();
+          })
+          .catch(error => {
+            console.error('Error uploading chunk:', error);
+          });
+      } else {
+        setProgress(100);
+        setSelectedFile(undefined);
+        //setStatus('File upload completed');
+      }
+    };
+
+    uploadNextChunk().then();
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: Array<Blob>) => {
+      setUploadingFiles(acceptedFiles);
+      //uploadFile(acceptedFiles[0]);
+      //return;
       const formData = new FormData();
-      formData.append('container_uuid', containerUuid);
       acceptedFiles.forEach(item => {
         formData.append('file[]', item);
       });
-      setUploadingFiles(acceptedFiles);
+      formData.append('container_uuid', containerUuid);
       const config = {
         onUploadProgress: (r: AxiosProgressEvent) => {
           setLoadingInformation(r);
         },
+        baseURL: import.meta.env.VITE_API_UPLOAD,
       };
       axios
         .post('file-management/files', formData, config)
@@ -93,18 +174,32 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   };
 
   const downloadFile = (file: File) => {
-    axios
-      .get(`file-management/files/${file.uuid}/download`)
+    const tenant = axios.defaults.headers.common['X-Tenant'];
+    const link =
+      'https://' + import.meta.env.VITE_WEB + '/' + tenant + `/storage/file-management/files/${file.uuid}/download`;
+    const element = document.getElementById('my_iframe');
+    if (element) {
+      element.src = link;
+    }
+    /*axios
+      .get(link)
       .then(response => {
         setLoading(false);
         if (response) {
-          setContainerContent(response.data);
+          const aElement = document.createElement('a');
+          aElement.setAttribute('download', 'download.png');
+          const href = URL.createObjectURL(response.data);
+          aElement.href = href;
+          aElement.setAttribute('target', '_blank');
+          aElement.click();
+          URL.revokeObjectURL(href);
+          //setContainerContent(response.data);
         }
       })
       .catch(e => {
         setLoading(false);
         ErrorHandler.showNotification(e);
-      });
+      });*/
   };
 
   const navigateToParent = () => {
@@ -117,6 +212,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
 
   return (
     <div {...getRootProps()} className={'content-viewer-wrapper'}>
+      <iframe id="my_iframe" style={{display: 'none'}}></iframe>
       <input {...getInputProps()} />
       {containerContent && (
         <>
@@ -124,6 +220,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
             container={containerContent.container}
             upLevel={navigateToParent}
             onChange={() => setReload(!reload)}
+            onReload={() => setReload(!reload)}
             onOpenUpload={open}
             onChangeViewMode={mode => setViewMode(mode)}
             onToggleInformation={value => setShowFileInformation(value)}

@@ -61,7 +61,7 @@ const Navigation = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to={'/users'}>
+            <NavLink to={'/accounts'}>
               <span className="icon icon-users2"></span>
               <span className={'label'}>Usuarios</span>
             </NavLink>

@@ -9,6 +9,7 @@ import ErrorHandler from '../Utils/ErrorHandler';
 
 interface AuthContextDefaults {
   user: User | null;
+  sessionToken?: string;
   setUser: (data: any) => void;
   logout: () => Promise<any>;
   config?: TenantConfig;
@@ -40,7 +41,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
             setUser(userResponse.data);
           } else {
             if (window.location.pathname.indexOf('/login') === -1) {
-              //window.location.href = '/login';
+              window.location.href = '/login';
             }
           }
         })
@@ -86,6 +87,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         setUser,
         logout,
         config,
+        sessionToken: token,
       }}>
       {children}
     </AuthContext.Provider>
