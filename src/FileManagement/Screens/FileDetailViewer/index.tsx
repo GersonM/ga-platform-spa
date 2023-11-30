@@ -60,23 +60,25 @@ const FileDetailViewer = () => {
               <div className={'time-line-container'}>
                 <h3>Anotaciones</h3>
                 <br />
-                <Timeline
-                  items={file?.activity
-                    ?.filter(a => a.action !== 'created')
-                    ?.map(a => {
-                      return {
-                        dot: a.time ? <ClockIcon width={16} /> : <ChatBubbleBottomCenterIcon width={16} />,
-                        children: (
-                          <div>
-                            {a.comment} <br />
-                            <small>
-                              {a.time ? 'Ir a segundo ' + a.time : dayjs(a.created_at).format('D/M/YY [a las] h:m a')}
-                            </small>
-                          </div>
-                        ),
-                      };
-                    })}
-                />
+                {file?.activity && (
+                  <Timeline
+                    items={file?.activity
+                      ?.filter(a => a.action !== 'created')
+                      ?.map(a => {
+                        return {
+                          dot: a.time ? <ClockIcon width={16} /> : <ChatBubbleBottomCenterIcon width={16} />,
+                          children: (
+                            <div>
+                              {a.comment} <br />
+                              <small>
+                                {a.time ? 'Ir a segundo ' + a.time : dayjs(a.created_at).format('D/M/YY [a las] h:m a')}
+                              </small>
+                            </div>
+                          ),
+                        };
+                      })}
+                  />
+                )}
               </div>
             </Col>
           )}
