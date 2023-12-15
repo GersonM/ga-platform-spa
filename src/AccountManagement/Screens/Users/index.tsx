@@ -93,6 +93,7 @@ const Users = () => {
               {
                 label: 'Permisos',
                 key: 'permissions',
+                disabled: true,
                 children: <ConfigAccounts />,
               },
             ]}
