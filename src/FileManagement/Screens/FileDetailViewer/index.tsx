@@ -4,22 +4,27 @@ import axios from 'axios';
 import {Button, Col, Divider, Image, Row, Space, Timeline} from 'antd';
 import {BiDownload} from 'react-icons/bi';
 import dayjs from 'dayjs';
-import {Player} from 'video-react';
+import {ChatBubbleBottomCenterIcon, ClockIcon} from '@heroicons/react/24/outline';
+import ReactWaves from '@dschoon/react-waves';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {File} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
+import MediaPlayer from '../../../CommonUI/MediaPlayer';
 
-import 'video-react/dist/video-react.css';
 import './styles.less';
 import logo from '../../../Assets/logo_full.png';
-import {ChatBubbleBottomCenterIcon, ClockIcon} from '@heroicons/react/24/outline';
+import sound from '../../../Assets/2gs6xzw9FuiYYAAieJlYlWA3lMtp0RqZ3xfJUJFJ.mp3';
 
 const FileDetailViewer = () => {
   const params = useParams();
   const [file, setFile] = useState<File>();
   const {config} = useContext(AuthContext);
+  const [playing, setPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [reload, setReload] = useState(true);
+  const [initTime, setInitTime] = useState<number>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -32,6 +37,7 @@ const FileDetailViewer = () => {
       .then(response => {
         if (response) {
           setFile(response.data);
+          setInitTime(response.data.time);
         }
       })
       .catch(e => {
@@ -39,7 +45,7 @@ const FileDetailViewer = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, []);
+  }, [reload]);
 
   const showAnnotations = file?.activity && file?.activity?.filter(a => a.action !== 'created').length > 0;
 
@@ -68,7 +74,7 @@ const FileDetailViewer = () => {
                         return {
                           dot: a.time ? <ClockIcon width={16} /> : <ChatBubbleBottomCenterIcon width={16} />,
                           children: (
-                            <div>
+                            <div onClick={() => setInitTime(a.time)}>
                               {a.comment} <br />
                               <small>
                                 {a.time ? 'Ir a segundo ' + a.time : dayjs(a.created_at).format('D/M/YY [a las] h:m a')}
@@ -84,11 +90,38 @@ const FileDetailViewer = () => {
           )}
 
           <Col md={showAnnotations ? 19 : 24}>
-            <div className={'file-container'}>
-              {file?.type.includes('image') && <Image src={file?.source} />}
-              {file?.type.includes('vid') && <Player startTime={file?.start_from} src={file?.source} />}
-              {file?.type.includes('aud') && <audio className={'audio-player'} controls src={file?.source} />}
-            </div>
+            {file && (
+              <div className={'file-container'}>
+                {file.type.includes('image') && <Image src={file.source} />}
+                {file.type.includes('vid') && (
+                  <MediaPlayer startTime={initTime} onActivityChange={() => setReload(!reload)} video={file} />
+                )}
+                {file.type.includes('aud') && (
+                  <>
+                    <ReactWaves
+                      audioFile={sound}
+                      className={'react-waves'}
+                      pos={position}
+                      options={{
+                        barHeight: 1,
+                        cursorWidth: 0,
+                        height: 120,
+                        progressColor: '#EC407A',
+                        responsive: true,
+                        waveColor: '#D1D6DA',
+                        mediaControls: true,
+                        cursorColor: '#0000ff',
+                        normalize: true,
+                        barRadius: 12,
+                      }}
+                      volume={1}
+                      zoom={2}
+                      playing={playing}
+                    />
+                  </>
+                )}
+              </div>
+            )}
             <Button
               shape={'round'}
               icon={<BiDownload className={'button-icon'} />}
@@ -96,10 +129,10 @@ const FileDetailViewer = () => {
               href={file?.download}>
               Descargar
             </Button>
+            <Divider />
+            <p>{file?.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
           </Col>
         </Row>
-        <Divider />
-        <p>{file?.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
       </div>
       <div className={'footer'}>
         {config?.name} | V{version}

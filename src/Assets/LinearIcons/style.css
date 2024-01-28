@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('./fonts/icomoon.eot?agyl3c');
-  src:  url('./fonts/icomoon.eot?agyl3c#iefix') format('embedded-opentype'),
-    url('./fonts/icomoon.ttf?agyl3c') format('truetype'),
-    url('./fonts/icomoon.woff?agyl3c') format('woff'),
-    url('./fonts/icomoon.svg?agyl3c#icomoon') format('svg');
+  src:  url('./fonts/icomoon.eot?xry1lb');
+  src:  url('./fonts/icomoon.eot?xry1lb#iefix') format('embedded-opentype'),
+  url('./fonts/icomoon.ttf?xry1lb') format('truetype'),
+  url('./fonts/icomoon.woff?xry1lb') format('woff'),
+  url('./fonts/icomoon.svg?xry1lb#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,57 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-adobe:before {
+  content: "\e9ea";
+  color: #f00;
+}
+.icon-adobeacrobatreader:before {
+  content: "\e9eb";
+  color: #ee3f24;
+}
+.icon-airplayaudio:before {
+  content: "\e9ed";
+}
+.icon-airplayvideo:before {
+  content: "\e9ee";
+}
+.icon-amazonaws:before {
+  content: "\e9ef";
+}
+.icon-apple1:before {
+  content: "\e9f0";
+  color: #999;
+}
+.icon-applepay:before {
+  content: "\e9f1";
+}
+.icon-cpanel:before {
+  content: "\e9f2";
+  color: #ff6c2c;
+}
+.icon-gmail:before {
+  content: "\e9f3";
+  color: #d14836;
+}
+.icon-google:before {
+  content: "\e9f4";
+  color: #4285f4;
+}
+.icon-googlepay:before {
+  content: "\e9f5";
+  color: #5f6368;
+}
+.icon-googleplay:before {
+  content: "\e9f6";
+  color: #607d8b;
+}
+.icon-ios:before {
+  content: "\e9f7";
+}
+.icon-paypal:before {
+  content: "\e9f8";
+  color: #00457c;
+}
 .icon-home:before {
   content: "\e600";
 }
@@ -3030,4 +3081,7 @@
 }
 .icon-ellipsis:before {
   content: "\e9e9";
+}
+.icon-ctrl_key:before {
+  content: "\e9f9";
 }

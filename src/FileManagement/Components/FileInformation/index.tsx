@@ -24,8 +24,8 @@ interface FileInformationProps {
 
 const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) => {
   const [fileActivity, setFileActivity] = useState<Array<FileActivity>>();
-  const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [commentForm] = useForm();
 
   useEffect(() => {
