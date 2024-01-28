@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import ReactWaves, {ReactWavesProps} from '@dschoon/react-waves';
 import ReactPlayer from 'react-player';
 import {Button, Popover} from 'antd';
 
@@ -9,40 +10,43 @@ import './styles.less';
 import FileActivityForm from '../FileActivityForm';
 import Hotkey from '../Hotkey';
 
+import sound from '../../Assets/2gs6xzw9FuiYYAAieJlYlWA3lMtp0RqZ3xfJUJFJ.mp3';
+
 interface VideoPlayerProps {
-  video: File;
+  media: File;
   startTime?: number;
   onActivityChange?: () => void;
 }
 
-const MediaPlayer = ({video, startTime, onActivityChange}: VideoPlayerProps) => {
+const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => {
   const [playing, setPlaying] = useState(true);
   const [time, setTime] = useState(0);
   const [muted, setMuted] = useState(false);
   const ref = useRef<ReactPlayer>(null);
+  const audioRef = useRef<ReactWavesProps>(null);
   const [playerReady, setPlayerReady] = useState(false);
   const [videoRate, setVideoRate] = useState(1);
   const [openAddActivity, setOpenAddActivity] = useState(false);
   const {user} = useContext(AuthContext);
 
   useEffect(() => {
-    if (startTime && ref.current) {
-      ref.current.seekTo(startTime);
+    if (startTime) {
+      if (ref.current) {
+        ref.current.seekTo(startTime);
+      }
+      setTime(startTime);
+      console.log('time ----', {startTime});
     }
   }, [startTime]);
 
   useEffect(() => {
-    if (ref.current && video.start_from && playerReady) {
-      ref.current.seekTo(video.start_from);
+    if (ref.current && media.start_from && playerReady) {
+      ref.current.seekTo(media.start_from);
     }
-  }, [ref, video, playerReady]);
+  }, [ref, media, playerReady]);
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
-      if (!event.ctrlKey) {
-        return;
-      }
-
       if (event.code === 'ArrowLeft') {
         event.preventDefault();
         setVideoRate(state => state - 0.3);
@@ -51,6 +55,10 @@ const MediaPlayer = ({video, startTime, onActivityChange}: VideoPlayerProps) => 
         event.preventDefault();
         setVideoRate(state => state + 0.3);
       }
+      if (!event.ctrlKey) {
+        return;
+      }
+
       if (event.code === 'KeyP') {
         event.preventDefault();
         handlePlay();
@@ -88,24 +96,55 @@ const MediaPlayer = ({video, startTime, onActivityChange}: VideoPlayerProps) => 
   return (
     <>
       <div className={'video-player-wrapper'}>
-        <ReactPlayer
-          ref={ref}
-          playbackRate={videoRate}
-          onReady={() => setPlayerReady(true)}
-          autoplay
-          width={'100%'}
-          height={'auto'}
-          controls={true}
-          muted={muted}
-          playing={playing}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          url={video.source}
-          progressInterval={300}
-          onProgress={state => {
-            setTime(Math.round(state.playedSeconds));
-          }}
-        />
+        {media.type.includes('vid') && (
+          <ReactPlayer
+            ref={ref}
+            playbackRate={videoRate}
+            onReady={() => setPlayerReady(true)}
+            autoplay
+            width={'100%'}
+            height={'auto'}
+            controls={true}
+            muted={muted}
+            playing={playing}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            url={media.source}
+            progressInterval={300}
+            onProgress={state => {
+              setTime(Math.round(state.playedSeconds));
+            }}
+          />
+        )}
+        {media.type.includes('aud') && (
+          <>
+            <ReactWaves
+              audioFile={sound}
+              className={'react-waves'}
+              pos={1}
+              options={{
+                barHeight: 1,
+                cursorWidth: 0,
+                height: 120,
+                progressColor: '#EC407A',
+                responsive: true,
+                waveColor: '#D1D6DA',
+                mediaControls: true,
+                cursorColor: '#0000ff',
+                normalize: true,
+                barRadius: 12,
+                audioRate: videoRate,
+              }}
+              volume={muted ? 0 : 1}
+              zoom={2}
+              // @ts-ignore
+              onPosChange={(pos: any) => {
+                //setTime(pos);
+              }}
+              playing={playing}
+            />
+          </>
+        )}
       </div>
       <div>
         <div className={'shortcuts-container'}>
@@ -128,7 +167,7 @@ const MediaPlayer = ({video, startTime, onActivityChange}: VideoPlayerProps) => 
                         onActivityChange();
                       }
                     }}
-                    file={video}
+                    file={media}
                     type={'comment'}
                     time={time}
                   />
@@ -144,7 +183,5 @@ const MediaPlayer = ({video, startTime, onActivityChange}: VideoPlayerProps) => 
     </>
   );
 };
-
-//wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=16gJZiIm3kEfIhjcx2sNoj2Q_2YG2BoWP' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=16gJZiIm3kEfIhjcx2sNoj2Q_2YG2BoWP" -O andina.wpress && rm -rf /tmp/cookies.txt
 
 export default MediaPlayer;

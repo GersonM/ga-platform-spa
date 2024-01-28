@@ -74,7 +74,7 @@ const FileDetailViewer = () => {
                         return {
                           dot: a.time ? <ClockIcon width={16} /> : <ChatBubbleBottomCenterIcon width={16} />,
                           children: (
-                            <div onClick={() => setInitTime(a.time)}>
+                            <div className={'timeline-item'} onClick={() => setInitTime(a.time)}>
                               {a.comment} <br />
                               <small>
                                 {a.time ? 'Ir a segundo ' + a.time : dayjs(a.created_at).format('D/M/YY [a las] h:m a')}
@@ -93,32 +93,8 @@ const FileDetailViewer = () => {
             {file && (
               <div className={'file-container'}>
                 {file.type.includes('image') && <Image src={file.source} />}
-                {file.type.includes('vid') && (
-                  <MediaPlayer startTime={initTime} onActivityChange={() => setReload(!reload)} video={file} />
-                )}
-                {file.type.includes('aud') && (
-                  <>
-                    <ReactWaves
-                      audioFile={sound}
-                      className={'react-waves'}
-                      pos={position}
-                      options={{
-                        barHeight: 1,
-                        cursorWidth: 0,
-                        height: 120,
-                        progressColor: '#EC407A',
-                        responsive: true,
-                        waveColor: '#D1D6DA',
-                        mediaControls: true,
-                        cursorColor: '#0000ff',
-                        normalize: true,
-                        barRadius: 12,
-                      }}
-                      volume={1}
-                      zoom={2}
-                      playing={playing}
-                    />
-                  </>
+                {(file.type.includes('vid') || file.type.includes('aud')) && (
+                  <MediaPlayer startTime={initTime} onActivityChange={() => setReload(!reload)} media={file} />
                 )}
               </div>
             )}
