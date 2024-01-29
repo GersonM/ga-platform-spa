@@ -28,15 +28,15 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
   const [viewMode, setViewMode] = useState<string | number>();
   const [loadingInformation, setLoadingInformation] = useState<AxiosProgressEvent>();
-  const [uploadingFiles, setUploadingFiles] = useState<Array<any>>();
+  const [selectedFiles, setSelectedFiles] = useState<Array<any>>();
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    if (uploadingFiles) {
-      const current = uploadingFiles[0];
+    if (selectedFiles) {
+      const current = selectedFiles[0];
       console.log(current);
     }
-  }, [uploadingFiles]);
+  }, [selectedFiles]);
 
   const uploadFile = (file: any) => {
     handleFileUpload(file);
@@ -109,7 +109,8 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
 
   const onDrop = useCallback(
     (acceptedFiles: Array<Blob>) => {
-      setUploadingFiles(acceptedFiles);
+      setSelectedFiles(acceptedFiles);
+      return;
       //uploadFile(acceptedFiles[0]);
       //return;
       const formData = new FormData();
@@ -267,7 +268,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
               />
             )}
           </div>
-          <UploadInformation files={uploadingFiles} progress={loadingInformation} />
+          <UploadInformation files={selectedFiles} progress={loadingInformation} />
         </>
       )}
     </div>

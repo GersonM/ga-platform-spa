@@ -5,13 +5,19 @@ import './styles.less';
 interface HotkeyProps {
   shortKey: string;
   title?: string;
+  showCtrl?: boolean;
 }
 
-const Hotkey = ({shortKey, title}: HotkeyProps) => {
+const Hotkey = ({shortKey, title, showCtrl = true}: HotkeyProps) => {
   return (
     <Tooltip title={title}>
       <div className={'hotkey-container'}>
-        <i className={'key-icon icon-ctrl_key'} /> + {shortKey}
+        {showCtrl && (
+          <>
+            <i className={'key-icon icon-ctrl_key'} />+
+          </>
+        )}{' '}
+        {shortKey}
       </div>
     </Tooltip>
   );

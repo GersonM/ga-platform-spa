@@ -5,7 +5,6 @@ import {Button, Col, Divider, Image, Row, Space, Timeline} from 'antd';
 import {BiDownload} from 'react-icons/bi';
 import dayjs from 'dayjs';
 import {ChatBubbleBottomCenterIcon, ClockIcon} from '@heroicons/react/24/outline';
-import ReactWaves from '@dschoon/react-waves';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {File} from '../../../Types/api';
@@ -15,14 +14,11 @@ import MediaPlayer from '../../../CommonUI/MediaPlayer';
 
 import './styles.less';
 import logo from '../../../Assets/logo_full.png';
-import sound from '../../../Assets/2gs6xzw9FuiYYAAieJlYlWA3lMtp0RqZ3xfJUJFJ.mp3';
 
 const FileDetailViewer = () => {
   const params = useParams();
   const [file, setFile] = useState<File>();
   const {config} = useContext(AuthContext);
-  const [playing, setPlaying] = useState(false);
-  const [position, setPosition] = useState(0);
   const [reload, setReload] = useState(true);
   const [initTime, setInitTime] = useState<number>();
 

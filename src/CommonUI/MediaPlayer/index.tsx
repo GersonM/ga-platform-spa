@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import ReactWaves, {ReactWavesProps} from '@dschoon/react-waves';
 import ReactPlayer from 'react-player';
 import {Button, Popover} from 'antd';
 
@@ -9,8 +8,6 @@ import AuthContext from '../../Context/AuthContext';
 import './styles.less';
 import FileActivityForm from '../FileActivityForm';
 import Hotkey from '../Hotkey';
-
-import sound from '../../Assets/2gs6xzw9FuiYYAAieJlYlWA3lMtp0RqZ3xfJUJFJ.mp3';
 
 interface VideoPlayerProps {
   media: File;
@@ -23,7 +20,6 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
   const [time, setTime] = useState(0);
   const [muted, setMuted] = useState(false);
   const ref = useRef<ReactPlayer>(null);
-  const audioRef = useRef<ReactWavesProps>(null);
   const [playerReady, setPlayerReady] = useState(false);
   const [videoRate, setVideoRate] = useState(1);
   const [openAddActivity, setOpenAddActivity] = useState(false);
@@ -95,64 +91,33 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
 
   return (
     <>
-      <div className={'video-player-wrapper'}>
-        {media.type.includes('vid') && (
-          <ReactPlayer
-            ref={ref}
-            playbackRate={videoRate}
-            onReady={() => setPlayerReady(true)}
-            autoplay
-            width={'100%'}
-            height={'auto'}
-            controls={true}
-            muted={muted}
-            playing={playing}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-            url={media.source}
-            progressInterval={300}
-            onProgress={state => {
-              setTime(Math.round(state.playedSeconds));
-            }}
-          />
-        )}
-        {media.type.includes('aud') && (
-          <>
-            <ReactWaves
-              audioFile={sound}
-              className={'react-waves'}
-              pos={1}
-              options={{
-                barHeight: 1,
-                cursorWidth: 0,
-                height: 120,
-                progressColor: '#EC407A',
-                responsive: true,
-                waveColor: '#D1D6DA',
-                mediaControls: true,
-                cursorColor: '#0000ff',
-                normalize: true,
-                barRadius: 12,
-                audioRate: videoRate,
-              }}
-              volume={muted ? 0 : 1}
-              zoom={2}
-              // @ts-ignore
-              onPosChange={(pos: any) => {
-                //setTime(pos);
-              }}
-              playing={playing}
-            />
-          </>
-        )}
+      <div className={`${media.type.includes('aud') ? 'audio-player' : 'video-player'} video-player-wrapper`}>
+        <ReactPlayer
+          ref={ref}
+          playbackRate={videoRate}
+          onReady={() => setPlayerReady(true)}
+          autoplay
+          width={'100%'}
+          height={media.type.includes('aud') ? '90px' : 'auto'}
+          controls={true}
+          muted={muted}
+          playing={playing}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          url={media.source}
+          progressInterval={300}
+          onProgress={state => {
+            setTime(Math.round(state.playedSeconds));
+          }}
+        />
       </div>
       <div>
         <div className={'shortcuts-container'}>
           <Hotkey shortKey={'P'} title={'Reproducir / Pausar'} />
           <Hotkey shortKey={'M'} title={'Silenciar'} />
           <Hotkey shortKey={'N'} title={'Agregar nota'} />
-          <Hotkey shortKey={'←'} title={'Reducir velocidad'} />
-          <Hotkey shortKey={'→'} title={'Incrementar velocidad'} />
+          <Hotkey shortKey={'←'} showCtrl={false} title={'Reducir velocidad'} />
+          <Hotkey shortKey={'→'} showCtrl={false} title={'Incrementar velocidad'} />
           {user && (
             <>
               <Popover
@@ -179,6 +144,7 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
             </>
           )}
         </div>
+        <span>Velocidad {videoRate.toFixed(1)}x</span>
       </div>
     </>
   );
