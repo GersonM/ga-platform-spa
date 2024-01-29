@@ -110,7 +110,6 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   const onDrop = useCallback(
     (acceptedFiles: Array<Blob>) => {
       setSelectedFiles(acceptedFiles);
-      return;
       //uploadFile(acceptedFiles[0]);
       //return;
       const formData = new FormData();
