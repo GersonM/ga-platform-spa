@@ -34,7 +34,6 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
         if (response) {
           const value = response.data.birthday ? dayjs(response.data.birthday) : null;
           setProfile({...response.data, birthday: value});
-          console.log(response.data);
         }
       })
       .catch(e => {

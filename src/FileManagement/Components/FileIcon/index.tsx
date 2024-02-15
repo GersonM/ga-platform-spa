@@ -1,10 +1,10 @@
 import React from 'react';
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import {BsFileEarmarkPdf} from 'react-icons/bs';
 import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
 
 interface FileIconProps {
-  file: File;
+  file: ApiFile;
 }
 
 const FileIcon = ({file}: FileIconProps) => {

@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import {ChatBubbleBottomCenterIcon, ClockIcon} from '@heroicons/react/24/outline';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
@@ -17,7 +17,7 @@ import logo from '../../../Assets/logo_full.png';
 
 const FileDetailViewer = () => {
   const params = useParams();
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<ApiFile>();
   const {config} = useContext(AuthContext);
   const [reload, setReload] = useState(true);
   const [initTime, setInitTime] = useState<number>();

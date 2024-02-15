@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Dropdown, Modal} from 'antd';
 import RenameFile from './RenameFile';
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
@@ -16,7 +16,7 @@ const items = [
 interface FileDropdownActionsProps {
   children: React.ReactNode;
   trigger?: ('click' | 'hover' | 'contextMenu')[];
-  file: File;
+  file: ApiFile;
   onChange?: () => void;
 }
 

@@ -25,7 +25,7 @@ export type Profile = {
   phone?: string;
   address?: string;
   user?: User;
-  avatar?: File;
+  avatar?: ApiFile;
 };
 
 export type User = {
@@ -45,10 +45,10 @@ export type FileActivity = {
   time?: number;
   verified_at?: string;
   action: string;
-  file?: File;
+  file?: ApiFile;
 };
 
-export type File = {
+export type ApiFile = {
   uuid: number;
   name: string;
   description: string;
@@ -81,7 +81,7 @@ export type Container = {
 export type ContainerContent = {
   container: Container;
   containers: Array<Container>;
-  files: Array<File>;
+  files: Array<ApiFile>;
 };
 
 export type FileManagementStatus = {
@@ -145,4 +145,9 @@ export type MailMessage = {
   excerpt: string;
   delivery_date: string;
   body?: string;
+};
+
+export type UploadQueueItem = {
+  hash: string;
+  file: File;
 };

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {Button, Popover} from 'antd';
 
-import {File} from '../../Types/api';
+import {ApiFile} from '../../Types/api';
 import AuthContext from '../../Context/AuthContext';
 
 import './styles.less';
@@ -10,7 +10,7 @@ import FileActivityForm from '../FileActivityForm';
 import Hotkey from '../Hotkey';
 
 interface VideoPlayerProps {
-  media: File;
+  media: ApiFile;
   startTime?: number;
   onActivityChange?: () => void;
 }
@@ -31,7 +31,6 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
         ref.current.seekTo(startTime);
       }
       setTime(startTime);
-      console.log('time ----', {startTime});
     }
   }, [startTime]);
 

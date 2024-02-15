@@ -4,24 +4,24 @@ import {AxiosProgressEvent} from 'axios';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
+import {UploadQueueItem} from '../../../Types/api';
 
 interface UploadInformationProps {
-  files?: Array<File>;
+  files?: UploadQueueItem[];
   progress?: AxiosProgressEvent;
 }
 
-const UploadInformation = ({files, progress}: UploadInformationProps) => {
+const UploadManager = ({files, progress}: UploadInformationProps) => {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
     setOpen(true);
   }, [files]);
 
-  console.log('Files', {files});
-  if (!progress || !open) return null;
+  if (!open) return null;
 
-  const total = progress.total || 100;
-  const percent = (progress.loaded / total) * 100;
+  const total = 0; //progress.total || 100;
+  const percent = 0; //(progress.loaded / total) * 100;
 
   return (
     <div className={'upload-information-wrapper'}>
@@ -41,10 +41,10 @@ const UploadInformation = ({files, progress}: UploadInformationProps) => {
             {files.map((f, index) => {
               return (
                 <li key={index}>
-                  {f.name}
+                  {f.file.name}
                   <small>
                     {' - '}
-                    <FileSize size={f.size} />
+                    <FileSize size={f.file.size} />
                   </small>
                 </li>
               );
@@ -58,4 +58,4 @@ const UploadInformation = ({files, progress}: UploadInformationProps) => {
   );
 };
 
-export default UploadInformation;
+export default UploadManager;

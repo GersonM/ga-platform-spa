@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Empty} from 'antd';
 import axios, {AxiosProgressEvent} from 'axios';
@@ -9,11 +9,10 @@ import FolderItem from './FolderItem';
 import FileInformation from '../FileInformation';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {Container, ContainerContent, File} from '../../../Types/api';
+import {Container, ContainerContent, ApiFile} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
-import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
-import {sendFileToServer} from '../../../Utils/FileUploader';
+import UploaderContext from '../../../Context/UploaderContext';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -22,7 +21,7 @@ interface ContainerContentViewerProps {
 
 const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
-  const [selectedFile, setSelectedFile] = useState<File>();
+  const [selectedFile, setSelectedFile] = useState<ApiFile>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
@@ -30,13 +29,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   const [loadingInformation, setLoadingInformation] = useState<AxiosProgressEvent>();
   const [selectedFiles, setSelectedFiles] = useState<Array<any>>();
   const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    if (selectedFiles) {
-      const current = selectedFiles[0];
-      console.log(current);
-    }
-  }, [selectedFiles]);
+  const {addFiles} = useContext(UploaderContext);
 
   const uploadFile = (file: any) => {
     handleFileUpload(file);
@@ -108,10 +101,11 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   };
 
   const onDrop = useCallback(
-    (acceptedFiles: Array<Blob>) => {
-      setSelectedFiles(acceptedFiles);
+    (acceptedFiles: any[]) => {
+      //setSelectedFiles(acceptedFiles);
       //uploadFile(acceptedFiles[0]);
-      //return;
+      addFiles(acceptedFiles);
+      return;
       const formData = new FormData();
       acceptedFiles.forEach(item => {
         formData.append('file[]', item);
@@ -173,7 +167,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
     }
   };
 
-  const downloadFile = (file: File) => {
+  const downloadFile = (file: ApiFile) => {
     const tenant = axios.defaults.headers.common['X-Tenant'];
     const link =
       'https://' + import.meta.env.VITE_WEB + '/' + tenant + `/storage/file-management/files/${file.uuid}/download`;
@@ -267,7 +261,6 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
               />
             )}
           </div>
-          <UploadInformation files={selectedFiles} progress={loadingInformation} />
         </>
       )}
     </div>

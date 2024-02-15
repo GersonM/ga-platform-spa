@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button, Form, Input} from 'antd';
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface RenameFileProps {
-  file: File;
+  file: ApiFile;
   onCompleted?: () => void;
 }
 

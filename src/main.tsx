@@ -9,6 +9,7 @@ import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 
 import {AuthContextProvider} from './Context/AuthContext';
+import {UploaderContextProvider} from './Context/UploaderContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
@@ -17,7 +18,7 @@ dayjs.locale('es');
 
 const token = Cookies.get('session_token');
 const isDevMode = window.location.hostname.includes('localhost');
-const tenantID = isDevMode ? 'platform' : window.location.hostname.split('.')[0];
+const tenantID = isDevMode ? 'app' : window.location.hostname.split('.')[0];
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;
@@ -30,9 +31,11 @@ axios
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthContextProvider config={response.data.config}>
         <TenantAppConfig tenant={response.data.config}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <UploaderContextProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </UploaderContextProvider>
         </TenantAppConfig>
       </AuthContextProvider>,
     );

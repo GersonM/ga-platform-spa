@@ -4,10 +4,10 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../Utils/ErrorHandler';
-import {File} from '../../Types/api';
+import {ApiFile} from '../../Types/api';
 
 interface FileActivityFormProps {
-  file: File;
+  file: ApiFile;
   type?: string;
   time?: number;
   onCompleted?: () => void;

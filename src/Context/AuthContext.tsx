@@ -79,7 +79,6 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
     Cookies.remove('session_token');
     window.location.href = '/login';
   };
-  console.log('Auth context');
   return (
     <AuthContext.Provider
       value={{
