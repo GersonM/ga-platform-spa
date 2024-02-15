@@ -17,7 +17,7 @@ dayjs.locale('es');
 
 const token = Cookies.get('session_token');
 const isDevMode = window.location.hostname.includes('localhost');
-const tenantID = isDevMode ? 'platform' : window.location.hostname.split('.')[0];
+const tenantID = isDevMode ? 'app' : window.location.hostname.split('.')[0];
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;
