@@ -96,7 +96,7 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
           ref={ref}
           playbackRate={videoRate}
           onReady={() => setPlayerReady(true)}
-          autoplay
+          autoPlay
           width={'100%'}
           height={media.type.includes('aud') ? '90px' : 'auto'}
           controls={true}

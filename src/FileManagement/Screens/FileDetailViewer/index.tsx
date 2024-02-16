@@ -98,8 +98,7 @@ const FileDetailViewer = () => {
               shape={'round'}
               icon={<BiDownload className={'button-icon'} />}
               type={'primary'}
-              target={'_blank'}
-              href={file?.public}>
+              href={file?.download}>
               Descargar
             </Button>
             <Divider />
