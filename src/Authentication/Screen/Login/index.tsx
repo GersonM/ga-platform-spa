@@ -3,11 +3,16 @@ import {Button, Form, Input, Modal} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import axios, {AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
+import {SocialAuth, Auth} from '@supabase/auth-ui-react';
+import {ThemeSupa} from '@supabase/auth-ui-shared';
+import {createClient} from '@supabase/supabase-js';
 
 import './styles.less';
 import Package from './../../../../package.json';
 import logo from './../../../Assets/logo_full.png';
 import AuthContext from '../../../Context/AuthContext';
+
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY_PUBLIC);
 
 const Login = () => {
   const navigate = useNavigate();
@@ -59,6 +64,23 @@ const Login = () => {
         <div className="page"></div>
         <div className="form-block">
           <img src={config?.logo ? config.logo : logo} alt="Logo" className={'logo'} />
+          {/*<Auth
+            appearance={{
+              theme: ThemeSupa,
+              variables: {
+                default: {
+                  colors: {
+                    brand: '#0075CA',
+                    brandAccent: '#005c9d',
+                  },
+                },
+              },
+            }}
+            supabaseClient={supabase}
+            socialLayout={'horizontal'}
+            dark={true}
+            providers={['google', 'azure']}
+          />*/}
           <Form onFinish={login}>
             <Form.Item name={'email'}>
               <Input bordered={false} className={'login-form-input'} placeholder={'E-mail'} inputMode={'email'} />

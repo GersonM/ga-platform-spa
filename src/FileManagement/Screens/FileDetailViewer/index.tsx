@@ -52,7 +52,9 @@ const FileDetailViewer = () => {
           <img src={config?.logo ? config.logo : logo} alt="Logo" className={'logo'} />
           <div>
             <h2 className={'title'}>{file?.name}</h2>
-            <small>{dayjs(file?.created_at).fromNow()}</small>
+            <small>
+              {dayjs(file?.created_at).fromNow()} - ({dayjs(file?.created_at).format('DD MMMM YYYY H:mm a')})
+            </small>
           </div>
         </Space>
         <Divider />
@@ -88,7 +90,7 @@ const FileDetailViewer = () => {
           <Col md={showAnnotations ? 19 : 24}>
             {file && (
               <div className={'file-container'}>
-                {file.type.includes('image') && <Image src={file.source} />}
+                {file.type.includes('image') && <Image placeholder={'Imagen'} title={file.name} src={file.source} />}
                 {(file.type.includes('vid') || file.type.includes('aud')) && (
                   <MediaPlayer startTime={initTime} onActivityChange={() => setReload(!reload)} media={file} />
                 )}
