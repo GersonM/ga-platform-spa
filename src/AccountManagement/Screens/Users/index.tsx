@@ -82,7 +82,14 @@ const Users = () => {
         title={'Usuarios registrados'}
         header={
           <>
-            <Input.Search size={'small'} onSearch={value => setSearch(value)} />
+            <Input.Search
+              placeholder={'Buscar por nombre'}
+              size={'small'}
+              onSearch={value => {
+                setSearch(value);
+                setCurrentPage(1);
+              }}
+            />
           </>
         }
         footer={
