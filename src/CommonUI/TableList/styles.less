@@ -1,0 +1,56 @@
+@borderRadius: 10px;
+
+.table-list {
+  .ant-table {
+    background: none;
+
+  }
+
+  .ant-table-thead {
+    .ant-table-cell {
+      background: var(--backgroung-color);
+      border: none;
+      padding-bottom: 10px;
+      padding-top: 10px;
+    }
+  }
+
+  .ant-table-body {
+  }
+
+  tr {
+    td {
+      border: none !important;
+    }
+  }
+
+  table {
+    tbody {
+      .table-row-light {
+        td {
+          background: var(--backgroung-color-higlight);
+        }
+      }
+
+      .ant-table-expanded-row {
+        td {
+          background: none !important;
+        }
+      }
+
+      .ant-table-row {
+        td {
+          &:first-child {
+            border-radius: @borderRadius 0 0 @borderRadius;
+          }
+
+          &:last-child {
+            border-radius: 0 @borderRadius @borderRadius 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+

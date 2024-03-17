@@ -8,13 +8,23 @@ interface ModuleSidebarProps {
   children?: React.ReactNode;
   actions?: React.ReactNode;
   footer?: React.ReactNode;
+  header?: React.ReactNode;
   width?: number;
   title?: string;
   loadingMessage?: string;
   loading?: boolean;
 }
 
-const ModuleSidebar = ({title, children, actions, footer, width, loading, loadingMessage}: ModuleSidebarProps) => {
+const ModuleSidebar = ({
+  title,
+  children,
+  actions,
+  header,
+  footer,
+  width,
+  loading,
+  loadingMessage,
+}: ModuleSidebarProps) => {
   const [open, setOpen] = useState(false);
   const {pathname} = useLocation();
 
@@ -29,16 +39,19 @@ const ModuleSidebar = ({title, children, actions, footer, width, loading, loadin
       </a>
       <div className={`module-sidebar-wrapper ${open ? 'open' : ''}`} style={{width: width}}>
         <LoadingIndicator visible={loading} message={loadingMessage} />
-        <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
+        <OverlayScrollbarsComponent className={'scroll-content'} defer options={{scrollbars: {autoHide: 'scroll'}}}>
           {(title || actions) && (
             <div className={'module-nav-header'}>
-              <h4>{title}</h4>
-              {actions && <div>{actions}</div>}
+              <div className={'title'}>
+                <h4>{title}</h4>
+                {actions && <div>{actions}</div>}
+              </div>
+              {header && <div>{header}</div>}
             </div>
           )}
           <div className={'module-nav-content'}>{children}</div>
-          {footer && <div className={'module-nav-footer'}>{footer}</div>}
         </OverlayScrollbarsComponent>
+        {footer && <div className={'module-nav-footer'}>{footer}</div>}
       </div>
     </>
   );

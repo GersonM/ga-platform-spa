@@ -24,6 +24,7 @@ export type Profile = {
   gender?: string;
   phone?: string;
   address?: string;
+  created_at?: string;
   user?: User;
   avatar?: File;
 };
@@ -145,4 +146,34 @@ export type MailMessage = {
   excerpt: string;
   delivery_date: string;
   body?: string;
+};
+
+export type ResponsePagination = {
+  current_page: number;
+  from: number;
+  last_page: number;
+  per_page: number;
+  to: number;
+  total: number;
+};
+
+export type Plan = {
+  created_at: string;
+  description: string;
+  name: string;
+  price: number;
+  sku: string;
+  updated_at: string;
+  uuid: string;
+};
+
+export type Subscription = {
+  billing_currency: string;
+  billing_period: string;
+  email_verified_at: string;
+  is_active: boolean;
+  plan: Plan;
+  started_at: string;
+  terminated_at: string;
+  uuid: string;
 };

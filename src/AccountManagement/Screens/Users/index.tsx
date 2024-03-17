@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Button, Pagination, Popover, Tabs, Tooltip} from 'antd';
-import {PlusCircleIcon} from '@heroicons/react/24/outline';
+import {Button, Empty, Input, Pagination, Popover, Space, Tabs, Tooltip} from 'antd';
+import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
+import {IdentificationIcon, UserCircleIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-import {Profile} from '../../../Types/api';
+import {Profile, ResponsePagination} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -12,19 +13,27 @@ import ProfileEditor from '../../Components/ProfileEditor';
 import ConfigAccounts from '../../../InboxManagement/Screens/ConfigOptions/ConfigAccounts';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import CreateUser from '../../Components/CreateUser';
+import IconButton from '../../../CommonUI/IconButton';
+import dayjs from 'dayjs';
+import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
 
 const Users = () => {
-  const [profiles, setProfiles] = useState<Profile[]>();
-  const [reload, setReload] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
+  const [profiles, setProfiles] = useState<Profile[]>();
+  const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openCreateUser, setOpenCreateUser] = useState(false);
+  const [pagination, setPagination] = useState<ResponsePagination>();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [search, setSearch] = useState<string>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
+      params: {page: currentPage, page_size: pageSize, search},
     };
     setLoading(true);
     axios
@@ -32,7 +41,8 @@ const Users = () => {
       .then(response => {
         setLoading(false);
         if (response) {
-          setProfiles(response.data);
+          setProfiles(response.data.data);
+          setPagination(response.data.meta);
         }
       })
       .catch(e => {
@@ -41,11 +51,12 @@ const Users = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload]);
+  }, [reload, currentPage, pageSize, search]);
   return (
     <>
       <ModuleSidebar
         loading={loading}
+        width={400}
         actions={
           <Popover
             open={openCreateUser}
@@ -69,12 +80,40 @@ const Users = () => {
           </Popover>
         }
         title={'Usuarios registrados'}
-        footer={<Pagination size={'small'} total={20} current={1} />}>
+        header={
+          <>
+            <Input.Search size={'small'} onSearch={value => setSearch(value)} />
+          </>
+        }
+        footer={
+          <Space>
+            <Pagination
+              showSizeChanger={false}
+              size={'small'}
+              total={pagination?.total}
+              pageSize={pagination?.per_page}
+              current={pagination?.current_page}
+              onChange={(page, size) => {
+                setCurrentPage(page);
+                setPageSize(size);
+              }}
+            />
+            <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
+          </Space>
+        }>
         <NavList>
           {profiles?.map(p => (
-            <NavListItem name={`${p.name} ${p.last_name || ''}`} caption={p.email} path={`/accounts/${p.uuid}`} />
+            <NavListItem
+              name={`${p.name} ${p.last_name || ''}`}
+              caption={dayjs(p.created_at).fromNow() + (p.user ? ' | ' + p.user?.email : '')}
+              icon={p.user ? <IdentificationIcon /> : <UserCircleIcon />}
+              path={`/accounts/${p.uuid}`}
+            />
           ))}
         </NavList>
+        {profiles?.length === 0 && (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay personas registradas'} />
+        )}
       </ModuleSidebar>
       <ModuleContent>
         {params.uuid && (
@@ -89,6 +128,11 @@ const Users = () => {
                 label: 'Información personal',
                 key: 'info',
                 children: <ProfileEditor profileUuid={params.uuid} onCompleted={() => setReload(!reload)} />,
+              },
+              {
+                label: 'Suscripciones',
+                key: 'subscriptions',
+                children: <PersonSubscription profileUuid={params.uuid} />,
               },
               {
                 label: 'Permisos',
