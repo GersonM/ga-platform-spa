@@ -65,10 +65,13 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       render: (date: string) => dayjs(date).format('D/MM/YYYY [a las] hh:mm a'),
     },
     {
-      title: 'Duración',
+      title: 'Tiempo restante',
       dataIndex: 'terminated_at',
       width: 200,
-      render: (date: string, row: Subscription) => dayjs(date).diff(row.started_at, 'hour'),
+      render: (date: string, row: Subscription) => {
+        const days = dayjs(date).diff(new Date(), 'days');
+        return days < 0 ? 'Terminado' : days;
+      },
     },
     {
       title: 'Periodo',
