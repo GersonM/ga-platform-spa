@@ -53,24 +53,25 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       ),
     },
     {
-      title: 'Iniciado',
+      title: 'Fechas',
       dataIndex: 'started_at',
-      width: 200,
-      render: (date: string) => dayjs(date).format('D/MM/YYYY [a las] hh:mm a'),
-    },
-    {
-      title: 'Terminado',
-      dataIndex: 'terminated_at',
-      width: 200,
-      render: (date: string) => dayjs(date).format('D/MM/YYYY [a las] hh:mm a'),
+      width: 440,
+      render: (date: string, row: Subscription) => (
+        <>
+          <strong>Inicio: </strong>
+          {dayjs(date).format('DD [de] MMMM [del] YYYY [a las] hh:mm a')} <br />
+          <strong>Final: </strong>
+          {dayjs(row.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a')}
+        </>
+      ),
     },
     {
       title: 'Tiempo restante',
       dataIndex: 'terminated_at',
-      width: 200,
+      width: 180,
       render: (date: string, row: Subscription) => {
         const days = dayjs(date).diff(new Date(), 'days');
-        return days < 0 ? 'Terminado' : days;
+        return days < 0 ? 'Terminado' : `${days} días restantes`;
       },
     },
     {
@@ -81,12 +82,12 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
     {
       title: 'Renovación automática',
       dataIndex: 'automatic_renew',
-      width: 200,
+      width: 180,
     },
     {
       title: 'Activo',
       dataIndex: 'is_active',
-      width: 200,
+      width: 110,
       render: (isActive: boolean) => (isActive ? 'Si' : 'No'),
     },
   ];
