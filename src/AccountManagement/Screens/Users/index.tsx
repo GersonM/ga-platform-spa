@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Button, Empty, Input, Pagination, Popover, Space, Tabs, Tooltip} from 'antd';
+import {Button, Empty, Input, Pagination, Popover, Select, Space, Tabs, Tooltip} from 'antd';
 import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
 import {IdentificationIcon, UserCircleIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -28,12 +28,13 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState<string>();
+  const [filterSubscription, setFilterSubscription] = useState<string>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {page: currentPage, page_size: pageSize, search},
+      params: {page: currentPage, page_size: pageSize, search, subscription: filterSubscription},
     };
     setLoading(true);
     axios
@@ -51,12 +52,11 @@ const Users = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, currentPage, pageSize, search]);
+  }, [reload, currentPage, pageSize, search, filterSubscription]);
   return (
     <>
       <ModuleSidebar
         loading={loading}
-        width={400}
         actions={
           <Popover
             open={openCreateUser}
@@ -81,8 +81,9 @@ const Users = () => {
         }
         title={'Usuarios registrados'}
         header={
-          <>
+          <Space>
             <Input.Search
+              allowClear
               placeholder={'Buscar por nombre'}
               size={'small'}
               onSearch={value => {
@@ -90,27 +91,42 @@ const Users = () => {
                 setCurrentPage(1);
               }}
             />
-          </>
-        }
-        footer={
-          <Space>
-            <Pagination
-              showSizeChanger={false}
+            <Select
+              allowClear
+              placeholder={'Suscripción'}
               size={'small'}
-              total={pagination?.total}
-              pageSize={pagination?.per_page}
-              current={pagination?.current_page}
-              onChange={(page, size) => {
-                setCurrentPage(page);
-                setPageSize(size);
-              }}
+              onChange={value => setFilterSubscription(value)}
+              options={[
+                {label: 'Con alguna subscripción', value: 'any'},
+                {label: 'Con subscripción activa', value: 'active'},
+                {label: 'Con subscripción terminada', value: 'terminated'},
+              ]}
             />
-            <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
           </Space>
+        }
+        statusInfo={`Total ${pagination?.total}`}
+        footer={
+          <>
+            <Space>
+              <Pagination
+                showSizeChanger={false}
+                size={'small'}
+                total={pagination?.total}
+                pageSize={pagination?.per_page}
+                current={pagination?.current_page}
+                onChange={(page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                }}
+              />
+              <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
+            </Space>
+          </>
         }>
         <NavList>
-          {profiles?.map(p => (
+          {profiles?.map((p, index) => (
             <NavListItem
+              key={index}
               name={`${p.name} ${p.last_name || ''}`}
               caption={dayjs(p.created_at).fromNow() + (p.user ? ' | ' + p.user?.email : '')}
               icon={p.user ? <IdentificationIcon /> : <UserCircleIcon />}

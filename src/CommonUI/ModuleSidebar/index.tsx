@@ -11,6 +11,7 @@ interface ModuleSidebarProps {
   header?: React.ReactNode;
   width?: number;
   title?: string;
+  statusInfo?: string;
   loadingMessage?: string;
   loading?: boolean;
 }
@@ -24,6 +25,7 @@ const ModuleSidebar = ({
   width,
   loading,
   loadingMessage,
+  statusInfo,
 }: ModuleSidebarProps) => {
   const [open, setOpen] = useState(false);
   const {pathname} = useLocation();
@@ -51,7 +53,12 @@ const ModuleSidebar = ({
           )}
           <div className={'module-nav-content'}>{children}</div>
         </OverlayScrollbarsComponent>
-        {footer && <div className={'module-nav-footer'}>{footer}</div>}
+        {(footer || statusInfo) && (
+          <div className={'module-nav-footer'}>
+            {footer}
+            <div className={'status-info'}>{statusInfo}</div>
+          </div>
+        )}
       </div>
     </>
   );
