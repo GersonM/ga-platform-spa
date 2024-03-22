@@ -18,7 +18,7 @@
     "js-cookie": "^3.0.5",
     "overlayscrollbars": "^2.4.7",
     "overlayscrollbars-react": "^0.5.4",
-    "react": "^18.0.0",
+    "react": "^18.2.0",
     "react-dom": "^18.0.0",
     "react-dropzone": "^14.2.3",
     "react-helmet": "^6.1.0",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.2",
-    "@types/react": "^18.0.0",
+    "@types/react": "^18.2.67",
     "@types/react-dom": "^18.0.0",
     "@types/react-helmet": "^6.1.6",
     "@types/tinycolor2": "^1.4.6",

@@ -5,9 +5,33 @@
     <link rel="icon" type="image/png" href="/src/Assets/logo_square.png" />
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Maven+Pro:wght@500;600&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Geek Advice</title>
   </head>
   <body>
+  <script>
+    // Se realiza una consulta AJAX para los datos
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'get_domain.php', true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          // Analizar la respuesta JSON
+          var data;
+          try {
+            data = JSON.parse(xhr.responseText);
+            // Establecer el título de la página con el título recibido
+            document.title = data.title;
+          } catch (error) {
+            console.error('Error al analizar la respuesta JSON:', error);
+          }
+        } else {
+          console.error('Error en la solicitud: Estado', xhr.status);
+        }
+      }
+    };
+    xhr.send();
+  </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
