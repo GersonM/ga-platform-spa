@@ -4,7 +4,7 @@
   "version": "0.4.1",
   "scripts": {
     "dev": "vite",
-    "build": "bash generate_index.sh && tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
