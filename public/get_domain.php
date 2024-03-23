@@ -1,20 +1,19 @@
 <?php
-// Detectar el dominio
-$domain = $_SERVER['HTTP_HOST'];
-
-// Extraer el nombre del dominio para el título
-$title = ucwords(str_replace('.', ' ', $domain));
-
-// Crear un array con los datos
-$data = array(
-        'domain' => $domain,
+// Array de dominios y nombres de empresa
+$domains_and_names = array(
+        'geekadvice.com' => 'Geek Advice',
 );
 
-// Convierte el array a formato JSON
-$json_data = json_encode($data);
+$domain = $_SERVER['HTTP_HOST'];
 
-// Imprimir los datos como respuesta
-header('Content-Type: application/json');
-echo $json_data;
+// Inicializar el nombre de la empresa como desconocido
+$company_name = "Desconocido";
 
+// Buscar el nombre de la empresa basado en el dominio
+if (isset($domains_and_names[$domain])) {
+  $company_name = $domains_and_names[$domain];
+}
+
+// Guardar el nombre de la empresa en una variable
+$nombre_empresa = $company_name;
 ?>
