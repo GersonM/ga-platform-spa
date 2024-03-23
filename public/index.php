@@ -11,7 +11,7 @@ $jsFile = '';
 $cssFile = '';
 
 if(isset($tenantNames[$host])) {
-  $title = $tenantNames[$host] || 'Geek Advice';
+  $title = $tenantNames[$host];
 }
 
 foreach ($dir as $filename) {
