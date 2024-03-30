@@ -177,3 +177,35 @@ export type Subscription = {
   terminated_at: string;
   uuid: string;
 };
+
+export type InvoicePayment = {
+  amount: number;
+  created_at: string;
+  description?: string;
+  fk_invoice_uuid: string;
+  fk_payment_method_uuid: string;
+  purchase_token: string;
+  transaction_info: string;
+  updated_at: string;
+  uuid: string;
+  voucher_code: string;
+};
+
+export type Invoice = {
+  uuid: string;
+  amount: number;
+  concept: string;
+  created_at: string;
+  customer: Profile;
+  customer_id: string;
+  customer_type: string;
+  expires_on: string;
+  invoiceable: Subscription;
+  invoiceable_id: string;
+  invoiceable_type: string;
+  issued_on: string;
+  paid_at?: string;
+  payments: InvoicePayment[];
+  purchase_token?: string;
+  updated_at: string;
+};

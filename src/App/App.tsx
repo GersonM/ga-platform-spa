@@ -16,6 +16,7 @@ import ModuleConfiguration from '../ConfigManagement/Screens/ModuleConfiguration
 import ConfigOptions from '../InboxManagement/Screens/ConfigOptions';
 import Users from '../AccountManagement/Screens/Users';
 import FileDetailViewer from '../FileManagement/Screens/FileDetailViewer';
+import Invoices from '../PaymentManagement/Screens/Invoices';
 
 const App = () => {
   useEffect(() => {
@@ -65,12 +66,24 @@ const App = () => {
             <Route path={':tab'} />
           </Route>
         </Route>
+        <Route path={'invoices'} element={<Invoices />}>
+          <Route path={':uuid'} />
+        </Route>
         <Route path={'config'} element={<ModuleConfiguration />}>
           <Route path={'inbox-management'} element={<ConfigOptions />}>
             <Route path={':tab'} element={null} />
           </Route>
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
+        <Route
+          path={'*'}
+          element={
+            <div>
+              <h1>Error 404</h1>
+              <p>No content available under this view</p>
+            </div>
+          }
+        />
       </Route>
     </Routes>
   );
