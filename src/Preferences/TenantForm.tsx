@@ -6,7 +6,6 @@ import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { ColorPicker } from 'antd';
 import './TenantForm.css';
 
-
 function TenantForm() {
   const [form] = Form.useForm();
   const [logoPreviewDark, setLogoPreviewDark] = useState<string>('');
@@ -26,8 +25,21 @@ function TenantForm() {
     }
   };
 
-  const onFinish = (values: any) => {
-    console.log('Valores del formulario:', values);
+  const onFinish = async (values: any) => {
+    try {
+      const response = await fetch('URL_DEL_BACKEND', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      });
+
+      const data = await response.json();
+      console.log('Respuesta del backend:', data);
+    } catch (error) {
+      console.error('Error al enviar los datos al backend:', error);
+    }
   };
 
   return (
