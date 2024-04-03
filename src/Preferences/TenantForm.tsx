@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { Form, Input, Upload, Button, Space, Typography } from 'antd';
+import { Form, Input, Upload, Button} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { ColorPicker } from 'antd';
+import './TenantForm.css';
 
-const { Title } = Typography;
 
 function TenantForm() {
   const [form] = Form.useForm();
-
-  // Estado para la previsualización del logo en dark y light mode
   const [logoPreviewDark, setLogoPreviewDark] = useState<string>('');
   const [logoPreviewLight, setLogoPreviewLight] = useState<string>('');
 
-  // Función para manejar el cambio de imagen del logo
   const handleLogoChange = (info: UploadChangeParam<UploadFile<any>>) => {
     if (info.file && info.file.status === 'done' && info.file.originFileObj) {
       const reader = new FileReader();
@@ -34,10 +31,9 @@ function TenantForm() {
   };
 
   return (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '100vh', backgroundColor: '#fff' }}>
-            <div style={{ width: '90%', maxWidth: '80%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <Title level={2}>Editar Información del Tenant</Title>
-              <Form form={form} onFinish={onFinish} style={{ width: '100%', maxWidth: '400px' }}>
+          <div className="container">
+            <div className="form-container">
+              <Form form={form} onFinish={onFinish} className="form-wrapper">
                 <Form.Item label="Color" name="color">
                   <ColorPicker />
                 </Form.Item>
@@ -50,19 +46,19 @@ function TenantForm() {
                   >
                     <Button icon={<UploadOutlined />}>Seleccionar Logo</Button>
                   </Upload>
-                  <div style={{ marginTop: '1rem', width: '100%', maxWidth: '200px', textAlign: 'center' }}>
+                  <div className="logo-preview">
                     {logoPreviewDark && (
                             <div>
                               <span>Previsualización en Dark Mode:</span>
                               <br />
-                              <img src={logoPreviewDark} alt="Logo Dark Mode" style={{ maxWidth: '100%' }} />
+                              <img src={logoPreviewDark} alt="Logo Dark Mode" className="logo-img" />
                             </div>
                     )}
                     {logoPreviewLight && (
                             <div>
                               <span>Previsualización en Light Mode:</span>
                               <br />
-                              <img src={logoPreviewLight} alt="Logo Light Mode" style={{ maxWidth: '100%' }} />
+                              <img src={logoPreviewLight} alt="Logo Light Mode" className="logo-img" />
                             </div>
                     )}
                   </div>
