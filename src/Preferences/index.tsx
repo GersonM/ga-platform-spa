@@ -4,12 +4,12 @@ import TenantForm from './TenantForm';
 
 const TenantFormPage = () => {
   return (
-          <div>
-            <ModuleContent>
-              <h1>Configuración del Tenant</h1>
-              <TenantForm />
-            </ModuleContent>
-          </div>
+    <div>
+      <ModuleContent>
+        <h1>Configuración del Tenant</h1>
+        <TenantForm />
+      </ModuleContent>
+    </div>
   );
 };
 
