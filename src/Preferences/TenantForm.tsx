@@ -4,12 +4,13 @@ import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { ColorPicker } from 'antd';
-import './TenantForm.css';
+import axios from 'axios'; // Importa Axios
+import './TenantForm.less';
 
 function TenantForm() {
   const [form] = Form.useForm();
-  const [logoPreviewDark, setLogoPreviewDark] = useState<string>('');
-  const [logoPreviewLight, setLogoPreviewLight] = useState<string>('');
+  const [logoPreviewDark, setLogoPreviewDark] = useState<string>();
+  const [logoPreviewLight, setLogoPreviewLight] = useState<string>();
 
   const handleLogoChange = (info: UploadChangeParam<UploadFile<any>>) => {
     if (info.file && info.file.status === 'done' && info.file.originFileObj) {
@@ -27,16 +28,8 @@ function TenantForm() {
 
   const onFinish = async (values: any) => {
     try {
-      const response = await fetch('URL_DEL_BACKEND', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(values)
-      });
-
-      const data = await response.json();
-      console.log('Respuesta del backend:', data);
+      const response = await axios.post('/tenant-management/tenant-information', values);
+      console.log('Respuesta del backend:', response.data);
     } catch (error) {
       console.error('Error al enviar los datos al backend:', error);
     }
