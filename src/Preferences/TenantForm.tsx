@@ -4,10 +4,10 @@ import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { UploadChangeParam } from 'antd/lib/upload/interface';
 import { ColorPicker } from 'antd';
-import axios from 'axios'; // Importa Axios
+import axios from 'axios';
 import './TenantForm.less';
 
-function TenantForm() {
+const TenantForm = () => {
   const [form] = Form.useForm();
   const [logoPreviewDark, setLogoPreviewDark] = useState<string>();
   const [logoPreviewLight, setLogoPreviewLight] = useState<string>();
@@ -36,54 +36,49 @@ function TenantForm() {
   };
 
   return (
-          <div className="container">
-            <div className="form-container">
-              <Form form={form} onFinish={onFinish} className="form-wrapper">
-                <Form.Item label="Color" name="color">
-                  <ColorPicker />
-                </Form.Item>
-                <Form.Item label="Logo" name="logo">
-                  <Upload
-                          name="logo"
-                          beforeUpload={() => false}
-                          onChange={handleLogoChange}
-                          maxCount={1}
-                  >
-                    <Button icon={<UploadOutlined />}>Seleccionar Logo</Button>
-                  </Upload>
-                  <div className="logo-preview">
-                    {logoPreviewDark && (
-                            <div>
-                              <span>Previsualización en Dark Mode:</span>
-                              <br />
-                              <img src={logoPreviewDark} alt="Logo Dark Mode" className="logo-img" />
-                            </div>
-                    )}
-                    {logoPreviewLight && (
-                            <div>
-                              <span>Previsualización en Light Mode:</span>
-                              <br />
-                              <img src={logoPreviewLight} alt="Logo Light Mode" className="logo-img" />
-                            </div>
-                    )}
-                  </div>
-                </Form.Item>
-                <Form.Item label="Favicon" name="favicon">
-                  <Upload name="favicon" beforeUpload={() => false}>
-                    <Button icon={<UploadOutlined />}>Seleccionar Favicon</Button>
-                  </Upload>
-                </Form.Item>
-                <Form.Item label="Nombre" name="nombre">
-                  <Input />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Guardar Cambios
-                  </Button>
-                </Form.Item>
-              </Form>
+    <div className="tenant-form-container">
+      <div className="form-container">
+        <Form form={form} onFinish={onFinish} className="form-wrapper">
+          <Form.Item label="Color" name="color">
+            <ColorPicker />
+          </Form.Item>
+          <Form.Item label="Logo" name="logo">
+            <Upload name="logo" beforeUpload={() => false} onChange={handleLogoChange} maxCount={1}>
+              <Button icon={<UploadOutlined />}>Seleccionar Logo</Button>
+            </Upload>
+            <div className="logo-preview">
+              {logoPreviewDark && (
+                <div>
+                  <span>Previsualización en Dark Mode:</span>
+                  <br />
+                  <img src={logoPreviewDark} alt="Logo Dark Mode" className="logo-img" />
+                </div>
+              )}
+              {logoPreviewLight && (
+                <div>
+                  <span>Previsualización en Light Mode:</span>
+                  <br />
+                  <img src={logoPreviewLight} alt="Logo Light Mode" className="logo-img" />
+                </div>
+              )}
             </div>
-          </div>
+          </Form.Item>
+          <Form.Item label="Favicon" name="favicon">
+            <Upload name="favicon" beforeUpload={() => false}>
+              <Button icon={<UploadOutlined />}>Seleccionar Favicon</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item label="Nombre" name="nombre">
+            <Input />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Guardar Cambios
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
   );
 }
 
