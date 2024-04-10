@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Form, Input, Upload, Button} from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { UploadFile } from 'antd/lib/upload/interface';
-import { UploadChangeParam } from 'antd/lib/upload/interface';
-import { ColorPicker } from 'antd';
+import React, {useState} from 'react';
+import {Form, Input, Upload, Button} from 'antd';
+import {UploadOutlined} from '@ant-design/icons';
+import {UploadFile} from 'antd/lib/upload/interface';
+import {UploadChangeParam} from 'antd/lib/upload/interface';
+import {ColorPicker} from 'antd';
 import axios from 'axios';
 import './TenantForm.less';
 
@@ -80,6 +80,6 @@ const TenantForm = () => {
       </div>
     </div>
   );
-}
+};
 
 export default TenantForm;
