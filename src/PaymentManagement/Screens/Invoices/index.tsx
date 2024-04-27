@@ -61,7 +61,7 @@ const Invoices = () => {
     {
       title: 'Creado',
       dataIndex: 'created_at',
-      width: 440,
+      width: 250,
       render: (date: string) => (
         <>
           {dayjs(date).format('DD [de] MMMM [del] YYYY [a las] hh:mm a')} <br />
@@ -70,7 +70,11 @@ const Invoices = () => {
     },
     {
       title: 'Transacción',
+      width: 400,
       dataIndex: 'transaction_info',
+      render: (transaction_info: string) => (
+        <pre style={{lineBreak: 'anywhere', wordWrap: 'break-word', textWrap: 'wrap'}}>{transaction_info}</pre>
+      ),
     },
     {
       title: 'Monto',
