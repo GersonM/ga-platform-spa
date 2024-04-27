@@ -5,7 +5,6 @@ import {UploadFile} from 'antd/lib/upload/interface';
 import {UploadChangeParam} from 'antd/lib/upload/interface';
 import {ColorPicker} from 'antd';
 import axios from 'axios';
-import './TenantForm.less';
 
 const TenantForm = () => {
   const [form] = Form.useForm();

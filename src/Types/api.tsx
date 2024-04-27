@@ -6,6 +6,17 @@ export type TenantConfig = {
   favicon_white?: string;
   logo?: string;
 };
+
+export type SettingsGroup = {
+  key: string;
+  settings: SettingValue[];
+};
+
+export type SettingValue = {
+  key: string;
+  value?: string;
+};
+
 export type Company = {
   uuid: number;
   name: string;
