@@ -68,6 +68,12 @@ const Navigation = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to={'/invoices'}>
+              <span className="icon icon-cash-dollar"></span>
+              <span className={'label'}>Pagos</span>
+            </NavLink>
+          </li>
+          <li>
             <NavLink to={'/config'}>
               <span className="icon icon-cog"></span>
               <span className={'label'}>Opciones</span>
