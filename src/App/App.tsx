@@ -17,6 +17,7 @@ import ConfigOptions from '../InboxManagement/Screens/ConfigOptions';
 import Users from '../AccountManagement/Screens/Users';
 import FileDetailViewer from '../FileManagement/Screens/FileDetailViewer';
 import Invoices from '../PaymentManagement/Screens/Invoices';
+import PreferencesManager from '../Preferences/Screens/PreferencesManager';
 
 const App = () => {
   useEffect(() => {
@@ -73,6 +74,7 @@ const App = () => {
           <Route path={'inbox-management'} element={<ConfigOptions />}>
             <Route path={':tab'} element={null} />
           </Route>
+          <Route path={'preferences'} element={<PreferencesManager />} />
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
         <Route

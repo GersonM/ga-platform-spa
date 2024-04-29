@@ -3,14 +3,13 @@ import {ConfigProvider, theme} from 'antd';
 import tinyColor from 'tinycolor2';
 
 import {TenantConfig} from '../Types/api';
-import MetaTitle from '../CommonUI/MetaTitle';
 
 interface AntConfigProps {
   children: React.ReactNode;
   tenant: TenantConfig;
 }
 
-const defaultColor = '#186dc0';
+const defaultColor = '#0082ca';
 const defaultColorLight = '#52b5ff';
 
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
@@ -62,12 +61,23 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
         token: {
           colorPrimary: tenant.color ? tenant.color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.color ? tenant.color : defaultColor,
-          fontFamily: 'Barlow, Helvetica, Arial, sans-serif',
-          fontWeightStrong: 600,
+          fontFamily: 'Poppins, Helvetica, Arial, sans-serif',
+          fontSize: 13,
+          borderRadius: 9,
+        },
+        components: {
+          Modal: {
+            titleFontSize: 24,
+          },
+          Button: {
+            fontWeight: 500,
+          },
+          Input: {
+            padding: 20,
+          },
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
       }}>
-      <MetaTitle />
       {children}
     </ConfigProvider>
   );
