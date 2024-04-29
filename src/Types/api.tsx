@@ -9,12 +9,15 @@ export type TenantConfig = {
 
 export type SettingsGroup = {
   key: string;
+  label: string;
   settings: SettingValue[];
 };
 
 export type SettingValue = {
   key: string;
   value?: string;
+  label?: string;
+  type?: string;
 };
 
 export type Company = {

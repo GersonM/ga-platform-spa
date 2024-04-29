@@ -1,21 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {CheckIcon} from '@heroicons/react/24/solid';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import TenantForm from './TenantForm';
 import MetaTitle from '../../../CommonUI/MetaTitle';
 import AuthContext from '../../../Context/AuthContext';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 import './styles.less';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {SettingsGroup} from '../../../Types/api';
 import {Divider, Input} from 'antd';
+import PreferenceValue from '../../Components/PreferenceValue';
 
 const PreferencesManager = () => {
   const {config} = useContext(AuthContext);
   const [settings, setSettings] = useState<SettingsGroup[]>();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -35,13 +34,7 @@ const PreferencesManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, []);
-
-  const saveChanges = () => {
-    axios.put('tenant-management/settings').then(res => {
-      console.log(res);
-    });
-  };
+  }, [reload]);
 
   return (
     <ModuleContent>
@@ -51,15 +44,10 @@ const PreferencesManager = () => {
       {settings?.map(value => {
         return (
           <div>
-            <Divider>{value.key.replace('-', ' ')}</Divider>
-            {value.settings.map(s => {
-              return (
-                <p>
-                  {s.key}
-                  <Input value={s.value} />
-                </p>
-              );
-            })}
+            <Divider>{value.label}</Divider>
+            {value.settings.map((s, sI) => (
+              <PreferenceValue key={sI} preference={s} onUpdated={() => setReload(!reload)} />
+            ))}
           </div>
         );
       })}
