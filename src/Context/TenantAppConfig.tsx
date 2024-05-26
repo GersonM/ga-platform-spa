@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ConfigProvider, theme} from 'antd';
 import tinyColor from 'tinycolor2';
 
 import {TenantConfig} from '../Types/api';
+import AuthContext from './AuthContext';
 
 interface AntConfigProps {
   children: React.ReactNode;
@@ -13,10 +14,10 @@ const defaultColor = '#0082ca';
 const defaultColorLight = '#52b5ff';
 
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const {darkMode, setDarkMode} = useContext(AuthContext);
 
   useEffect(() => {
-    if (tenant.favicon) {
+    if (tenant.config.favicon) {
       let link = document.querySelector("link[rel~='icon']");
       if (!link) {
         link = document.createElement('link');
@@ -28,7 +29,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
       link.href = tenant.favicon;
     }
 
-    const primaryColor = tenant.color || defaultColor;
+    const primaryColor = tenant.primary_color || defaultColor;
     const tColor = tinyColor(primaryColor);
     tColor.brighten(40);
     tColor.setAlpha(0.1);
@@ -59,8 +60,8 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: tenant.color ? tenant.color : darkMode ? defaultColorLight : defaultColor,
-          colorLink: tenant.color ? tenant.color : defaultColor,
+          colorPrimary: tenant.primary_color ? tenant.primary_color : darkMode ? defaultColorLight : defaultColor,
+          colorLink: tenant.primary_color ? tenant.primary_color : defaultColor,
           fontFamily: 'Poppins, Helvetica, Arial, sans-serif',
           fontSize: 13,
           borderRadius: 9,

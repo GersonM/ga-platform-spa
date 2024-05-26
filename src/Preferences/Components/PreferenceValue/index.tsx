@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ColorPicker, Input, Space} from 'antd';
+import {Col, ColorPicker, Input, Row, Space, Upload} from 'antd';
 
 import {SettingValue} from '../../../Types/api';
 import './styles.less';
@@ -8,6 +8,7 @@ import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {TrashIcon} from '@heroicons/react/24/outline';
+import FileUploader from '../../../CommonUI/FileUploader';
 
 interface PreferenceValueProps {
   preference: SettingValue;
@@ -15,7 +16,7 @@ interface PreferenceValueProps {
 }
 
 const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
-  const [value, setValue] = useState(preference.value);
+  const [value, setValue] = useState<string | undefined>(preference.value);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,8 +27,10 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
     switch (preference.type) {
       case 'color':
         return <ColorPicker value={value} onChange={value => onChangeValue(value.toHexString())} />;
+      case 'image':
+        return <FileUploader showPreview imagePath={value} onFilesUploaded={file => setValue(file.uuid)} />;
       default:
-        return <Input placeholder={'Value'} value={value} onChange={e => onChangeValue(e.target.value)} />;
+        return <Input placeholder={'Value'} value={value} onChange={e => setValue(e.target.value)} />;
     }
   };
 
@@ -65,12 +68,19 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
 
   return (
     <div className={'preference-value-container'}>
-      <span className={'label'}>{preference.label}</span>
-      <Space>
-        {getControl()}
-        <IconButton small loading={loading} icon={<CheckIcon />} onClick={saveValue} />
-        <IconButton small danger loading={loading} icon={<TrashIcon />} onClick={deleteValue} />
-      </Space>
+      <Row align={'middle'} gutter={30}>
+        <Col md={6}>
+          <span className={'label'}>{preference.label}</span>
+          <small>{preference.hint}</small>
+        </Col>
+        <Col md={12}>
+          <Space>
+            {getControl()}
+            <IconButton small loading={loading} icon={<CheckIcon />} onClick={saveValue} />
+            <IconButton small danger loading={loading} icon={<TrashIcon />} onClick={deleteValue} />
+          </Space>
+        </Col>
+      </Row>
     </div>
   );
 };

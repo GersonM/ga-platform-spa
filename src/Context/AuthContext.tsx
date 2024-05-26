@@ -13,6 +13,8 @@ interface AuthContextDefaults {
   setUser: (data: any) => void;
   logout: () => Promise<any>;
   config?: TenantConfig;
+  setDarkMode: (value: boolean) => void;
+  darkMode?: boolean;
 }
 
 interface AuthContextProp {
@@ -25,12 +27,40 @@ const AuthContext = createContext<AuthContextDefaults>({
     return Promise.resolve(undefined);
   },
   setUser(): void {},
+  setDarkMode(): void {},
   user: null,
 });
 const token = Cookies.get('session_token');
 
 const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [user, setUser] = useState<User | null>(null);
+  const [darkMode, setDarkMode] = useState<boolean>();
+  const [preferredMode] = useState('auto');
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (preferredMode === 'auto') {
+      const media = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      setDarkMode(media === 'dark');
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        const colorScheme = e.matches ? 'dark' : 'light';
+        setDarkMode(colorScheme === 'dark');
+      });
+
+      return () => {
+        window.removeEventListener('change', function () {});
+      };
+    } else {
+      setDarkMode(preferredMode === 'dark');
+    }
+  }, [preferredMode]);
 
   useEffect(() => {
     if (token) {
@@ -87,6 +117,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         setUser,
         logout,
         config,
+        setDarkMode,
+        darkMode,
         sessionToken: token,
       }}>
       {children}

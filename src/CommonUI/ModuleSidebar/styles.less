@@ -1,12 +1,14 @@
 .module-sidebar-wrapper {
   background: var(--backgroung-color);
-  position: relative;
   max-width: 350px;
   min-width: 280px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  height: 100dvh;
 
   .scroll-content {
     display: flex;
@@ -15,8 +17,7 @@
   }
 
   .module-nav-header {
-    background-color: var(--primary-color-glass);
-    backdrop-filter: blur(6px);
+    background: linear-gradient(var(--backgroung-color), var(--backgroung-color), rgba(0, 0, 0, 0));
     position: sticky;
     top: 0;
     padding: 10px 15px;
@@ -26,7 +27,6 @@
       align-items: center;
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
 
       h4 {
         font-size: 15px;
@@ -41,6 +41,9 @@
         line-height: 11px;
       }
     }
+    .header {
+      margin-top: 5px;
+    }
   }
 
   .module-nav-content {
@@ -51,8 +54,6 @@
   .module-nav-footer {
     position: sticky;
     bottom: 0;
-    background-color: var(--primary-color-glass);
-    backdrop-filter: blur(6px);
     padding: 5px 10px;
 
     .status-info {

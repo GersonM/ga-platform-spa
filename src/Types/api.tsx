@@ -1,10 +1,16 @@
 export type TenantConfig = {
-  id: string;
-  color?: string;
-  name?: string;
-  favicon?: string;
-  favicon_white?: string;
-  logo?: string;
+  dark_logo?: string;
+  primary_color?: string;
+  version?: string;
+  white_logo?: string;
+  config: {
+    id: string;
+    color?: string;
+    name?: string;
+    favicon?: string;
+    favicon_white?: string;
+    logo?: string;
+  };
 };
 
 export type SettingsGroup = {
@@ -17,6 +23,7 @@ export type SettingValue = {
   key: string;
   value?: string;
   label?: string;
+  hint?: string;
   type?: string;
 };
 
@@ -64,7 +71,7 @@ export type FileActivity = {
 };
 
 export type File = {
-  uuid: number;
+  uuid: string;
   name: string;
   description: string;
   code: string;

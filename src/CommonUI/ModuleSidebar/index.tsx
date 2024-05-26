@@ -46,9 +46,9 @@ const ModuleSidebar = ({
             <div className={'module-nav-header'}>
               <div className={'title'}>
                 <h4>{title}</h4>
-                {actions && <div>{actions}</div>}
+                {actions && <div className={'actions'}>{actions}</div>}
               </div>
-              {header && <div>{header}</div>}
+              {header && <div className={'header'}>{header}</div>}
             </div>
           )}
           <div className={'module-nav-content'}>{children}</div>
@@ -56,7 +56,7 @@ const ModuleSidebar = ({
         {(footer || statusInfo) && (
           <div className={'module-nav-footer'}>
             {footer}
-            <div className={'status-info'}>{statusInfo}</div>
+            {statusInfo && <div className={'status-info'}>{statusInfo}</div>}
           </div>
         )}
       </div>

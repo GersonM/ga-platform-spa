@@ -28,8 +28,8 @@ axios
   .get('/version')
   .then(response => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
-      <AuthContextProvider config={response.data.config}>
-        <TenantAppConfig tenant={response.data.config}>
+      <AuthContextProvider config={response.data}>
+        <TenantAppConfig tenant={response.data}>
           <BrowserRouter>
             <App />
           </BrowserRouter>

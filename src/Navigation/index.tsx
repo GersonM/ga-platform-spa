@@ -7,6 +7,7 @@ import './styles.less';
 import logo from '../Assets/logo_square.png';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
+import {LightBulbIcon, MoonIcon} from '@heroicons/react/24/solid';
 
 const menuItems: ItemType[] = [
   {
@@ -21,13 +22,15 @@ const menuItems: ItemType[] = [
 ];
 
 const Navigation = () => {
-  const {user, logout, config} = useContext(AuthContext);
+  const {user, logout, config, setDarkMode, darkMode} = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const {pathname} = useLocation();
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  const navLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
   return (
     <div className={`navigation-wrapper ${open ? 'open' : ''}`}>
@@ -37,7 +40,7 @@ const Navigation = () => {
           onClick={() => {
             setOpen(!open);
           }}>
-          <img src={config?.favicon_white ? config.favicon_white : logo} alt="Logo" />
+          <img src={navLogo || logo} alt="Logo" />
         </div>
       </div>
       <nav>
@@ -80,13 +83,16 @@ const Navigation = () => {
           </li>
         </ul>
       </nav>
-      <Dropdown arrow={true} placement={'topLeft'} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
-        <div className="logged-user">
+      <div className="bottom-nav">
+        <div className={'user-tool'} onClick={() => setDarkMode(!darkMode)}>
+          {darkMode ? <i className={'icon-sun'} /> : <i className={'icon-moon'} />}
+        </div>
+        <Dropdown arrow={true} placement={'topLeft'} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
           <Avatar size={'large'} className={'avatar'}>
             {user?.name.substring(0, 1)}
           </Avatar>
-        </div>
-      </Dropdown>
+        </Dropdown>
+      </div>
       <div className={'version-info'}>v{Package.version}</div>
     </div>
   );
