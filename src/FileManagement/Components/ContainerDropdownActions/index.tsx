@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dropdown, MenuProps, Modal, List, Input, Button } from 'antd';
+import { Dropdown, Menu, Modal, List, Input, Button } from 'antd';
 import RenameContainer from './RenameContainer';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -21,7 +21,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
     switch (option.key) {
       case 'delete':
         Modal.confirm({
-          okText: 'Sí, borrar',
+          okText: 'Si, borrar',
           content: '¿Seguro que quieres borrar este archivo?',
           onOk: () => deleteContainer(),
         });
@@ -74,12 +74,22 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
             });
   };
 
-  const handleShare = (profile) => {
-    // Aquí puedes manejar la acción de compartir con el perfil seleccionado
-    console.log('Compartir con:', profile);
+  const shareProfile = (profileId) => {
+    axios
+            .post('/api/v1/share/store', { profile_id: profileId, container_uuid: container.uuid })
+            .then(response => {
+              ErrorHandler.showNotification(response.data.message, 'success');
+              if (onChange) {
+                onChange();
+              }
+            })
+            .catch(error => {
+              ErrorHandler.showNotification(error);
+            });
   };
 
-  const items: MenuProps['items'] = [
+
+  const items = [
     {
       label: container.is_public ? 'Hacer privado' : 'Convertir en público',
       key: 'change_visibility',
@@ -117,9 +127,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
                           renderItem={profile => (
                                   <List.Item
                                           actions={[
-                                            <Button type="primary" onClick={() => handleShare(profile)}>
-                                              Compartir
-                                            </Button>,
+                                            <Button onClick={() => shareProfile(profile.uuid)}>Compartir</Button>
                                           ]}
                                   >
                                     <List.Item.Meta title={profile.name} description={profile.email} />
@@ -128,6 +136,8 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
                   />
                 </>
         );
+      default:
+        return null;
     }
   };
 
@@ -138,7 +148,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
 
   return (
           <>
-            <Dropdown menu={{ items, onClick }} arrow trigger={trigger}>
+            <Dropdown overlay={<Menu onClick={onClick} items={items} />} trigger={trigger}>
               {children}
             </Dropdown>
             <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
