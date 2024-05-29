@@ -21,7 +21,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
     switch (option.key) {
       case 'delete':
         Modal.confirm({
-          okText: 'Si, borrar',
+          okText: 'Sí, borrar',
           content: '¿Seguro que quieres borrar este archivo?',
           onOk: () => deleteContainer(),
         });
@@ -74,6 +74,11 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
             });
   };
 
+  const handleShare = (profile) => {
+    // Aquí puedes manejar la acción de compartir con el perfil seleccionado
+    console.log('Compartir con:', profile);
+  };
+
   const items: MenuProps['items'] = [
     {
       label: container.is_public ? 'Hacer privado' : 'Convertir en público',
@@ -110,7 +115,13 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
                   <List
                           dataSource={profiles}
                           renderItem={profile => (
-                                  <List.Item>
+                                  <List.Item
+                                          actions={[
+                                            <Button type="primary" onClick={() => handleShare(profile)}>
+                                              Compartir
+                                            </Button>,
+                                          ]}
+                                  >
                                     <List.Item.Meta title={profile.name} description={profile.email} />
                                   </List.Item>
                           )}
