@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dropdown, Menu, Modal, List, Input, Button } from 'antd';
+import { Dropdown, MenuProps, Modal, List, Input, Button } from 'antd';
 import RenameContainer from './RenameContainer';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -21,7 +21,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
     switch (option.key) {
       case 'delete':
         Modal.confirm({
-          okText: 'Si, borrar',
+          okText: 'Sí, borrar',
           content: '¿Seguro que quieres borrar este archivo?',
           onOk: () => deleteContainer(),
         });
@@ -65,7 +65,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
 
   const fetchProfiles = () => {
     axios
-            .post('/api/v1/share', { user_email: userEmail })
+            .post('share/action', { user_email: userEmail })
             .then(response => {
               setProfiles(response.data);
             })
@@ -74,22 +74,25 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
             });
   };
 
-  const shareProfile = (profileId) => {
+  const shareProfile = (profileId: any, containerUuid: string)=> {
     axios
-            .post('/api/v1/share/store', { profile_id: profileId, container_uuid: container.uuid })
-            .then(response => {
-              ErrorHandler.showNotification(response.data.message, 'success');
-              if (onChange) {
-                onChange();
-              }
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
+      .post('share/store', { profile_id: profileId, container_uuid: containerUuid })
+      .then(response => {
+        ErrorHandler.showNotification(response.data.message, 200);
+        if (onChange) {
+          onChange();
+        }
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error.message, 200);
+      })
   };
 
+  const handleShare = (profile: any) => {
+    shareProfile(profile.id, container.uuid);
+  };
 
-  const items = [
+  const items: MenuProps['items'] = [
     {
       label: container.is_public ? 'Hacer privado' : 'Convertir en público',
       key: 'change_visibility',
@@ -109,52 +112,51 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
   const getContent = () => {
     switch (activeAction) {
       case 'move':
-        return <RenameContainer container={container} onCompleted={onComplete} />;
       case 'rename':
         return <RenameContainer container={container} onCompleted={onComplete} />;
       case 'share':
         return (
-                <>
-                  <Input
-                          placeholder="Ingrese correo electrónico"
-                          value={userEmail}
-                          onChange={e => setUserEmail(e.target.value)}
-                          onPressEnter={fetchProfiles}
-                  />
-                  <Button onClick={fetchProfiles}>Buscar</Button>
-                  <List
-                          dataSource={profiles}
-                          renderItem={profile => (
-                                  <List.Item
-                                          actions={[
-                                            <Button onClick={() => shareProfile(profile.uuid)}>Compartir</Button>
-                                          ]}
-                                  >
-                                    <List.Item.Meta title={profile.name} description={profile.email} />
-                                  </List.Item>
-                          )}
-                  />
-                </>
+          <>
+            <Input
+              placeholder="Ingrese correo electrónico"
+              value={userEmail}
+              onChange={e => setUserEmail(e.target.value)}
+              onPressEnter={fetchProfiles}
+            />
+            <Button onClick={fetchProfiles}>Buscar</Button>
+            <List
+              dataSource={profiles}
+              renderItem={profile => (
+                <List.Item
+                  actions={[
+                    <Button type="primary" onClick={() => handleShare(profile)}>
+                      Compartir
+                    </Button>,
+                  ]}>
+                  <List.Item.Meta title={profile.name} description={profile.email} />
+                </List.Item>
+              )}
+            />
+          </>
         );
       default:
         return null;
     }
   };
-
   const onComplete = () => {
     setActiveAction(undefined);
     if (onChange) onChange();
   };
 
   return (
-          <>
-            <Dropdown overlay={<Menu onClick={onClick} items={items} />} trigger={trigger}>
-              {children}
-            </Dropdown>
-            <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
-              {getContent()}
-            </Modal>
-          </>
+    <>
+      <Dropdown menu={{ items, onClick }} arrow trigger={trigger}>
+        {children}
+      </Dropdown>
+      <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
+        {getContent()}
+      </Modal>
+    </>
   );
 };
 
