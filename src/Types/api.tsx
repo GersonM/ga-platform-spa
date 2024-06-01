@@ -28,7 +28,7 @@ export type Company = {
 };
 
 export type Profile = {
-  uuid: number;
+  uuid: string;
   name: string;
   last_name: string;
   birthday?: string;

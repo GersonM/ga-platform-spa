@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Dropdown, MenuProps, Modal, List, Input, Button } from 'antd';
-import RenameContainer from './RenameContainer';
+import React, {useState} from 'react';
+import {Dropdown, MenuProps, Modal} from 'antd';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import { Container } from '../../../Types/api';
+import {Container} from '../../../Types/api';
+import RenameContainer from './RenameContainer';
+import ShareContainer from './ShareContainer';
 
 interface ContainerDropdownActionsProps {
   children: React.ReactNode;
@@ -12,10 +14,8 @@ interface ContainerDropdownActionsProps {
   onChange?: () => void;
 }
 
-const ContainerDropdownActions = ({ children, trigger, container, onChange }: ContainerDropdownActionsProps) => {
+const ContainerDropdownActions = ({children, trigger, container, onChange}: ContainerDropdownActionsProps) => {
   const [activeAction, setActiveAction] = useState<string>();
-  const [profiles, setProfiles] = useState([]);
-  const [userEmail, setUserEmail] = useState('');
 
   const onClick = (option: any) => {
     switch (option.key) {
@@ -39,57 +39,28 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
 
   const changeVisibility = () => {
     axios
-            .post(`file-management/containers/${container.uuid}/change-visibility`, { is_public: !container.is_public })
-            .then(response => {
-              if (onChange) {
-                onChange();
-              }
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
-  };
-
-  const deleteContainer = () => {
-    axios
-            .delete(`file-management/containers/${container.uuid}`, {})
-            .then(() => {
-              if (onChange) {
-                onChange();
-              }
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
-  };
-
-  const fetchProfiles = () => {
-    axios
-            .post('share/action', { user_email: userEmail })
-            .then(response => {
-              setProfiles(response.data);
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
-  };
-
-  const shareProfile = (profileId: any, containerUuid: string)=> {
-    axios
-      .post('share/store', { profile_id: profileId, container_uuid: containerUuid })
+      .post(`file-management/containers/${container.uuid}/change-visibility`, {is_public: !container.is_public})
       .then(response => {
-        ErrorHandler.showNotification(response.data.message, 200);
         if (onChange) {
           onChange();
         }
       })
       .catch(error => {
-        ErrorHandler.showNotification(error.message, 200);
-      })
+        ErrorHandler.showNotification(error);
+      });
   };
 
-  const handleShare = (profile: any) => {
-    shareProfile(profile.id, container.uuid);
+  const deleteContainer = () => {
+    axios
+      .delete(`file-management/containers/${container.uuid}`, {})
+      .then(() => {
+        if (onChange) {
+          onChange();
+        }
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
   };
 
   const items: MenuProps['items'] = [
@@ -98,15 +69,15 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
       key: 'change_visibility',
       icon: <span className={container.is_public ? 'icon icon-lock' : 'icon icon-earth'} />,
     },
-    { label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true },
-    { label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />, disabled: true },
+    {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
+    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />, disabled: true},
     {
       label: 'Compartir',
       key: 'share',
       icon: <span className={'icon icon-share'} />,
     },
-    { type: 'divider' },
-    { label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} /> },
+    {type: 'divider'},
+    {label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} />},
   ];
 
   const getContent = () => {
@@ -115,30 +86,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
       case 'rename':
         return <RenameContainer container={container} onCompleted={onComplete} />;
       case 'share':
-        return (
-          <>
-            <Input
-              placeholder="Ingrese correo electrónico"
-              value={userEmail}
-              onChange={e => setUserEmail(e.target.value)}
-              onPressEnter={fetchProfiles}
-            />
-            <Button onClick={fetchProfiles}>Buscar</Button>
-            <List
-              dataSource={profiles}
-              renderItem={profile => (
-                <List.Item
-                  actions={[
-                    <Button type="primary" onClick={() => handleShare(profile)}>
-                      Compartir
-                    </Button>,
-                  ]}>
-                  <List.Item.Meta title={profile.name} description={profile.email} />
-                </List.Item>
-              )}
-            />
-          </>
-        );
+        return <ShareContainer container={container} onCompleted={onComplete} />;
       default:
         return null;
     }
@@ -150,7 +98,7 @@ const ContainerDropdownActions = ({ children, trigger, container, onChange }: Co
 
   return (
     <>
-      <Dropdown menu={{ items, onClick }} arrow trigger={trigger}>
+      <Dropdown menu={{items, onClick}} arrow trigger={trigger}>
         {children}
       </Dropdown>
       <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
