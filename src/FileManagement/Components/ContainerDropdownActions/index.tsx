@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {Dropdown, MenuProps, Modal} from 'antd';
-import RenameContainer from './RenameContainer';
 import axios from 'axios';
 
-import {Container} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {Container} from '../../../Types/api';
+import RenameContainer from './RenameContainer';
+import ShareContainer from './ShareContainer';
 
 interface ContainerDropdownActionsProps {
   children: React.ReactNode;
@@ -20,13 +21,16 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
     switch (option.key) {
       case 'delete':
         Modal.confirm({
-          okText: 'Si, borrar',
+          okText: 'Sí, borrar',
           content: '¿Seguro que quieres borrar este archivo?',
           onOk: () => deleteContainer(),
         });
         break;
       case 'change_visibility':
         changeVisibility();
+        break;
+      case 'share':
+        setActiveAction('share');
         break;
       default:
         setActiveAction(option.key);
@@ -46,18 +50,6 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
       });
   };
 
-  const items: MenuProps['items'] = [
-    {
-      label: container.is_public ? 'Hacer privado' : 'Convertir en público',
-      key: 'change_visibility',
-      icon: <span className={container.is_public ? 'icon icon-lock' : 'icon icon-earth'} />,
-    },
-    {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
-    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />, disabled: true},
-    {type: 'divider'},
-    {label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} />},
-  ];
-
   const deleteContainer = () => {
     axios
       .delete(`file-management/containers/${container.uuid}`, {})
@@ -71,17 +63,37 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
       });
   };
 
-  const onComplete = () => {
-    setActiveAction(undefined);
-    if (onChange) onChange();
-  };
+  const items: MenuProps['items'] = [
+    {
+      label: container.is_public ? 'Hacer privado' : 'Convertir en público',
+      key: 'change_visibility',
+      icon: <span className={container.is_public ? 'icon icon-lock' : 'icon icon-earth'} />,
+    },
+    {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
+    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />, disabled: true},
+    {
+      label: 'Compartir',
+      key: 'share',
+      icon: <span className={'icon icon-share'} />,
+    },
+    {type: 'divider'},
+    {label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} />},
+  ];
+
   const getContent = () => {
     switch (activeAction) {
       case 'move':
-        return <RenameContainer container={container} onCompleted={onComplete} />;
       case 'rename':
         return <RenameContainer container={container} onCompleted={onComplete} />;
+      case 'share':
+        return <ShareContainer container={container} onCompleted={onComplete} />;
+      default:
+        return null;
     }
+  };
+  const onComplete = () => {
+    setActiveAction(undefined);
+    if (onChange) onChange();
   };
 
   return (
