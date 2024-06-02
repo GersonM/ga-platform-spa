@@ -12,9 +12,9 @@ const ProfileCard = ({profile}: ProfileCardProps) => {
   return (
     <div className={'profile-card-container'}>
       <Avatar size={120}>{profile.name.substring(0, 1)}</Avatar>
-      <h4 className={'name'}>
+      <h2 className={'name'}>
         {profile.name} {profile.last_name}
-      </h4>
+      </h2>
       <small>{profile.email}</small>
     </div>
   );

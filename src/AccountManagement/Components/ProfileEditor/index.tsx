@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select} from 'antd';
+import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
@@ -9,7 +9,9 @@ import {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';
-import {minimal} from '@supabase/auth-ui-shared';
+import UserPermissionsManager from '../UserPermissionsManager';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {LockClosedIcon, ShieldCheckIcon} from '@heroicons/react/24/solid';
 
 interface ProfileEditorProps {
   profileUuid: string;
@@ -21,6 +23,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
   const [loading, setLoading] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [openPermissionsManager, setOpenPermissionsManager] = useState(false);
+  const [reload, setReload] = useState(false);
   const params = useParams();
   const [form] = useForm();
 
@@ -44,7 +47,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [params.uuid]);
+  }, [params.uuid, reload]);
 
   useEffect(() => {
     if (profile) {
@@ -82,12 +85,20 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       <Row justify={'center'} gutter={20}>
         <Col md={5}>
           <ProfileCard profile={profile} />
-          <Button block type={'text'} onClick={() => setOpenChangePassword(true)}>
-            Actualizar contraseña
-          </Button>
-          <Button block type={'text'} onClick={() => setOpenChangePassword(true)}>
-            Ver permisos
-          </Button>
+          <Space direction={'vertical'}>
+            <PrimaryButton
+              icon={<LockClosedIcon />}
+              block
+              label={'Actualizar contraseña'}
+              onClick={() => setOpenChangePassword(true)}
+            />
+            <PrimaryButton
+              icon={<ShieldCheckIcon />}
+              block
+              label={'Ver permisos'}
+              onClick={() => setOpenPermissionsManager(true)}
+            />
+          </Space>
         </Col>
         <Col md={13}>
           <Form form={form} initialValues={profile} layout={'vertical'} onFinish={onSubmit}>
@@ -175,16 +186,9 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       <Drawer
         destroyOnClose
         open={openPermissionsManager}
-        title={'Actualizar contraseña para ' + profile.name}
-        onClose={() => setOpenChangePassword(false)}>
-        {profile && (
-          <UpdateUserPassword
-            onChange={() => {
-              setOpenChangePassword(false);
-            }}
-            profile={profile}
-          />
-        )}
+        title={'Actualizar permisos para ' + profile.name}
+        onClose={() => setOpenPermissionsManager(false)}>
+        {profile.user && <UserPermissionsManager user={profile.user} onChange={() => setReload(!reload)} />}
       </Drawer>
     </>
   );
