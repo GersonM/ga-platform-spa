@@ -18,7 +18,7 @@ import logo from '../../../Assets/logo_full.png';
 const FileDetailViewer = () => {
   const params = useParams();
   const [file, setFile] = useState<File>();
-  const {config} = useContext(AuthContext);
+  const {config, darkMode} = useContext(AuthContext);
   const [reload, setReload] = useState(true);
   const [initTime, setInitTime] = useState<number>();
 
@@ -44,12 +44,13 @@ const FileDetailViewer = () => {
   }, [reload]);
 
   const showAnnotations = file?.activity && file?.activity?.filter(a => a.action !== 'created').length > 0;
+  const tenantLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
   return (
     <div className={'file-detail-wrapper'}>
       <div className={'file-detail-container'}>
         <Space size={'large'} align={'start'}>
-          <img src={config?.logo ? config.logo : logo} alt="Logo" className={'logo'} />
+          <img src={tenantLogo ? tenantLogo : logo} alt="Logo" className={'logo'} />
           <div>
             <h2 className={'title'}>{file?.name}</h2>
             <small>
@@ -109,7 +110,7 @@ const FileDetailViewer = () => {
         </Row>
       </div>
       <div className={'footer'}>
-        {config?.name} | V{version}
+        {config?.config.name} | V{version}
       </div>
     </div>
   );
