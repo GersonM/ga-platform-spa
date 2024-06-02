@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, ColorPicker, Input, Row, Space, Upload} from 'antd';
+import {Col, ColorPicker, Input, Row, Space} from 'antd';
 
 import {SettingValue} from '../../../Types/api';
 import './styles.less';
