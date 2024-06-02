@@ -70,8 +70,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           if (userResponse) {
             setUser(userResponse.data);
           } else {
-            if (window.location.pathname.indexOf('/login') === -1) {
-              window.location.href = '/login';
+            if (window.location.pathname.indexOf('/auth/login') === -1) {
+              window.location.href = '/auth/login';
             }
           }
         })
@@ -107,7 +107,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
     await axios.get('authentication/logout');
     setUser(null);
     Cookies.remove('session_token');
-    window.location.href = '/login';
+    window.location.href = '/auth/login';
   };
   console.log('Auth context');
   return (

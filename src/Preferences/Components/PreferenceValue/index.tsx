@@ -18,6 +18,7 @@ interface PreferenceValueProps {
 const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
   const [value, setValue] = useState<string | undefined>(preference.value);
   const [loading, setLoading] = useState(false);
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     setValue(preference.value);
@@ -28,14 +29,15 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
       case 'color':
         return <ColorPicker value={value} onChange={value => onChangeValue(value.toHexString())} />;
       case 'image':
-        return <FileUploader showPreview imagePath={value} onFilesUploaded={file => setValue(file.uuid)} />;
+        return <FileUploader showPreview imagePath={value} onFilesUploaded={file => onChangeValue(file.uuid)} />;
       default:
-        return <Input placeholder={'Value'} value={value} onChange={e => setValue(e.target.value)} />;
+        return <Input placeholder={'Value'} value={value} onChange={e => onChangeValue(e.target.value)} />;
     }
   };
 
   const onChangeValue = (val: string) => {
     setValue(val);
+    setIsModified(true);
   };
 
   const saveValue = () => {
@@ -44,6 +46,9 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
       .put('/tenant-management/settings', {value, key: preference.key})
       .then(() => {
         setLoading(false);
+        if (preference.key.includes('color') || preference.key.includes('logo')) {
+          location.reload();
+        }
         onUpdated && onUpdated();
       })
       .catch(error => {
@@ -76,7 +81,7 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
         <Col md={12}>
           <Space>
             {getControl()}
-            <IconButton small loading={loading} icon={<CheckIcon />} onClick={saveValue} />
+            <IconButton small disabled={!isModified} loading={loading} icon={<CheckIcon />} onClick={saveValue} />
             <IconButton small danger loading={loading} icon={<TrashIcon />} onClick={deleteValue} />
           </Space>
         </Col>

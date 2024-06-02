@@ -4,15 +4,15 @@ import PasswordStrengthBar from 'react-password-strength-bar';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
-import {User} from '../../../Types/api';
+import {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface UpdateUserPasswordProps {
   onChange?: () => void;
-  user: User;
+  profile: Profile;
 }
 
-const UpdateUserPassword = ({onChange, user}: UpdateUserPasswordProps) => {
+const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
   const [password, setPassword] = useState<string>();
   const [generatedPassword, setGeneratedPassword] = useState<string>();
   const [form] = useForm();
@@ -20,7 +20,7 @@ const UpdateUserPassword = ({onChange, user}: UpdateUserPasswordProps) => {
   const changePassword = (values: any) => {
     console.log(values);
     axios
-      .post('authentication/change-password', {...values, user_uuid: user.uuid})
+      .post('authentication/change-password', {...values, user_uuid: profile.user?.uuid, profile_uuid: profile.uuid})
       .then(response => {
         console.log(response);
         if (onChange) {
@@ -53,6 +53,12 @@ const UpdateUserPassword = ({onChange, user}: UpdateUserPasswordProps) => {
 
   return (
     <div>
+      {!profile.user && (
+        <p>
+          Esta persona no tiene un usuario asociado, al generar una contraseña se creará el usuario y este podrá acceder
+          a la plataforma
+        </p>
+      )}
       <Form form={form} layout={'vertical'} onFinish={changePassword}>
         <Form.Item name={'password'} label={'Nueva contraseña'}>
           <Input.Password

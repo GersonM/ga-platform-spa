@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Button, Empty, Input, Pagination, Popover, Select, Space, Tabs, Tooltip} from 'antd';
 import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
-import {IdentificationIcon, UserCircleIcon} from '@heroicons/react/24/solid';
+import {IdentificationIcon, UserCircleIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import {Profile, ResponsePagination} from '../../../Types/api';
@@ -104,7 +104,6 @@ const Users = () => {
             />
           </Space>
         }
-        statusInfo={`Total ${pagination?.total}`}
         footer={
           <>
             <Space>
@@ -119,20 +118,24 @@ const Users = () => {
                   setPageSize(size);
                 }}
               />
+              <div>Total {pagination?.total}</div>
               <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
             </Space>
           </>
         }>
         <NavList>
-          {profiles?.map((p, index) => (
-            <NavListItem
-              key={index}
-              name={`${p.name} ${p.last_name || ''}`}
-              caption={dayjs(p.created_at).fromNow() + (p.user ? ' | ' + p.user?.email : '')}
-              icon={p.user ? <IdentificationIcon /> : <UserCircleIcon />}
-              path={`/accounts/${p.uuid}`}
-            />
-          ))}
+          {profiles?.map((p, index) => {
+            const isAdmin = !!p.user?.roles?.filter(r => r.name == 'admin').length;
+            return (
+              <NavListItem
+                key={index}
+                name={`${p.name} ${p.last_name || ''} ${isAdmin ? '*' : ''}`}
+                caption={dayjs(p.created_at).fromNow() + (p.user ? ' | ' + p.user?.email : '')}
+                icon={p.user ? <IdentificationIcon /> : <UserIcon />}
+                path={`/accounts/${p.uuid}`}
+              />
+            );
+          })}
         </NavList>
         {profiles?.length === 0 && (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay personas registradas'} />
@@ -156,12 +159,6 @@ const Users = () => {
                 label: 'Suscripciones',
                 key: 'subscriptions',
                 children: <PersonSubscription profileUuid={params.uuid} />,
-              },
-              {
-                label: 'Permisos',
-                key: 'permissions',
-                disabled: true,
-                children: <ConfigAccounts />,
               },
             ]}
           />

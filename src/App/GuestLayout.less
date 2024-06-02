@@ -1,0 +1,99 @@
+.login-wrapper {
+  background: #778899 url(./../Assets/bg_app.jpg) no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+}
+
+.login-block {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background: rgba(250, 251, 255, 0.4);
+  backdrop-filter: blur(10px);
+  box-shadow: 5px 10px 30px rgba(0, 0, 0, .2);
+  border-radius: 15px;
+
+  .form-block {
+    text-align: center;
+    padding: 30px;
+    width: 320px;
+  }
+
+  .logo-label {
+    display: block;
+    color: #000;
+  }
+
+  .logo {
+    max-width: 150px;
+    max-height: 50px;
+    margin: 25px auto;
+  }
+
+  .version-info {
+    opacity: 0.3;
+    font-size: 11px;
+    line-height: 11px;
+    display: block;
+    margin-top: 25px;
+  }
+}
+
+
+.dark-mode {
+  .login-wrapper {
+    background-image: url(./../Assets/bg_app_dark.jpg);
+  }
+
+  .login-block {
+    background: rgba(5, 17, 10, 0.6);
+    backdrop-filter: blur(25px);
+    box-shadow: 5px 10px 30px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.otp-input {
+  justify-content: center;
+
+  input {
+    border: none;
+    border-radius: 6px;
+    margin: 0 5px;
+    width: 30px !important;
+    height: 40px;
+    line-height: 20px;
+    font-size: 18px;
+    background: var(--backgroung-color);
+  }
+}
+
+.zoom-in {
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  -webkit-animation-timing-function: cubic-bezier(.02, .41, .03, 1);
+  animation-timing-function: cubic-bezier(.02, .41, .03, 1);
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(1.2, 1.2, 1.2);
+  }
+
+  70% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  to {
+    opacity: 1;
+  }
+}

@@ -7,6 +7,7 @@ interface IconButtonProps {
   danger?: boolean;
   loading?: boolean;
   small?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 }
 

@@ -9,6 +9,7 @@ import {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';
+import {minimal} from '@supabase/auth-ui-shared';
 
 interface ProfileEditorProps {
   profileUuid: string;
@@ -19,6 +20,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
   const [profile, setProfile] = useState<Profile>();
   const [loading, setLoading] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [openPermissionsManager, setOpenPermissionsManager] = useState(false);
   const params = useParams();
   const [form] = useForm();
 
@@ -74,19 +76,28 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
   };
 
   if (!profile) return null;
+
   return (
     <>
-      <Row align={'middle'} justify={'center'}>
-        <Col>
+      <Row justify={'center'} gutter={20}>
+        <Col md={5}>
           <ProfileCard profile={profile} />
+          <Button block type={'text'} onClick={() => setOpenChangePassword(true)}>
+            Actualizar contraseña
+          </Button>
+          <Button block type={'text'} onClick={() => setOpenChangePassword(true)}>
+            Ver permisos
+          </Button>
+        </Col>
+        <Col md={13}>
           <Form form={form} initialValues={profile} layout={'vertical'} onFinish={onSubmit}>
             <Row gutter={15}>
-              <Col>
+              <Col md={12}>
                 <Form.Item name={'name'} label={'Nombre'}>
                   <Input />
                 </Form.Item>
               </Col>
-              <Col>
+              <Col md={12}>
                 <Form.Item name={'last_name'} label={'Apellidos'}>
                   <Input />
                 </Form.Item>
@@ -144,11 +155,6 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
             <Button block htmlType={'submit'} type={'primary'} loading={loading}>
               Guardar
             </Button>
-            <br />
-            <br />
-            <Button block type={'text'} onClick={() => setOpenChangePassword(true)}>
-              Actualizar contraseña
-            </Button>
           </Form>
         </Col>
       </Row>
@@ -157,12 +163,26 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
         open={openChangePassword}
         title={'Actualizar contraseña para ' + profile.name}
         onClose={() => setOpenChangePassword(false)}>
-        {profile.user && (
+        {profile && (
           <UpdateUserPassword
             onChange={() => {
               setOpenChangePassword(false);
             }}
-            user={profile.user}
+            profile={profile}
+          />
+        )}
+      </Drawer>
+      <Drawer
+        destroyOnClose
+        open={openPermissionsManager}
+        title={'Actualizar contraseña para ' + profile.name}
+        onClose={() => setOpenChangePassword(false)}>
+        {profile && (
+          <UpdateUserPassword
+            onChange={() => {
+              setOpenChangePassword(false);
+            }}
+            profile={profile}
           />
         )}
       </Drawer>

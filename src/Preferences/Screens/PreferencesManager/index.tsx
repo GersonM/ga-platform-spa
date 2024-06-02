@@ -1,16 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
+import axios from 'axios';
 
-import ModuleContent from '../../../CommonUI/ModuleContent';
 import MetaTitle from '../../../CommonUI/MetaTitle';
 import AuthContext from '../../../Context/AuthContext';
 
-import './styles.less';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {SettingsGroup} from '../../../Types/api';
-import {Divider, Input} from 'antd';
+import {Divider} from 'antd';
 import PreferenceValue from '../../Components/PreferenceValue';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import './styles.less';
 
 const PreferencesManager = () => {
   const {config} = useContext(AuthContext);
@@ -41,9 +40,9 @@ const PreferencesManager = () => {
   }, [reload]);
 
   return (
-    <ModuleContent>
+    <>
       <MetaTitle title={'Configuración de la cuenta'} />
-      <ContentHeader loading={loading} title={'Configuración del Tenant'} onRefresh={() => setReload(!reload)}>
+      <ContentHeader loading={loading} title={'Configuración de la cuenta'} onRefresh={() => setReload(!reload)}>
         <p>Nombre de la cuenta: {config?.config.name}</p>
       </ContentHeader>
       {settings?.map((value, index) => {
@@ -56,7 +55,7 @@ const PreferencesManager = () => {
           </div>
         );
       })}
-    </ModuleContent>
+    </>
   );
 };
 

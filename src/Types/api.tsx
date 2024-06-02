@@ -50,10 +50,15 @@ export type Profile = {
   avatar?: File;
 };
 
+export type Role = {
+  id: number;
+  name: string;
+};
 export type User = {
   uuid: number;
   email: string;
   profile: Profile;
+  roles?: Role[];
   name: string;
   token: string;
 };

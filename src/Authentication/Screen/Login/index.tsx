@@ -1,23 +1,18 @@
-import React, {useContext, useState} from 'react';
-import {Button, Form, Input, Modal} from 'antd';
-import {useNavigate} from 'react-router-dom';
+import React, {useState} from 'react';
+import {Button, Divider, Form, Input, Modal} from 'antd';
+import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
-import {SocialAuth, Auth} from '@supabase/auth-ui-react';
-import {ThemeSupa} from '@supabase/auth-ui-shared';
-import {createClient} from '@supabase/supabase-js';
+import {LockClosedIcon} from '@heroicons/react/24/solid';
 
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import './styles.less';
-import Package from './../../../../package.json';
-import logo from './../../../Assets/logo_full.png';
-import AuthContext from '../../../Context/AuthContext';
 
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY_PUBLIC);
+//const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY_PUBLIC);
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const {config} = useContext(AuthContext);
 
   const login = ({email, password}: any) => {
     axios.defaults.headers.common.Authorization = 'Bearer token';
@@ -58,47 +53,27 @@ const Login = () => {
         }
       });
   };
+
   return (
-    <div className={'login-wrapper'}>
-      <div className="login-block zoom-in">
-        <div className="page"></div>
-        <div className="form-block">
-          <img src={config?.logo ? config.logo : logo} alt="Logo" className={'logo'} />
-          {/*<Auth
-            appearance={{
-              theme: ThemeSupa,
-              variables: {
-                default: {
-                  colors: {
-                    brand: '#0075CA',
-                    brandAccent: '#005c9d',
-                  },
-                },
-              },
-            }}
-            supabaseClient={supabase}
-            socialLayout={'horizontal'}
-            dark={true}
-            providers={['google', 'azure']}
-          />*/}
-          <Form onFinish={login}>
-            <Form.Item name={'email'}>
-              <Input bordered={false} className={'login-form-input'} placeholder={'E-mail'} inputMode={'email'} />
-            </Form.Item>
-            <Form.Item name={'password'}>
-              <Input.Password className={'login-form-input'} bordered={false} placeholder={'Contraseña'} />
-            </Form.Item>
-            <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
-              Ingresar
-            </Button>
-          </Form>
-          <Button type={'link'} href={'/auth/recovery'}>
-            Recuperar contraseña
-          </Button>
-          <span className={'version-info'}>Geek Advice v{Package.version}</span>
-        </div>
-      </div>
-    </div>
+    <>
+      <h2>Iniciar sesión</h2>
+      <br />
+      <Form onFinish={login}>
+        <Form.Item name={'email'}>
+          <Input variant={'filled'} placeholder={'E-mail'} inputMode={'email'} />
+        </Form.Item>
+        <Form.Item name={'password'}>
+          <Input.Password variant={'filled'} placeholder={'Contraseña'} />
+        </Form.Item>
+        <PrimaryButton block icon={<LockClosedIcon />} label={'Ingresar'} loading={loading} htmlType={'submit'} />
+      </Form>
+      <Divider />
+      <NavLink to={'/auth/recover'}>
+        <Button block type={'text'}>
+          Recuperar contraseña
+        </Button>
+      </NavLink>
+    </>
   );
 };
 

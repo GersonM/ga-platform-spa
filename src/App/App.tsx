@@ -18,6 +18,9 @@ import Users from '../AccountManagement/Screens/Users';
 import FileDetailViewer from '../FileManagement/Screens/FileDetailViewer';
 import Invoices from '../PaymentManagement/Screens/Invoices';
 import PreferencesManager from '../Preferences/Screens/PreferencesManager';
+import GuestLayout from './GuestLayout';
+import PasswordRecovery from '../Authentication/Screen/PasswordRecovery';
+import VerifyRecovery from '../Authentication/Screen/VerifyRecovery';
 
 const App = () => {
   useEffect(() => {
@@ -35,8 +38,8 @@ const App = () => {
       if (error.message !== 'Network Error' && error.response) {
         switch (error.response.status) {
           case 401:
-            if (window.location.pathname.indexOf('/login') === -1) {
-              window.location.href = '/login';
+            if (window.location.pathname.indexOf('/auth/login') === -1) {
+              window.location.href = '/auth/login';
             }
             break;
           default:
@@ -48,7 +51,11 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path={'/login'} element={<Login />} />
+      <Route path={'/auth'} element={<GuestLayout />}>
+        <Route path={'login'} element={<Login />} />
+        <Route path={'recover'} element={<PasswordRecovery />} />
+        <Route path={'verify-recovery'} element={<VerifyRecovery />} />
+      </Route>
       <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
       <Route path={'/'} element={<AuthenticatedLayout />}>
         <Route index element={<DashboardHome />} />

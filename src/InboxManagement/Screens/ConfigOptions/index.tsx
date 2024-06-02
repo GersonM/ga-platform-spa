@@ -4,6 +4,7 @@ import ConfigAccounts from './ConfigAccounts';
 import ConfigProviders from './ConfigProviders';
 import {useNavigate, useParams} from 'react-router-dom';
 import './styles.less';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 
 const ConfigOptions = () => {
   const params = useParams();
@@ -12,8 +13,8 @@ const ConfigOptions = () => {
   console.log(params.tab);
 
   return (
-    <div>
-      <h2>Configuración de cuentas de correo</h2>
+    <>
+      <ContentHeader title={'Configuración de cuentas de correo'} />
       <Tabs
         animated={{inkBar: true, tabPane: true}}
         onChange={tab => {
@@ -33,7 +34,7 @@ const ConfigOptions = () => {
           },
         ]}
       />
-    </div>
+    </>
   );
 };
 
