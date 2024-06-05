@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Input, List, notification} from 'antd';
 import {Container, Profile} from '../../../Types/api';
 import axios from 'axios';
@@ -12,6 +12,23 @@ interface ShareContainerProps {
 const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
   const [userEmail, setUserEmail] = useState<string>();
   const [profiles, setProfiles] = useState<Profile[]>();
+  const [sharedProfiles, setSharedProfiles] = useState<Profile[]>([]);
+
+  useEffect(()=>{
+    fetchSharedProfiles();
+  },[container.uuid]);
+
+  const fetchSharedProfiles = () => {
+    axios
+      .get(`file-management/containers/${container.uuid}/shared-profiles`)
+      .then(response => {
+        setSharedProfiles(response.data.data);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
 
   const fetchProfiles = () => {
     axios
@@ -25,18 +42,17 @@ const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
   };
 
   const shareProfile = (profile: Profile) => {
-    console.log({profile});
     axios
       .post(`file-management/containers/${container.uuid}/share`, {profile_uuid: profile.uuid})
       .then(response => {
         notification.success({message: 'Acceso compartido'});
         onCompleted && onCompleted();
+        fetchSharedProfiles();
       })
-      .catch(error => {
-        ErrorHandler.showNotification(error);
-      });
+        .catch(error => {
+          ErrorHandler.showNotification(error);
+        });
   };
-
   return (
     <div>
       <h2>Compartir acceso a "{container.name}"</h2>
@@ -58,6 +74,15 @@ const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
               </Button>,
             ]}>
             <List.Item.Meta title={profile.name} description={profile.email} />
+          </List.Item>
+        )}
+      />
+      <h3>Usuarios con acceso compartido</h3>
+      <List
+        dataSource={sharedProfiles}
+        renderItem={profile =>(
+          <List.Item>
+            <List.Item.Meta title={profile.name} description={profile.email}/>
           </List.Item>
         )}
       />
