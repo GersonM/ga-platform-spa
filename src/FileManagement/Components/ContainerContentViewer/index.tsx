@@ -14,6 +14,7 @@ import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
 import {sendFileToServer} from '../../../Utils/FileUploader';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -34,7 +35,6 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   useEffect(() => {
     if (selectedFiles) {
       const current = selectedFiles[0];
-      console.log(current);
     }
   }, [selectedFiles]);
 
@@ -75,13 +75,13 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
           .post('file-management/chunked-files', formData, config)
 
           /*fetch(import.meta.env.VITE_API_UPLOAD + 'file-management/chunked-files', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                  'X-Tenant': 'app',
-                  Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
-                },
-              })*/
+                      method: 'POST',
+                      body: formData,
+                      headers: {
+                        'X-Tenant': 'app',
+                        Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
+                      },
+                    })*/
           //.then(response => response.json())
           .then(data => {
             console.log({data});
@@ -209,6 +209,17 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
           />
           <div className="file-navigator-wrapper">
             {isDragActive && <DropMessage />}
+            {showFileInformation && (
+              <FileInformation
+                fileContainer={containerContent.container}
+                file={selectedFile}
+                onChange={() => {
+                  //  setSelectedFile(undefined);
+                  //TODO: Check if the selected file exist
+                  setReload(!reload);
+                }}
+              />
+            )}
             {containerContent.containers.length === 0 && containerContent.files.length === 0 ? (
               <div style={{flex: 1}}>
                 <Empty
@@ -253,18 +264,6 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
                   />
                 ))}
               </div>
-            )}
-
-            {showFileInformation && (
-              <FileInformation
-                fileContainer={containerContent.container}
-                file={selectedFile}
-                onChange={() => {
-                  //  setSelectedFile(undefined);
-                  //TODO: Check if the selected file exist
-                  setReload(!reload);
-                }}
-              />
             )}
           </div>
           <UploadInformation files={selectedFiles} progress={loadingInformation} />

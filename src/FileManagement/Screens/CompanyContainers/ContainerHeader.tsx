@@ -1,17 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Popover, Segmented, Space, Tooltip} from 'antd';
+import {Button, Popover, Segmented, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
-import dayjs from 'dayjs';
+import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
 
 import CreateContainer from '../../Components/CreateContainer';
 import {Container} from '../../../Types/api';
-import {
-  ArrowPathIcon,
-  ArrowUpIcon,
-  FolderOpenIcon,
-  FolderPlusIcon,
-  InformationCircleIcon,
-} from '@heroicons/react/24/outline';
+import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface ContainerHeaderProps {
   container: Container;
@@ -54,68 +50,53 @@ const ContainerHeader = ({
   }, [informationEnabled, onToggleInformation]);
 
   return (
-    <div className={'container-header-wrapper'}>
-      <FolderOpenIcon className={'icon'} width={35} />
-      <div className={'name'}>
-        <h4>
-          {container.parent_container && (
-            <>
-              <Button type={'text'} size={'small'} className={'parent'} onClick={upLevel}>
-                {container.parent_container?.name}
-              </Button>
-              {'/'}
-            </>
-          )}
-          <span className={'current'}>{container.name}</span>
-          <Button type={'text'} size={'small'} shape={'circle'} onClick={onReload}>
-            <ArrowPathIcon width={12} />
-          </Button>
-        </h4>
-        <small>
-          Última modificación:
-          {dayjs(container.updated_at).format(' D/MM/YYYY [a las] H:mm')}
-        </small>
-      </div>
-      <Space>
-        <Button type={'primary'} onClick={onOpenUpload} icon={<span className="button-icon icon-upload2" />}>
-          Cargar archivos
-        </Button>
-        <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
-          <Button
-            type={informationEnabled ? 'primary' : 'default'}
-            onClick={() => setInformationEnabled(!informationEnabled)}
-            icon={<InformationCircleIcon height={24} />}
+    <ContentHeader
+      backLocation={container.parent_container?.uuid}
+      onRefresh={onReload}
+      title={container.name}
+      description={container.parent_container?.name}
+      tools={
+        <>
+          <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon />}>
+            Cargar archivos
+          </PrimaryButton>
+          <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
+            <Button
+              type={informationEnabled ? 'primary' : 'default'}
+              onClick={() => setInformationEnabled(!informationEnabled)}
+              icon={<InformationCircleIcon height={20} />}
+            />
+          </Tooltip>
+          <Tooltip title={'Subir un nivel'}>
+            <Button type={'text'} onClick={upLevel} icon={<ArrowUpIcon height={20} />} />
+          </Tooltip>
+          <Tooltip title={'Nuevo folder'}>
+            <Popover
+              placement={'bottomRight'}
+              content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
+              trigger={'click'}>
+              <Button type={'text'} icon={<FolderPlusIcon height={20} />} />
+            </Popover>
+          </Tooltip>
+          <Segmented
+            onResize={() => {}}
+            onResizeCapture={() => {}}
+            options={[
+              {
+                value: 'list',
+                icon: <BarsOutlined />,
+              },
+              {
+                value: 'grid',
+                icon: <AppstoreOutlined />,
+              },
+            ]}
+            value={viewMode}
+            onChange={setViewMode}
           />
-        </Tooltip>
-        <Tooltip title={'Subir un nivel'}>
-          <Button type={'text'} onClick={upLevel} icon={<ArrowUpIcon height={24} />} />
-        </Tooltip>
-        <Tooltip title={'Nuevo folder'}>
-          <Popover
-            placement={'bottomRight'}
-            content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
-            trigger={'click'}>
-            <Button type={'text'} icon={<FolderPlusIcon height={23} />} />
-          </Popover>
-        </Tooltip>
-        <Segmented
-          onResize={() => {}}
-          onResizeCapture={() => {}}
-          options={[
-            {
-              value: 'list',
-              icon: <BarsOutlined />,
-            },
-            {
-              value: 'grid',
-              icon: <AppstoreOutlined />,
-            },
-          ]}
-          value={viewMode}
-          onChange={setViewMode}
-        />
-      </Space>
-    </div>
+        </>
+      }
+    />
   );
 };
 

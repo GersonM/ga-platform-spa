@@ -29,7 +29,7 @@ const UploadInformation = ({files, progress}: UploadInformationProps) => {
         <>
           <div className={'header'}>
             <h4>
-              {percent < 100 ? 'Cargando...' : 'Terminado'} {' - '} {files.length} archivo{files.length > 1 ? 's' : ''}
+              {percent < 100 ? 'Cargando...' : 'Terminado - '} {files.length} archivo{files.length > 1 ? 's' : ''}
             </h4>
             <Button
               onClick={() => setOpen(!open)}
