@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Input, List, notification} from 'antd';
-import {Container, Profile} from '../../../Types/api';
+import {Container, Profile, SharedProfile} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
@@ -8,108 +8,98 @@ interface ShareContainerProps {
   container: Container;
   onCompleted?: () => void;
 }
-interface HandleDeleteProps {
-  profile: Profile;
-  recordUuid: string;
-  fetchSharedProfiles: () => void;
-}
 
 const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
   const [userEmail, setUserEmail] = useState<string>();
   const [profiles, setProfiles] = useState<Profile[]>();
-  const [sharedProfiles, setSharedProfiles] = useState<Profile[]>([]);
+  const [sharedProfiles, setSharedProfiles] = useState<SharedProfile[]>([]);
+  const [reload, setReload] = useState(false);
 
-  useEffect(()=>{
-    fetchSharedProfiles();
-  },[container.uuid]);
-
-  const fetchSharedProfiles = () => {
+  useEffect(() => {
     axios
-            .get(`file-management/containers/${container.uuid}/profiles-info`)
-            .then(response => {
-              setSharedProfiles(response.data);
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
-  };
-
+      .get(`file-management/containers/${container.uuid}/profiles-info`)
+      .then(response => {
+        setSharedProfiles(response.data);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  }, [container.uuid, reload]);
 
   const fetchProfiles = () => {
     axios
-            .get('hr-management/profiles', {params: {search: userEmail}})
-            .then(response => {
-              setProfiles(response.data.data);
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
+      .get('hr-management/profiles', {params: {search: userEmail}})
+      .then(response => {
+        setProfiles(response.data.data);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
   };
 
   const shareProfile = (profile: Profile) => {
     axios
-            .post(`file-management/containers/${container.uuid}/share`, {profile_uuid: profile.uuid})
-            .then(response => {
-              notification.success({message: 'Acceso compartido'});
-              onCompleted && onCompleted();
-              fetchSharedProfiles();
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
+      .post(`file-management/containers/${container.uuid}/share`, {profile_uuid: profile.uuid})
+      .then(response => {
+        notification.success({message: 'Acceso compartido'});
+        onCompleted && onCompleted();
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
   };
-  const handleDelete = ({ profile, recordUuid, fetchSharedProfiles }: HandleDeleteProps) => {
+  const handleDelete = (profileUUID: string, containerUUID: string) => {
     axios
-            .delete(`file-management/containers-profiles/${recordUuid}/delete`)
-            .then(response => {
-              notification.success({ message: 'Perfil eliminado' });
-              fetchSharedProfiles();
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
+      .delete(`file-management/containers/${containerUUID}/authorizations/${profileUUID}`)
+      .then(response => {
+        notification.success({message: 'Perfil eliminado'});
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
   };
 
   return (
-          <div>
-            <h2>Compartir acceso a "{container.name}"</h2>
-            <p>Buscar a una persona por su nombre o correo para permitirle ver el contenido de esta carpeta.</p>
-            <Input.Search
-                    placeholder="Ingrese correo electrónico"
-                    value={userEmail}
-                    onSearch={value => setUserEmail(value)}
-                    onChange={e => setUserEmail(e.target.value)}
-                    onPressEnter={fetchProfiles}
-            />
-            <List
-                    dataSource={profiles}
-                    renderItem={profile => (
-                            <List.Item
-                                    actions={[
-                                      <Button type="primary" onClick={() => shareProfile(profile)}>
-                                        Compartir
-                                      </Button>,
-                                    ]}>
-                              <List.Item.Meta title={profile.name} description={profile.email} />
-                            </List.Item>
-                    )}
-            />
-            <h3>Usuarios con acceso compartido</h3>
-            <List
-                    dataSource={sharedProfiles}
-                    renderItem={profile => (
-                            <List.Item
-                                    actions={[
-                                      <Button danger onClick={() => handleDelete({ profile, recordUuid: profile.uuid, fetchSharedProfiles })}>
-                                        Eliminar
-                                      </Button>,
-                                    ]}
-                            >
-                              <List.Item.Meta title={profile.name} description={profile.email} />
-                            </List.Item>
-                    )}
-            />
-          </div>
+    <div>
+      <h2>Compartir acceso a "{container.name}"</h2>
+      <p>Buscar a una persona por su nombre o correo para permitirle ver el contenido de esta carpeta.</p>
+      <Input.Search
+        placeholder="Ingrese correo electrónico"
+        value={userEmail}
+        onSearch={value => setUserEmail(value)}
+        onChange={e => setUserEmail(e.target.value)}
+        onPressEnter={fetchProfiles}
+      />
+      <List
+        dataSource={profiles}
+        renderItem={profile => (
+          <List.Item
+            actions={[
+              <Button type="primary" onClick={() => shareProfile(profile)}>
+                Compartir
+              </Button>,
+            ]}>
+            <List.Item.Meta title={profile.name} description={profile.email} />
+          </List.Item>
+        )}
+      />
+      <h3>Usuarios con acceso compartido</h3>
+      <List
+        dataSource={sharedProfiles}
+        renderItem={(sp: SharedProfile) => (
+          <List.Item
+            actions={[
+              <Button danger onClick={() => handleDelete(sp.uuid, sp.uuid)}>
+                Eliminar
+              </Button>,
+            ]}>
+            <List.Item.Meta title={sp.profile.name} description={sp.profile.email} />
+          </List.Item>
+        )}
+      />
+    </div>
   );
 };
 
