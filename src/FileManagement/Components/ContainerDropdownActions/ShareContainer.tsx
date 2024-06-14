@@ -20,9 +20,9 @@ const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
 
   const fetchSharedProfiles = () => {
     axios
-      .get(`file-management/containers/${container.uuid}/shared-profiles`)
+      .get(`file-management/containers/${container.uuid}/profiles-info`)
       .then(response => {
-        setSharedProfiles(response.data.data);
+        setSharedProfiles(response.data);
       })
       .catch(error => {
         ErrorHandler.showNotification(error);
