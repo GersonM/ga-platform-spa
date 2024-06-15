@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Input, List, notification} from 'antd';
-import {Container, Profile} from '../../../Types/api';
+import {Container, Profile, SharedProfile} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
@@ -12,6 +12,19 @@ interface ShareContainerProps {
 const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
   const [userEmail, setUserEmail] = useState<string>();
   const [profiles, setProfiles] = useState<Profile[]>();
+  const [sharedProfiles, setSharedProfiles] = useState<SharedProfile[]>([]);
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`file-management/containers/${container.uuid}/profiles-info`)
+      .then(response => {
+        setSharedProfiles(response.data);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  }, [container.uuid, reload]);
 
   const fetchProfiles = () => {
     axios
@@ -25,12 +38,23 @@ const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
   };
 
   const shareProfile = (profile: Profile) => {
-    console.log({profile});
     axios
       .post(`file-management/containers/${container.uuid}/share`, {profile_uuid: profile.uuid})
       .then(response => {
         notification.success({message: 'Acceso compartido'});
         onCompleted && onCompleted();
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+  const handleDelete = (profileUUID: string, containerUUID: string) => {
+    axios
+      .delete(`file-management/containers/${containerUUID}/authorizations/${profileUUID}`)
+      .then(response => {
+        notification.success({message: 'Perfil eliminado'});
+        setReload(!reload);
       })
       .catch(error => {
         ErrorHandler.showNotification(error);
@@ -58,6 +82,20 @@ const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
               </Button>,
             ]}>
             <List.Item.Meta title={profile.name} description={profile.email} />
+          </List.Item>
+        )}
+      />
+      <h3>Usuarios con acceso compartido</h3>
+      <List
+        dataSource={sharedProfiles}
+        renderItem={(sp: SharedProfile) => (
+          <List.Item
+            actions={[
+              <Button danger onClick={() => handleDelete(sp.uuid, sp.uuid)}>
+                Eliminar
+              </Button>,
+            ]}>
+            <List.Item.Meta title={sp.profile.name} description={sp.profile.email} />
           </List.Item>
         )}
       />

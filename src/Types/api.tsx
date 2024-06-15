@@ -50,6 +50,11 @@ export type Profile = {
   avatar?: File;
 };
 
+export type SharedProfile = {
+  uuid: string;
+  profile: Profile;
+};
+
 export type Role = {
   id: number;
   name: string;
