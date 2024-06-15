@@ -34,11 +34,11 @@ const Login = () => {
         document.location.href = '/';
       })
       .catch(error => {
+        setLoading(false);
         if (error.response && error.response.data.error === 'pending_verification') {
           Cookies.set('2fa', error.response.data.hint);
           navigate('/two-factor-verify');
         } else {
-          setLoading(false);
           let message = error.message;
           if (error.response) {
             message = error.response.data.message;
