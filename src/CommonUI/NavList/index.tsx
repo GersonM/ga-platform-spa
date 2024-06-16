@@ -7,7 +7,7 @@ import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 import IconButton from '../IconButton';
 
 interface NavItemProps {
-  name: string;
+  name: string | React.ReactNode;
   caption?: string;
   path: string;
   icon?: React.ReactNode;

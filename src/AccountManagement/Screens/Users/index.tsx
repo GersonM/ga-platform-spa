@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Button, Empty, Input, Pagination, Popover, Select, Space, Tabs, Tooltip} from 'antd';
 import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
-import {IdentificationIcon, UserCircleIcon, UserIcon} from '@heroicons/react/24/solid';
+import {IdentificationIcon, LockClosedIcon, NoSymbolIcon, UserCircleIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import {Profile, ResponsePagination} from '../../../Types/api';
@@ -129,7 +129,12 @@ const Users = () => {
             return (
               <NavListItem
                 key={index}
-                name={`${p.name} ${p.last_name || ''} ${isAdmin ? '*' : ''}`}
+                name={
+                  <Space>
+                    {`${p.name} ${p.last_name || ''} ${isAdmin ? '*' : ''}`}
+                    {p.login_method === 'none' && <NoSymbolIcon width={15} />}
+                  </Space>
+                }
                 caption={dayjs(p.created_at).fromNow() + (p.user ? ' | ' + p.user?.email : '')}
                 icon={p.user ? <IdentificationIcon /> : <UserIcon />}
                 path={`/accounts/${p.uuid}`}

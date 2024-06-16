@@ -65,7 +65,7 @@ const App = () => {
         </Route>
         <Route path={'inbox-management'} element={<InboxManager />}>
           <Route path={'storage/:uuid'} element={<MailAccountStats />} />
-          <Route path={':uuid'} element={<MailMessagesViewer />}>
+          <Route path={':account/:uuid/:message?'} element={<MailMessagesViewer />}>
             <Route path={':tab'} />
           </Route>
         </Route>

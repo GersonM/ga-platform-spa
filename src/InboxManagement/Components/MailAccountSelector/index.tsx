@@ -8,11 +8,12 @@ import {MailAccount} from '../../../Types/api';
 import './styles.less';
 
 interface MailAccountSelectorProps {
-  onSelect?: (account: MailAccount) => void;
+  onSelect?: (account: MailAccount, index: number) => void;
+  selectedIndex?: number;
   refresh?: boolean;
 }
 
-const MailAccountSelector = ({onSelect, refresh}: MailAccountSelectorProps) => {
+const MailAccountSelector = ({onSelect, refresh, selectedIndex}: MailAccountSelectorProps) => {
   const [accounts, setAccounts] = useState<MailAccount[]>();
   const [selectedAccount, setSelectedAccount] = useState<MailAccount>();
 
@@ -21,7 +22,6 @@ const MailAccountSelector = ({onSelect, refresh}: MailAccountSelectorProps) => {
     const config = {
       cancelToken: cancelTokenSource.token,
     };
-
     axios
       .get(`inbox-management/accounts`, config)
       .then(response => {
@@ -29,27 +29,30 @@ const MailAccountSelector = ({onSelect, refresh}: MailAccountSelectorProps) => {
         if (selectedAccount) {
           setSelectedAccount(response.data.find((a: MailAccount) => a.uuid === selectedAccount.uuid));
         } else {
-          if (response.data[0]) {
-            setSelectedAccount(response.data[0]);
+          if (selectedIndex !== undefined) {
+            setSelectedAccount(response.data[selectedIndex]);
+            onSelect && onSelect(response.data[selectedIndex], selectedIndex);
+          } else {
+            if (response.data[0]) {
+              setSelectedAccount(response.data[0]);
+              onSelect && onSelect(response.data[0], 0);
+            }
           }
         }
       })
       .catch(e => {
-        console.log('error');
         ErrorHandler.showNotification(e);
       });
 
     return cancelTokenSource.cancel;
   }, [refresh]);
 
-  useEffect(() => {
-    if (onSelect && selectedAccount) {
-      onSelect(selectedAccount);
+  const onItemSelected = (key: string) => {
+    const index = accounts?.findIndex(a => a.uuid === key);
+    if (accounts && index) {
+      setSelectedAccount(accounts[index]);
+      onSelect && onSelect(accounts[index], index);
     }
-  }, [selectedAccount]);
-
-  const onItemSelected = (item: any) => {
-    setSelectedAccount(accounts?.find(a => a.uuid === item.key));
   };
 
   return (
@@ -72,7 +75,7 @@ const MailAccountSelector = ({onSelect, refresh}: MailAccountSelectorProps) => {
               };
             }),
             activeKey: selectedAccount?.uuid,
-            onClick: onItemSelected,
+            onClick: event => onItemSelected(event.key),
           }}>
           <div className={'selector'}>
             <div>

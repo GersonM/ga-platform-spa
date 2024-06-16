@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space} from 'antd';
+import {Col, DatePicker, Divider, Drawer, Form, Input, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {useParams} from 'react-router-dom';
+import {CheckIcon, LockClosedIcon, ShieldCheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -11,7 +12,6 @@ import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';
 import UserPermissionsManager from '../UserPermissionsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {LockClosedIcon, ShieldCheckIcon} from '@heroicons/react/24/solid';
 
 interface ProfileEditorProps {
   profileUuid: string;
@@ -64,9 +64,9 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       .then(response => {
         if (response) {
           setLoading(false);
-          const value = response.data.birthday ? dayjs(response.data.birthday) : null;
-          setProfile({...response.data, birthday: value});
+          //const value = response.data.birthday ? dayjs(response.data.birthday) : null;
           setProfile(response.data);
+          setReload(!reload);
           if (onCompleted) {
             onCompleted();
           }
@@ -82,23 +82,21 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
 
   return (
     <>
-      <Row justify={'center'} gutter={20}>
-        <Col md={5}>
+      <Row justify={'center'} gutter={30}>
+        <Col md={6}>
           <ProfileCard profile={profile} />
-          <Space direction={'vertical'}>
-            <PrimaryButton
-              icon={<LockClosedIcon />}
-              block
-              label={'Actualizar contraseña'}
-              onClick={() => setOpenChangePassword(true)}
-            />
-            <PrimaryButton
-              icon={<ShieldCheckIcon />}
-              block
-              label={'Ver permisos'}
-              onClick={() => setOpenPermissionsManager(true)}
-            />
-          </Space>
+          <PrimaryButton
+            icon={<LockClosedIcon />}
+            block
+            label={'Actualizar contraseña'}
+            onClick={() => setOpenChangePassword(true)}
+          />
+          <PrimaryButton
+            block
+            icon={<ShieldCheckIcon />}
+            label={'Ver permisos'}
+            onClick={() => setOpenPermissionsManager(true)}
+          />
         </Col>
         <Col md={13}>
           <Form form={form} initialValues={profile} layout={'vertical'} onFinish={onSubmit}>
@@ -114,10 +112,18 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                 </Form.Item>
               </Col>
             </Row>
-
-            <Form.Item name={'email'} label={'Email'}>
-              <Input />
-            </Form.Item>
+            <Row gutter={15}>
+              <Col md={12}>
+                <Form.Item name={'email'} label={'Email'}>
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col md={12}>
+                <Form.Item name={'phone'} label={'Teléfono'}>
+                  <Input />
+                </Form.Item>
+              </Col>
+            </Row>
             <Row gutter={15}>
               <Col md={10}>
                 <Form.Item name={'doc_type'} label={'Tipo de documento'}>
@@ -141,7 +147,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
               <Input />
             </Form.Item>
             <Row gutter={15}>
-              <Col>
+              <Col md={8}>
                 <Form.Item name={'fk_country_uuid'} label={'País de nacimiento'}>
                   <Select
                     aria-autocomplete={'none'}
@@ -157,15 +163,40 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                   />
                 </Form.Item>
               </Col>
-              <Col>
+              <Col md={8}>
+                <Form.Item name={'gender'} label={'Género'}>
+                  <Select
+                    aria-autocomplete={'none'}
+                    showSearch
+                    placeholder={'No definido'}
+                    options={[
+                      {label: 'Masculino', value: 'M'},
+                      {label: 'Femenino', value: 'F'},
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+              <Col md={8}>
                 <Form.Item name={'birthday'} label={'Fecha de nacimiento'}>
-                  <DatePicker />
+                  <DatePicker style={{width: '100%'}} />
                 </Form.Item>
               </Col>
             </Row>
-            <Button block htmlType={'submit'} type={'primary'} loading={loading}>
-              Guardar
-            </Button>
+            <Divider>Autenticación</Divider>
+            <Form.Item name={'login_method'} label={'Método de inicio de sesión'}>
+              <Select
+                aria-autocomplete={'none'}
+                showSearch
+                placeholder={'Todos'}
+                options={[
+                  {label: 'cPanel / Webmail', value: 'cpanel'},
+                  {label: 'Gmail', value: 'gmail'},
+                  {label: 'Todos', value: 'any'},
+                  {label: 'Restringido', value: 'none'},
+                ]}
+              />
+            </Form.Item>
+            <PrimaryButton block htmlType={'submit'} icon={<CheckIcon />} loading={loading} label={'Guardar'} />
           </Form>
         </Col>
       </Row>

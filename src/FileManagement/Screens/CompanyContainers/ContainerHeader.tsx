@@ -53,6 +53,7 @@ const ContainerHeader = ({
     <ContentHeader
       backLocation={container.parent_container?.uuid}
       onRefresh={onReload}
+      bordered
       title={container.name}
       description={container.parent_container?.name}
       tools={

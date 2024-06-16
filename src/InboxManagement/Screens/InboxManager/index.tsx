@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Outlet, useNavigate} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Outlet, useNavigate, useParams} from 'react-router-dom';
 import {
   CircleStackIcon,
   ExclamationTriangleIcon,
@@ -17,13 +17,24 @@ import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import MailAccountSelector from '../../Components/MailAccountSelector';
-import {MailAccount} from '../../../Types/api';
+import {MailAccount, MailFolder} from '../../../Types/api';
 import MailSetupForm from '../../Components/MailSetupForm';
 
 const InboxManager = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const [reload, setReload] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<MailAccount>();
+  const [selectedFolder, setSelectedFolder] = useState<MailFolder>();
+
+  useEffect(() => {
+    if (selectedAccount && params.uuid) {
+      const folder = selectedAccount.folders?.find(f => f.uuid === params.uuid);
+      if (folder) {
+        setSelectedFolder(folder);
+      }
+    }
+  }, [selectedAccount, params.uuid]);
 
   const syncFolders = () => {
     if (selectedAccount) {
@@ -57,13 +68,14 @@ const InboxManager = () => {
 
   return (
     <>
-      <ModuleSidebar width={220}>
+      <ModuleSidebar>
         <MailAccountSelector
           refresh={reload}
-          onSelect={selected => {
+          selectedIndex={params.account ? parseInt(params.account) : 0}
+          onSelect={(selected, index) => {
             setSelectedAccount(selected);
             if (selected.folders?.length) {
-              navigate(`/inbox-management/${selected.folders[0].uuid}`);
+              navigate(`/inbox-management/${index}/${selected.folders[0].uuid}`);
             }
           }}
         />
@@ -92,7 +104,7 @@ const InboxManager = () => {
                     height={45}
                     icon={icon}
                     name={c.name}
-                    path={'/inbox-management/' + c.uuid}
+                    path={`/inbox-management/${params.account}/${c.uuid}`}
                   />
                 );
               })}
@@ -107,8 +119,8 @@ const InboxManager = () => {
           </>
         )}
       </ModuleSidebar>
-      <ModuleContent opaque>
-        <Outlet />
+      <ModuleContent>
+        <Outlet context={{folder: selectedFolder}} />
       </ModuleContent>
     </>
   );

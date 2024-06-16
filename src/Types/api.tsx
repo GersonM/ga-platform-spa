@@ -46,6 +46,7 @@ export type Profile = {
   phone?: string;
   address?: string;
   created_at?: string;
+  login_method?: string;
   user?: User;
   avatar?: File;
 };
@@ -145,9 +146,11 @@ export type MailAccountStats = {
 };
 
 export type MailFolder = {
-  uuid: number;
+  uuid: string;
   name: string;
+  order: number;
   path: string;
+  parent_uuid: string;
 };
 
 export type MailProvider = {

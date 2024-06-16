@@ -1,36 +1,67 @@
-import React, {useState} from 'react';
-import {useParams} from 'react-router-dom';
+import React from 'react';
+import {Tag} from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 
 import './styles.less';
-import {MailFolderPageContent} from '../../../Types/api';
+import {MailFolderPageContent, MailMessage} from '../../../Types/api';
+import TableList from '../../../CommonUI/TableList';
+
+dayjs.extend(relativeTime);
 
 interface ListMailMessagesProps {
   messages: MailFolderPageContent;
+  onMessageSelected?: (msg: MailMessage) => void;
 }
 
-const ListMailMessages = ({messages}: ListMailMessagesProps) => {
-  const params = useParams();
-  const [content, setContent] = useState<string>();
+const ListMailMessages = ({messages, onMessageSelected}: ListMailMessagesProps) => {
+  const columns = [
+    {
+      title: 'De',
+      dataIndex: 'from',
+      width: 250,
+      render: (from: any) => (
+        <>
+          {from[0].personal} <br />
+          <small>{from[0].mail}</small>
+        </>
+      ),
+    },
+    {
+      title: 'Asunto',
+      dataIndex: 'subject',
+      render: (subject: string, row: MailMessage) => (
+        <>
+          {!row.is_read && <Tag color={'#f86110'}>Nuevo</Tag>} {subject} <br />
+          <small className={'excerpt'}>{row.excerpt.substring(0, 120)}</small>
+        </>
+      ),
+    },
+    {
+      title: 'Fecha',
+      dataIndex: 'delivery_date',
+      render: (delivery_date: string) => {
+        if (dayjs(delivery_date).isBefore(dayjs().subtract(1, 'day'))) {
+          return dayjs(delivery_date).format('DD/MM/YYYY');
+        } else {
+          return dayjs(delivery_date).fromNow();
+        }
+      },
+    },
+  ];
 
   return (
-    <div className={'list-mail-messages-wrapper'}>
-      {messages.messages.map(m => {
-        return (
-          <div key={m.message_id} className={'mail-message-item'} onClick={() => setContent(m.body)}>
-            <div className={'sender'}>{m.from[0].mail}</div>
-            <div className={'subject'}>
-              <h4>{m.subject}</h4>
-              <small className={'excerpt'}>{m.excerpt.substring(0, 120)}</small>
-            </div>
-            <span className={'date'}>{dayjs(m.delivery_date).fromNow()}</span>
-          </div>
-        );
-      })}
-      {content && <div dangerouslySetInnerHTML={{__html: content}} />}
-    </div>
+    <>
+      <TableList
+        onClick={(row: MailMessage) => {
+          //navigate(`/inbox-management/${params.account}/${params.uuid}/${row.message_id}`);
+          onMessageSelected && onMessageSelected(row);
+        }}
+        rowKey={'message_id'}
+        columns={columns}
+        dataSource={messages.messages}
+      />
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select} fr
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
+import {CloudArrowDownIcon, EyeIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -13,9 +14,8 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
-import './styles.less';
-import {CloudArrowDownIcon, EyeIcon} from '@heroicons/react/24/outline';
 import IconButton from '../../../CommonUI/IconButton';
+import './styles.less';
 
 interface FileInformationProps {
   file?: File;
@@ -83,7 +83,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
       ) : (
         <>
           <div className={'information-header'}>
-            <h4>Información del archivo</h4>
+            <h4 className={'title'}>Información del archivo</h4>
             <FileDropdownActions
               onChange={() => {
                 if (onChange) onChange();
