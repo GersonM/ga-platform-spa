@@ -52,6 +52,7 @@ export type Profile = {
 
 export type SharedProfile = {
   uuid: string;
+  level: string;
   profile: Profile;
 };
 

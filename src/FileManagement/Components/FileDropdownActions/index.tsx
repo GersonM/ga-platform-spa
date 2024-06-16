@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Dropdown, Modal} from 'antd';
+import axios from 'axios';
+
 import RenameFile from './RenameFile';
 import {File} from '../../../Types/api';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 const items = [

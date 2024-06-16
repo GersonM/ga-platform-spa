@@ -13,8 +13,6 @@ import {Container, ContainerContent, File} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
-import {sendFileToServer} from '../../../Utils/FileUploader';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 
 interface ContainerContentViewerProps {
   containerUuid: string;

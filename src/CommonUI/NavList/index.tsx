@@ -1,9 +1,10 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import {Button, Dropdown, MenuProps} from 'antd';
-import {FiMoreVertical} from 'react-icons/fi';
+import {Dropdown, MenuProps} from 'antd';
 
 import './styles.less';
+import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
+import IconButton from '../IconButton';
 
 interface NavItemProps {
   name: string;
@@ -16,13 +17,6 @@ interface NavItemProps {
 }
 
 const NavListItem = ({name, caption, icon, onClick, path, menuItems, height}: NavItemProps) => {
-  const handleMenuClick = (element: any) => {
-    switch (element.key) {
-      case 'delete':
-        break;
-    }
-  };
-
   return (
     <li className={'nav-list-item'}>
       <NavLink to={path} onClick={onClick} style={{height}}>
@@ -34,7 +28,7 @@ const NavListItem = ({name, caption, icon, onClick, path, menuItems, height}: Na
       </NavLink>
       {menuItems && (
         <Dropdown trigger={['click']} menu={menuItems} arrow={true}>
-          <Button type={'link'} icon={<FiMoreVertical />} />
+          <IconButton icon={<EllipsisVerticalIcon />} />
         </Dropdown>
       )}
     </li>

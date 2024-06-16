@@ -11,6 +11,8 @@ interface IconItemProps {
   onDoubleClick?: () => void;
 }
 
+const MAX_CHARS = 33;
+
 const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoubleClick}: IconItemProps) => {
   const onItemClick = () => {
     if (onClick) {
@@ -27,7 +29,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
       ) : (
         <span className="icon icon-file-empty"></span>
       )}
-      <span className={'file-name'}>{name}</span>
+      <span className={'file-name'}>{name.length > MAX_CHARS ? name.substring(0, MAX_CHARS) + '...' : name}</span>
       {caption && <span className={'file-caption'}>{caption}</span>}
     </div>
   );

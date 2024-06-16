@@ -15,6 +15,7 @@ import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
 import './styles.less';
 import {CloudArrowDownIcon, EyeIcon} from '@heroicons/react/24/outline';
+import IconButton from '../../../CommonUI/IconButton';
 
 interface FileInformationProps {
   file?: File;
@@ -89,7 +90,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
               }}
               trigger={['click']}
               file={file}>
-              <BsThreeDotsVertical className={'icon'} />
+              <IconButton icon={<BsThreeDotsVertical />} />
             </FileDropdownActions>
           </div>
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>

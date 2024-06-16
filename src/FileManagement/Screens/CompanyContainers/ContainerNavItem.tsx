@@ -1,10 +1,10 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import {Button} from 'antd';
-import {FiMoreVertical} from 'react-icons/fi';
+import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 
 import {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
+import IconButton from '../../../CommonUI/IconButton';
 
 interface ContainerNavItemProps {
   container: Container;
@@ -33,7 +33,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
             onChange(container);
           }
         }}>
-        <Button type={'link'} icon={<FiMoreVertical />} />
+        <IconButton icon={<EllipsisVerticalIcon />} />
       </ContainerDropdownActions>
     </>
   );
