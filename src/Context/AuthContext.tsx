@@ -4,11 +4,11 @@ import axios from 'axios';
 import {notification} from 'antd';
 
 import {version} from '../../package.json';
-import {TenantConfig, User} from '../Types/api';
+import {SessionUser, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface AuthContextDefaults {
-  user: User | null;
+  user: SessionUser | null;
   sessionToken?: string;
   setUser: (data: any) => void;
   logout: () => Promise<any>;
@@ -33,7 +33,7 @@ const AuthContext = createContext<AuthContextDefaults>({
 const token = Cookies.get('session_token');
 
 const AuthContextProvider = ({children, config}: AuthContextProp) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>();
   const [preferredMode] = useState('auto');
 

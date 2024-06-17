@@ -75,12 +75,14 @@ const Navigation = () => {
               <span className={'label'}>Pagos</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to={'/config'}>
-              <span className="icon icon-cog"></span>
-              <span className={'label'}>Opciones</span>
-            </NavLink>
-          </li>
+          {user?.roles?.includes('admin') && (
+            <li>
+              <NavLink to={'/config'}>
+                <span className="icon icon-cog"></span>
+                <span className={'label'}>Opciones</span>
+              </NavLink>
+            </li>
+          )}
         </ul>
       </nav>
       <div className="bottom-nav">

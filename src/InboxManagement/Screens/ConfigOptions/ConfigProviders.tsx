@@ -10,6 +10,8 @@ import CreateProvider from './CreateProvider';
 import FileSize from '../../../CommonUI/FileSize';
 import MailBackupManager from '../../Components/MailBackupManager';
 import TableList from '../../../CommonUI/TableList';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {PlusIcon} from '@heroicons/react/24/solid';
 
 const ConfigProviders = () => {
   const [providers, setProviders] = useState<MailProvider[]>();
@@ -142,9 +144,7 @@ const ConfigProviders = () => {
           ))}
         </Select>
         <Popover trigger={['click']} content={<CreateProvider onFinish={() => setReload(!reload)} />}>
-          <Button ghost type={'primary'} icon={<span className={'icon-plus button-icon'} />}>
-            Registrar proveedor
-          </Button>
+          <PrimaryButton icon={<PlusIcon />}>Registrar proveedor</PrimaryButton>
         </Popover>
         <Button
           type={'primary'}

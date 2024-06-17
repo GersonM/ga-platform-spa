@@ -67,6 +67,19 @@ export type User = {
   profile: Profile;
   roles?: Role[];
   name: string;
+  disabled_at?: string;
+  email_verified_at?: string;
+  token: string;
+};
+
+export type SessionUser = {
+  uuid: number;
+  email: string;
+  profile: Profile;
+  roles?: string[];
+  name: string;
+  disabled_at?: string;
+  email_verified_at?: string;
   token: string;
 };
 
