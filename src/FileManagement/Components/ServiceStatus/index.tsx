@@ -42,9 +42,6 @@ const ServiceStatus = () => {
         <small>Espacio utilizado</small>
         {serviceStatus && (
           <>
-            <FileSize size={15106780616519} />
-            <FileSize size={10000048576} />
-            <br />
             <FileSize size={serviceStatus.usage} /> ({((serviceStatus.usage / serviceStatus.total) * 100).toFixed(2)}%)
           </>
         )}
