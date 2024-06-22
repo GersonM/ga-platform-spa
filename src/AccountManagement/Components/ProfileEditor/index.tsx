@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Col, DatePicker, Divider, Drawer, Form, Input, Row, Select} from 'antd';
+import {Alert, Button, Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {useParams} from 'react-router-dom';
-import {CheckIcon, LockClosedIcon, ShieldCheckIcon} from '@heroicons/react/24/solid';
+import {CheckIcon, HandThumbUpIcon, LockClosedIcon, NoSymbolIcon, ShieldCheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -12,6 +12,9 @@ import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';
 import UserPermissionsManager from '../UserPermissionsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {TrashIcon} from '@heroicons/react/24/outline';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
+import AlertMessage from '../../../CommonUI/AlertMessage';
 
 interface ProfileEditorProps {
   profileUuid: string;
@@ -78,25 +81,89 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       });
   };
 
+  const terminateAccount = () => {
+    setLoading(true);
+    axios
+      .post(`authentication/users/${profile?.user?.uuid}/disable`)
+      .then(response => {
+        if (response) {
+          setLoading(false);
+          setReload(!reload);
+        }
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const enableAccount = () => {
+    setLoading(true);
+    axios
+      .post(`authentication/users/${profile?.user?.uuid}/enable`)
+      .then(response => {
+        if (response) {
+          setLoading(false);
+          setReload(!reload);
+        }
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   if (!profile) return null;
 
   return (
     <>
-      <Row justify={'center'} gutter={30}>
+      <LoadingIndicator visible={loading} message={'Guardando...'} />
+      <Row gutter={30}>
         <Col md={6}>
           <ProfileCard profile={profile} />
-          <PrimaryButton
-            icon={<LockClosedIcon />}
-            block
-            label={'Actualizar contraseña'}
-            onClick={() => setOpenChangePassword(true)}
-          />
-          <PrimaryButton
-            block
-            icon={<ShieldCheckIcon />}
-            label={'Ver permisos'}
-            onClick={() => setOpenPermissionsManager(true)}
-          />
+          <Space.Compact block direction={'vertical'}>
+            <PrimaryButton
+              icon={<LockClosedIcon width={20} />}
+              label={'Actualizar contraseña'}
+              onClick={() => setOpenChangePassword(true)}
+            />
+            <PrimaryButton
+              icon={<ShieldCheckIcon />}
+              label={'Ver permisos'}
+              onClick={() => setOpenPermissionsManager(true)}
+            />
+            {profile.user?.disabled_at ? (
+              <PrimaryButton icon={<HandThumbUpIcon />} label={'Habilitar usuario'} onClick={enableAccount} />
+            ) : (
+              <Popconfirm
+                title={'Bloquear usuario'}
+                cancelText={'Cancelar'}
+                okText={'Bloquear'}
+                onConfirm={terminateAccount}
+                description={
+                  <>
+                    El bloquear al usuario, se cerraran todas las sesiones <br />
+                    activas y no podrá iniciar sesión
+                  </>
+                }>
+                <PrimaryButton danger icon={<NoSymbolIcon />} label={'Bloquear usuario'} />
+              </Popconfirm>
+            )}
+            <Popconfirm
+              title={'Eliminar usuario'}
+              cancelText={'Cancelar'}
+              okText={'Eliminar'}
+              description={
+                <>
+                  Esta acción es irreversible y borrará toda la información <br /> relacionada con este usuario
+                </>
+              }>
+              <PrimaryButton danger icon={<TrashIcon />} label={'Eliminar cuenta'} />
+            </Popconfirm>
+          </Space.Compact>
+          {profile.user?.disabled_at && (
+            <AlertMessage message={'Este usuario está bloqueado y no podrá iniciar sesión'} />
+          )}
         </Col>
         <Col md={13}>
           <Form form={form} initialValues={profile} layout={'vertical'} onFinish={onSubmit}>
@@ -183,19 +250,28 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
               </Col>
             </Row>
             <Divider>Autenticación</Divider>
-            <Form.Item name={'login_method'} label={'Método de inicio de sesión'}>
-              <Select
-                aria-autocomplete={'none'}
-                showSearch
-                placeholder={'Todos'}
-                options={[
-                  {label: 'cPanel / Webmail', value: 'cpanel'},
-                  {label: 'Gmail', value: 'gmail'},
-                  {label: 'Todos', value: 'any'},
-                  {label: 'Restringido', value: 'none'},
-                ]}
-              />
-            </Form.Item>
+            <Row gutter={15}>
+              <Col md={12}>
+                <Form.Item name={'login_method'} label={'Método de inicio de sesión'}>
+                  <Select
+                    aria-autocomplete={'none'}
+                    showSearch
+                    placeholder={'Todos'}
+                    options={[
+                      {label: 'cPanel / Webmail', value: 'cpanel'},
+                      {label: 'Gmail', value: 'gmail'},
+                      {label: 'Todos', value: 'any'},
+                      {label: 'Restringido', value: 'none'},
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+              <Col md={12}>
+                <Form.Item name={'user_email'} label={'E-mail de login'}>
+                  {profile.user?.email}
+                </Form.Item>
+              </Col>
+            </Row>
             <PrimaryButton block htmlType={'submit'} icon={<CheckIcon />} loading={loading} label={'Guardar'} />
           </Form>
         </Col>

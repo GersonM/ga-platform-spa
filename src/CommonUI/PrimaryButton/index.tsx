@@ -13,6 +13,7 @@ interface PrimaryButtonProps {
   style?: object;
   height?: number;
   ghost?: boolean;
+  danger?: boolean;
   icon?: React.ReactNode;
   onClick?: any;
   props?: object;
@@ -23,15 +24,7 @@ interface PrimaryButtonProps {
 
 const PrimaryButton = ({label, size, disabled, children, icon, href, onClick, ...props}: PrimaryButtonProps) => {
   return (
-    <Button
-      className={'primary-button'}
-      disabled={disabled}
-      type="primary"
-      icon={icon}
-      href={href}
-      size={size}
-      onClick={onClick}
-      {...props}>
+    <Button disabled={disabled} type="primary" icon={icon} href={href} size={size} onClick={onClick} {...props}>
       {label || children}
     </Button>
   );
