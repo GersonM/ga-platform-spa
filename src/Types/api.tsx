@@ -60,7 +60,15 @@ export type SharedProfile = {
 export type Role = {
   id: number;
   name: string;
+  permissions: Permission[];
 };
+
+export type Permission = {
+  id: number;
+  name: string;
+  guard_name: string;
+};
+
 export type User = {
   uuid: number;
   email: string;

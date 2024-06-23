@@ -1,9 +1,9 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import {Dropdown, MenuProps} from 'antd';
+import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 
 import './styles.less';
-import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 import IconButton from '../IconButton';
 
 interface NavItemProps {

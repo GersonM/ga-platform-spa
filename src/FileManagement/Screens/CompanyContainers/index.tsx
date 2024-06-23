@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
-import {Button, Empty, Popover, Tooltip} from 'antd';
+import {Empty, Popover, Tooltip} from 'antd';
 import {PlusCircleIcon} from '@heroicons/react/24/outline';
 
-import './styles.less';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateContainer from '../../Components/CreateContainer';
 import ContainerNavItem from './ContainerNavItem';
@@ -15,6 +14,8 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
+import IconButton from '../../../CommonUI/IconButton';
+import './styles.less';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -75,9 +76,7 @@ const CompanyContainers = () => {
             }}
             trigger={'click'}>
             <Tooltip title={'Crear contenedor'} placement={'left'}>
-              <Button type={'text'} shape={'circle'}>
-                <PlusCircleIcon height={24} />
-              </Button>
+              <IconButton icon={<PlusCircleIcon />} />
             </Tooltip>
           </Popover>
         }
@@ -94,7 +93,7 @@ const CompanyContainers = () => {
                   <ContainerNavItem container={c} onChange={() => setReload(!reload)} />
                 </li>
               ))}
-              <li>
+              <li className={params.uuid === 'trash' ? 'active' : ''}>
                 <NavLink to={`/file-management/trash`}>
                   <span className="icon icon-trash3"></span>
                   <span className="label">Elementos borrados</span>

@@ -13,6 +13,7 @@ import {Container, ContainerContent, File} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
+import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -227,13 +228,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
                       <small>No hay archivos en esta ubicación</small> <br />
                       <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br />
                       <br />
-                      <Button
-                        ghost
-                        icon={<span className="button-icon icon-upload2" />}
-                        onClick={open}
-                        shape={'round'}
-                        type={'primary'}
-                        size={'small'}>
+                      <Button ghost icon={<CloudArrowUpIcon />} onClick={open} shape={'round'} type={'primary'}>
                         Cargar archivos
                       </Button>
                     </>

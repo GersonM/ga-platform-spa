@@ -1,21 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Button, Empty, Input, Pagination, Popover, Select, Space, Tabs, Tooltip} from 'antd';
+import {Empty, Input, Pagination, Popover, Select, Space, Tabs, Tooltip} from 'antd';
 import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
-import {IdentificationIcon, LockClosedIcon, NoSymbolIcon, UserCircleIcon, UserIcon} from '@heroicons/react/24/solid';
+import {IdentificationIcon, NoSymbolIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 import {Profile, ResponsePagination} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ProfileEditor from '../../Components/ProfileEditor';
-import ConfigAccounts from '../../../InboxManagement/Screens/ConfigOptions/ConfigAccounts';
-import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import CreateUser from '../../Components/CreateUser';
 import IconButton from '../../../CommonUI/IconButton';
-import dayjs from 'dayjs';
 import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
+import NavList, {NavListItem} from '../../../CommonUI/NavList';
 
 const Users = () => {
   const params = useParams();
@@ -73,9 +72,7 @@ const Users = () => {
             }}
             trigger={'click'}>
             <Tooltip title={'Registrar nuevo usuario'} placement={'left'}>
-              <Button type={'text'} shape={'circle'}>
-                <PlusCircleIcon height={24} />
-              </Button>
+              <IconButton icon={<PlusCircleIcon />} />
             </Tooltip>
           </Popover>
         }

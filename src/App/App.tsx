@@ -21,6 +21,7 @@ import PreferencesManager from '../Preferences/Screens/PreferencesManager';
 import GuestLayout from './GuestLayout';
 import PasswordRecovery from '../Authentication/Screen/PasswordRecovery';
 import VerifyRecovery from '../Authentication/Screen/VerifyRecovery';
+import PermissionsManager from '../Authentication/Screen/PermissionsManager';
 
 const App = () => {
   useEffect(() => {
@@ -82,6 +83,7 @@ const App = () => {
             <Route path={':tab'} element={null} />
           </Route>
           <Route path={'preferences'} element={<PreferencesManager />} />
+          <Route path={'permissions'} element={<PermissionsManager />} />
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
         <Route

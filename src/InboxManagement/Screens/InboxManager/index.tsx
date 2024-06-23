@@ -74,7 +74,7 @@ const InboxManager = () => {
           selectedIndex={params.account ? parseInt(params.account) : 0}
           onSelect={(selected, index) => {
             setSelectedAccount(selected);
-            if (selected.folders?.length) {
+            if (selected && selected.folders?.length) {
               navigate(`/inbox-management/${index}/${selected.folders[0].uuid}`);
             }
           }}

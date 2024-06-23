@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
-import {Button, Dropdown, Empty} from 'antd';
+import {Dropdown, Empty} from 'antd';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MailAccount} from '../../../Types/api';
 import './styles.less';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {PlusIcon} from '@heroicons/react/24/solid';
 
 interface MailAccountSelectorProps {
   onSelect?: (account: MailAccount, index: number) => void;
@@ -59,10 +61,7 @@ const MailAccountSelector = ({onSelect, refresh, selectedIndex}: MailAccountSele
     <div className={'mail-account-selector-wrapper'}>
       {accounts && accounts.length === 0 && (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No tienes cuentas asignadas'}>
-          <Button type={'primary'}>
-            <span className={'button-icon icon-plus'}></span>
-            Agregar
-          </Button>
+          <PrimaryButton icon={<PlusIcon />} label={'Agregar'} />
         </Empty>
       )}
       {accounts && accounts.length > 0 && (
