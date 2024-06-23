@@ -65,6 +65,7 @@ export type Role = {
 
 export type Permission = {
   id: number;
+  hint: string;
   name: string;
   guard_name: string;
 };

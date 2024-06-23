@@ -84,12 +84,14 @@ const UserPermissionsManager = ({user, onChange}: UserPermissionsManagerProps) =
       <h3>Agregar otro rol</h3>
       {roles?.map(r => {
         return (
-          <Space key={r.id}>
-            {r.name}
-            <Button size={'small'} onClick={() => assignRole(r.id)}>
-              Agregar
-            </Button>
-          </Space>
+          <div key={r.id}>
+            <Space>
+              {r.name}
+              <Button size={'small'} onClick={() => assignRole(r.id)}>
+                Agregar
+              </Button>
+            </Space>
+          </div>
         );
       })}
     </>

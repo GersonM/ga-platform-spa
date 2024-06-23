@@ -33,9 +33,9 @@ foreach ($dir as $filename) {
   <meta charset="UTF-8"/>
   <link rel="icon" type="image/png" href="/assets/logo_square-0cukfj_4.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><?php echo $title ?></title>
   <script type="module" crossorigin src="/assets/<?php echo $jsFile; ?>"></script>
   <link rel="stylesheet" crossorigin href="/assets/<?php echo $cssFile ?>">

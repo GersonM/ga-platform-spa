@@ -27,7 +27,7 @@ const AuthRoleForm = ({role, onComplete}: AuthRoleFormProps) => {
   return (
     <Form initialValues={role} layout="vertical" onFinish={submitForm}>
       <Form.Item label={'Nombre'} name={'name'}>
-        <Input />
+        <Input autoFocus={true} />
       </Form.Item>
       <PrimaryButton icon={<PlusIcon />} label={'Guardar'} block />
     </Form>

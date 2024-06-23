@@ -1,8 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Button, Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
+import {Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {useParams} from 'react-router-dom';
-import {CheckIcon, HandThumbUpIcon, LockClosedIcon, NoSymbolIcon, ShieldCheckIcon} from '@heroicons/react/24/solid';
+import {
+  TrashIcon,
+  CheckIcon,
+  HandThumbUpIcon,
+  LockClosedIcon,
+  NoSymbolIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -12,7 +19,6 @@ import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';
 import UserPermissionsManager from '../UserPermissionsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {TrashIcon} from '@heroicons/react/24/outline';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import AlertMessage from '../../../CommonUI/AlertMessage';
 
