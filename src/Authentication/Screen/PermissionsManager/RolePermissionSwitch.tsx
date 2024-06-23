@@ -48,8 +48,16 @@ const RolePermissionSwitch = ({permission, role}: IRolePermissionSwitchProps) =>
   };
 
   return (
-    <div>
-      {permission.name} <Switch loading={loading} onChange={updatePermission} />
+    <div className={'role-permissions-wrapper'}>
+      <span className={'name'}>
+        {permission.name}
+        <small>{permission.name}</small>
+      </span>
+      <Switch
+        defaultChecked={!!role.permissions.find(p => p.id == permission.id)}
+        loading={loading}
+        onChange={updatePermission}
+      />
     </div>
   );
 };

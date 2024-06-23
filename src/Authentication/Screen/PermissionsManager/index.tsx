@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+import {Modal, Popconfirm, Space, Tabs} from 'antd';
+import {TrashIcon, PencilIcon} from '@heroicons/react/24/solid';
+
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import {Permission, Role} from '../../../Types/api';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {Modal, Switch, Tabs} from 'antd';
 import RolePermissionSwitch from './RolePermissionSwitch';
 import AuthRoleForm from '../../Components/AuthRoleForm';
+
+import './styles.less';
 
 const PermissionsManager = () => {
   const [roles, setRoles] = useState<Role[]>();
@@ -57,24 +61,16 @@ const PermissionsManager = () => {
   const syncPermissions = () => {
     axios
       .post(`authentication/permissions/sync`)
-      .then(response => {
-        if (response) {
-          setPermissions(response.data);
-        }
-      })
+      .then(() => {})
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
   };
 
-  const createRole = () => {
+  const deleteRole = (role: Role) => {
     axios
-      .post(`authentication/roles`)
-      .then(response => {
-        if (response) {
-          setPermissions(response.data);
-        }
-      })
+      .delete(`authentication/roles/${role.id}`)
+      .then(() => {})
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
@@ -88,24 +84,57 @@ const PermissionsManager = () => {
         title={'Roles y permisos'}
         tools={<PrimaryButton label={'Sincronizar permisos'} onClick={syncPermissions} />}
       />
-      <div></div>
-      <Tabs tabPosition={'left'}>
-        {roles?.map((role, index) => (
-          <Tabs.TabPane key={index} tab={role.name}>
-            <h3>Permisos para {role.name}</h3>
-            {permissions?.map((permission, index) => (
-              <RolePermissionSwitch key={index} permission={permission} role={role} />
-            ))}
-          </Tabs.TabPane>
-        ))}
-      </Tabs>
+      <p>Los roles permiten agrupar múltiples permisos para asignarlos fácilmente a un usuario</p>
+      <br />
+      <Tabs
+        tabPosition={'left'}
+        animated={true}
+        items={roles?.map((role, index) => ({
+          key: role.name,
+          label: (
+            <div className={'tab-name'}>
+              <span className={'name'}>{role.name}</span>
+              <small>{role.permissions.length} permisos</small>
+            </div>
+          ),
+          children: (
+            <>
+              <h3>Permisos para {role.name}</h3>
+              <Space>
+                <PrimaryButton icon={<PencilIcon />} ghost label={'Editar rol'} />
+                <Popconfirm
+                  onConfirm={() => deleteRole(role)}
+                  title={
+                    <>
+                      Al eliminar el rol se elimina todas las relaciones hechas, <br /> ¿Quieres continuar?
+                    </>
+                  }>
+                  <PrimaryButton icon={<TrashIcon />} ghost danger label={'Eliminar rol'} />
+                </Popconfirm>
+              </Space>
+              <br />
+              <div className={'role-permissions-list'}>
+                {permissions?.map((permission, index) => (
+                  <RolePermissionSwitch key={index} permission={permission} role={role} />
+                ))}
+              </div>
+            </>
+          ),
+        }))}
+      />
+
       <Modal
         title={'Crear role'}
         onCancel={() => setOpenRoleForm(false)}
         footer={null}
         open={openRoleForm}
         destroyOnClose>
-        <AuthRoleForm />
+        <AuthRoleForm
+          onComplete={() => {
+            setOpenRoleForm(false);
+            setReload(!reload);
+          }}
+        />
       </Modal>
     </>
   );
