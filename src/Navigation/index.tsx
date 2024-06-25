@@ -7,7 +7,6 @@ import './styles.less';
 import logo from '../Assets/logo_square.png';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
-import {LightBulbIcon, MoonIcon} from '@heroicons/react/24/solid';
 
 const menuItems: ItemType[] = [
   {

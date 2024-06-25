@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation} from 'react-router-dom';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import './styles.less';
+
 import LoadingIndicator from '../LoadingIndicator';
+import './styles.less';
 
 interface ModuleSidebarProps {
   children?: React.ReactNode;

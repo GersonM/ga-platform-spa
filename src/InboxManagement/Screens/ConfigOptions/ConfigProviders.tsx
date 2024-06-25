@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Drawer, Empty, Popover, Select, Space} from 'antd';
+import {Button, Drawer, Empty, Modal, Select, Space} from 'antd';
 import {SiCpanel, SiGmail} from 'react-icons/si';
-import {ChartPieIcon} from '@heroicons/react/24/outline';
+import {PlusIcon, ChartPieIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
 import {MailAccount, MailProvider} from '../../../Types/api';
@@ -11,7 +11,6 @@ import FileSize from '../../../CommonUI/FileSize';
 import MailBackupManager from '../../Components/MailBackupManager';
 import TableList from '../../../CommonUI/TableList';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {PlusIcon} from '@heroicons/react/24/solid';
 
 const ConfigProviders = () => {
   const [providers, setProviders] = useState<MailProvider[]>();
@@ -22,6 +21,7 @@ const ConfigProviders = () => {
   const [selectedAccount, setSelectedAccount] = useState<MailAccount>();
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [openCreateProvider, setOpenCreateProvider] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -133,6 +133,7 @@ const ConfigProviders = () => {
       ),
     },
   ];
+
   return (
     <>
       <Space>
@@ -143,9 +144,9 @@ const ConfigProviders = () => {
             </Select.Option>
           ))}
         </Select>
-        <Popover trigger={['click']} content={<CreateProvider onFinish={() => setReload(!reload)} />}>
-          <PrimaryButton icon={<PlusIcon />}>Registrar proveedor</PrimaryButton>
-        </Popover>
+        <PrimaryButton icon={<PlusIcon />} onClick={() => setOpenCreateProvider(true)}>
+          Registrar proveedor
+        </PrimaryButton>
         <Button
           type={'primary'}
           loading={syncing}
@@ -183,6 +184,19 @@ const ConfigProviders = () => {
       {!selectedProvider && (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'Seleccionar un proveedor para ver las cuentas'} />
       )}
+      <Modal
+        title={'Registrar proveedor'}
+        onCancel={() => setOpenCreateProvider(false)}
+        footer={null}
+        open={openCreateProvider}
+        destroyOnClose>
+        <CreateProvider
+          onFinish={() => {
+            setReload(!reload);
+            setOpenCreateProvider(false);
+          }}
+        />
+      </Modal>
       <Drawer
         destroyOnClose
         open={!!selectedAccount}
