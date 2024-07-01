@@ -8,6 +8,7 @@ import {Container} from '../../../Types/api';
 import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import * as tus from 'tus-js-client';
 
 interface ContainerHeaderProps {
   container: Container;
@@ -18,6 +19,29 @@ interface ContainerHeaderProps {
   onOpenUpload?: () => void;
   onReload?: () => void;
 }
+
+const uploadFile = (file: File) => {
+  const upload = new tus.Upload(file, {
+    endpoint: 'http://localhost:8080/files/', // URL del servidor tusd
+    retryDelays: [0, 1000, 3000, 5000],
+    metadata: {
+      filename: (file as File).name, // Asegurando que file es de tipo File
+      filetype: (file as File).type // Asegurando que file es de tipo File
+    },
+    onError: (error) => {
+      console.log('Failed because: ' + error);
+    },
+    onProgress: (bytesUploaded, bytesTotal) => {
+      const percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
+      console.log(bytesUploaded, bytesTotal, percentage + '%');
+    },
+    onSuccess: () => {
+      console.log('Download %s from %s', (upload.file as File).name, upload.url);
+    }
+  });
+
+  upload.start();
+};
 
 const ContainerHeader = ({
   container,
@@ -49,6 +73,13 @@ const ContainerHeader = ({
     }
   }, [informationEnabled, onToggleInformation]);
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      uploadFile(file);
+    }
+  };
+
   return (
     <ContentHeader
       backLocation={container.parent_container?.uuid}
@@ -58,42 +89,50 @@ const ContainerHeader = ({
       description={container.parent_container?.name}
       tools={
         <>
-          <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon />}>
+          <input
+            type="file"
+            style={{display: 'none'}}
+            id="fileInput"
+            onChange={handleFileSelect}
+          />
+          <PrimaryButton onClick={() => document.getElementById('fileInput')!.click()} icon={<CloudArrowUpIcon/>}>
             Cargar archivos
           </PrimaryButton>
           <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
             <Button
-              type={informationEnabled ? 'primary' : 'default'}
-              onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<InformationCircleIcon height={20} />}
+                    type={informationEnabled ? 'primary' : 'default'}
+                    onClick={() => setInformationEnabled(!informationEnabled)}
+                    icon={<InformationCircleIcon height={20}/>}
             />
           </Tooltip>
           <Tooltip title={'Subir un nivel'}>
-            <Button type={'text'} onClick={upLevel} icon={<ArrowUpIcon height={20} />} />
+            <Button type={'text'} onClick={upLevel} icon={<ArrowUpIcon height={20}/>}/>
           </Tooltip>
           <Tooltip title={'Nuevo folder'}>
             <Popover
-              placement={'bottomRight'}
-              content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
-              trigger={'click'}>
-              <Button type={'text'} icon={<FolderPlusIcon height={20} />} />
+                    placement={'bottomRight'}
+                    content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange}/>}
+                    trigger={'click'}>
+              <Button type={'text'} icon={<FolderPlusIcon height={20}/>}/>
             </Popover>
           </Tooltip>
           <Segmented
-            onResize={() => {}}
-            onResizeCapture={() => {}}
-            options={[
-              {
-                value: 'list',
-                icon: <BarsOutlined />,
-              },
-              {
-                value: 'grid',
-                icon: <AppstoreOutlined />,
-              },
-            ]}
-            value={viewMode}
-            onChange={setViewMode}
+                  onResize={() => {
+                  }}
+                  onResizeCapture={() => {
+                  }}
+                  options={[
+                    {
+                      value: 'list',
+                      icon: <BarsOutlined/>,
+                    },
+                    {
+                      value: 'grid',
+                      icon: <AppstoreOutlined/>,
+                    },
+                  ]}
+                  value={viewMode}
+                  onChange={setViewMode}
           />
         </>
       }
