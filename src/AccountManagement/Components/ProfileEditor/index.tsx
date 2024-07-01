@@ -42,16 +42,18 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       cancelToken: cancelTokenSource.token,
     };
 
+    setLoading(true);
     axios
       .get(`hr-management/profiles/${profileUuid}`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           const value = response.data.birthday ? dayjs(response.data.birthday) : null;
           setProfile({...response.data, birthday: value});
-          console.log(response.data);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 
@@ -264,7 +266,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                     showSearch
                     placeholder={'Todos'}
                     options={[
-                      {label: 'cPanel / Webmail', value: 'cpanel'},
+                      {label: 'cPanel / Webmail', value: 'imap'},
                       {label: 'Gmail', value: 'gmail'},
                       {label: 'Todos', value: 'any'},
                       {label: 'Restringido', value: 'none'},

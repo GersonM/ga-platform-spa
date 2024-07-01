@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import AlertMessage from '../../../CommonUI/AlertMessage';
 
 interface UpdateUserPasswordProps {
   onChange?: () => void;
@@ -84,6 +85,12 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
             banner
             message={'Esta es tu nueva contraseña'}
             description={generatedPassword}></Alert>
+        )}
+        {profile.login_method === 'imap' && (
+          <AlertMessage
+            caption={'Este usuario tienen configurado el inicio de sesión con webmail'}
+            message={'Se actualizará la contraseña de Webmail'}
+          />
         )}
         <Button block type={'text'} onClick={generatePassword}>
           Generar contraseña aleatoria

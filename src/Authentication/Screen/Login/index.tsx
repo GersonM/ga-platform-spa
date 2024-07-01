@@ -45,9 +45,9 @@ const Login = () => {
           }
 
           Modal.error({
-            title: "Can't verify your credentials",
+            title: 'No se pudo iniciar sesión',
             content: message,
-            okText: 'Try again',
+            okText: 'Volver a intentar',
             centered: true,
           });
         }

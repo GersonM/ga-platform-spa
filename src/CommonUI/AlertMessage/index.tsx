@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {CheckIcon, XMarkIcon} from '@heroicons/react/24/solid';
+import {ExclamationTriangleIcon} from '@heroicons/react/24/solid';
 
 import IconButton from '../IconButton';
 import './styles.less';
-import {ExclamationTriangleIcon} from '@heroicons/react/24/solid';
 
 interface IAlertMessageProps {
   message: string;
@@ -23,7 +23,10 @@ const AlertMessage = ({message, caption, type = 'warning', float, dismissible}: 
       <div className={'icon'}>
         {type === 'success' ? <CheckIcon width={25} /> : <ExclamationTriangleIcon width={25} />}
       </div>
-      {message}
+      <div>
+        {message}
+        {caption && <div className={'caption'}>{caption}</div>}
+      </div>
       {dismissible && <IconButton icon={<XMarkIcon color={'#000000'} />} onClick={() => setDismiss(true)} />}
     </div>
   );

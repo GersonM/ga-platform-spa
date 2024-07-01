@@ -69,6 +69,18 @@ const Navigation = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to={'/lms'}>
+              <span className="icon icon-graduation-hat"></span>
+              <span className={'label'}>LMS</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={'/store'}>
+              <span className="icon icon-cart-full"></span>
+              <span className={'label'}>Tienda</span>
+            </NavLink>
+          </li>
+          <li>
             <NavLink to={'/attendance'}>
               <span className="icon icon-clock"></span>
               <span className={'label'}>Asistencia</span>

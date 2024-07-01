@@ -100,7 +100,7 @@ const MailBackupManager = ({mailAccount, onChange}: MailBackupManagerProps) => {
           <MailSetupForm onChange={onChange} mailAccount={mailAccount} />
         </>
       )}
-      <LoadingIndicator visible={loading} overlay={false} size={'small'} message={'asdadsf'} />
+      <LoadingIndicator visible={loading} overlay={false} size={'small'} />
       {stats &&
         stats.map((s, index) => (
           <div key={index} className={'stats-wrapper'}>
