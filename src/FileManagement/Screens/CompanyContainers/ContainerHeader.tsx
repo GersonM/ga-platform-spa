@@ -21,12 +21,14 @@ interface ContainerHeaderProps {
 }
 
 const uploadFile = (file: File) => {
+  const chunkSize = 5 * 1024 * 1024;
   const upload = new tus.Upload(file, {
-    endpoint: 'http://localhost:8080/files/', // URL del servidor tusd
+    endpoint: 'http://localhost:8080/files/',
+    chunkSize: chunkSize,
     retryDelays: [0, 1000, 3000, 5000],
     metadata: {
-      filename: (file as File).name, // Asegurando que file es de tipo File
-      filetype: (file as File).type // Asegurando que file es de tipo File
+      filename: (file as File).name,
+      filetype: (file as File).type
     },
     onError: (error) => {
       console.log('Failed because: ' + error);
@@ -110,29 +112,29 @@ const ContainerHeader = ({
           </Tooltip>
           <Tooltip title={'Nuevo folder'}>
             <Popover
-                    placement={'bottomRight'}
-                    content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange}/>}
-                    trigger={'click'}>
+              placement={'bottomRight'}
+              content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange}/>}
+              trigger={'click'}>
               <Button type={'text'} icon={<FolderPlusIcon height={20}/>}/>
             </Popover>
           </Tooltip>
           <Segmented
-                  onResize={() => {
-                  }}
-                  onResizeCapture={() => {
-                  }}
-                  options={[
-                    {
-                      value: 'list',
-                      icon: <BarsOutlined/>,
-                    },
-                    {
-                      value: 'grid',
-                      icon: <AppstoreOutlined/>,
-                    },
-                  ]}
-                  value={viewMode}
-                  onChange={setViewMode}
+            onResize={() => {
+            }}
+            onResizeCapture={() => {
+            }}
+            options={[
+              {
+                value: 'list',
+                icon: <BarsOutlined/>,
+              },
+              {
+                value: 'grid',
+                icon: <AppstoreOutlined/>,
+              },
+            ]}
+            value={viewMode}
+            onChange={setViewMode}
           />
         </>
       }
