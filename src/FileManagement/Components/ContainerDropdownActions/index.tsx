@@ -6,6 +6,8 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Container} from '../../../Types/api';
 import RenameContainer from './RenameContainer';
 import ShareContainer from './ShareContainer';
+import {ArrowsRightLeftIcon, LockOpenIcon, ShareIcon, TrashIcon} from '@heroicons/react/16/solid';
+import {LockClosedIcon, PencilIcon} from '@heroicons/react/24/solid';
 
 interface ContainerDropdownActionsProps {
   children: React.ReactNode;
@@ -67,17 +69,13 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
     {
       label: container.is_public ? 'Hacer privado' : 'Convertir en público',
       key: 'change_visibility',
-      icon: <span className={container.is_public ? 'icon icon-lock' : 'icon icon-earth'} />,
+      icon: container.is_public ? <LockClosedIcon width={16} /> : <LockOpenIcon width={16} />,
     },
-    {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
-    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />, disabled: true},
-    {
-      label: 'Compartir',
-      key: 'share',
-      icon: <span className={'icon icon-share'} />,
-    },
+    {label: 'Mover a otra ubicación', key: 'move', icon: <ArrowsRightLeftIcon width={16} />, disabled: true},
+    {label: 'Cambiar nombre', key: 'rename', icon: <PencilIcon width={16} />, disabled: true},
+    {label: 'Compartir', key: 'share', icon: <ShareIcon width={16} />},
     {type: 'divider'},
-    {label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} />},
+    {label: 'Borrar', key: 'delete', danger: true, icon: <TrashIcon width={16} />},
   ];
 
   const getContent = () => {
