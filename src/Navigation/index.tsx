@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {NavLink, useLocation} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Dropdown} from 'antd';
@@ -21,23 +21,22 @@ const menuItems: ItemType[] = [
 ];
 
 const Navigation = () => {
-  const {user, logout, config, setDarkMode, darkMode} = useContext(AuthContext);
-  const [open, setOpen] = useState(false);
+  const {user, logout, config, setDarkMode, darkMode, setOpenMenu, openMenu} = useContext(AuthContext);
   const {pathname} = useLocation();
 
   useEffect(() => {
-    setOpen(false);
+    setOpenMenu(false);
   }, [pathname]);
 
   const navLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
   return (
-    <div className={`navigation-wrapper ${open ? 'open' : ''}`}>
+    <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
       <div className={'head'}>
         <div
           className="logo-square"
           onClick={() => {
-            setOpen(!open);
+            setOpenMenu(!open);
           }}>
           <img src={navLogo || logo} alt="Logo" />
         </div>

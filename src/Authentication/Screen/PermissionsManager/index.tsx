@@ -85,9 +85,7 @@ const PermissionsManager = () => {
         tools={<PrimaryButton label={'Sincronizar permisos'} onClick={syncPermissions} />}
       />
       <p>Los roles permiten agrupar múltiples permisos para asignarlos fácilmente a un usuario</p>
-      <br />
       <Tabs
-        tabPosition={'left'}
         animated={true}
         items={roles?.map((role, index) => ({
           key: role.name,

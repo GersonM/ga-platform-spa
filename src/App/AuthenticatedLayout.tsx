@@ -14,12 +14,12 @@ const AuthenticatedLayout = () => {
   }
 
   return (
-    <div className="app-container">
+    <>
       <Navigation />
       <div className="app-content">
         <Outlet />
       </div>
-    </div>
+    </>
   );
 };
 

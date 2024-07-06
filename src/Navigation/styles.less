@@ -4,8 +4,8 @@
 
 .navigation-wrapper {
   background: var(--backgroung-color);
-  min-width: 85px;
-  max-width: 85px;
+  min-width: var(--main-nav-width);
+  max-width: var(--main-nav-width);
   overflow: auto;
   transition: all 0.3s;
   display: flex;
@@ -133,75 +133,15 @@
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
   .navigation-wrapper {
-    max-width: none;
-    overflow: visible;
-    justify-content: space-between;
-    flex-direction: row;
-    z-index: 3;
-    background: #ffffff;
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    transform: translateX(-100%);
 
     &.open {
-      nav {
-        display: block;
-      }
-    }
-
-    .head {
-      display: flex;
-      align-items: center;
-      margin: 0;
-      z-index: 1;
-      flex: 1;
-
-      .logo-square {
-        margin: 0 0 0 15px;
-        height: 50px;
-
-        img {
-        }
-      }
-    }
-
-    .bottom-nav {
-      padding: 5px 5px 0 0;
-      height: 50px;
-      background: none;
-    }
-
-    nav {
-      background: #ffffff;
-      width: 100%;
-      display: none;
-      position: absolute;
-      top: 50px;
-      box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
-
-      .navigation-list {
-        display: flex;
-        flex-wrap: wrap;
-
-        li {
-          width: 25%;
-
-          a {
-            display: flex;
-            justify-content: center;
-            height: 100%;
-            border-radius: 10px;
-            margin: 0 5px;
-
-            &:after {
-              display: none;
-            }
-          }
-        }
-      }
-    }
-
-    .version-info {
-      display: none;
+      transform: translateX(0);
     }
   }
 }
@@ -214,18 +154,19 @@
 
 /* Track */
 .navigation-wrapper::-webkit-scrollbar-track {
-  background: var(--primary-color);
+  background: #efefef;
+
 }
 
 /* Handle */
 .navigation-wrapper::-webkit-scrollbar-thumb {
-  background: var(--ant-hover);
+  background: #dfdfdf;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 .navigation-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #818181;
+  background: var(--primary-color);
 }
 
 .dark-mode {

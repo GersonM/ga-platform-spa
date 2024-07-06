@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Empty, Input, Pagination, Popover, Select, Space, Tabs, Tooltip} from 'antd';
+import {Empty, Input, Pagination, Popover, Select, Space, Tabs, Tag, Tooltip} from 'antd';
 import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
 import {IdentificationIcon, NoSymbolIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -122,13 +122,20 @@ const Users = () => {
         }>
         <NavList>
           {profiles?.map((p, index) => {
-            const isAdmin = !!p.user?.roles?.filter(r => r.name == 'admin').length;
+            let rolesLabel: string = '';
+            if (p.user?.roles && p.user?.roles?.length > 0) {
+              rolesLabel = p.user.roles[0].name;
+              if (p.user.roles.length > 1) {
+                rolesLabel += ' +' + (p.user.roles.length - 1);
+              }
+            }
             return (
               <NavListItem
                 key={index}
                 name={
                   <Space>
-                    {`${p.name} ${p.last_name || ''} ${isAdmin ? '*' : ''}`}
+                    {`${p.name} ${p.last_name || ''}`}
+                    {rolesLabel && <Tag color={'blue'}>{rolesLabel}</Tag>}
                     {p.login_method === 'none' && <NoSymbolIcon width={15} />}
                   </Space>
                 }

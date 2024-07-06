@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {useLocation} from 'react-router-dom';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 
 import LoadingIndicator from '../LoadingIndicator';
+import AuthContext from '../../Context/AuthContext';
 import './styles.less';
 
 interface ModuleSidebarProps {
@@ -28,19 +29,12 @@ const ModuleSidebar = ({
   loadingMessage,
   statusInfo,
 }: ModuleSidebarProps) => {
-  const [open, setOpen] = useState(false);
+  const {openMenu, setOpenMenu} = useContext(AuthContext);
   const {pathname} = useLocation();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <>
-      <a className={`toggle-button ${open ? 'open' : ''}`} onClick={() => setOpen(!open)} href="#toggle">
-        {open ? <span className="icon-chevron-left"></span> : <span className="icon-chevron-right"></span>}
-      </a>
-      <div className={`module-sidebar-wrapper ${open ? 'open' : ''}`} style={{width: width}}>
+      <div className={`module-sidebar-wrapper ${openMenu ? 'open' : ''}`} style={{width: width}}>
         <LoadingIndicator visible={loading} message={loadingMessage} />
         <OverlayScrollbarsComponent className={'scroll-content'} defer options={{scrollbars: {autoHide: 'scroll'}}}>
           {(title || actions) && (

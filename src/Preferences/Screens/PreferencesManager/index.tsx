@@ -42,7 +42,7 @@ const PreferencesManager = () => {
     <>
       <MetaTitle title={'Configuración de la cuenta'} />
       <ContentHeader loading={loading} title={'Configuración de la cuenta'} onRefresh={() => setReload(!reload)}>
-        <p>Nombre de la cuenta: {config?.config.name}</p>
+        <p>Nombre de la cuenta: {config?.config.name || 'Sin nombre'}</p>
       </ContentHeader>
       {settings?.map((value, index) => {
         return (

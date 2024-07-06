@@ -15,6 +15,8 @@ interface AuthContextDefaults {
   config?: TenantConfig;
   setDarkMode: (value: boolean) => void;
   darkMode?: boolean;
+  openMenu: boolean;
+  setOpenMenu: (value: boolean) => void;
 }
 
 interface AuthContextProp {
@@ -29,12 +31,15 @@ const AuthContext = createContext<AuthContextDefaults>({
   setUser(): void {},
   setDarkMode(): void {},
   user: null,
+  openMenu: false,
+  setOpenMenu(): void {},
 });
 const token = Cookies.get('session_token');
 
 const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>();
+  const [openMenu, setOpenMenu] = useState(false);
   const [preferredMode] = useState('auto');
 
   useEffect(() => {
@@ -119,6 +124,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         config,
         setDarkMode,
         darkMode,
+        openMenu,
+        setOpenMenu,
         sessionToken: token,
       }}>
       {children}
