@@ -266,3 +266,30 @@ export type Invoice = {
   purchase_token?: string;
   updated_at: string;
 };
+
+export type MoveLocation = {
+  uuid: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MoveRoute = {
+  uuid: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+export type MoveVehicle = {
+  uuid: string;
+  model?: string;
+  brand?: string;
+  type?: string;
+  registration_plate?: string;
+  weight?: string;
+  max_capacity?: string;
+  fk_driver_uuid?: string;
+  color?: string;
+  created_at: string;
+  updated_at: string;
+};

@@ -1,18 +1,26 @@
 import React, {useContext, useEffect} from 'react';
 import {NavLink, useLocation} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
-import {Avatar, Dropdown} from 'antd';
+import {Avatar, Dropdown, Popover, Progress} from 'antd';
+import {UploadOutlined} from '@ant-design/icons';
+import axios from 'axios';
 
 import './styles.less';
 import logo from '../Assets/logo_square.png';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
+import ErrorHandler from '../Utils/ErrorHandler';
+import UploadInformation from '../FileManagement/Components/UploadInformation';
 
 const menuItems: ItemType[] = [
   {
     label: 'Mi cuenta',
     key: 'account',
     disabled: true,
+  },
+  {
+    label: 'Favoritos',
+    key: 'favorites',
   },
   {
     label: 'Cerrar sesión',
@@ -27,6 +35,29 @@ const Navigation = () => {
   useEffect(() => {
     setOpenMenu(false);
   }, [pathname]);
+
+  const getFavorites = () => {
+    axios
+      .get(`hr-management/profiles/${user?.profile.uuid}/favorites`)
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
+  const handleUserMenuClick = (item: any) => {
+    console.log(item.key);
+    switch (item.key) {
+      case 'logout':
+        logout().then();
+        break;
+      case 'favorites':
+        getFavorites();
+        break;
+    }
+  };
 
   const navLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
@@ -74,9 +105,9 @@ const Navigation = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to={'/store'}>
-              <span className="icon icon-cart-full"></span>
-              <span className={'label'}>Tienda</span>
+            <NavLink to={'/move'}>
+              <span className="icon icon-bus2"></span>
+              <span className={'label'}>Transporte</span>
             </NavLink>
           </li>
           <li>
@@ -102,10 +133,26 @@ const Navigation = () => {
         </ul>
       </nav>
       <div className="bottom-nav">
+        <Popover
+          placement={'right'}
+          content={
+            <>
+              <h3>Cargas</h3>
+              <UploadInformation />
+            </>
+          }>
+          <Progress type={'circle'} size={43} percent={100} style={{marginBottom: '10px'}}>
+            <UploadOutlined />
+          </Progress>
+        </Popover>
         <div className={'user-tool'} onClick={() => setDarkMode(!darkMode)}>
           {darkMode ? <i className={'icon-sun'} /> : <i className={'icon-moon'} />}
         </div>
-        <Dropdown arrow={true} placement={'topLeft'} trigger={['click']} menu={{items: menuItems, onClick: logout}}>
+        <Dropdown
+          arrow={true}
+          placement={'topLeft'}
+          trigger={['click']}
+          menu={{items: menuItems, onClick: handleUserMenuClick}}>
           <Avatar size={'large'} className={'avatar'}>
             {user?.name.substring(0, 1)}
           </Avatar>

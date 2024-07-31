@@ -1,6 +1,12 @@
 import React from 'react';
 import {Outlet} from 'react-router-dom';
-import {EnvelopeIcon, PaintBrushIcon, ServerStackIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
+import {
+  EnvelopeIcon,
+  PaintBrushIcon,
+  QueueListIcon,
+  ServerStackIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/24/outline';
 
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -20,6 +26,7 @@ const ModuleConfiguration = () => {
           <NavListItem icon={<EnvelopeIcon />} height={45} name={'E-mail'} path={'/config/inbox-management'} />
           <NavListItem icon={<PaintBrushIcon />} height={45} name={'Preferencias'} path={'/config/preferences'} />
           <NavListItem icon={<ShieldCheckIcon />} height={45} name={'Roles y permisos'} path={'/config/permissions'} />
+          <NavListItem icon={<QueueListIcon />} height={45} name={'Taxonomías'} path={'/config/taxonomy'} />
         </NavList>
       </ModuleSidebar>
       <ModuleContent>

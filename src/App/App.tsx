@@ -22,6 +22,9 @@ import GuestLayout from './GuestLayout';
 import PasswordRecovery from '../Authentication/Screen/PasswordRecovery';
 import VerifyRecovery from '../Authentication/Screen/VerifyRecovery';
 import PermissionsManager from '../Authentication/Screen/PermissionsManager';
+import MoveLayout from '../MoveManagement/Screens/MoveLayout';
+import MoveRoutesManager from '../MoveManagement/Screens/MoveRoutesManager';
+import MoveVehiclesManager from '../MoveManagement/Screens/MoveVehiclesManager';
 
 const App = () => {
   useEffect(() => {
@@ -84,6 +87,16 @@ const App = () => {
           </Route>
           <Route path={'preferences'} element={<PreferencesManager />} />
           <Route path={'permissions'} element={<PermissionsManager />} />
+          <Route path={'taxonomy'} element={<ConfigOptions />}>
+            <Route path={':tab'} element={null} />
+          </Route>
+        </Route>
+        <Route path={'move'} element={<MoveLayout />}>
+          <Route path={'inbox-management'} element={<ConfigOptions />}>
+            <Route path={':tab'} element={null} />
+          </Route>
+          <Route path={'routes'} element={<MoveRoutesManager />} />
+          <Route path={'vehicles'} element={<MoveVehiclesManager />} />
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
         <Route
