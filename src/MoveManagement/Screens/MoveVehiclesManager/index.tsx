@@ -102,7 +102,7 @@ const MoveVehiclesManager = () => {
         <DriversManager />
       </Modal>
       <Modal
-        title={'Nueva ruta'}
+        title={'Nuevo vehiculo'}
         footer={false}
         open={openVehicleForm}
         destroyOnClose
