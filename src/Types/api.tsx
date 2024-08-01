@@ -280,6 +280,15 @@ export type MoveRoute = {
   created_at: string;
   updated_at: string;
 };
+export type MoveDriver = {
+  uuid: string;
+  name: string;
+  license_type: string;
+  license_number: string;
+  profile?: Profile;
+  created_at: string;
+  updated_at: string;
+};
 export type MoveVehicle = {
   uuid: string;
   model?: string;

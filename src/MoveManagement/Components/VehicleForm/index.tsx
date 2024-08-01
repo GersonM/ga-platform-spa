@@ -6,6 +6,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {MoveRoute, MoveVehicle} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
+import DriverSelector from '../../../CommonUI/DriverSelector';
 
 interface VehicleFormProps {
   onCompleted: () => void;
@@ -65,7 +66,7 @@ const VehicleForm = ({onCompleted, vehicle}: VehicleFormProps) => {
           <Input />
         </Form.Item>
         <Form.Item name={'fk_driver_uuid'} label={'Conductor'} rules={[{required: true, message: 'Requerido'}]}>
-          <ProfileSelector />
+          <DriverSelector />
         </Form.Item>
         <Form.Item name={'type'} label={'Tipo'} rules={[{required: true, message: 'Requerido'}]}>
           <Input />

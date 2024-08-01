@@ -1,19 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import {Modal, Popconfirm, Space, Tooltip} from 'antd';
-import LocationsManager from '../../Components/LocationsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {ListBulletIcon, MapPinIcon, PencilIcon, TrashIcon} from '@heroicons/react/24/solid';
+import {ListBulletIcon, PencilIcon, TrashIcon, UserIcon} from '@heroicons/react/24/solid';
 import TableList from '../../../CommonUI/TableList';
-import RouteForm from '../../Components/RouteForm';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveRoute, MoveVehicle} from '../../../Types/api';
+import {MoveDriver, MoveRoute, MoveVehicle} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import VehicleForm from '../../Components/VehicleForm';
+import DriversManager from '../../Components/DriversManager';
 
 const MoveVehiclesManager = () => {
-  const [openLocationModal, setOpenLocationModal] = useState(false);
+  const [openDriverModal, setOpenDriverModal] = useState(false);
   const [openVehicleForm, setOpenVehicleForm] = useState(false);
   const [vehicles, setVehicles] = useState<MoveVehicle[]>();
   const [reload, setReload] = useState(false);
@@ -57,7 +56,13 @@ const MoveVehiclesManager = () => {
     {title: 'Color', dataIndex: 'color'},
     {title: 'Tipo', dataIndex: 'type'},
     {title: 'Capacidad', dataIndex: 'max_capacity'},
-    {title: 'Conductor', dataIndex: 'fk_driver_uuid'},
+    {
+      title: 'Conductor',
+      dataIndex: 'driver',
+      render: (driver: MoveDriver) => {
+        return `${driver.profile?.name} ${driver.profile?.last_name}`;
+      },
+    },
     {
       title: 'Acciones',
       dataIndex: 'uuid',
@@ -85,11 +90,16 @@ const MoveVehiclesManager = () => {
     <>
       <ContentHeader title={'Unidades'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)} />
       <Space>
-        <PrimaryButton icon={<MapPinIcon />} label={'Lugares'} onClick={() => setOpenLocationModal(true)} />
+        <PrimaryButton icon={<UserIcon />} label={'Conductores'} onClick={() => setOpenDriverModal(true)} />
       </Space>
       <TableList columns={routesColumns} dataSource={vehicles} />
-      <Modal footer={false} open={openLocationModal} destroyOnClose onCancel={() => setOpenLocationModal(false)}>
-        <LocationsManager />
+      <Modal
+        width={900}
+        footer={false}
+        open={openDriverModal}
+        destroyOnClose
+        onCancel={() => setOpenDriverModal(false)}>
+        <DriversManager />
       </Modal>
       <Modal
         title={'Nueva ruta'}
