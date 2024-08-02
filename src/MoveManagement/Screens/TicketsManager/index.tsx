@@ -5,6 +5,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TripForm from '../../Components/TripForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
+import dayjs from 'dayjs';
 
 const TicketsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -39,10 +40,10 @@ const TicketsManager = () => {
         items={trips?.map((trip, i) => {
           return {
             label: (
-              <>
+              <div style={{textAlign: 'left'}}>
                 {trip.route?.name} <br />
-                <small>{trip.departure_time}</small>
-              </>
+                <small>{dayjs(trip.departure_time).format('hh:mm a')}</small>
+              </div>
             ),
             key: trip.uuid,
             children: `Content of Tab ${trip.route?.name}`,

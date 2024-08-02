@@ -52,10 +52,10 @@ const TripForm = ({onCompleted, route}: TripFormProps) => {
           name={'departure_time'}
           label={'Hora de salida'}
           rules={[{required: true, message: 'La dirección es requerida'}]}>
-          <TimePicker />
+          <TimePicker use12Hours needConfirm={false} showNow={false} minuteStep={15} format="HH:mm" />
         </Form.Item>
         <Form.Item name={'arrival_time'} label={'Hora de llegada'}>
-          <TimePicker />
+          <TimePicker use12Hours needConfirm={false} showNow={false} minuteStep={15} format="HH:mm" />
         </Form.Item>
         <Form.Item name={'max_passengers'} label={'Pasajeros máximo'}>
           <InputNumber />
