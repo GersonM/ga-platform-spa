@@ -6,6 +6,7 @@ import TripForm from '../../Components/TripForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import dayjs from 'dayjs';
+import TripPassengersManager from '../../Components/TripPassengersManager';
 
 const TicketsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -36,6 +37,7 @@ const TicketsManager = () => {
     <>
       <ContentHeader title={'Venta de pasajes'} onAdd={() => setOpenTripModal(true)} />
       <Tabs
+        destroyInactiveTabPane
         tabPosition={'left'}
         items={trips?.map((trip, i) => {
           return {
@@ -46,7 +48,7 @@ const TicketsManager = () => {
               </div>
             ),
             key: trip.uuid,
-            children: `Content of Tab ${trip.route?.name}`,
+            children: <TripPassengersManager trip={trip} />,
           };
         })}
       />
