@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {Modal, Popconfirm, Space, Tooltip} from 'antd';
+import {Drawer, Modal, Popconfirm, Space, Tag, Tooltip} from 'antd';
 import LocationsManager from '../../Components/LocationsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {ListBulletIcon, MapPinIcon, PencilIcon, TrashIcon} from '@heroicons/react/24/solid';
@@ -8,12 +8,14 @@ import TableList from '../../../CommonUI/TableList';
 import RouteForm from '../../Components/RouteForm';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveRoute} from '../../../Types/api';
+import {MoveLocation, MoveRoute} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
+import RouteLocationManager from '../../Components/RouteLocationManager';
 
 const MoveRoutesManager = () => {
   const [openLocationModal, setOpenLocationModal] = useState(false);
   const [openRouteManager, setOpenRouteManager] = useState(false);
+  const [openAddLocations, setOpenAddLocations] = useState(false);
   const [routes, setRoutes] = useState<MoveRoute[]>();
   const [reload, setReload] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
@@ -51,7 +53,13 @@ const MoveRoutesManager = () => {
 
   const routesColumns = [
     {title: 'Nombre', dataIndex: 'name'},
-    {title: 'Lugares', dataIndex: 'locations'},
+    {
+      title: 'Lugares',
+      dataIndex: 'locations',
+      render: (locations: MoveLocation[]) => {
+        return locations.map((location: MoveLocation) => <Tag>{location.name}</Tag>);
+      },
+    },
     {title: 'Distancia', dataIndex: 'distance'},
     {title: 'Duración', dataIndex: 'duration'},
     {title: 'Costo', dataIndex: 'cost'},
@@ -68,7 +76,13 @@ const MoveRoutesManager = () => {
             icon={<PencilIcon />}
           />
           <Tooltip title={'Editar lugares'}>
-            <IconButton onClick={() => setSelectedRoute(route)} icon={<ListBulletIcon />} />
+            <IconButton
+              onClick={() => {
+                setSelectedRoute(route);
+                setOpenAddLocations(true);
+              }}
+              icon={<ListBulletIcon />}
+            />
           </Tooltip>
           <Popconfirm title={'Eliminar ruta'} onConfirm={() => deleteRoute(uuid)}>
             <IconButton danger icon={<TrashIcon />} />
@@ -106,6 +120,23 @@ const MoveRoutesManager = () => {
           }}
         />
       </Modal>
+      <Drawer
+        onClose={() => {
+          setSelectedRoute(undefined);
+          setOpenAddLocations(false);
+          setReload(!reload);
+        }}
+        title={'Editar lugares para ' + selectedRoute?.name}
+        open={openAddLocations}>
+        {selectedRoute && (
+          <RouteLocationManager
+            onChange={() => {
+              setReload(!reload);
+            }}
+            route={selectedRoute}
+          />
+        )}
+      </Drawer>
     </>
   );
 };

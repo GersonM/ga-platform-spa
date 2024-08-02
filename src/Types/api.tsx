@@ -277,6 +277,17 @@ export type MoveLocation = {
 export type MoveRoute = {
   uuid: string;
   name: string;
+  locations?: MoveLocation[];
+  created_at: string;
+  updated_at: string;
+};
+export type MoveTrip = {
+  uuid: string;
+  route?: MoveRoute;
+  vehicle?: MoveVehicle;
+  arrival_time: string;
+  departure_time: string;
+  arrived_at: string;
   created_at: string;
   updated_at: string;
 };

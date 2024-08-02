@@ -25,6 +25,7 @@ import PermissionsManager from '../Authentication/Screen/PermissionsManager';
 import MoveLayout from '../MoveManagement/Screens/MoveLayout';
 import MoveRoutesManager from '../MoveManagement/Screens/MoveRoutesManager';
 import MoveVehiclesManager from '../MoveManagement/Screens/MoveVehiclesManager';
+import TicketsManager from '../MoveManagement/Screens/TicketsManager';
 
 const App = () => {
   useEffect(() => {
@@ -92,9 +93,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'move'} element={<MoveLayout />}>
-          <Route path={'inbox-management'} element={<ConfigOptions />}>
-            <Route path={':tab'} element={null} />
-          </Route>
+          <Route path={'trips'} element={<TicketsManager />} />
           <Route path={'routes'} element={<MoveRoutesManager />} />
           <Route path={'vehicles'} element={<MoveVehiclesManager />} />
         </Route>

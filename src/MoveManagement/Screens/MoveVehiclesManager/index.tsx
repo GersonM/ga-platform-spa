@@ -75,9 +75,6 @@ const MoveVehiclesManager = () => {
             }}
             icon={<PencilIcon />}
           />
-          <Tooltip title={'Editar lugares'}>
-            <IconButton onClick={() => setSelectedVehicle(route)} icon={<ListBulletIcon />} />
-          </Tooltip>
           <Popconfirm title={'Eliminar ruta'} onConfirm={() => deleteRoute(uuid)}>
             <IconButton danger icon={<TrashIcon />} />
           </Popconfirm>

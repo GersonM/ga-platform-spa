@@ -1,20 +1,21 @@
 import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {Profile} from '../../Types/api';
-import ErrorHandler from '../../Utils/ErrorHandler';
+import {MoveLocation} from '../../../Types/api';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface ProfileSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
+  value?: any;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
 const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) => {
-  const [users, setUsers] = useState<Profile | any>([]);
+  const [locations, setLocations] = useState<MoveLocation | any>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,13 +26,13 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
     };
 
     axios
-      .get(`hr-management/profiles`, config)
+      .get(`move/locations`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setUsers(
-            response.data.data.map((item: Profile) => {
-              return {value: item.uuid, label: `${item.name} ${item.last_name}`};
+          setLocations(
+            response.data.map((item: MoveLocation) => {
+              return {value: item.uuid, label: `${item.name}`};
             }),
           );
         }
@@ -52,7 +53,7 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
       showSearch={true}
       optionFilterProp={'label'}
       loading={loading}
-      options={users}
+      options={locations}
       mode={mode || undefined}
     />
   );

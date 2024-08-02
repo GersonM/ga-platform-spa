@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {MoveLocation} from '../../../Types/api';
+import {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
-interface ProfileSelectorProps {
+interface VehicleSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -14,8 +14,8 @@ interface ProfileSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) => {
-  const [locations, setLocations] = useState<MoveLocation | any>([]);
+const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) => {
+  const [locations, setLocations] = useState<MoveVehicle | any>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,13 +26,13 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
     };
 
     axios
-      .get(`move/locations`, config)
+      .get(`move/vehicles`, config)
       .then(response => {
         setLoading(false);
         if (response) {
           setLocations(
-            response.data.map((item: MoveLocation) => {
-              return {value: item.uuid, label: `${item.name}`};
+            response.data.map((item: MoveVehicle) => {
+              return {value: item.uuid, label: `${item.registration_plate} - ${item.brand}`};
             }),
           );
         }
@@ -59,4 +59,4 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
   );
 };
 
-export default ProfileSelector;
+export default VehicleSelector;
