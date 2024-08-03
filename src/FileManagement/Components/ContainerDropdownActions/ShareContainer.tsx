@@ -96,6 +96,7 @@ const ShareContainer = ({container, onCompleted}: ShareContainerProps) => {
       <h2>Compartir acceso a "{container.name}"</h2>
       <p>Buscar a una persona por su nombre o correo para permitirle ver el contenido de esta carpeta.</p>
       <SearchProfile
+        mode={'multiple'}
         style={{marginBottom: '10px'}}
         onChange={values => {
           setSelectedProfiles(values);

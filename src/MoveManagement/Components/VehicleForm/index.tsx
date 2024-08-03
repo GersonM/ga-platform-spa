@@ -65,7 +65,7 @@ const VehicleForm = ({onCompleted, vehicle}: VehicleFormProps) => {
         <Form.Item name={'model'} label={'Modelo'} rules={[{required: true, message: 'Requerido'}]}>
           <Input />
         </Form.Item>
-        <Form.Item name={'fk_driver_uuid'} label={'Conductor'} rules={[{required: true, message: 'Requerido'}]}>
+        <Form.Item name={'fk_driver_uuid'} label={'Conductor'}>
           <DriverSelector />
         </Form.Item>
         <Form.Item name={'type'} label={'Tipo'} rules={[{required: true, message: 'Requerido'}]}>

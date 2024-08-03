@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {MoveDriver, Profile} from '../../Types/api';
+import {MoveDriver} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
 
-interface ProfileSelectorProps {
+interface DriverSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -13,7 +13,7 @@ interface ProfileSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) => {
+const DriverSelector = ({placeholder, mode, ...props}: DriverSelectorProps) => {
   const [users, setUsers] = useState<MoveDriver | any>([]);
   const [loading, setLoading] = useState(false);
 
@@ -58,4 +58,4 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
   );
 };
 
-export default ProfileSelector;
+export default DriverSelector;

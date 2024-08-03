@@ -4,7 +4,7 @@ import axios from 'axios';
 import {MoveLocation} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
-interface ProfileSelectorProps {
+interface LocationsSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -14,7 +14,7 @@ interface ProfileSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) => {
+const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps) => {
   const [locations, setLocations] = useState<MoveLocation | any>([]);
   const [loading, setLoading] = useState(false);
 
@@ -59,4 +59,4 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
   );
 };
 
-export default ProfileSelector;
+export default LocationsSelector;

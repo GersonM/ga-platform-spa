@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {MoveTrip} from '../../../Types/api';
+import {Breadcrumb, Divider, Modal} from 'antd';
+import {PlusIcon, TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
-import {Breadcrumb, Divider, Modal, Space, Tag} from 'antd';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {PlusIcon} from '@heroicons/react/24/solid';
+import RegisterPassenger from '../RegisterPassenger';
+import IconButton from '../../../CommonUI/IconButton';
+import {MoveTrip} from '../../../Types/api';
+import './styles.less';
 
 interface TripPassengersManagerProps {
   trip: MoveTrip;
@@ -37,6 +41,19 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
+  const removePassenger = (uuid: string) => {
+    axios
+      .delete(`move/passengers/${uuid}`)
+      .then(response => {
+        if (response) {
+          setReload(!reload);
+        }
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   return (
     <>
       <h3>
@@ -45,14 +62,34 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
       <Breadcrumb items={trip.route?.locations?.map(location => ({title: location.name}))} />
       <Divider />
       <PrimaryButton icon={<PlusIcon />} onClick={() => setOpenPassengerModal(true)} label={'Agregar pasajero'} />
+      {passengers?.map(p => {
+        return (
+          <div key={p.uuid} className={'passenger-item'}>
+            <div>
+              {p.profile.name} {p.profile.last_name} <br />
+              <small>{p.ledger}</small>
+            </div>
+            <div>
+              <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
+            </div>
+          </div>
+        );
+      })}
       <Modal
-        title={'Nuevo pasajero'}
         footer={false}
         open={openPassengerModal}
         destroyOnClose
         onCancel={() => {
           setOpenPassengerModal(false);
-        }}></Modal>
+        }}>
+        <RegisterPassenger
+          trip={trip}
+          onComplete={() => {
+            setOpenPassengerModal(false);
+            setReload(!reload);
+          }}
+        />
+      </Modal>
     </>
   );
 };

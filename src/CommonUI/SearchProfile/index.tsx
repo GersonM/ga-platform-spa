@@ -13,7 +13,7 @@ interface SearchProfileProps {
   value?: string | string[];
 }
 
-const SearchProfile = ({style, value, onChange, mode = 'multiple'}: SearchProfileProps) => {
+const SearchProfile = ({style, value, onChange, mode}: SearchProfileProps) => {
   const [loading, setLoading] = useState(false);
   const [searchProfile, setSearchProfile] = useState<string>();
   const lastSearchText = useDebounce(searchProfile, 400);
@@ -48,6 +48,7 @@ const SearchProfile = ({style, value, onChange, mode = 'multiple'}: SearchProfil
       mode={mode}
       value={value}
       onChange={onChange}
+      allowClear
       filterOption={false}
       style={{width: '100%', ...style}}
       showSearch
