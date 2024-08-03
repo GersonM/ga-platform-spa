@@ -1,0 +1,39 @@
+.reservation-step-container {
+  max-width: 400px;
+  margin: 50px auto;
+}
+
+.vehicle-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  li {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 10px;
+    background: var(--backgroung-color);
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &:hover, &.selected {
+      border-color: var(--color-hover);
+    }
+
+    span.icon-bus {
+      font-size: 30px;
+      margin-right: 10px;
+    }
+
+    .vehicle-info {
+      flex: 1;
+    }
+  }
+}

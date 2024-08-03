@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {Modal, Popconfirm, Space, Tooltip} from 'antd';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {ListBulletIcon, PencilIcon, TrashIcon, UserIcon} from '@heroicons/react/24/solid';
-import TableList from '../../../CommonUI/TableList';
+import {Modal, Popconfirm, Space} from 'antd';
+import {PencilIcon, TrashIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
+
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveDriver, MoveRoute, MoveVehicle} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import VehicleForm from '../../Components/VehicleForm';
 import DriversManager from '../../Components/DriversManager';
+import {MoveDriver, MoveRoute, MoveVehicle} from '../../../Types/api';
 
 const MoveVehiclesManager = () => {
   const [openDriverModal, setOpenDriverModal] = useState(false);

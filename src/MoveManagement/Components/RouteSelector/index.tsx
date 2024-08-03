@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {MoveLocation} from '../../../Types/api';
+import {MoveLocation, MoveRoute} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface RouteSelectorProps {
@@ -15,7 +15,7 @@ interface RouteSelectorProps {
 }
 
 const RouteSelector = ({placeholder, mode, ...props}: RouteSelectorProps) => {
-  const [locations, setLocations] = useState<MoveLocation | any>([]);
+  const [routes, setRoutes] = useState<MoveRoute | any>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const RouteSelector = ({placeholder, mode, ...props}: RouteSelectorProps) => {
       .then(response => {
         setLoading(false);
         if (response) {
-          setLocations(
+          setRoutes(
             response.data.map((item: MoveLocation) => {
               return {value: item.uuid, label: `${item.name}`};
             }),
@@ -49,11 +49,11 @@ const RouteSelector = ({placeholder, mode, ...props}: RouteSelectorProps) => {
     <Select
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige un persona'}
+      placeholder={placeholder || 'Elige una ruta'}
       showSearch={true}
       optionFilterProp={'label'}
       loading={loading}
-      options={locations}
+      options={routes}
       mode={mode || undefined}
     />
   );

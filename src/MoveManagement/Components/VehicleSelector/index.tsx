@@ -15,7 +15,7 @@ interface VehicleSelectorProps {
 }
 
 const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) => {
-  const [locations, setLocations] = useState<MoveVehicle | any>([]);
+  const [vehicles, setVehicles] = useState<MoveVehicle | any>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,9 +30,12 @@ const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) =>
       .then(response => {
         setLoading(false);
         if (response) {
-          setLocations(
+          setVehicles(
             response.data.map((item: MoveVehicle) => {
-              return {value: item.uuid, label: `${item.registration_plate} - ${item.brand}`};
+              return {
+                value: item.uuid,
+                label: `${item.registration_plate} - ${item.brand} - ${item.type} (${item.max_capacity})`,
+              };
             }),
           );
         }
@@ -53,7 +56,7 @@ const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) =>
       showSearch={true}
       optionFilterProp={'label'}
       loading={loading}
-      options={locations}
+      options={vehicles}
       mode={mode || undefined}
     />
   );

@@ -1,35 +1,37 @@
 import React, {useState} from 'react';
-import {Form, Input, InputNumber, TimePicker} from 'antd';
+import {DatePicker, Form} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
+import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {MoveLocation} from '../../../Types/api';
 import RouteSelector from '../RouteSelector';
 import VehicleSelector from '../VehicleSelector';
-import {CheckIcon} from '@heroicons/react/24/solid';
+import {MoveLocation, MoveRoute, MoveTrip, MoveVehicle} from '../../../Types/api';
 
 interface TripFormProps {
-  onCompleted: () => void;
+  onCompleted: (trip: MoveTrip) => void;
   route?: MoveLocation;
+  vehicle?: MoveVehicle;
 }
 
-const TripForm = ({onCompleted, route}: TripFormProps) => {
+const TripForm = ({onCompleted, route, vehicle}: TripFormProps) => {
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
-  const submitForm = (values: Location) => {
+  const submitForm = (values: MoveRoute) => {
     setLoading(true);
     axios
       .request({
         url: route ? `move/trips/${route.uuid}` : 'move/trips',
         method: route ? 'put' : 'post',
-        data: values,
+        data: {...values, fk_vehicule_uuid: vehicle?.uuid},
       })
-      .then(() => {
+      .then(response => {
         setLoading(false);
         if (onCompleted) {
-          onCompleted();
+          onCompleted(response.data);
           form.resetFields();
         }
       })
@@ -41,25 +43,44 @@ const TripForm = ({onCompleted, route}: TripFormProps) => {
 
   return (
     <>
-      <Form name="outerForm" form={form} initialValues={route} layout={'vertical'} onFinish={submitForm}>
+      <Form
+        requiredMark={false}
+        name="outerForm"
+        form={form}
+        initialValues={route}
+        layout={'vertical'}
+        onFinish={submitForm}>
         <Form.Item name={'fk_route_uuid'} label={'Ruta'}>
           <RouteSelector />
         </Form.Item>
-        <Form.Item name={'fk_vehicule_uuid'} label={'Vehículo'}>
-          <VehicleSelector />
-        </Form.Item>
+        {!vehicle && (
+          <Form.Item name={'fk_vehicule_uuid'} label={'Vehículo'}>
+            <VehicleSelector />
+          </Form.Item>
+        )}
         <Form.Item
           name={'departure_time'}
-          label={'Hora de salida'}
+          label={'Fecha y hora'}
           rules={[{required: true, message: 'La dirección es requerida'}]}>
-          <TimePicker use12Hours needConfirm={false} showNow={false} minuteStep={15} format="HH:mm" />
+          <DatePicker
+            showTime
+            placeholder={'Hora'}
+            style={{width: '100%'}}
+            use12Hours
+            needConfirm={false}
+            showNow={false}
+            minuteStep={15}
+            format="DD/MM/YYYY - hh:mm a"
+          />
         </Form.Item>
+        {/*
         <Form.Item name={'arrival_time'} label={'Hora de llegada'}>
           <TimePicker use12Hours needConfirm={false} showNow={false} minuteStep={15} format="HH:mm" />
         </Form.Item>
         <Form.Item name={'max_passengers'} label={'Pasajeros máximo'}>
           <InputNumber />
         </Form.Item>
+        */}
         <PrimaryButton block icon={<CheckIcon />} loading={loading} label={'Guardar'} htmlType={'submit'} />
       </Form>
     </>

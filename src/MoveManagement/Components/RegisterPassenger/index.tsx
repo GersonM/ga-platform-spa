@@ -3,7 +3,6 @@ import {Divider, Input} from 'antd';
 import {MoveTrip} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
