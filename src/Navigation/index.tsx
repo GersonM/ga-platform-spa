@@ -80,48 +80,60 @@ const Navigation = () => {
               <span className="label">Dashboard</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to={'/file-management'}>
-              <span className="icon icon-server"></span>
-              <span className={'label'}>Gestor de Archivos</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to={'/inbox-management'}>
-              <span className="icon icon-envelope-open"></span>
-              <span className={'label'}>E-mail</span>
-            </NavLink>
-          </li>
+          {config?.modules.includes('files') && (
+            <li>
+              <NavLink to={'/file-management'}>
+                <span className="icon icon-server"></span>
+                <span className={'label'}>Gestor de Archivos</span>
+              </NavLink>
+            </li>
+          )}
+          {config?.modules.includes('inbox') && (
+            <li>
+              <NavLink to={'/inbox-management'}>
+                <span className="icon icon-envelope-open"></span>
+                <span className={'label'}>E-mail</span>
+              </NavLink>
+            </li>
+          )}
           <li>
             <NavLink to={'/accounts'}>
               <span className="icon icon-users2"></span>
               <span className={'label'}>Usuarios</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to={'/lms'}>
-              <span className="icon icon-graduation-hat"></span>
-              <span className={'label'}>LMS</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to={'/move'}>
-              <span className="icon icon-bus2"></span>
-              <span className={'label'}>Transporte</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to={'/attendance'}>
-              <span className="icon icon-clock"></span>
-              <span className={'label'}>Asistencia</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to={'/invoices'}>
-              <span className="icon icon-cash-dollar"></span>
-              <span className={'label'}>Pagos</span>
-            </NavLink>
-          </li>
+          {config?.modules.includes('lms') && (
+            <li>
+              <NavLink to={'/lms'}>
+                <span className="icon icon-graduation-hat"></span>
+                <span className={'label'}>LMS</span>
+              </NavLink>
+            </li>
+          )}
+          {config?.modules.includes('move') && (
+            <li>
+              <NavLink to={'/move'}>
+                <span className="icon icon-bus2"></span>
+                <span className={'label'}>Transporte</span>
+              </NavLink>
+            </li>
+          )}
+          {config?.modules.includes('attendance') && (
+            <li>
+              <NavLink to={'/attendance'}>
+                <span className="icon icon-clock"></span>
+                <span className={'label'}>Asistencia</span>
+              </NavLink>
+            </li>
+          )}
+          {config?.modules.includes('payments') && (
+            <li>
+              <NavLink to={'/invoices'}>
+                <span className="icon icon-cash-dollar"></span>
+                <span className={'label'}>Pagos</span>
+              </NavLink>
+            </li>
+          )}
           {user?.roles?.includes('admin') && (
             <li>
               <NavLink to={'/config'}>

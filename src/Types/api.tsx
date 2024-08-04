@@ -3,6 +3,7 @@ export type TenantConfig = {
   primary_color?: string;
   version?: string;
   white_logo?: string;
+  modules: string[];
   config: {
     id: string;
     color?: string;
