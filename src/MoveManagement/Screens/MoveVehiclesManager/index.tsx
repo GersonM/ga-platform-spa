@@ -60,8 +60,8 @@ const MoveVehiclesManager = () => {
     {
       title: 'Conductor',
       dataIndex: 'driver',
-      render: (driver: MoveDriver) => {
-        return `${driver.profile?.name} ${driver.profile?.last_name}`;
+      render: (driver?: MoveDriver) => {
+        return driver ? `${driver?.profile?.name} ${driver?.profile?.last_name}` : 'Sin conductor';
       },
     },
     {

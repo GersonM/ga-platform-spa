@@ -64,13 +64,12 @@ const TripForm = ({onCompleted, route, vehicle}: TripFormProps) => {
           rules={[{required: true, message: 'La dirección es requerida'}]}>
           <DatePicker
             showTime
-            placeholder={'Hora'}
+            placeholder={'Selecciona la fecha y hora'}
             style={{width: '100%'}}
-            use12Hours
             needConfirm={false}
             showNow={false}
             minuteStep={15}
-            format="DD/MM/YYYY - hh:mm a"
+            format="DD/MM/YYYY - HH:mm"
           />
         </Form.Item>
         {/*

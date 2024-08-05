@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {Divider, Input} from 'antd';
+import {Divider, Input, Modal} from 'antd';
 import {MoveTrip} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import CreateProfile from '../../../AccountManagement/Components/CreateProfile';
 
 interface RegisterPassengerProps {
   trip: MoveTrip;
@@ -15,6 +16,7 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
   const [profileUuid, setProfileUuid] = useState<string>();
   const [selectedProfile, setSelectedProfile] = useState(false);
   const [ledger, setLedger] = useState<string>();
+  const [openNewProfileModal, setOpenNewProfileModal] = useState(false);
 
   const createPassenger = () => {
     axios
@@ -43,12 +45,13 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
             }}
           />
           <Divider />
-          <PrimaryButton label={'Registrar nuevo'} block disabled={true} />
+          <PrimaryButton label={'Registrar nuevo'} block onClick={() => setOpenNewProfileModal(true)} />
         </>
       ) : (
         <>
           <Input
-            placeholder={'Código'}
+            style={{marginBottom: 15}}
+            placeholder={'Centro de coste'}
             onChange={value => {
               setLedger(value.target.value);
             }}
@@ -63,6 +66,18 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
           />
         </>
       )}
+      <Modal
+        title={'Registrar nueva persona'}
+        footer={false}
+        open={openNewProfileModal}
+        onCancel={() => setOpenNewProfileModal(false)}>
+        <CreateProfile
+          onCompleted={profile => {
+            setSelectedProfile(true);
+            setProfileUuid(profile.uuid);
+          }}
+        />
+      </Modal>
     </>
   );
 };
