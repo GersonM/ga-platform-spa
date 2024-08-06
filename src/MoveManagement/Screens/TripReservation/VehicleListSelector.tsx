@@ -44,22 +44,27 @@ const VehicleListSelector = ({onChange}: VehicleListSelectorProps) => {
     <div>
       <LoadingIndicator visible={loading} />
       <ul className={'vehicle-list'}>
-        {vehicles.map((item: MoveVehicle) => {
+        {vehicles.map((vehicle: MoveVehicle) => {
           return (
             <li
-              key={item.uuid}
-              className={`${selectedVehicle && selectedVehicle.uuid == item.uuid ? 'selected' : ''}`}
+              key={vehicle.uuid}
+              className={`${selectedVehicle && selectedVehicle.uuid == vehicle.uuid ? 'selected' : ''}`}
               onClick={() => {
-                setSelectedVehicle(item);
-                onChange && onChange(item);
+                setSelectedVehicle(vehicle);
+                onChange && onChange(vehicle);
               }}>
               <span className={'icon-bus'}></span>
               <div className={'vehicle-info'}>
-                {item.brand}
+                {vehicle.brand} {vehicle.model} {vehicle.color}
                 <br />
-                <small>{item.max_capacity} pasajeros</small>
+                <small>
+                  {vehicle.type} {vehicle.max_capacity} pasajeros
+                </small>
               </div>
-              <Tag>{item.registration_plate}</Tag>
+              <div>
+                <Tag>{vehicle.registration_plate}</Tag> <br />
+                <Tag color={'blue'}>C234123412343</Tag>
+              </div>
             </li>
           );
         })}

@@ -68,7 +68,6 @@ const TripForm = ({onCompleted, route, vehicle}: TripFormProps) => {
             style={{width: '100%'}}
             needConfirm={false}
             showNow={false}
-            minuteStep={15}
             format="DD/MM/YYYY - HH:mm"
           />
         </Form.Item>

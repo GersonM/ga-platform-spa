@@ -5,16 +5,17 @@ import {MapPinIcon, TicketIcon, TruckIcon, UsersIcon} from '@heroicons/react/24/
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import ModuleContent from '../../../CommonUI/ModuleContent';
+import {BsListStars} from 'react-icons/bs';
 
 const MoveLayout = () => {
   return (
     <>
       <ModuleSidebar title={'Transporte'}>
         <NavList>
-          <NavListItem icon={<TicketIcon />} height={45} name={'Reserva de viaje'} path={'/move/reservation'} />
-          <NavListItem icon={<UsersIcon />} height={45} name={'Pasajes'} path={'/move/trips'} />
-          <NavListItem icon={<TruckIcon />} height={45} name={'Vehículos & conductores'} path={'/move/vehicles'} />
-          <NavListItem icon={<MapPinIcon />} height={45} name={'Rutas & lugares'} path={'/move/routes'} />
+          <NavListItem icon={<TicketIcon />} name={'Nueva reserva'} path={'/move/reservation'} />
+          <NavListItem icon={<BsListStars />} name={'Mis reservas'} path={'/move/trips'} />
+          <NavListItem icon={<i className={'icon-bus'} />} name={'Vehículos & conductores'} path={'/move/vehicles'} />
+          <NavListItem icon={<MapPinIcon />} name={'Rutas & lugares'} path={'/move/routes'} />
         </NavList>
       </ModuleSidebar>
       <ModuleContent>

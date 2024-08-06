@@ -45,7 +45,7 @@ const TripReservation = () => {
 
   return (
     <>
-      <ContentHeader title={'Reservar viaje'} />
+      <ContentHeader title={'Reserva'} />
       <Steps
         current={currentStep}
         items={steps}
