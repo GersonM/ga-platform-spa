@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {DatePicker, Modal, Space, Tabs} from 'antd';
+import {DatePicker, Modal, Progress, Space, Tabs} from 'antd';
 import axios from 'axios';
+import dayjs, {Dayjs} from 'dayjs';
+
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TripForm from '../../Components/TripForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
-import dayjs, {Dayjs} from 'dayjs';
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import RouteSelector from '../../Components/RouteSelector';
 
@@ -43,21 +44,25 @@ const TicketsManager = () => {
   return (
     <>
       <ContentHeader title={'Reserva de pasajes'} onAdd={() => setOpenTripModal(true)}>
-        <Space>
-          <p>Filtros</p>
+        <Space style={{marginTop: 10}}>
+          <span>Filtros</span>
           <DatePicker onChange={val => setSelectedDate(val)} />
           <RouteSelector onChange={value => setSelectedRouteUuid(value)} />
         </Space>
       </ContentHeader>
       <Tabs
+        style={{margin: '0 0 0 -20px'}}
         destroyInactiveTabPane
         tabPosition={'left'}
         items={trips?.map((trip, i) => {
           return {
             label: (
               <div style={{textAlign: 'left'}}>
-                {trip.route?.name} <br />
-                <small>{dayjs(trip.departure_time).format('DD/MM hh:mm a')}</small>
+                <Progress percent={100} type={'circle'} size={25} />
+                <div>
+                  {trip.route?.name} <br />
+                  <small>{dayjs(trip.departure_time).format('DD/MM hh:mm a')}</small>
+                </div>
               </div>
             ),
             key: trip.uuid,

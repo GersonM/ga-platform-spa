@@ -9,6 +9,7 @@ interface DriverSelectorProps {
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
+  style?: any;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
@@ -31,7 +32,11 @@ const DriverSelector = ({placeholder, mode, ...props}: DriverSelectorProps) => {
         if (response) {
           setUsers(
             response.data.map((item: MoveDriver) => {
-              return {value: item.uuid, label: `${item.profile?.name} ${item.profile?.last_name}`};
+              return {
+                value: item.uuid,
+                entity: item,
+                label: `${item.profile?.name} ${item.profile?.last_name}`,
+              };
             }),
           );
         }
