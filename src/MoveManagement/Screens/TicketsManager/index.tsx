@@ -9,6 +9,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import RouteSelector from '../../Components/RouteSelector';
+import './styles.less';
 
 const TicketsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -43,7 +44,10 @@ const TicketsManager = () => {
 
   return (
     <>
-      <ContentHeader title={'Reserva de pasajes'} onAdd={() => setOpenTripModal(true)}>
+      <ContentHeader
+        title={'Reserva de pasajes'}
+        onRefresh={() => setReload(!reload)}
+        onAdd={() => setOpenTripModal(true)}>
         <Space style={{marginTop: 10}}>
           <span>Filtros</span>
           <DatePicker onChange={val => setSelectedDate(val)} />
@@ -54,15 +58,19 @@ const TicketsManager = () => {
         style={{margin: '0 0 0 -20px'}}
         destroyInactiveTabPane
         tabPosition={'left'}
-        items={trips?.map((trip, i) => {
+        items={trips?.map(trip => {
+          const percent = trip.vehicle && (trip.total_passengers * 100) / trip.vehicle?.max_capacity;
           return {
             label: (
-              <div style={{textAlign: 'left'}}>
-                <Progress percent={100} type={'circle'} size={25} />
-                <div>
-                  {trip.route?.name} <br />
-                  <small>{dayjs(trip.departure_time).format('DD/MM hh:mm a')}</small>
+              <div className={'trip-tab'}>
+                <div className={'tab-label'}>
+                  {trip.route?.name}
+                  <small>
+                    {dayjs(trip.departure_time).format('DD/MM hh:mm a')} | {trip.total_passengers} de{' '}
+                    {trip.vehicle?.max_capacity}
+                  </small>
                 </div>
+                <Progress percent={Math.round(percent || 0)} type={'circle'} size={25} />
               </div>
             ),
             key: trip.uuid,

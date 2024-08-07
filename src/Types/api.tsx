@@ -286,7 +286,10 @@ export type MoveTrip = {
   uuid: string;
   route?: MoveRoute;
   vehicle?: MoveVehicle;
+  driver?: MoveDriver;
   arrival_time: string;
+  max_passengers: number;
+  total_passengers: number;
   departure_time: string;
   arrived_at: string;
   created_at: string;
@@ -307,8 +310,9 @@ export type MoveVehicle = {
   brand?: string;
   type?: string;
   registration_plate?: string;
-  weight?: string;
-  max_capacity?: string;
+  circulation_card?: string;
+  weight?: number;
+  max_capacity: number;
   fk_driver_uuid?: string;
   color?: string;
   created_at: string;

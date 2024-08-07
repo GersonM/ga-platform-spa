@@ -63,7 +63,7 @@ const VehicleListSelector = ({onChange}: VehicleListSelectorProps) => {
               </div>
               <div>
                 <Tag>{vehicle.registration_plate}</Tag> <br />
-                <Tag color={'blue'}>C234123412343</Tag>
+                <Tag color={'blue'}>{vehicle.circulation_card || 'Sin tarjeta'}</Tag>
               </div>
             </li>
           );

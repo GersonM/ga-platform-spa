@@ -16,6 +16,7 @@ import DriverSelector from '../../../CommonUI/DriverSelector';
 
 interface TripPassengersManagerProps {
   trip: MoveTrip;
+  onChange?: () => void;
 }
 
 const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
@@ -84,17 +85,30 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
           </h3>
           <Breadcrumb items={trip.route?.locations?.map(location => ({title: location.name}))} />
         </div>
-        {isAbleToAssignDriver && (
-          <PrimaryButton
-            onClick={() => setOpenAssignDriver(true)}
-            label={'Asignar conductor'}
-            icon={<UserPlusIcon />}
-            ghost
-          />
+        {trip.driver ? (
+          <div>
+            {trip.driver.profile?.name} {trip.driver.profile?.last_name} <br />
+            {trip.driver.profile?.doc_type}: {trip.driver.profile?.doc_number}
+          </div>
+        ) : (
+          isAbleToAssignDriver && (
+            <PrimaryButton
+              onClick={() => setOpenAssignDriver(true)}
+              label={'Asignar conductor'}
+              icon={<UserPlusIcon />}
+              ghost
+            />
+          )
         )}
       </div>
       <Divider />
-      <PrimaryButton icon={<PlusIcon />} onClick={() => setOpenPassengerModal(true)} label={'Agregar pasajero'} />
+      <PrimaryButton
+        block
+        disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
+        icon={<PlusIcon />}
+        onClick={() => setOpenPassengerModal(true)}
+        label={'Agregar pasajero'}
+      />
       {passengers?.map(p => {
         return (
           <div key={p.uuid} className={'passenger-item'}>
