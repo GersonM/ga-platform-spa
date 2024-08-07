@@ -47,6 +47,9 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
       <Form.Item name={'phone'} label={'Teléfono'}>
         <Input />
       </Form.Item>
+      <Form.Item name={'cost_center'} label={'Centro de costo'}>
+        <Input />
+      </Form.Item>
       <Row gutter={15}>
         <Col md={10}>
           <Form.Item name={'doc_type'} label={'Tipo de documento'}>
@@ -68,7 +71,7 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
       </Row>
       <Row gutter={15}>
         <Col md={12}>
-          <Form.Item name={'company'} label={'Empresa'}>
+          <Form.Item name={'company_name'} label={'Empresa'}>
             <Input />
           </Form.Item>
         </Col>

@@ -40,13 +40,7 @@ const VehicleForm = ({onCompleted, vehicle}: VehicleFormProps) => {
 
   return (
     <>
-      <Form
-        name="outerForm"
-        form={form}
-        initialValues={vehicle}
-        layout={'vertical'}
-        onFinish={submitForm}
-        requiredMark={false}>
+      <Form form={form} initialValues={vehicle} layout={'vertical'} onFinish={submitForm} requiredMark={false}>
         <Form.Item
           name={'registration_plate'}
           label={'Placa de rodaje'}
@@ -60,6 +54,12 @@ const VehicleForm = ({onCompleted, vehicle}: VehicleFormProps) => {
           <InputNumber suffix={'Pax'} />
         </Form.Item>
         <Form.Item name={'brand'} label={'Fabricante'} rules={[{required: true, message: 'Requerido'}]}>
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={'circulation_card'}
+          label={'Tarjeta de circulación'}
+          rules={[{required: true, message: 'Requerido'}]}>
           <Input />
         </Form.Item>
         <Form.Item name={'model'} label={'Modelo'} rules={[{required: true, message: 'Requerido'}]}>

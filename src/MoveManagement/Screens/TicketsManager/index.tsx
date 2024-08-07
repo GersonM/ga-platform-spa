@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {DatePicker, Modal, Tabs} from 'antd';
+import {DatePicker, Modal, Space, Tabs} from 'antd';
 import axios from 'axios';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TripForm from '../../Components/TripForm';
@@ -7,11 +7,13 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import dayjs, {Dayjs} from 'dayjs';
 import TripPassengersManager from '../../Components/TripPassengersManager';
+import RouteSelector from '../../Components/RouteSelector';
 
 const TicketsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const [selectedRouteUuid, setSelectedRouteUuid] = useState<string>();
   const [trips, setTrips] = useState<MoveTrip[]>();
 
   useEffect(() => {
@@ -20,6 +22,7 @@ const TicketsManager = () => {
       cancelToken: cancelTokenSource.token,
       params: {
         date: selectedDate?.format('YYYY-MM-DD'),
+        route_uuid: selectedRouteUuid,
       },
     };
 
@@ -40,7 +43,11 @@ const TicketsManager = () => {
   return (
     <>
       <ContentHeader title={'Reserva de pasajes'} onAdd={() => setOpenTripModal(true)}>
-        <DatePicker onChange={val => setSelectedDate(val)} />
+        <Space>
+          <p>Filtros</p>
+          <DatePicker onChange={val => setSelectedDate(val)} />
+          <RouteSelector onChange={value => setSelectedRouteUuid(value)} />
+        </Space>
       </ContentHeader>
       <Tabs
         destroyInactiveTabPane
