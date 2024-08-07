@@ -67,11 +67,11 @@ const MoveVehiclesManager = () => {
     {
       title: 'Acciones',
       dataIndex: 'uuid',
-      render: (uuid: string, route: MoveRoute) => (
+      render: (uuid: string, vehicle: MoveVehicle) => (
         <Space>
           <IconButton
             onClick={() => {
-              setSelectedVehicle(route);
+              setSelectedVehicle(vehicle);
               setOpenVehicleForm(true);
             }}
             icon={<PencilIcon />}
