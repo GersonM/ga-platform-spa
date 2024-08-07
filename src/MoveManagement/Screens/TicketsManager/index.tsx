@@ -40,7 +40,7 @@ const TicketsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, selectedDate]);
+  }, [reload, selectedDate, selectedRouteUuid]);
 
   return (
     <>
@@ -51,7 +51,11 @@ const TicketsManager = () => {
         <Space style={{marginTop: 10}}>
           <span>Filtros</span>
           <DatePicker onChange={val => setSelectedDate(val)} />
-          <RouteSelector onChange={value => setSelectedRouteUuid(value)} />
+          <RouteSelector
+            onChange={value => {
+              setSelectedRouteUuid(value);
+            }}
+          />
         </Space>
       </ContentHeader>
       <Tabs
