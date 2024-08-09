@@ -276,7 +276,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
               </Col>
               <Col md={12}>
                 <Form.Item name={'user_email'} label={'E-mail de login'}>
-                  {profile.user?.email}
+                  {profile.email}
                 </Form.Item>
               </Col>
             </Row>

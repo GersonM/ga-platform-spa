@@ -73,10 +73,10 @@ export type Permission = {
 
 export type User = {
   uuid: number;
-  email: string;
+  //email: string;
   profile: Profile;
   roles?: Role[];
-  name: string;
+  //name: string;
   disabled_at?: string;
   email_verified_at?: string;
   token: string;
