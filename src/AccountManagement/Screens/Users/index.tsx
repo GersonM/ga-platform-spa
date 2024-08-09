@@ -139,7 +139,7 @@ const Users = () => {
                     {p.login_method === 'none' && <NoSymbolIcon width={15} />}
                   </Space>
                 }
-                caption={dayjs(p.created_at).fromNow() + (p.user ? ' | ' + p.user?.email : '')}
+                caption={dayjs(p.created_at).fromNow() + ' | ' + p.email}
                 icon={p.user ? <IdentificationIcon /> : <UserIcon />}
                 path={`/accounts/${p.uuid}`}
               />

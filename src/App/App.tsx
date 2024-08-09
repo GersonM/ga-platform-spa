@@ -27,6 +27,7 @@ import MoveRoutesManager from '../MoveManagement/Screens/MoveRoutesManager';
 import MoveVehiclesManager from '../MoveManagement/Screens/MoveVehiclesManager';
 import TicketsManager from '../MoveManagement/Screens/TicketsManager';
 import TripReservation from '../MoveManagement/Screens/TripReservation';
+import TaxonomyManager from '../TaxonomyManagement/Screens/TaxonomyManager';
 
 const App = () => {
   useEffect(() => {
@@ -89,8 +90,8 @@ const App = () => {
           </Route>
           <Route path={'preferences'} element={<PreferencesManager />} />
           <Route path={'permissions'} element={<PermissionsManager />} />
-          <Route path={'taxonomy'} element={<ConfigOptions />}>
-            <Route path={':tab'} element={null} />
+          <Route path={'taxonomy'} element={<TaxonomyManager />}>
+            <Route path={':taxonomy'} element={null} />
           </Route>
         </Route>
         <Route path={'move'} element={<MoveLayout />}>
