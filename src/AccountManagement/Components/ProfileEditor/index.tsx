@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   TrashIcon,
   CheckIcon,
@@ -28,6 +28,7 @@ interface ProfileEditorProps {
 }
 
 const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile>();
   const [loading, setLoading] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
@@ -78,9 +79,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
           //const value = response.data.birthday ? dayjs(response.data.birthday) : null;
           setProfile(response.data);
           setReload(!reload);
-          if (onCompleted) {
-            onCompleted();
-          }
+          onCompleted && onCompleted();
         }
       })
       .catch(e => {
@@ -89,7 +88,24 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       });
   };
 
-  const terminateAccount = () => {
+  const terminateProfile = () => {
+    setLoading(true);
+    axios
+      .delete(`hr-management/profiles/${profile?.uuid}`)
+      .then(response => {
+        if (response) {
+          navigate('/accounts');
+          onCompleted && onCompleted();
+          setLoading(false);
+        }
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const disableProfile = () => {
     setLoading(true);
     axios
       .post(`authentication/users/${profile?.user?.uuid}/disable`)
@@ -147,7 +163,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                 title={'Bloquear usuario'}
                 cancelText={'Cancelar'}
                 okText={'Bloquear'}
-                onConfirm={terminateAccount}
+                onConfirm={disableProfile}
                 description={
                   <>
                     El bloquear al usuario, se cerraran todas las sesiones <br />
@@ -161,6 +177,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
               title={'Eliminar usuario'}
               cancelText={'Cancelar'}
               okText={'Eliminar'}
+              onConfirm={terminateProfile}
               description={
                 <>
                   Esta acción es irreversible y borrará toda la información <br /> relacionada con este usuario
