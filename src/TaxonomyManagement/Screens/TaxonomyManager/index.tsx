@@ -33,7 +33,7 @@ const TaxonomyManager = () => {
       <CascaderPanel
         fieldNames={{label: 'name', value: 'uuid'}}
         options={taxonomies}
-        onChange={val => {
+        onChange={(val: any) => {
           console.log(val);
         }}
       />
