@@ -17,6 +17,7 @@ const PermissionsManager = () => {
   const [permissions, setPermissions] = useState<Permission[]>();
   const [reload, setReload] = useState(false);
   const [openRoleForm, setOpenRoleForm] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -59,10 +60,15 @@ const PermissionsManager = () => {
   }, [reload]);
 
   const syncPermissions = () => {
+    setSyncing(true);
     axios
       .post(`authentication/permissions/sync`)
-      .then(() => {})
+      .then(() => {
+        setSyncing(false);
+        setReload(!reload);
+      })
       .catch(e => {
+        setSyncing(false);
         ErrorHandler.showNotification(e);
       });
   };
@@ -82,7 +88,7 @@ const PermissionsManager = () => {
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenRoleForm(true)}
         title={'Roles y permisos'}
-        tools={<PrimaryButton label={'Sincronizar permisos'} onClick={syncPermissions} />}
+        tools={<PrimaryButton loading={syncing} label={'Sincronizar permisos'} onClick={syncPermissions} />}
       />
       <p>Los roles permiten agrupar múltiples permisos para asignarlos fácilmente a un usuario</p>
       <Tabs
