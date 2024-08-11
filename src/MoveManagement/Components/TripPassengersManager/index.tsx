@@ -74,7 +74,7 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
       });
   };
 
-  const isAbleToAssignDriver = user?.roles?.includes('admin') || user?.roles?.includes('operator');
+  const isAbleToAssignDriver = user?.roles?.includes('admin');
 
   return (
     <>
