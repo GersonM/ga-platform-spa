@@ -52,6 +52,7 @@ const TicketsManager = () => {
           <span>Filtros</span>
           <DatePicker onChange={val => setSelectedDate(val)} />
           <RouteSelector
+            style={{width: 250}}
             onChange={value => {
               setSelectedRouteUuid(value);
             }}

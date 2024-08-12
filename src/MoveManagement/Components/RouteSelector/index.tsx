@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
 import {MoveLocation, MoveRoute} from '../../../Types/api';
@@ -10,6 +10,7 @@ interface RouteSelectorProps {
   bordered?: boolean;
   disabled?: boolean;
   value?: any;
+  style?: React.CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }

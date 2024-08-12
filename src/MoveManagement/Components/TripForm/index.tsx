@@ -8,7 +8,8 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RouteSelector from '../RouteSelector';
 import VehicleSelector from '../VehicleSelector';
-import {MoveLocation, MoveRoute, MoveTrip, MoveVehicle} from '../../../Types/api';
+import {MoveLocation, MoveTrip, MoveVehicle} from '../../../Types/api';
+import Config from '../../../Config';
 
 interface TripFormProps {
   onCompleted: (trip: MoveTrip) => void;
@@ -20,13 +21,18 @@ const TripForm = ({onCompleted, route, vehicle}: TripFormProps) => {
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
-  const submitForm = (values: MoveRoute) => {
+  const submitForm = (values: any) => {
+    const data = {
+      departure_time: values.departure_time.format(Config.datetimeFormatServer),
+      fk_vehicule_uuid: vehicle?.uuid,
+      fk_route_uuid: values.fk_route_uuid,
+    };
     setLoading(true);
     axios
       .request({
         url: route ? `move/trips/${route.uuid}` : 'move/trips',
         method: route ? 'put' : 'post',
-        data: {...values, fk_vehicule_uuid: vehicle?.uuid},
+        data,
       })
       .then(response => {
         setLoading(false);

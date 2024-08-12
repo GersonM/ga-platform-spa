@@ -10,7 +10,10 @@ interface MetaTitleProps {
 
 const MetaTitle = ({title = 'Plataforma'}: MetaTitleProps) => {
   const {config} = useContext(AuthContext);
-  return <Helmet title={`${title} :. ${config?.config.name}`} />;
+
+  console.log(config);
+
+  return <Helmet title={`${title} :. ${config?.config.name || 'Geek Advice'}`} />;
 };
 
 export default MetaTitle;

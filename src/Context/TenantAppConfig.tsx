@@ -4,6 +4,11 @@ import tinyColor from 'tinycolor2';
 
 import {TenantConfig} from '../Types/api';
 import AuthContext from './AuthContext';
+import locale from 'antd/locale/es_ES';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es-mx.js';
+
+dayjs.locale('es-mx');
 
 interface AntConfigProps {
   children: React.ReactNode;
@@ -58,6 +63,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
 
   return (
     <ConfigProvider
+      locale={locale}
       theme={{
         token: {
           colorPrimary: tenant.primary_color ? tenant.primary_color : darkMode ? defaultColorLight : defaultColor,
