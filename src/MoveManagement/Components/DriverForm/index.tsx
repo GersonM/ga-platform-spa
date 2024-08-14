@@ -67,6 +67,9 @@ const RouteForm = ({onCompleted, driver}: CountryFormProps) => {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item name={'phone'} label={'Teléfono'}>
+          <Input />
+        </Form.Item>
         <Form.Item name={'license_type'} label={'Tipo de licencia'}>
           <Input />
         </Form.Item>

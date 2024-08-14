@@ -4,10 +4,10 @@ import axios from 'axios';
 import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';
 
-import './styles.less';
 import IconButton from '../IconButton';
 import {File as ApiFile} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
+import './styles.less';
 
 interface FileUploaderProps {
   onFilesUploaded?: (file: ApiFile) => void;

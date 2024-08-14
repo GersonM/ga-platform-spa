@@ -45,7 +45,7 @@ const TicketsManager = () => {
   return (
     <>
       <ContentHeader
-        title={'Reserva de pasajes'}
+        title={'Viajes programados'}
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenTripModal(true)}>
         <Space style={{marginTop: 10}}>

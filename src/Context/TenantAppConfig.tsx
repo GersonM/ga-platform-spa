@@ -1,12 +1,12 @@
 import React, {useContext, useEffect} from 'react';
 import {ConfigProvider, theme} from 'antd';
 import tinyColor from 'tinycolor2';
-
-import {TenantConfig} from '../Types/api';
-import AuthContext from './AuthContext';
 import locale from 'antd/locale/es_ES';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es-mx.js';
+
+import {TenantConfig} from '../Types/api';
+import AuthContext from './AuthContext';
 
 dayjs.locale('es-mx');
 

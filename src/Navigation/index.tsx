@@ -97,9 +97,15 @@ const Navigation = () => {
             </li>
           )}
           <li>
-            <NavLink to={'/accounts'}>
+            <NavLink to={'/hr'}>
               <span className="icon icon-users2"></span>
-              <span className={'label'}>Usuarios</span>
+              <span className={'label'}>RR. HH.</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to={'/accounts'}>
+              <span className="icon icon-shield"></span>
+              <span className={'label'}>Seguridad</span>
             </NavLink>
           </li>
           {config?.modules.includes('lms') && (

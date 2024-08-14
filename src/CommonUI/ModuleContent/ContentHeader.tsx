@@ -56,17 +56,17 @@ const ContentHeader = ({
           <>
             <Divider type={'vertical'} />
             {onAdd && (
-              <Tooltip title={'Create new'}>
+              <Tooltip title={'Nuevo'}>
                 <IconButton icon={<PlusIcon />} onClick={onAdd} />
               </Tooltip>
             )}
             {onRefresh && (
-              <Tooltip title={'Reload content'}>
+              <Tooltip title={'Actualizar'}>
                 <IconButton icon={<ArrowPathIcon className={loading ? 'spin' : ''} />} onClick={onRefresh} />
               </Tooltip>
             )}
             {onEdit && (
-              <Tooltip title={'Edit'}>
+              <Tooltip title={'Editar'}>
                 <IconButton icon={<PencilIcon />} onClick={onEdit} />
               </Tooltip>
             )}
@@ -74,8 +74,7 @@ const ContentHeader = ({
           </>
         )}
       </Space>
-      <br />
-      {children}
+      {children && <div className={'content-header-caption'}>{children}</div>}
     </div>
   );
 };

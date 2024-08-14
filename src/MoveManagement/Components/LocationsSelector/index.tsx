@@ -32,7 +32,7 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
         if (response) {
           setLocations(
             response.data.map((item: MoveLocation) => {
-              return {value: item.uuid, label: `${item.name}`};
+              return {value: item.uuid, label: `${item.name}`, entity: item};
             }),
           );
         }
@@ -49,12 +49,22 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
     <Select
       {...props}
       allowClear
+      onSearch={value => {
+        console.log(value);
+      }}
       placeholder={placeholder || 'Elige un persona'}
       showSearch={true}
       optionFilterProp={'label'}
       loading={loading}
+      optionRender={option => (
+        <div>
+          {option.label}
+          <br />
+          <small>{option.data.entity.address}</small>
+        </div>
+      )}
       options={locations}
-      mode={mode || undefined}
+      mode={mode}
     />
   );
 };

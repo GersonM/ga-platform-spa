@@ -76,6 +76,8 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
 
   const isAbleToAssignDriver = user?.roles?.includes('admin');
 
+  const driver = trip.driver || trip.vehicle?.driver;
+
   return (
     <>
       <div className={'trip-card'}>
@@ -85,10 +87,10 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
           </h3>
           <Breadcrumb items={trip.route?.locations?.map(location => ({title: location.name}))} />
         </div>
-        {trip.driver ? (
+        {driver ? (
           <div>
-            {trip.driver.profile?.name} {trip.driver.profile?.last_name} <br />
-            {trip.driver.profile?.doc_type}: {trip.driver.profile?.doc_number}
+            {driver.profile?.name} {driver.profile?.last_name} <br />
+            {driver.profile?.doc_type}: {driver.profile?.doc_number}
           </div>
         ) : (
           isAbleToAssignDriver && (
@@ -114,7 +116,9 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
           <div key={p.uuid} className={'passenger-item'}>
             <div>
               {p.profile.name} {p.profile.last_name} <br />
-              <small>{p.ledger}</small>
+              <small>
+                {p.profile.email} - {p.ledger}
+              </small>
             </div>
             <div>
               <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />

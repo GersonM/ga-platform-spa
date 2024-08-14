@@ -28,6 +28,8 @@ import MoveVehiclesManager from '../MoveManagement/Screens/MoveVehiclesManager';
 import TicketsManager from '../MoveManagement/Screens/TicketsManager';
 import TripReservation from '../MoveManagement/Screens/TripReservation';
 import TaxonomyManager from '../TaxonomyManagement/Screens/TaxonomyManager';
+import HRManagementLayout from '../HRManagement/Screens/HRManagementLayout';
+import TripsSchedule from '../MoveManagement/Screens/TripsSchedule';
 
 const App = () => {
   useEffect(() => {
@@ -81,6 +83,11 @@ const App = () => {
             <Route path={':tab'} />
           </Route>
         </Route>
+        <Route path={'hr'} element={<HRManagementLayout />}>
+          <Route path={':uuid'}>
+            <Route path={':tab'} />
+          </Route>
+        </Route>
         <Route path={'invoices'} element={<Invoices />}>
           <Route path={':uuid'} />
         </Route>
@@ -99,6 +106,7 @@ const App = () => {
           <Route path={'trips'} element={<TicketsManager />} />
           <Route path={'routes'} element={<MoveRoutesManager />} />
           <Route path={'vehicles'} element={<MoveVehiclesManager />} />
+          <Route path={'schedule'} element={<TripsSchedule />} />
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
         <Route

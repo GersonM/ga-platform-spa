@@ -312,6 +312,7 @@ export type MoveVehicle = {
   brand?: string;
   type?: string;
   registration_plate?: string;
+  driver?: MoveDriver;
   circulation_card?: string;
   weight?: number;
   max_capacity: number;

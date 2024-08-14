@@ -2,6 +2,8 @@
 $tenantNames = array(
     'platform.fbgroup.pe' => 'FB Group',
     'fireworks.geekadvice.pe' => 'Fireworks',
+    'villa-primavera.geekadvice.pe' => 'Villa Primavera',
+    'localhost:5173' => 'Villa Primavera',
 );
 $host = $_SERVER['HTTP_HOST'];
 $dir = scandir('./assets');
