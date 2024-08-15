@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Breadcrumb, Divider, Modal} from 'antd';
+import {Breadcrumb, Button, Divider, Empty, Modal, Popconfirm, Space} from 'antd';
 import {PlusIcon, TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -19,7 +19,7 @@ interface TripPassengersManagerProps {
   onChange?: () => void;
 }
 
-const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
+const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => {
   const {user} = useContext(AuthContext);
   const [passengers, setPassengers] = useState<any[]>();
   const [reload, setReload] = useState(false);
@@ -74,6 +74,17 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
       });
   };
 
+  const cancelTrip = () => {
+    axios
+      .post(`move/trips/${trip.uuid}/cancel`)
+      .then(() => {
+        onChange && onChange();
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   const isAbleToAssignDriver = user?.roles?.includes('admin');
 
   const driver = trip.driver || trip.vehicle?.driver;
@@ -86,6 +97,9 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
             {dayjs(trip.departure_time).format('hh:mm a')} :: {trip.route?.name}
           </h3>
           <Breadcrumb items={trip.route?.locations?.map(location => ({title: location.name}))} />
+          <small>
+            {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
+          </small>
         </div>
         {driver ? (
           <div>
@@ -104,13 +118,22 @@ const TripPassengersManager = ({trip}: TripPassengersManagerProps) => {
         )}
       </div>
       <Divider />
-      <PrimaryButton
-        block
-        disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
-        icon={<PlusIcon />}
-        onClick={() => setOpenPassengerModal(true)}
-        label={'Agregar pasajero'}
-      />
+      <Space>
+        <PrimaryButton label={'Editar'} />
+        <PrimaryButton
+          block
+          disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
+          icon={<PlusIcon />}
+          onClick={() => setOpenPassengerModal(true)}
+          label={'Agregar pasajero'}
+        />
+        <Popconfirm title={'Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
+          <Button danger>Cancelar viaje</Button>
+        </Popconfirm>
+      </Space>
+      {passengers && passengers.length == 0 && (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'} />
+      )}
       {passengers?.map(p => {
         return (
           <div key={p.uuid} className={'passenger-item'}>

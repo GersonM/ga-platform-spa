@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Col, DatePicker, Divider, Form, Popover, Row, Segmented} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
@@ -12,6 +12,8 @@ import {MoveLocation, MoveTrip, MoveVehicle} from '../../../Types/api';
 import Config from '../../../Config';
 import LocationsSelector from '../LocationsSelector';
 import {QueueListIcon} from '@heroicons/react/24/outline';
+import VehicleListSelector from '../../Screens/TripReservation/VehicleListSelector';
+import {Dayjs} from 'dayjs';
 
 interface TripFormProps {
   onCompleted: (data: any) => void;
@@ -20,8 +22,10 @@ interface TripFormProps {
   showVehicle?: boolean;
 }
 
-const TripForm = ({onCompleted, route, vehicle, showVehicle}: TripFormProps) => {
+const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormProps) => {
   const [loading, setLoading] = useState(false);
+  const [arrivalDate, setArrivalDate] = useState<Dayjs>();
+  const [departureDate, setDepartureDate] = useState<Dayjs>();
   const [form] = useForm();
 
   const submitForm = (values: any) => {
@@ -72,11 +76,6 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle}: TripFormProps) => 
             </Form.Item>
           </Col>
         </Row>
-        {!vehicle && showVehicle && (
-          <Form.Item name={'fk_vehicule_uuid'} label={'Vehículo'}>
-            <VehicleSelector />
-          </Form.Item>
-        )}
         <Row gutter={15}>
           <Col span={12}>
             <Form.Item
@@ -87,6 +86,7 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle}: TripFormProps) => 
                 showTime
                 style={{width: '100%'}}
                 needConfirm={false}
+                onChange={date => setDepartureDate(date)}
                 showNow={false}
                 format="DD/MM/YYYY - HH:mm"
               />
@@ -98,12 +98,18 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle}: TripFormProps) => 
                 showTime
                 style={{width: '100%'}}
                 needConfirm={false}
+                onChange={date => setArrivalDate(date)}
                 showNow={false}
                 format="DD/MM/YYYY - HH:mm"
               />
             </Form.Item>
           </Col>
         </Row>
+        {!vehicle && showVehicle && (
+          <Form.Item name={'fk_vehicle_uuid'} label={'Vehículo'}>
+            <VehicleListSelector arrivalTime={arrivalDate} departureTime={departureDate} />
+          </Form.Item>
+        )}
         <PrimaryButton block icon={<CheckIcon />} loading={loading} label={'Continuar'} htmlType={'submit'} />
       </Form>
     </>

@@ -1,30 +1,22 @@
 import React, {useState} from 'react';
 import {Steps} from 'antd';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import TripForm from '../../Components/TripForm';
-import VehicleListSelector from './VehicleListSelector';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {MoveTrip, MoveVehicle} from '../../../Types/api';
-import TripPassengersManager from '../../Components/TripPassengersManager';
 import axios from 'axios';
+
+import TripPassengersManager from '../../Components/TripPassengersManager';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {CheckIcon} from '@heroicons/react/24/solid';
+import {MoveTrip} from '../../../Types/api';
+import TripForm from '../../Components/TripForm';
 
 const TripReservation = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [selectedVehicle, setSelectedVehicle] = useState<MoveVehicle>();
   const [selectedTrip, setSelectedTrip] = useState<MoveTrip>();
-  const [tripDetails, setTripDetails] = useState<any>();
   const [loading, setLoading] = useState(false);
 
-  const createTrip = (trip: MoveTrip) => {
+  const createTrip = (tripData: any) => {
     setLoading(true);
-    const data = {
-      ...tripDetails,
-      fk_vehicule_uuid: selectedVehicle?.uuid,
-    };
     axios
-      .post('move/trips', data)
+      .post('move/trips', tripData)
       .then(response => {
         setLoading(false);
         setSelectedTrip(response.data);
@@ -42,27 +34,9 @@ const TripReservation = () => {
       content: (
         <div>
           <TripForm
-            showVehicle={false}
             onCompleted={trip => {
-              setCurrentStep(currentStep + 1);
-              setTripDetails(trip);
+              createTrip(trip);
             }}
-          />
-        </div>
-      ),
-    },
-    {
-      title: 'Unidad',
-      content: (
-        <div>
-          <VehicleListSelector onChange={v => setSelectedVehicle(v)} />
-          <PrimaryButton
-            icon={<CheckIcon />}
-            loading={loading}
-            block
-            disabled={!selectedVehicle}
-            onClick={createTrip}
-            label={'Crear reserva'}
           />
         </div>
       ),

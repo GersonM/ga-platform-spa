@@ -79,7 +79,7 @@ const TicketsManager = () => {
               </div>
             ),
             key: trip.uuid,
-            children: <TripPassengersManager trip={trip} />,
+            children: <TripPassengersManager onChange={() => setReload(!reload)} trip={trip} />,
           };
         })}
       />

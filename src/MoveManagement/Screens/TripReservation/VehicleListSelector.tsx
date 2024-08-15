@@ -1,18 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import {Empty, Tag} from 'antd';
 
 import {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import './styles.less';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {Tag} from 'antd';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import './styles.less';
+import {Dayjs} from 'dayjs';
+import Config from '../../../Config';
 
 interface VehicleListSelectorProps {
-  onChange?: (vehicle: MoveVehicle) => void;
+  value?: string;
+  departureTime?: Dayjs;
+  arrivalTime?: Dayjs;
+  onChange?: (value: string, vehicle: MoveVehicle) => void;
 }
 
-const VehicleListSelector = ({onChange}: VehicleListSelectorProps) => {
+const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: VehicleListSelectorProps) => {
   const [vehicles, setVehicles] = useState<MoveVehicle | any>([]);
   const [loading, setLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<MoveVehicle>();
@@ -22,6 +26,10 @@ const VehicleListSelector = ({onChange}: VehicleListSelectorProps) => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
+      params: {
+        departure_time: departureTime?.format(Config.datetimeFormatServer),
+        arrival_time: arrivalTime?.format(Config.datetimeFormatServer),
+      },
     };
 
     axios
@@ -38,11 +46,14 @@ const VehicleListSelector = ({onChange}: VehicleListSelectorProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, []);
+  }, [arrivalTime, departureTime]);
 
   return (
     <div>
       <LoadingIndicator visible={loading} />
+      {vehicles && vehicles.length == 0 && (
+        <Empty description={'No hay vehículos disponibles'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
       <ul className={'vehicle-list'}>
         {vehicles.map((vehicle: MoveVehicle) => {
           return (
@@ -51,7 +62,7 @@ const VehicleListSelector = ({onChange}: VehicleListSelectorProps) => {
               className={`${selectedVehicle && selectedVehicle.uuid == vehicle.uuid ? 'selected' : ''}`}
               onClick={() => {
                 setSelectedVehicle(vehicle);
-                onChange && onChange(vehicle);
+                onChange && onChange(vehicle.uuid, vehicle);
               }}>
               <span className={'icon-bus'}></span>
               <div className={'vehicle-info'}>
