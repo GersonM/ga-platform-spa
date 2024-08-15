@@ -44,6 +44,7 @@ const SearchProfile = ({style, value, mode, ...props}: SearchProfileProps) => {
 
     return cancelTokenSource.cancel;
   }, [lastSearchText]);
+
   return (
     <Select
       loading={loading}

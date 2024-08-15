@@ -1,8 +1,12 @@
-import {useEffect, useState} from 'react';
-import {Select} from 'antd';
+import React, {useEffect, useRef, useState} from 'react';
+import {Button, Divider, Input, InputRef, Select, Space, Tooltip} from 'antd';
 import axios from 'axios';
 import {MoveLocation} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {PlusIcon} from '@heroicons/react/24/solid';
+import IconButton from '../../../CommonUI/IconButton';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {useDebounce} from '@uidotdev/usehooks';
 
 interface LocationsSelectorProps {
   placeholder?: string;
@@ -17,12 +21,19 @@ interface LocationsSelectorProps {
 const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps) => {
   const [locations, setLocations] = useState<MoveLocation | any>([]);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const lastSearchText = useDebounce(name, 300);
+  const inputRef = useRef<InputRef>(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
+      params: {
+        search: lastSearchText,
+      },
     };
 
     axios
@@ -43,7 +54,21 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
       });
 
     return cancelTokenSource.cancel;
-  }, []);
+  }, [reload, lastSearchText]);
+
+  const addItem = () => {
+    setLoading(true);
+    axios
+      .post('move/locations', {name, address: name})
+      .then(() => {
+        setLoading(false);
+        setReload(!reload);
+      })
+      .catch(error => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      });
+  };
 
   return (
     <Select
@@ -51,8 +76,11 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
       allowClear
       placeholder={placeholder || 'Selecciona una ubicación'}
       showSearch={true}
-      optionFilterProp={'label'}
+      onSearch={value => setName(value)}
+      filterOption={false}
       loading={loading}
+      options={locations}
+      mode={mode}
       optionRender={option => (
         <div>
           {option.label}
@@ -60,8 +88,18 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
           <small>{option.data.entity.address}</small>
         </div>
       )}
-      options={locations}
-      mode={mode}
+      dropdownRender={menu => (
+        <>
+          {menu}
+          {name.length > 2 && (
+            <>
+              <Tooltip title={'Agregar'}>
+                <PrimaryButton block icon={<PlusIcon />} onClick={addItem} label={'Crear "' + name + '"'} />
+              </Tooltip>
+            </>
+          )}
+        </>
+      )}
     />
   );
 };
