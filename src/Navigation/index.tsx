@@ -102,12 +102,14 @@ const Navigation = () => {
               <span className={'label'}>RR. HH.</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to={'/accounts'}>
-              <span className="icon icon-shield"></span>
-              <span className={'label'}>Seguridad</span>
-            </NavLink>
-          </li>
+          {user?.roles?.includes('admin') && (
+            <li>
+              <NavLink to={'/accounts'}>
+                <span className="icon icon-shield"></span>
+                <span className={'label'}>Seguridad</span>
+              </NavLink>
+            </li>
+          )}
           {config?.modules.includes('lms') && (
             <li>
               <NavLink to={'/lms'}>

@@ -1,12 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Button, Divider, Input, InputRef, Select, Space, Tooltip} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Select, Tooltip} from 'antd';
+import {PlusIcon} from '@heroicons/react/24/solid';
+import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
 import {MoveLocation} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {PlusIcon} from '@heroicons/react/24/solid';
-import IconButton from '../../../CommonUI/IconButton';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {useDebounce} from '@uidotdev/usehooks';
 
 interface LocationsSelectorProps {
   placeholder?: string;
@@ -23,7 +22,6 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
-  const inputRef = useRef<InputRef>(null);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
