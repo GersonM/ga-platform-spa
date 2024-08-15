@@ -119,7 +119,6 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
       </div>
       <Divider />
       <Space>
-        <PrimaryButton label={'Editar'} />
         <PrimaryButton
           block
           disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
@@ -128,7 +127,9 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           label={'Agregar pasajero'}
         />
         <Popconfirm title={'Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
-          <Button danger>Cancelar viaje</Button>
+          <Button icon={<TrashIcon />} danger>
+            Cancelar viaje
+          </Button>
         </Popconfirm>
       </Space>
       {passengers && passengers.length == 0 && (
@@ -171,6 +172,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
       </Modal>
       <Modal
         footer={false}
+        width={600}
         open={openPassengerModal}
         destroyOnClose
         onCancel={() => {

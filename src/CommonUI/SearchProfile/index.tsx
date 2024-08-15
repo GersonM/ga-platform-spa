@@ -31,7 +31,11 @@ const SearchProfile = ({style, value, mode, ...props}: SearchProfileProps) => {
       .get('hr-management/profiles', config)
       .then(response => {
         setLoading(false);
-        setProfiles(response.data.data);
+        setProfiles(
+          response.data.data.map((item: Profile) => {
+            return {value: item.uuid, label: `${item.name} ${item.last_name}`, entity: item};
+          }),
+        );
       })
       .catch(error => {
         setLoading(false);
@@ -49,8 +53,17 @@ const SearchProfile = ({style, value, mode, ...props}: SearchProfileProps) => {
       filterOption={false}
       style={{width: '100%', ...style}}
       showSearch
-      options={profiles?.map(profile => ({value: profile.uuid, label: profile.name, entity: profile}))}
-      placeholder="Busca una persona"
+      options={profiles}
+      placeholder="Buscar una persona"
+      optionRender={option => (
+        <div>
+          {option.label}
+          <br />
+          <small>
+            {option.data.entity.doc_type}: {option.data.entity.doc_number} - {option.data.entity.email}
+          </small>
+        </div>
+      )}
       onSearch={value => {
         setSearchProfile(value);
       }}

@@ -49,10 +49,7 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
     <Select
       {...props}
       allowClear
-      onSearch={value => {
-        console.log(value);
-      }}
-      placeholder={placeholder || 'Elige un persona'}
+      placeholder={placeholder || 'Selecciona una ubicación'}
       showSearch={true}
       optionFilterProp={'label'}
       loading={loading}

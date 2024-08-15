@@ -31,7 +31,7 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
         if (response) {
           setUsers(
             response.data.data.map((item: Profile) => {
-              return {value: item.uuid, label: `${item.name} ${item.last_name}`};
+              return {value: item.uuid, label: `${item.name} ${item.last_name}`, entity: item};
             }),
           );
         }
@@ -53,6 +53,13 @@ const ProfileSelector = ({placeholder, mode, ...props}: ProfileSelectorProps) =>
       optionFilterProp={'label'}
       loading={loading}
       options={users}
+      optionRender={option => (
+        <div>
+          {option.label}
+          <br />
+          <small>{option.data.entity.doc_number}</small>
+        </div>
+      )}
       mode={mode || undefined}
     />
   );
