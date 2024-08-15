@@ -110,7 +110,14 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
             <VehicleListSelector arrivalTime={arrivalDate} departureTime={departureDate} />
           </Form.Item>
         )}
-        <PrimaryButton block icon={<CheckIcon />} loading={loading} label={'Continuar'} htmlType={'submit'} />
+        <PrimaryButton
+          disabled={!arrivalDate || !departureDate}
+          block
+          icon={<CheckIcon />}
+          loading={loading}
+          label={'Continuar'}
+          htmlType={'submit'}
+        />
       </Form>
     </>
   );

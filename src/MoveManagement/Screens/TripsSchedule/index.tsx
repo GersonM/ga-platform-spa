@@ -8,7 +8,6 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 
-dayjs().locale('es-pe');
 const localizer = dayjsLocalizer(dayjs);
 
 const TripsSchedule = () => {
@@ -39,11 +38,14 @@ const TripsSchedule = () => {
 
   const events = trips?.map(t => {
     return {
-      title: t.route?.name,
+      title: (
+        <>
+          <div style={{marginBottom: 5}}>{t.route?.name}</div>
+          <strong>Reservado por:</strong> {t.created_by?.name} {t.created_by?.last_name}
+        </>
+      ),
       start: dayjs(t.departure_time).toDate(),
       end: dayjs(t.arrival_time).toDate(),
-      //allDay?: boolean
-      //resource?: any,
     };
   });
 
@@ -67,9 +69,10 @@ const TripsSchedule = () => {
   return (
     <div>
       <ContentHeader title="Programación de viajes" onRefresh={() => setReload(!reload)} loading={loading} />
-      <div style={{height: 700, width: 920}}>
+      <div style={{height: 800, width: '100%'}}>
         <Calendar
           messages={calendarLabels}
+          defaultView={'agenda'}
           events={events}
           formats={{
             dayFormat: (date, culture, l) => (l ? l.format(date, 'dddd D', culture) : ''),

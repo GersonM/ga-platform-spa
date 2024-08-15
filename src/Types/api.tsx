@@ -289,6 +289,7 @@ export type MoveTrip = {
   route?: MoveRoute;
   vehicle?: MoveVehicle;
   driver?: MoveDriver;
+  created_by?: Profile;
   arrival_time: string;
   max_passengers: number;
   total_passengers: number;

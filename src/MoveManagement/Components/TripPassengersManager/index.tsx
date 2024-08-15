@@ -97,7 +97,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
             {dayjs(trip.departure_time).format('DD/MM/YY hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')}
           </div>
           <h3>{trip.route?.name}</h3>
-          <Breadcrumb items={trip.route?.locations?.map(location => ({title: location.name}))} />
+          Reservado por: {trip.created_by?.name} {trip.created_by?.last_name} <br />
           <small>
             {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
           </small>

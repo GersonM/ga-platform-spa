@@ -72,7 +72,8 @@ const TicketsManager = () => {
                   {trip.route?.name}
                   <small>
                     {dayjs(trip.departure_time).format('DD/MM hh:mm a')} | {trip.total_passengers} de{' '}
-                    {trip.vehicle?.max_capacity}
+                    {trip.vehicle?.max_capacity} <br />
+                    Reservado por: {trip.created_by?.name}
                   </small>
                 </div>
                 <Progress percent={Math.round(percent || 0)} type={'circle'} size={25} />
