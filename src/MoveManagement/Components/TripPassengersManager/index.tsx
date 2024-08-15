@@ -93,9 +93,10 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
     <>
       <div className={'trip-card'}>
         <div>
-          <h3>
-            {dayjs(trip.departure_time).format('hh:mm a')} :: {trip.route?.name}
-          </h3>
+          <div>
+            {dayjs(trip.departure_time).format('DD/MM/YY hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')}
+          </div>
+          <h3>{trip.route?.name}</h3>
           <Breadcrumb items={trip.route?.locations?.map(location => ({title: location.name}))} />
           <small>
             {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
@@ -126,7 +127,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           onClick={() => setOpenPassengerModal(true)}
           label={'Agregar pasajero'}
         />
-        <Popconfirm title={'Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
+        <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
           <Button icon={<TrashIcon />} danger>
             Cancelar viaje
           </Button>

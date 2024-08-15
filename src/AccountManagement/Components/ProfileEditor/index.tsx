@@ -206,7 +206,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
             </Row>
             <Row gutter={15}>
               <Col md={12}>
-                <Form.Item name={'email'} label={'Email'}>
+                <Form.Item name={'personal_email'} label={'E-mail personal'}>
                   <Input />
                 </Form.Item>
               </Col>
@@ -292,8 +292,8 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                 </Form.Item>
               </Col>
               <Col md={12}>
-                <Form.Item name={'user_email'} label={'E-mail de login'}>
-                  {profile.email}
+                <Form.Item name={'email'} label={'E-mail'}>
+                  <Input />
                 </Form.Item>
               </Col>
             </Row>
