@@ -295,6 +295,8 @@ export type MoveTrip = {
   total_passengers: number;
   departure_time: string;
   arrived_at: string;
+  cancelled_at: string;
+  confirmed_at: string;
   created_at: string;
   updated_at: string;
 };

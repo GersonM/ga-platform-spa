@@ -1,10 +1,34 @@
+.trip-day-divider {
+  margin: 15px 0;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:first-letter {
+    text-transform: capitalize;
+  }
+}
+
 .trip-tab {
   display: flex;
   align-items: center;
   text-align: left;
 
-  .tab-label {
+  .departure-time {
+    font-family: monospace;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 600;
     margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1px solid var(--border-color-active);
+
+    span {
+      line-height: 11px;
+      font-size: 11px;
+    }
+  }
+
+  .tab-label {
     small {
       display: block;
     }

@@ -92,47 +92,45 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   return (
     <>
       <div className={'trip-card'}>
-        <div>
-          <div>
-            {dayjs(trip.departure_time).format('DD/MM/YY hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')}
-          </div>
-          <h3>{trip.route?.name}</h3>
-          Reservado por: {trip.created_by?.name} {trip.created_by?.last_name} <br />
-          <small>
-            {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
-          </small>
-        </div>
-        {driver ? (
+        {driver && (
           <div>
             {driver.profile?.name} {driver.profile?.last_name} <br />
             {driver.profile?.doc_type}: {driver.profile?.doc_number}
           </div>
-        ) : (
-          isAbleToAssignDriver && (
+        )}
+        <div>
+          <div>
+            {dayjs(trip.departure_time).format('hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')}
+          </div>
+          <small>
+            {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
+          </small>
+        </div>
+        <Space>
+          <PrimaryButton
+            block
+            disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
+            icon={<PlusIcon />}
+            onClick={() => setOpenPassengerModal(true)}
+            label={'Agregar pasajero'}
+          />
+          <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
+            <Button icon={<TrashIcon />} danger>
+              Cancelar viaje
+            </Button>
+          </Popconfirm>
+          {isAbleToAssignDriver && (
             <PrimaryButton
               onClick={() => setOpenAssignDriver(true)}
               label={'Asignar conductor'}
               icon={<UserPlusIcon />}
               ghost
             />
-          )
-        )}
+          )}
+        </Space>
       </div>
       <Divider />
-      <Space>
-        <PrimaryButton
-          block
-          disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
-          icon={<PlusIcon />}
-          onClick={() => setOpenPassengerModal(true)}
-          label={'Agregar pasajero'}
-        />
-        <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
-          <Button icon={<TrashIcon />} danger>
-            Cancelar viaje
-          </Button>
-        </Popconfirm>
-      </Space>
+
       {passengers && passengers.length == 0 && (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'} />
       )}
