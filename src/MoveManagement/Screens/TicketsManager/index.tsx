@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {DatePicker, Modal, Progress, Space, Tabs} from 'antd';
+import {DatePicker, Empty, Modal, Progress, Space, Tabs} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
 
@@ -10,6 +10,7 @@ import {MoveTrip} from '../../../Types/api';
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import RouteSelector from '../../Components/RouteSelector';
 import './styles.less';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 
 const TicketsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -17,6 +18,7 @@ const TicketsManager = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
   const [selectedRouteUuid, setSelectedRouteUuid] = useState<string>();
   const [trips, setTrips] = useState<MoveTrip[]>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -27,15 +29,17 @@ const TicketsManager = () => {
         route_uuid: selectedRouteUuid,
       },
     };
-
+    setLoading(true);
     axios
       .get(`move/trips`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           setTrips(response.data);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 
@@ -46,6 +50,7 @@ const TicketsManager = () => {
     <>
       <ContentHeader
         title={'Viajes programados'}
+        loading={loading}
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenTripModal(true)}>
         <Space style={{marginTop: 10}}>
@@ -59,6 +64,10 @@ const TicketsManager = () => {
           />
         </Space>
       </ContentHeader>
+      <LoadingIndicator visible={loading} message={'Listando viajes...'} />
+      {trips && trips.length === 0 && (
+        <Empty description={'No hay viajes programados'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
       <Tabs
         style={{margin: '0 0 0 -20px'}}
         destroyInactiveTabPane
