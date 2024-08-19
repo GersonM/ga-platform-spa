@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Breadcrumb, Button, Col, Divider, Empty, Modal, Popconfirm, Row, Space} from 'antd';
-import {PlusIcon, TrashIcon} from '@heroicons/react/16/solid';
+import {Button, Empty, Modal, Popconfirm, Space} from 'antd';
+import {PlusIcon, TrashIcon, CheckIcon, UserPlusIcon, PencilIcon} from '@heroicons/react/24/solid';
+import {MdEmojiPeople} from 'react-icons/md';
+import {FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -9,12 +11,11 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';
 import IconButton from '../../../CommonUI/IconButton';
 import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
-import './styles.less';
-import {UserPlusIcon} from '@heroicons/react/24/solid';
 import AuthContext from '../../../Context/AuthContext';
 import DriverSelector from '../../../CommonUI/DriverSelector';
-import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
-import {RiUserLocationFill, RiUserLocationLine} from 'react-icons/ri';
+import './styles.less';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
+import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 
 interface TripPassengersManagerProps {
   trip: MoveTrip;
@@ -98,12 +99,24 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   return (
     <>
       <Space>
-        {driver && (
+        <div className={'driver-button'} onClick={() => setOpenAssignDriver(true)}>
+          <FaUserTie className={'icon'} />
           <div>
-            {driver.profile?.name} {driver.profile?.last_name} <br />
-            {driver.profile?.doc_type}: {driver.profile?.doc_number}
+            {driver ? (
+              <>
+                {`${driver.profile?.name} ${driver.profile?.last_name}`}{' '}
+                <span className={'caption'}>
+                  <ProfileDocument profile={driver?.profile} />
+                </span>
+              </>
+            ) : isAbleToAssignDriver ? (
+              'Asignar \n conductor'
+            ) : (
+              'Sin conductor'
+            )}
           </div>
-        )}
+          <PencilIcon width={16} className={'icon-edit'} />
+        </div>
         <div>
           {dayjs(trip.departure_time).format('hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')} <br />
           <small>
@@ -126,50 +139,48 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           </Button>
         </Popconfirm>
         {isAbleToAssignDriver && (
-          <PrimaryButton
-            block
-            onClick={() => setOpenAssignDriver(true)}
-            label={'Asignar conductor'}
-            icon={<UserPlusIcon />}
-            ghost
-          />
+          <PrimaryButton block onClick={() => setOpenAssignDriver(true)} label={'Editar'} icon={<PencilIcon />} ghost />
         )}
       </Space>
-      <Divider />
-
+      <LoadingIndicator visible={loading} />
       {passengers && passengers.length == 0 && (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'} />
       )}
       {passengers?.map(p => {
         return (
           <div key={p.uuid} className={'passenger-item'}>
-            <div>
-              {p.profile?.name} {p.profile?.last_name} <br />
-              <small>
-                {p.profile?.email} - {p.ledger}
-              </small>
+            <div className={'passenger-label'}>
+              <div>
+                {p.profile?.name} {p.profile?.last_name}
+                <span className={'caption'}>
+                  {p.profile?.email} - {p.ledger}
+                </span>
+              </div>
             </div>
             {p.pickup_location && (
-              <div>
-                <RiUserLocationLine />
-                <span>
-                  {p.pickup_location?.name} <br />
-                  {p.pickup_location?.address}
-                </span>
+              <div className={'passenger-label'}>
+                <MdEmojiPeople className={'passenger-icon'} />
+                <div>
+                  {p.pickup_location?.name}
+                  <span className={'caption'}>{p.pickup_location?.address}</span>
+                </div>
               </div>
             )}
             {p.drop_off_location && (
-              <div>
-                <RiUserLocationLine />{' '}
-                <span>
-                  {p.drop_off_location?.name} <br />
-                  {p.drop_off_location?.address}
-                </span>
+              <div className={'passenger-label'}>
+                <FaPersonWalkingLuggage className={'passenger-icon'} />
+                <div>
+                  {p.drop_off_location?.name}
+                  <span className={'caption'}>{p.drop_off_location?.address}</span>
+                </div>
               </div>
             )}
-            <div>
+            <Space>
+              {user?.roles?.includes('driver') && (
+                <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
+              )}
               <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
-            </div>
+            </Space>
           </div>
         );
       })}
