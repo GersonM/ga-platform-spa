@@ -30,6 +30,7 @@
     "react-player": "^2.14.1",
     "react-router-dom": "^6.4.2",
     "react-smooth-corners": "^1.0.4",
+    "timestring": "^7.0.0",
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {

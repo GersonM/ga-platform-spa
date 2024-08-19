@@ -1,8 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Empty, Modal, Popconfirm, Space} from 'antd';
-import {PlusIcon, TrashIcon, CheckIcon, UserPlusIcon, PencilIcon} from '@heroicons/react/24/solid';
+import {PlusIcon, TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {MdEmojiPeople} from 'react-icons/md';
 import {FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
+import {CiClock1} from 'react-icons/ci';
+import {PiCarLight} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -13,9 +15,12 @@ import IconButton from '../../../CommonUI/IconButton';
 import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import DriverSelector from '../../../CommonUI/DriverSelector';
-import './styles.less';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
+import InfoButton from '../../../CommonUI/InfoButton';
+import './styles.less';
+import TripForm from '../TripForm';
+import TripTimeEditor from './TripTimeEditor';
 
 interface TripPassengersManagerProps {
   trip: MoveTrip;
@@ -28,6 +33,8 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   const [reload, setReload] = useState(false);
   const [openPassengerModal, setOpenPassengerModal] = useState(false);
   const [openAssignDriver, setOpenAssignDriver] = useState(false);
+  const [openEditTime, setOpenEditTime] = useState(false);
+  const [openEditVehicle, setOpenEditVehicle] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState<MoveDriver>();
   const [loading, setLoading] = useState(false);
 
@@ -95,37 +102,32 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   const isAbleToAssignDriver = user?.roles?.includes('admin');
 
   const driver = trip.driver || trip.vehicle?.driver;
-
+  const driverCaption = driver ? <ProfileDocument profile={driver?.profile} /> : '';
+  const driverLabel = driver
+    ? `${driver.profile?.name} ${driver.profile?.last_name}`
+    : isAbleToAssignDriver
+    ? 'Asignar \n conductor'
+    : 'Sin conductor';
   return (
     <>
-      <Space>
-        <div className={'driver-button'} onClick={() => setOpenAssignDriver(true)}>
-          <FaUserTie className={'icon'} />
-          <div>
-            {driver ? (
-              <>
-                {`${driver.profile?.name} ${driver.profile?.last_name}`}{' '}
-                <span className={'caption'}>
-                  <ProfileDocument profile={driver?.profile} />
-                </span>
-              </>
-            ) : isAbleToAssignDriver ? (
-              'Asignar \n conductor'
-            ) : (
-              'Sin conductor'
-            )}
-          </div>
-          <PencilIcon width={16} className={'icon-edit'} />
-        </div>
-        <div>
-          {dayjs(trip.departure_time).format('hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')} <br />
-          <small>
-            {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
-          </small>
-        </div>
-      </Space>
-      <br />
-      <Space wrap>
+      <Space wrap style={{marginBottom: 15}}>
+        <InfoButton
+          onEdit={() => setOpenAssignDriver(true)}
+          icon={<FaUserTie className={'icon'} />}
+          caption={driverCaption}
+          label={driverLabel}
+        />
+        <InfoButton
+          icon={<CiClock1 className={'icon'} />}
+          onEdit={() => setOpenEditTime(true)}
+          caption={dayjs(trip.arrival_time).format('hh:mm a')}
+          label={dayjs(trip.departure_time).format('hh:mm a')}
+        />
+        <InfoButton
+          icon={<PiCarLight className={'icon'} />}
+          label={`${trip.vehicle?.brand} ${trip.vehicle?.color}`}
+          caption={trip.vehicle?.registration_plate}
+        />
         <PrimaryButton
           block
           disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
@@ -138,9 +140,6 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
             Cancelar
           </Button>
         </Popconfirm>
-        {isAbleToAssignDriver && (
-          <PrimaryButton block onClick={() => setOpenAssignDriver(true)} label={'Editar'} icon={<PencilIcon />} ghost />
-        )}
       </Space>
       <LoadingIndicator visible={loading} />
       {passengers && passengers.length == 0 && (
@@ -151,9 +150,9 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           <div key={p.uuid} className={'passenger-item'}>
             <div className={'passenger-label'}>
               <div>
-                {p.profile?.name} {p.profile?.last_name}
+                {p.profile?.name} {p.profile?.last_name} | <ProfileDocument profile={p.profile} />
                 <span className={'caption'}>
-                  {p.profile?.email} - {p.ledger}
+                  {p.profile?.email} | {p.profile?.phone}
                 </span>
               </div>
             </div>
@@ -217,6 +216,23 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           onComplete={() => {
             setOpenPassengerModal(false);
             setReload(!reload);
+          }}
+        />
+      </Modal>
+      <Modal
+        title={'Editar reserva'}
+        footer={false}
+        open={openEditTime}
+        destroyOnClose
+        onCancel={() => {
+          setOpenEditTime(false);
+        }}>
+        <TripTimeEditor
+          trip={trip}
+          onCompleted={() => {
+            //setReload(!reload);
+            setOpenEditTime(false);
+            onChange && onChange();
           }}
         />
       </Modal>
