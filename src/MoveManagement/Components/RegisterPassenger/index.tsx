@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Col, Divider, Input, Modal, Row} from 'antd';
+import {Col, Divider, Empty, Form, Input, Modal, Row} from 'antd';
 import {MoveTrip, Profile} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateProfile from '../../../AccountManagement/Components/CreateProfile';
 import {PlusIcon} from '@heroicons/react/24/solid';
+import LocationsSelector from '../LocationsSelector';
 
 interface RegisterPassengerProps {
   trip: MoveTrip;
@@ -18,10 +19,20 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
   const [ledger, setLedger] = useState<string>();
   const [openNewProfileModal, setOpenNewProfileModal] = useState(false);
+  const [customOrigin, setCustomOrigin] = useState<string>();
+  const [customDestination, setCustomDestination] = useState<string>();
 
   const createPassenger = () => {
+    const data = {
+      profile_uuid: profileUuid,
+      ledger,
+      fk_trip_uuid: trip.uuid,
+      pickup_uuid: customOrigin,
+      dropoff_uuid: customDestination,
+    };
+
     axios
-      .post('move/passengers', {profile_uuid: profileUuid, ledger, fk_trip_uuid: trip.uuid})
+      .post('move/passengers', data)
       .then(response => {
         console.log(response);
         onComplete && onComplete();
@@ -41,8 +52,7 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
             style={{marginBottom: 10}}
             onChange={(value, prof) => {
               setProfileUuid(value);
-              setSelectedProfile(prof.entity);
-              console.log(prof.entity);
+              setSelectedProfile(prof.entity ? prof.entity : undefined);
             }}
           />
         </Col>
@@ -58,23 +68,41 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
         </Col>
       </Row>
       <Divider />
-      {selectedProfile && (
-        <div>
-          <h3>
-            {selectedProfile.name} {selectedProfile.last_name}
-          </h3>
-          <small>{selectedProfile.email}</small>
-          <p>{selectedProfile.phone}</p>
-          <p>
-            {selectedProfile.doc_type} {selectedProfile.doc_number}
-          </p>
-        </div>
+      {selectedProfile ? (
+        <Row gutter={[15, 15]}>
+          <Col md={8}>
+            Pasajero <br />
+            <strong>
+              {selectedProfile.name} {selectedProfile.last_name}
+            </strong>
+            <br />
+            <small>
+              {selectedProfile.doc_type} {selectedProfile.doc_number}
+            </small>
+            <small>
+              {selectedProfile.phone || ''} | {selectedProfile.email}
+            </small>
+          </Col>
+          <Col md={8}>
+            Lugar de recojo (opcional) <br />
+            <LocationsSelector onChange={value => setCustomOrigin(value)} />
+          </Col>
+          <Col md={8}>
+            Destino (opcional)
+            <br />
+            <LocationsSelector onChange={value => setCustomDestination(value)} />
+          </Col>
+        </Row>
+      ) : (
+        <Empty description={'Elige una persona para poder agregarla'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
+
+      <br />
       <PrimaryButton
         label={'Registrar'}
         size={'large'}
         block
-        disabled={!profileUuid}
+        disabled={!selectedProfile}
         onClick={() => {
           createPassenger();
         }}

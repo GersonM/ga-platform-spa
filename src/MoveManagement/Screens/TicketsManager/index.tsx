@@ -69,8 +69,8 @@ const TicketsManager = () => {
         loading={loading}
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenTripModal(true)}>
-        <Space style={{marginTop: 10}}>
-          <span>Filtros</span>
+        <span>Filtros</span>
+        <Space>
           <DatePicker style={{width: 140}} onChange={val => setSelectedDate(val)} />
           <RouteSelector
             style={{width: 200}}
@@ -86,7 +86,7 @@ const TicketsManager = () => {
       )}
       {Object.keys(groupedTrips).map(g => {
         return (
-          <>
+          <div key={g}>
             <div className={'trip-day-divider'}>{groupedTrips[g].date.format('dddd DD [de] MMMM - YYYY')}</div>
             <Collapse
               items={groupedTrips[g].trips?.map((trip: MoveTrip) => {
@@ -122,7 +122,7 @@ const TicketsManager = () => {
                 };
               })}
             />
-          </>
+          </div>
         );
       })}
 

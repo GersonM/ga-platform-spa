@@ -1,19 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Col, DatePicker, Divider, Form, Popover, Row, Segmented} from 'antd';
+import React, {useState} from 'react';
+import {Col, DatePicker, Divider, Form, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
-import axios from 'axios';
+import {Dayjs} from 'dayjs';
 
-import ErrorHandler from '../../../Utils/ErrorHandler';
+import {MoveLocation, MoveRoute, MoveVehicle} from '../../../Types/api';
+import VehicleListSelector from '../../Screens/TripReservation/VehicleListSelector';
+import LocationsSelector from '../LocationsSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RouteSelector from '../RouteSelector';
-import VehicleSelector from '../VehicleSelector';
-import {MoveLocation, MoveTrip, MoveVehicle} from '../../../Types/api';
 import Config from '../../../Config';
-import LocationsSelector from '../LocationsSelector';
-import {QueueListIcon} from '@heroicons/react/24/outline';
-import VehicleListSelector from '../../Screens/TripReservation/VehicleListSelector';
-import {Dayjs} from 'dayjs';
 
 interface TripFormProps {
   onCompleted: (data: any) => void;
@@ -26,6 +22,7 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
   const [loading, setLoading] = useState(false);
   const [arrivalDate, setArrivalDate] = useState<Dayjs>();
   const [departureDate, setDepartureDate] = useState<Dayjs>();
+  const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
   const [form] = useForm();
 
   const submitForm = (values: any) => {
@@ -43,6 +40,14 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
     }
   };
 
+  let startLocation = undefined;
+  let endLocation = undefined;
+
+  if (selectedRoute?.locations) {
+    startLocation = selectedRoute.locations[0];
+    endLocation = selectedRoute.locations[selectedRoute.locations.length - 1];
+  }
+
   return (
     <>
       <Form
@@ -52,27 +57,27 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
         initialValues={route}
         layout={'vertical'}
         onFinish={submitForm}>
-        <Popover
-          content={
-            <>
-              <h3>Elige la ruta</h3>
-              <RouteSelector />
-            </>
-          }>
-          <Button block icon={<QueueListIcon />}>
-            Cargar ruta previa
-          </Button>
-        </Popover>
-        <Divider>Nueva ruta</Divider>
+        <h3>Elige la ruta</h3>
+        <RouteSelector
+          onChange={(_uuid, route) => {
+            if (route) {
+              setSelectedRoute(route.entity);
+            } else {
+              setSelectedRoute(undefined);
+            }
+          }}
+        />
+        <Divider>Crea una ruta nueva</Divider>
+        {selectedRoute?.name}
         <Row gutter={15}>
           <Col span={12}>
             <Form.Item name={'location_from'} label={'Desde'}>
-              <LocationsSelector />
+              <LocationsSelector disabled={!!selectedRoute} placeholder={startLocation?.name} />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name={'location_to'} label={'Hacia'}>
-              <LocationsSelector />
+              <LocationsSelector disabled={!!selectedRoute} placeholder={endLocation?.name} />
             </Form.Item>
           </Col>
         </Row>
@@ -93,7 +98,7 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name={'arrival_time'} label={'Fecha y hora de llegada'}>
+            <Form.Item name={'arrival_time'} label={'Duración'}>
               <DatePicker
                 showTime
                 style={{width: '100%'}}

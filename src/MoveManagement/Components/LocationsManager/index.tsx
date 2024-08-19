@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import ErrorHandler from '../../../Utils/ErrorHandler';
-import TableList from '../../../CommonUI/TableList';
-import {MoveLocation, Role} from '../../../Types/api';
-import LocationForm from '../LocationForm';
-import IconButton from '../../../CommonUI/IconButton';
 import {TrashIcon} from '@heroicons/react/24/solid';
 import {Popconfirm} from 'antd';
+
+import ErrorHandler from '../../../Utils/ErrorHandler';
+import TableList from '../../../CommonUI/TableList';
+import {MoveLocation} from '../../../Types/api';
+import LocationForm from '../LocationForm';
+import IconButton from '../../../CommonUI/IconButton';
 
 const LocationsManager = () => {
   const [locations, setLocations] = useState<MoveLocation[]>();

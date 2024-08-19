@@ -13,11 +13,12 @@ interface LocationsSelectorProps {
   bordered?: boolean;
   disabled?: boolean;
   value?: any;
+  style?: React.CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps) => {
+const LocationsSelector = ({placeholder, mode, style, ...props}: LocationsSelectorProps) => {
   const [locations, setLocations] = useState<MoveLocation | any>([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -77,6 +78,7 @@ const LocationsSelector = ({placeholder, mode, ...props}: LocationsSelectorProps
       onSearch={value => setName(value)}
       filterOption={false}
       loading={loading}
+      style={style ? style : {width: '100%'}}
       options={locations}
       mode={mode}
       optionRender={option => (

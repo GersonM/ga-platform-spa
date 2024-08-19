@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Breadcrumb, Button, Divider, Empty, Modal, Popconfirm, Space} from 'antd';
+import {Breadcrumb, Button, Col, Divider, Empty, Modal, Popconfirm, Row, Space} from 'antd';
 import {PlusIcon, TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -8,11 +8,13 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';
 import IconButton from '../../../CommonUI/IconButton';
-import {MoveDriver, MoveTrip} from '../../../Types/api';
+import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import './styles.less';
 import {UserPlusIcon} from '@heroicons/react/24/solid';
 import AuthContext from '../../../Context/AuthContext';
 import DriverSelector from '../../../CommonUI/DriverSelector';
+import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
+import {RiUserLocationFill, RiUserLocationLine} from 'react-icons/ri';
 
 interface TripPassengersManagerProps {
   trip: MoveTrip;
@@ -21,11 +23,12 @@ interface TripPassengersManagerProps {
 
 const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => {
   const {user} = useContext(AuthContext);
-  const [passengers, setPassengers] = useState<any[]>();
+  const [passengers, setPassengers] = useState<MovePassenger[]>();
   const [reload, setReload] = useState(false);
   const [openPassengerModal, setOpenPassengerModal] = useState(false);
   const [openAssignDriver, setOpenAssignDriver] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState<MoveDriver>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -33,15 +36,18 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
       cancelToken: cancelTokenSource.token,
       params: {trip_uuid: trip.uuid},
     };
+    setLoading(true);
 
     axios
       .get(`move/passengers`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           setPassengers(response.data);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 
@@ -91,7 +97,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
 
   return (
     <>
-      <div className={'trip-card'}>
+      <Space>
         {driver && (
           <div>
             {driver.profile?.name} {driver.profile?.last_name} <br />
@@ -99,36 +105,36 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           </div>
         )}
         <div>
-          <div>
-            {dayjs(trip.departure_time).format('hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')}
-          </div>
+          {dayjs(trip.departure_time).format('hh:mm a')} - {dayjs(trip.arrival_time).format('hh:mm a')} <br />
           <small>
             {trip.vehicle?.brand} {trip.vehicle?.color} | {trip.vehicle?.registration_plate}
           </small>
         </div>
-        <Space>
+      </Space>
+      <br />
+      <Space wrap>
+        <PrimaryButton
+          block
+          disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
+          icon={<PlusIcon />}
+          onClick={() => setOpenPassengerModal(true)}
+          label={'Agregar pasajero'}
+        />
+        <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
+          <Button block type={'primary'} icon={<TrashIcon />} danger>
+            Cancelar
+          </Button>
+        </Popconfirm>
+        {isAbleToAssignDriver && (
           <PrimaryButton
             block
-            disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
-            icon={<PlusIcon />}
-            onClick={() => setOpenPassengerModal(true)}
-            label={'Agregar pasajero'}
+            onClick={() => setOpenAssignDriver(true)}
+            label={'Asignar conductor'}
+            icon={<UserPlusIcon />}
+            ghost
           />
-          <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
-            <Button icon={<TrashIcon />} danger>
-              Cancelar viaje
-            </Button>
-          </Popconfirm>
-          {isAbleToAssignDriver && (
-            <PrimaryButton
-              onClick={() => setOpenAssignDriver(true)}
-              label={'Asignar conductor'}
-              icon={<UserPlusIcon />}
-              ghost
-            />
-          )}
-        </Space>
-      </div>
+        )}
+      </Space>
       <Divider />
 
       {passengers && passengers.length == 0 && (
@@ -138,11 +144,29 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
         return (
           <div key={p.uuid} className={'passenger-item'}>
             <div>
-              {p.profile.name} {p.profile.last_name} <br />
+              {p.profile?.name} {p.profile?.last_name} <br />
               <small>
-                {p.profile.email} - {p.ledger}
+                {p.profile?.email} - {p.ledger}
               </small>
             </div>
+            {p.pickup_location && (
+              <div>
+                <RiUserLocationLine />
+                <span>
+                  {p.pickup_location?.name} <br />
+                  {p.pickup_location?.address}
+                </span>
+              </div>
+            )}
+            {p.drop_off_location && (
+              <div>
+                <RiUserLocationLine />{' '}
+                <span>
+                  {p.drop_off_location?.name} <br />
+                  {p.drop_off_location?.address}
+                </span>
+              </div>
+            )}
             <div>
               <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
             </div>
@@ -171,7 +195,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
       </Modal>
       <Modal
         footer={false}
-        width={600}
+        width={650}
         open={openPassengerModal}
         destroyOnClose
         onCancel={() => {

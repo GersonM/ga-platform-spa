@@ -271,6 +271,7 @@ export type Invoice = {
 export type MoveLocation = {
   uuid: string;
   name: string;
+  address: string;
   created_at: string;
   updated_at: string;
 };
@@ -300,6 +301,25 @@ export type MoveTrip = {
   created_at: string;
   updated_at: string;
 };
+
+export type MovePassenger = {
+  uuid: string;
+  checkin_date: string;
+  checkout_date: string;
+  created_at: string;
+  drop_off_location?: MoveLocation;
+  pickup_location?: MoveLocation;
+  address: string;
+  disabled_at: string;
+  latitude: string;
+  longitude: string;
+  name: string;
+  updated_at: string;
+  profile?: Profile;
+  trip?: MoveTrip;
+  ledger: string;
+};
+
 export type MoveDriver = {
   uuid: string;
   name: string;

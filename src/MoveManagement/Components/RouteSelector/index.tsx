@@ -15,7 +15,7 @@ interface RouteSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const RouteSelector = ({placeholder, mode, ...props}: RouteSelectorProps) => {
+const RouteSelector = ({placeholder, mode, style, ...props}: RouteSelectorProps) => {
   const [routes, setRoutes] = useState<MoveRoute | any>([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +33,7 @@ const RouteSelector = ({placeholder, mode, ...props}: RouteSelectorProps) => {
         if (response) {
           setRoutes(
             response.data.map((item: MoveLocation) => {
-              return {value: item.uuid, label: `${item.name}`};
+              return {value: item.uuid, label: `${item.name}`, entity: item};
             }),
           );
         }
@@ -52,9 +52,19 @@ const RouteSelector = ({placeholder, mode, ...props}: RouteSelectorProps) => {
       allowClear
       placeholder={placeholder || 'Elige una ruta'}
       showSearch={true}
+      style={{width: '100%', ...style}}
       optionFilterProp={'label'}
       loading={loading}
       options={routes}
+      optionRender={option => {
+        return (
+          <div>
+            {option.label} <br />
+            {option.data.entity.duration}
+            <small>{option.data.entity.locations.map((location: MoveLocation) => location.name).join(' - ')}</small>
+          </div>
+        );
+      }}
       mode={mode || undefined}
     />
   );
