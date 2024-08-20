@@ -7,6 +7,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import TripForm from '../../Components/TripForm';
+import dayjs from 'dayjs';
 
 const TripReservation = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -43,7 +44,12 @@ const TripReservation = () => {
     },
     {
       title: 'Pasajeros',
-      content: <div>{selectedTrip && <TripPassengersManager trip={selectedTrip} />}</div>,
+      content: (
+        <div>
+          <h3>{dayjs(selectedTrip?.departure_time).format('DD [de] MMMM [del] YYYY')}</h3>
+          {selectedTrip && <TripPassengersManager trip={selectedTrip} />}
+        </div>
+      ),
     },
   ];
 

@@ -107,12 +107,13 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
     : isAbleToAssignDriver
     ? 'Asignar \n conductor'
     : 'Sin conductor';
+
   return (
     <>
       <Space wrap style={{marginBottom: 15}}>
         <Tooltip title={'Conductor'}>
           <InfoButton
-            onEdit={() => setOpenAssignDriver(true)}
+            onEdit={isAbleToAssignDriver ? () => setOpenAssignDriver(true) : undefined}
             icon={<TbSteeringWheel className={'icon'} />}
             caption={driverCaption}
             label={driverLabel}

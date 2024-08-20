@@ -11,9 +11,9 @@ interface InfoButtonProps {
 
 const InfoButton = ({icon, label, onEdit, caption}: InfoButtonProps) => {
   return (
-    <div className={'info-button'} onClick={onEdit}>
+    <div className={`info-button ${onEdit ? 'button' : ''}`} onClick={onEdit}>
       {icon}
-      <div>
+      <div className={'content'}>
         {label}
         {caption && <span className={'caption'}>{caption}</span>}
       </div>

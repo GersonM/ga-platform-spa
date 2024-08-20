@@ -1,13 +1,13 @@
 .info-button {
   background: var(--backgroung-color-higlight);
   border-radius: 8px;
-  padding: 3px 12px;
+  padding: 5px 12px;
   display: flex;
   align-items: center;
   cursor: pointer;
   transition: all 0.3s;
 
-  &:hover {
+  &.button:hover {
     background: var(--primary-color);
     color: #ffffff;
   }
@@ -16,12 +16,21 @@
     font-size: 24px;
     margin-right: 10px;
   }
-  .caption {
-    display: block;
-    opacity: 0.5;
-    font-weight: 600;
-    font-size: 12px;
+
+  .content {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 14px;
+
+    .caption {
+      display: block;
+      opacity: 0.5;
+      font-size: 12px;
+      line-height: 12px;
+      margin-top: 3px;
+    }
   }
+
   .icon-edit {
     margin-left: 10px;
   }

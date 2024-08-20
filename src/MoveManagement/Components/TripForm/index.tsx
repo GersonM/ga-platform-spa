@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Col, DatePicker, Divider, Form, Input, Row, Space} from 'antd';
+import {Col, DatePicker, Divider, Form, Input, Row, Space, Tooltip} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import {Dayjs} from 'dayjs';
@@ -11,27 +11,28 @@ import LocationsSelector from '../LocationsSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RouteSelector from '../RouteSelector';
 import Config from '../../../Config';
+import {IoInformationCircle} from 'react-icons/io5';
 
 interface TripFormProps {
   onCompleted: (data: any) => void;
   route?: MoveLocation;
   vehicle?: MoveVehicle;
+  loading?: boolean;
   showVehicle?: boolean;
 }
 
-const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormProps) => {
-  const [loading, setLoading] = useState(false);
+const TripForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: TripFormProps) => {
   const [arrivalDate, setArrivalDate] = useState<Dayjs>();
   const [departureDate, setDepartureDate] = useState<Dayjs>();
   const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
   const [form] = useForm();
-  const [durationMinutes, setDurationMinutes] = useState<number>(0);
+  const [durationSeconds, setDurationSeconds] = useState<number>(0);
 
   const submitForm = (values: any) => {
     const departure: Dayjs = values.departure_time;
     const data = {
       departure_time: values.departure_time.format(Config.datetimeFormatServer),
-      arrival_time: departure.add(durationMinutes, 's').format(Config.datetimeFormatServer),
+      arrival_time: departure.add(durationSeconds, 's').format(Config.datetimeFormatServer),
       fk_vehicule_uuid: vehicle ? vehicle.uuid : values.fk_vehicle_uuid,
       fk_route_uuid: selectedRoute?.uuid,
       location_from: values.location_from,
@@ -44,8 +45,13 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
   };
 
   const addTime = (time: string, reset: boolean = false) => {
-    const parseTime = timeString(time) + (reset ? 0 : durationMinutes);
-    setDurationMinutes(parseTime);
+    if (time === '' && reset) {
+      setDurationSeconds(0);
+      return;
+    }
+    const parseTime = timeString(time) + (reset ? 0 : durationSeconds);
+    setDurationSeconds(parseTime);
+    setArrivalDate(departureDate?.add(durationSeconds, 's'));
     form.setFieldValue('duration', timeToString(parseTime));
   };
 
@@ -53,15 +59,7 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
     let date = new Date(seconds * 1000);
     let hh = date.getUTCHours();
     let mm = date.getUTCMinutes();
-
-    let t = '';
-    if (hh > 0) {
-      t += hh + 'h ';
-    }
-    if (mm > 0) {
-      t += mm + 'm';
-    }
-    return t;
+    return hh > 0 ? hh + 'h ' : '' + (mm > 0) ? mm + 'm' : '';
   };
 
   let startLocation = undefined;
@@ -122,21 +120,28 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name={'duration'} label={'Duración'}>
+            <Form.Item
+              name={'duration'}
+              label={
+                <>
+                  Duración
+                  <Tooltip title={'Eje: 2h 45m'}>
+                    <IoInformationCircle style={{fontSize: 18, marginLeft: 5}} />
+                  </Tooltip>
+                </>
+              }>
               <Input
-                value={durationMinutes}
+                allowClear
+                value={durationSeconds}
                 onChange={event => addTime(event.target.value, true)}
                 addonAfter={
-                  <>
-                    <Space>
-                      <PrimaryButton onClick={() => addTime('10m')} label={'+10m'} size={'small'} ghost />
-                      <PrimaryButton onClick={() => addTime('1h')} label={'+1h'} size={'small'} ghost />
-                    </Space>
-                  </>
+                  <Space>
+                    <PrimaryButton onClick={() => addTime('10m')} label={'+10m'} size={'small'} ghost />
+                    <PrimaryButton onClick={() => addTime('1h')} label={'+1h'} size={'small'} ghost />
+                  </Space>
                 }
               />
             </Form.Item>
-            {durationMinutes} - {timeToString(durationMinutes)}
           </Col>
         </Row>
         {!vehicle && showVehicle && (

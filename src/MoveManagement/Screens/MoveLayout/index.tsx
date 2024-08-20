@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
 import {Outlet} from 'react-router-dom';
-import {CalendarIcon, MapPinIcon, TicketIcon, TruckIcon, UsersIcon} from '@heroicons/react/24/solid';
+import {BsListStars} from 'react-icons/bs';
+import {CalendarIcon, MapPinIcon, TicketIcon} from '@heroicons/react/24/solid';
 
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import {BsListStars} from 'react-icons/bs';
 import AuthContext from '../../../Context/AuthContext';
 
 const MoveLayout = () => {
