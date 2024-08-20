@@ -46,8 +46,7 @@ const TripForm = ({onCompleted, route, vehicle, showVehicle = true}: TripFormPro
   const addTime = (time: string, reset: boolean = false) => {
     const parseTime = timeString(time) + (reset ? 0 : durationMinutes);
     setDurationMinutes(parseTime);
-    console.log(time, parseTime);
-    timeToString(parseTime);
+    form.setFieldValue('duration', timeToString(parseTime));
   };
 
   const timeToString = (seconds: number) => {
