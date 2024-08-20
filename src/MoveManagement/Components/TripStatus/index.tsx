@@ -1,7 +1,6 @@
 import React from 'react';
-import {MoveTrip} from '../../../Types/api';
 import {Tag} from 'antd';
-import {ClockIcon} from '@heroicons/react/24/outline';
+import {MoveTrip} from '../../../Types/api';
 
 interface TripStatusProps {
   trip: MoveTrip;
