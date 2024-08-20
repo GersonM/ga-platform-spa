@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Empty, Modal, Popconfirm, Space} from 'antd';
+import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {PlusIcon, TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {MdEmojiPeople} from 'react-icons/md';
-import {FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
+import {FaPersonWalkingLuggage} from 'react-icons/fa6';
 import {CiClock1} from 'react-icons/ci';
 import {PiCarLight} from 'react-icons/pi';
+import {TbSteeringWheel} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -18,9 +19,8 @@ import DriverSelector from '../../../CommonUI/DriverSelector';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import InfoButton from '../../../CommonUI/InfoButton';
-import './styles.less';
-import TripForm from '../TripForm';
 import TripTimeEditor from './TripTimeEditor';
+import './styles.less';
 
 interface TripPassengersManagerProps {
   trip: MoveTrip;
@@ -34,7 +34,6 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   const [openPassengerModal, setOpenPassengerModal] = useState(false);
   const [openAssignDriver, setOpenAssignDriver] = useState(false);
   const [openEditTime, setOpenEditTime] = useState(false);
-  const [openEditVehicle, setOpenEditVehicle] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState<MoveDriver>();
   const [loading, setLoading] = useState(false);
 
@@ -111,12 +110,14 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   return (
     <>
       <Space wrap style={{marginBottom: 15}}>
-        <InfoButton
-          onEdit={() => setOpenAssignDriver(true)}
-          icon={<FaUserTie className={'icon'} />}
-          caption={driverCaption}
-          label={driverLabel}
-        />
+        <Tooltip title={'Conductor'}>
+          <InfoButton
+            onEdit={() => setOpenAssignDriver(true)}
+            icon={<TbSteeringWheel className={'icon'} />}
+            caption={driverCaption}
+            label={driverLabel}
+          />
+        </Tooltip>
         <InfoButton
           icon={<CiClock1 className={'icon'} />}
           onEdit={() => setOpenEditTime(true)}

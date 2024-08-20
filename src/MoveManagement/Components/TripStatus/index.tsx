@@ -9,7 +9,7 @@ interface TripStatusProps {
 
 const TripStatus = ({trip}: TripStatusProps) => {
   if (trip.confirmed_at) {
-    return <Tag color={'orange'}>Confirmado</Tag>;
+    return <Tag color={'blue'}>Confirmado</Tag>;
   }
 
   if (trip.cancelled_at) {

@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Collapse, DatePicker, Empty, Modal, Progress, Space, Tabs, Tag} from 'antd';
+import {Collapse, DatePicker, Empty, Modal, Progress, Space} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
 
@@ -9,9 +9,9 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import RouteSelector from '../../Components/RouteSelector';
-import './styles.less';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import TripStatus from '../../Components/TripStatus';
+import './styles.less';
 
 const TicketsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -20,7 +20,6 @@ const TicketsManager = () => {
   const [selectedRouteUuid, setSelectedRouteUuid] = useState<string>();
   const [trips, setTrips] = useState<MoveTrip[]>();
   const [loading, setLoading] = useState(false);
-  //const [tripsGroped, setTripsGrouped] = useState<MoveTrip[][]>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -60,8 +59,6 @@ const TicketsManager = () => {
     return groups;
   }, [trips]);
 
-  console.log('render', groupedTrips);
-
   return (
     <>
       <ContentHeader
@@ -69,11 +66,11 @@ const TicketsManager = () => {
         loading={loading}
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenTripModal(true)}>
-        <span>Filtros</span>
-        <Space>
-          <DatePicker style={{width: 140}} onChange={val => setSelectedDate(val)} />
+        <span>Filtros: </span>
+        <Space wrap>
+          <DatePicker style={{width: 130}} onChange={val => setSelectedDate(val)} />
           <RouteSelector
-            style={{width: 200}}
+            style={{width: 190}}
             onChange={value => {
               setSelectedRouteUuid(value);
             }}
@@ -92,11 +89,7 @@ const TicketsManager = () => {
               items={groupedTrips[g].trips?.map((trip: MoveTrip) => {
                 const percent = trip.vehicle && (trip.total_passengers * 100) / trip.vehicle?.max_capacity;
                 return {
-                  extra: (
-                    <Space>
-                      <Progress percent={Math.round(percent || 0)} type={'circle'} size={35} />
-                    </Space>
-                  ),
+                  extra: <Progress percent={Math.round(percent || 0)} type={'circle'} size={35} />,
                   label: (
                     <div className={'trip-tab'}>
                       <div>
