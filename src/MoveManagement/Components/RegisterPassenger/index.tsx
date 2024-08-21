@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import {Col, Divider, Empty, Form, Input, Modal, Row} from 'antd';
+import {Col, Divider, Empty, Input, Modal, Row} from 'antd';
+import {PlusIcon} from '@heroicons/react/24/solid';
 import {MoveTrip, Profile} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateProfile from '../../../AccountManagement/Components/CreateProfile';
-import {PlusIcon} from '@heroicons/react/24/solid';
 import LocationsSelector from '../LocationsSelector';
+import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 
 interface RegisterPassengerProps {
   trip: MoveTrip;
@@ -17,7 +18,7 @@ interface RegisterPassengerProps {
 const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
   const [profileUuid, setProfileUuid] = useState<string>();
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
-  const [ledger, setLedger] = useState<string>();
+  const [observations, setObservations] = useState<string>();
   const [openNewProfileModal, setOpenNewProfileModal] = useState(false);
   const [customOrigin, setCustomOrigin] = useState<string>();
   const [customDestination, setCustomDestination] = useState<string>();
@@ -25,7 +26,7 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
   const createPassenger = () => {
     const data = {
       profile_uuid: profileUuid,
-      ledger,
+      observations,
       fk_trip_uuid: trip.uuid,
       pickup_uuid: customOrigin,
       dropoff_uuid: customDestination,
@@ -77,7 +78,7 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
             </strong>
             <br />
             <small>
-              {selectedProfile.doc_type} {selectedProfile.doc_number}
+              <ProfileDocument profile={selectedProfile} />
             </small>
             <small>
               {selectedProfile.phone || ''} | {selectedProfile.email}
@@ -91,6 +92,10 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
             Destino (opcional)
             <br />
             <LocationsSelector onChange={value => setCustomDestination(value)} />
+          </Col>
+          <Col md={24}>
+            Observaciones (opcional)
+            <Input.TextArea onChange={event => setObservations(event.target.value)} />
           </Col>
         </Row>
       ) : (

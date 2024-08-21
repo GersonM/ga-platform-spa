@@ -5,30 +5,56 @@
 }
 
 .passenger-item {
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  background: var(--backgroung-color-body);
 
-  .passenger-label {
+  .content {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
-    .passenger-icon {
-      font-size: 25px;
-      margin-right: 5px;
-    }
+    .passenger-label {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
 
-    span {
-      line-height: 16px;
-    }
+      .passenger-icon {
+        font-size: 25px;
+        margin-right: 5px;
+      }
 
-    .caption {
-      line-height: 12px;
-      font-size: 12px;
+      span {
+        line-height: 16px;
+      }
+
+      .caption {
+        line-height: 11px;
+        font-size: 11px;
+        opacity: 0.6;
+        display: block;
+      }
+    }
+  }
+
+  .addons {
+    border-top: 1px dotted var(--backgroung-color-higlight);
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 8px 0 0 0;
+    line-height: 12px;
+    display: flex;
+
+    & > div {
       opacity: 0.6;
-      display: block;
+      margin-right: 7px;
+      padding-right: 7px;
+
+      .label {
+        font-weight: 600;
+      }
     }
   }
 }

@@ -99,7 +99,6 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
   };
 
   const isAbleToAssignDriver = user?.roles?.includes('admin');
-
   const driver = trip.driver || trip.vehicle?.driver;
   const driverCaption = driver ? <ProfileDocument profile={driver?.profile} /> : '';
   const driverLabel = driver
@@ -109,7 +108,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
     : 'Sin conductor';
 
   return (
-    <>
+    <div style={{position: 'relative'}}>
       <Space wrap style={{marginBottom: 15}}>
         <Tooltip title={'Conductor'}>
           <InfoButton
@@ -150,38 +149,56 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
       {passengers?.map(p => {
         return (
           <div key={p.uuid} className={'passenger-item'}>
-            <div className={'passenger-label'}>
-              <div>
-                {p.profile?.name} {p.profile?.last_name} | <ProfileDocument profile={p.profile} />
-                <span className={'caption'}>
-                  {p.profile?.email} | {p.profile?.phone}
-                </span>
-              </div>
-            </div>
-            {p.pickup_location && (
+            <div className={'content'}>
               <div className={'passenger-label'}>
-                <MdEmojiPeople className={'passenger-icon'} />
                 <div>
-                  {p.pickup_location?.name}
-                  <span className={'caption'}>{p.pickup_location?.address}</span>
+                  {p.profile?.name} {p.profile?.last_name} | <ProfileDocument profile={p.profile} />
+                  <span className={'caption'}>
+                    {p.profile?.email} | {p.profile?.phone}
+                  </span>
                 </div>
               </div>
-            )}
-            {p.drop_off_location && (
-              <div className={'passenger-label'}>
-                <FaPersonWalkingLuggage className={'passenger-icon'} />
-                <div>
-                  {p.drop_off_location?.name}
-                  <span className={'caption'}>{p.drop_off_location?.address}</span>
+              {p.pickup_location && (
+                <div className={'passenger-label'}>
+                  <MdEmojiPeople className={'passenger-icon'} />
+                  <div>
+                    {p.pickup_location?.name}
+                    <span className={'caption'}>{p.pickup_location?.address}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-            <Space>
-              {user?.roles?.includes('driver') && (
-                <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
               )}
-              <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
-            </Space>
+              {p.drop_off_location && (
+                <div className={'passenger-label'}>
+                  <FaPersonWalkingLuggage className={'passenger-icon'} />
+                  <div>
+                    {p.drop_off_location?.name}
+                    <span className={'caption'}>{p.drop_off_location?.address}</span>
+                  </div>
+                </div>
+              )}
+              <Space>
+                {user?.roles?.includes('driver') && (
+                  <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
+                )}
+                <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
+              </Space>
+            </div>
+
+            {(p.observations ||
+              (p.profile?.employees && p.profile?.employees[0] && p.profile?.employees[0].cost_center)) && (
+              <div className={'addons'}>
+                {p.profile?.employees && p.profile?.employees[0] && (
+                  <div>
+                    <span className={'label'}>Centro de costos:</span> {p.profile?.employees[0].cost_center}
+                  </div>
+                )}
+                {p.observations && (
+                  <div>
+                    <span className={'label'}>Observaciones:</span> {p.observations}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       })}
@@ -238,7 +255,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           }}
         />
       </Modal>
-    </>
+    </div>
   );
 };
 

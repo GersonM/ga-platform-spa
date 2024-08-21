@@ -46,10 +46,34 @@ export type Profile = {
   gender?: string;
   phone?: string;
   address?: string;
+  employees?: Employee[];
   created_at?: string;
   login_method?: string;
   user?: User;
   avatar?: File;
+};
+
+export type Employee = {
+  uuid: string;
+  bank_account?: string;
+  bank_name?: string;
+  children_number?: number;
+  cost_center?: string;
+  created_at?: string;
+  cuspp?: string;
+  employee_code?: string;
+  fk_company_uuid?: string;
+  fk_group_uuid?: string;
+  fk_profile_uuid?: string;
+  has_family_bonus?: boolean;
+  joining_date?: string;
+  monthly_salary?: number;
+  pension_system?: string;
+  position?: string;
+  termination_date?: string;
+  work_regime?: string;
+  working_department?: string;
+  working_place?: string;
 };
 
 export type SharedProfile = {
@@ -309,11 +333,7 @@ export type MovePassenger = {
   created_at: string;
   drop_off_location?: MoveLocation;
   pickup_location?: MoveLocation;
-  address: string;
-  disabled_at: string;
-  latitude: string;
-  longitude: string;
-  name: string;
+  observations: string;
   updated_at: string;
   profile?: Profile;
   trip?: MoveTrip;
