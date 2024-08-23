@@ -94,7 +94,9 @@ const Navigation = () => {
           {config?.modules.includes('files') && (
             <NavItem label={'Gestor de Archivos'} icon={<BsDeviceHdd />} path={'/file-management'} />
           )}
-          <NavItem label={'Comercial'} icon={<PiHandshakeLight />} path={'/commercial'} />
+          {config?.modules.includes('commercial') && (
+            <NavItem label={'Comercial'} icon={<PiHandshakeLight />} path={'/commercial'} />
+          )}
           {config?.modules.includes('move') && (
             <NavItem icon={<PiCarProfile />} label={'Transporte'}>
               <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/move/reservation'} />
