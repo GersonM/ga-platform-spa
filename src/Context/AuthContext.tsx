@@ -13,9 +13,12 @@ interface AuthContextDefaults {
   setUser: (data: any) => void;
   logout: () => Promise<any>;
   config?: TenantConfig;
+  setPreferredMode: (value: string) => void;
   setDarkMode: (value: boolean) => void;
+  preferredMode?: string;
   darkMode?: boolean;
   openMenu: boolean;
+  uploadProgress?: any;
   setOpenMenu: (value: boolean) => void;
 }
 
@@ -29,6 +32,7 @@ const AuthContext = createContext<AuthContextDefaults>({
     return Promise.resolve(undefined);
   },
   setUser(): void {},
+  setPreferredMode(): void {},
   setDarkMode(): void {},
   user: null,
   openMenu: false,
@@ -40,7 +44,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>();
   const [openMenu, setOpenMenu] = useState(false);
-  const [preferredMode] = useState('auto');
+  const [preferredMode, setPreferredMode] = useState<string>('auto');
+  const [uploadProgress, setUploadProgress] = useState<any>();
 
   useEffect(() => {
     if (darkMode) {
@@ -95,10 +100,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           placement: 'bottomLeft',
           className: 'deploy-alert-wrapper',
           description: (
-            <ul style={{padding: '0 0 0 20px'}}>
-              <li>Se agrego la opción para borrar contenedores y carpetas</li>
-              <li>Nueva opción para cambiar visibilidad de contenedores y carpetas</li>
-              <li>Haz clic derecho sobre una carpeta para nuevas opciones</li>
+            <ul style={{padding: '5px 5px 5px 20px', backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: '5px'}}>
+              <li>Nuevo módulo de reservas</li>
             </ul>
           ),
           duration: 0,
@@ -114,7 +117,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
     Cookies.remove('session_token');
     window.location.href = '/auth/login';
   };
-  console.log('Auth context');
+
   return (
     <AuthContext.Provider
       value={{
@@ -122,10 +125,13 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         setUser,
         logout,
         config,
+        setPreferredMode,
         setDarkMode,
+        preferredMode,
         darkMode,
         openMenu,
         setOpenMenu,
+        uploadProgress,
         sessionToken: token,
       }}>
       {children}
