@@ -19,7 +19,7 @@
   --border-radius: 10px;
   --main-nav-width: 85px;
 
-  --font-title: 'Maven Pro', sans-serif;
+  --font-title: "Inter", sans-serif;
 }
 
 #root {
@@ -28,9 +28,10 @@
 }
 
 body {
+  font-family: var(--font-title);
+
   margin: 0;
   background: var(--backgroung-color-body);
-  font-family: Poppins, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 13px;
@@ -46,7 +47,8 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Maven Pro', sans-serif;
+  //font-family: 'Maven Pro', sans-serif;
+  font-family: var(--font-title);
   font-weight: 400;
   color: var(--text-title-color);
 }
