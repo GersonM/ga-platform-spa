@@ -4,7 +4,8 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {MoveDriver, MoveRoute} from '../../../Types/api';
+import {MoveDriver, MoveRoute, Profile} from '../../../Types/api';
+import ProfileSelector from '../../../CommonUI/ProfileSelector';
 
 interface CountryFormProps {
   onCompleted: () => void;
@@ -13,6 +14,7 @@ interface CountryFormProps {
 
 const RouteForm = ({onCompleted, driver}: CountryFormProps) => {
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState<Profile>();
   const [form] = useForm();
 
   const submitForm = (values: MoveRoute) => {
@@ -39,6 +41,10 @@ const RouteForm = ({onCompleted, driver}: CountryFormProps) => {
   return (
     <>
       <Form form={form} initialValues={driver} layout={'vertical'} onFinish={submitForm}>
+        <Form.Item name={'name'} label={'Name'} rules={[{required: true, message: 'El nombre es requerido'}]}>
+          <ProfileSelector onChange={(_uuid, option) => setProfile(option.entity)} />
+        </Form.Item>
+        {profile && <div>{profile.name}</div>}
         <Form.Item name={'name'} label={'Name'} rules={[{required: true, message: 'El nombre es requerido'}]}>
           <Input />
         </Form.Item>

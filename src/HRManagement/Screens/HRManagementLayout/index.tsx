@@ -1,14 +1,6 @@
 import React from 'react';
 import {Outlet} from 'react-router-dom';
-import {
-  BuildingLibraryIcon,
-  BuildingOffice2Icon,
-  MapPinIcon,
-  TicketIcon,
-  TruckIcon,
-  UserPlusIcon,
-  UsersIcon,
-} from '@heroicons/react/24/solid';
+import {BuildingOffice2Icon, DocumentPlusIcon, MapPinIcon, UserPlusIcon, UsersIcon} from '@heroicons/react/24/solid';
 
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
@@ -23,6 +15,7 @@ const HRManagementLayout = () => {
           <NavListItem icon={<UsersIcon />} name={'Empleados'} path={'/hr/reservation'} />
           <NavListItem icon={<BuildingOffice2Icon />} name={'Empresas'} path={'/hr/trips'} />
           <NavListItem icon={<MapPinIcon />} name={'Reportes'} path={'/hr/dashboard'} />
+          <NavListItem icon={<DocumentPlusIcon />} name={'Generador de documentos'} path={'/hr/document-generator'} />
         </NavList>
       </ModuleSidebar>
       <ModuleContent>

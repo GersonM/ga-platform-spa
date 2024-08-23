@@ -1,22 +1,37 @@
-import React from 'react';
-import {SmoothCorners} from 'react-smooth-corners';
+import React, {useState} from 'react';
 import {NavLink} from 'react-router-dom';
+import {ChevronDownIcon} from '@heroicons/react/24/outline';
 
 interface NavItemProps {
   label: string;
-  icon: string;
-  path: string;
+  icon: React.ReactNode;
+  children?: React.ReactNode[];
+  path?: string;
 }
 
-const NavItem = ({path, label, icon}: NavItemProps) => {
+const NavItem = ({path, label, icon, children}: NavItemProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <li>
-      <NavLink to={path}>
-        <SmoothCorners className={'nav-item-content'} borderRadius="12px" corners="10, 43">
-          <span className={icon}></span>
-          <span className={'label'}>{label}</span>
-        </SmoothCorners>
-      </NavLink>
+      <div className={'item'}>
+        {path ? (
+          <NavLink to={path}>
+            {icon}
+            <span className={'label'}>{label}</span>
+          </NavLink>
+        ) : (
+          <a href={'#'} onClick={() => setIsOpen(!isOpen)}>
+            {icon}
+            <span className={'label'}>{label}</span>
+            {children && (
+              <div className={`open-button ${isOpen ? 'open' : ''}`}>
+                <ChevronDownIcon />
+              </div>
+            )}
+          </a>
+        )}
+      </div>
+      {children && <ul className={`${isOpen ? 'open' : ''}`}>{children}</ul>}
     </li>
   );
 };

@@ -10,7 +10,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
 import VehicleForm from '../../Components/VehicleForm';
 import DriversManager from '../../Components/DriversManager';
-import {MoveDriver, MoveRoute, MoveVehicle} from '../../../Types/api';
+import {MoveDriver, MoveVehicle} from '../../../Types/api';
 
 const MoveVehiclesManager = () => {
   const [openDriverModal, setOpenDriverModal] = useState(false);
@@ -86,13 +86,13 @@ const MoveVehiclesManager = () => {
 
   return (
     <>
-      <ContentHeader title={'Unidades'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)} />
-      <Space>
+      <ContentHeader title={'Unidades'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)}>
         <PrimaryButton icon={<UserIcon />} label={'Conductores'} onClick={() => setOpenDriverModal(true)} />
-      </Space>
+      </ContentHeader>
       <TableList columns={routesColumns} dataSource={vehicles} />
       <Modal
         width={900}
+        title={'Condcutores'}
         footer={false}
         open={openDriverModal}
         destroyOnClose

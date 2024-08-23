@@ -1,8 +1,11 @@
 import React, {useContext, useEffect} from 'react';
-import {NavLink, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
-import {Avatar, Dropdown, Popover, Progress} from 'antd';
+import {Avatar, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
+import {TbCashBanknote, TbMailStar} from 'react-icons/tb';
+import {HiOutlineCog} from 'react-icons/hi';
+import {IoApps} from 'react-icons/io5';
 import axios from 'axios';
 
 import './styles.less';
@@ -11,6 +14,19 @@ import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
+import {
+  PiCarLight,
+  PiCarProfile,
+  PiClockUser,
+  PiGraduationCap,
+  PiHandshakeLight,
+  PiShieldCheck,
+  PiUsersThree,
+} from 'react-icons/pi';
+import ScreenModeSelector from './ScreenModeSelector';
+import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
+import {BsDeviceHdd} from 'react-icons/bs';
+import NavItem from './NavItem';
 
 const menuItems: ItemType[] = [
   {
@@ -29,7 +45,7 @@ const menuItems: ItemType[] = [
 ];
 
 const Navigation = () => {
-  const {user, logout, config, setDarkMode, darkMode, setOpenMenu, openMenu} = useContext(AuthContext);
+  const {uploadProgress, user, logout, config, darkMode, setOpenMenu, openMenu} = useContext(AuthContext);
   const {pathname} = useLocation();
 
   useEffect(() => {
@@ -74,108 +90,78 @@ const Navigation = () => {
       </div>
       <nav>
         <ul className="navigation-list">
-          <li>
-            <NavLink end to={'/'}>
-              <span className="icon icon-icons2"></span>
-              <span className="label">Dashboard</span>
-            </NavLink>
-          </li>
+          <NavItem label={'Dashboard'} icon={<IoApps />} path={'/'} />
           {config?.modules.includes('files') && (
-            <li>
-              <NavLink to={'/file-management'}>
-                <span className="icon icon-server"></span>
-                <span className={'label'}>Gestor de Archivos</span>
-              </NavLink>
-            </li>
+            <NavItem label={'Gestor de Archivos'} icon={<BsDeviceHdd />} path={'/file-management'} />
+          )}
+          <NavItem label={'Comercial'} icon={<PiHandshakeLight />} path={'/commercial'} />
+          {config?.modules.includes('move') && (
+            <NavItem icon={<PiCarProfile />} label={'Transporte'}>
+              <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/move/reservation'} />
+              <NavItem icon={<QueueListIcon />} label={'Mis reservas'} path={'/move/trips'} />
+              {user?.roles?.includes('admin') && (
+                <>
+                  <NavItem
+                    icon={<PiCarLight className={'icon'} />}
+                    label={'Vehículos & conductores'}
+                    path={'/move/vehicles'}
+                  />
+                  <NavItem icon={<MapPinIcon />} label={'Rutas & lugares'} path={'/move/routes'} />
+                </>
+              )}
+              <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
+            </NavItem>
+          )}
+          {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
+          {user?.roles?.includes('admin') && (
+            <NavItem label={'Seguridad'} icon={<PiShieldCheck />} path={'/accounts'} />
+          )}
+          {config?.modules.includes('lms') && <NavItem label={'LMS'} icon={<PiGraduationCap />} path={'/lms'} />}
+          {config?.modules.includes('attendance') && (
+            <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />
           )}
           {config?.modules.includes('inbox') && (
-            <li>
-              <NavLink to={'/inbox-management'}>
-                <span className="icon icon-envelope-open"></span>
-                <span className={'label'}>E-mail</span>
-              </NavLink>
-            </li>
-          )}
-          <li>
-            <NavLink to={'/hr'}>
-              <span className="icon icon-users2"></span>
-              <span className={'label'}>RR. HH.</span>
-            </NavLink>
-          </li>
-          {user?.roles?.includes('admin') && (
-            <li>
-              <NavLink to={'/accounts'}>
-                <span className="icon icon-shield"></span>
-                <span className={'label'}>Seguridad</span>
-              </NavLink>
-            </li>
-          )}
-          {config?.modules.includes('lms') && (
-            <li>
-              <NavLink to={'/lms'}>
-                <span className="icon icon-graduation-hat"></span>
-                <span className={'label'}>LMS</span>
-              </NavLink>
-            </li>
-          )}
-          {config?.modules.includes('move') && (
-            <li>
-              <NavLink to={'/move'}>
-                <span className="icon icon-bus2"></span>
-                <span className={'label'}>Transporte</span>
-              </NavLink>
-            </li>
-          )}
-          {config?.modules.includes('attendance') && (
-            <li>
-              <NavLink to={'/attendance'}>
-                <span className="icon icon-clock"></span>
-                <span className={'label'}>Asistencia</span>
-              </NavLink>
-            </li>
+            <NavItem label={'E-mail'} icon={<TbMailStar />} path={'/inbox-management'} />
           )}
           {config?.modules.includes('payments') && (
-            <li>
-              <NavLink to={'/invoices'}>
-                <span className="icon icon-cash-dollar"></span>
-                <span className={'label'}>Pagos</span>
-              </NavLink>
-            </li>
+            <NavItem label={'Pagos'} icon={<TbCashBanknote />} path={'/invoices'} />
           )}
-          {user?.roles?.includes('admin') && (
-            <li>
-              <NavLink to={'/config'}>
-                <span className="icon icon-cog"></span>
-                <span className={'label'}>Opciones</span>
-              </NavLink>
-            </li>
-          )}
+          {user?.roles?.includes('admin') && <NavItem label={'Opciones'} icon={<HiOutlineCog />} path={'/config'} />}
         </ul>
       </nav>
       <div className="bottom-nav">
-        <Popover
-          placement={'right'}
-          content={
-            <>
-              <h3>Cargas</h3>
-              <UploadInformation />
-            </>
-          }>
-          <Progress type={'circle'} size={43} percent={100} style={{marginBottom: '10px'}}>
-            <UploadOutlined />
-          </Progress>
-        </Popover>
-        <div className={'user-tool'} onClick={() => setDarkMode(!darkMode)}>
-          {darkMode ? <i className={'icon-sun'} /> : <i className={'icon-moon'} />}
-        </div>
+        {uploadProgress && (
+          <Popover
+            placement={'right'}
+            content={
+              <>
+                <h3>Cargas</h3>
+                <UploadInformation />
+              </>
+            }>
+            <Progress type={'circle'} size={30} percent={100} style={{marginBottom: '10px'}}>
+              <UploadOutlined />
+            </Progress>
+          </Popover>
+        )}
+        <Space>
+          <div className={'user-tool'}>
+            <BellIcon />
+          </div>
+          <ScreenModeSelector />
+        </Space>
         <Dropdown
           arrow={true}
           placement={'topLeft'}
           trigger={['click']}
           menu={{items: menuItems, onClick: handleUserMenuClick}}>
-          <Avatar size={'large'} className={'avatar'}>
-            {user?.name.substring(0, 1)}
-          </Avatar>
+          <div className={'avatar'}>
+            <Avatar>{user?.name.substring(0, 1)}</Avatar>
+            <div>
+              {user?.profile.name}
+              <small>{user?.profile.email}</small>
+            </div>
+          </div>
         </Dropdown>
       </div>
       <div className={'version-info'}>v{Package.version}</div>

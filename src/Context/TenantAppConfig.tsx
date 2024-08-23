@@ -19,7 +19,7 @@ const defaultColor = '#0082ca';
 const defaultColorLight = '#52b5ff';
 
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
-  const {darkMode, setDarkMode} = useContext(AuthContext);
+  const {darkMode, preferredMode, setDarkMode} = useContext(AuthContext);
 
   useEffect(() => {
     if (tenant.config.favicon) {
@@ -46,16 +46,16 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
   }, [tenant]);
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    setDarkMode(media === 'dark');
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-      const colorScheme = e.matches ? 'dark' : 'light';
-      setDarkMode(colorScheme === 'dark');
-    });
-    return () => {
-      window.removeEventListener('change', function () {});
-    };
-  }, []);
+    if (preferredMode === 'auto') {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        const colorScheme = e.matches ? 'dark' : 'light';
+        setDarkMode(colorScheme === 'dark');
+      });
+      return () => {
+        window.removeEventListener('change', function () {});
+      };
+    }
+  }, [preferredMode]);
 
   if (darkMode === undefined && !tenant) {
     return null;
@@ -68,16 +68,16 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
         token: {
           colorPrimary: tenant.primary_color ? tenant.primary_color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.primary_color ? tenant.primary_color : defaultColor,
-          fontFamily: 'Poppins, Helvetica, Arial, sans-serif',
+          fontFamily: '"Open Sans", sans-serif',
           fontSize: 13,
-          borderRadius: 9,
+          borderRadius: 8,
         },
         components: {
           Modal: {
             titleFontSize: 24,
           },
           Button: {
-            fontWeight: 500,
+            fontWeight: 600,
           },
           Input: {
             padding: 20,

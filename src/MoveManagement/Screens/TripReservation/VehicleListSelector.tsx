@@ -8,6 +8,8 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import './styles.less';
 import {Dayjs} from 'dayjs';
 import Config from '../../../Config';
+import {GrCar} from 'react-icons/gr';
+import {PiCarProfile} from 'react-icons/pi';
 
 interface VehicleListSelectorProps {
   value?: string;
@@ -64,7 +66,7 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
                 setSelectedVehicle(vehicle);
                 onChange && onChange(vehicle.uuid, vehicle);
               }}>
-              <span className={'icon-bus'}></span>
+              <PiCarProfile className={'icon'} />
               <div className={'vehicle-info'}>
                 {vehicle.brand} {vehicle.model} {vehicle.color}
                 <br />

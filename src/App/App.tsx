@@ -30,6 +30,7 @@ import TripReservation from '../MoveManagement/Screens/TripReservation';
 import TaxonomyManager from '../TaxonomyManagement/Screens/TaxonomyManager';
 import HRManagementLayout from '../HRManagement/Screens/HRManagementLayout';
 import TripsSchedule from '../MoveManagement/Screens/TripsSchedule';
+import DocumentGeneratorScreen from '../HRManagement/Screens/DocumentGeneratorScreen';
 
 const App = () => {
   useEffect(() => {
@@ -83,11 +84,6 @@ const App = () => {
             <Route path={':tab'} />
           </Route>
         </Route>
-        <Route path={'hr'} element={<HRManagementLayout />}>
-          <Route path={':uuid'}>
-            <Route path={':tab'} />
-          </Route>
-        </Route>
         <Route path={'invoices'} element={<Invoices />}>
           <Route path={':uuid'} />
         </Route>
@@ -107,6 +103,12 @@ const App = () => {
           <Route path={'routes'} element={<MoveRoutesManager />} />
           <Route path={'vehicles'} element={<MoveVehiclesManager />} />
           <Route path={'schedule'} element={<TripsSchedule />} />
+        </Route>
+        <Route path={'hr'} element={<HRManagementLayout />}>
+          <Route path={'document-generator'} element={<DocumentGeneratorScreen />} />
+          <Route path={':uuid'}>
+            <Route path={':tab'} />
+          </Route>
         </Route>
         <Route path={'commercial/*'} element={<CommercialHome />} />
         <Route

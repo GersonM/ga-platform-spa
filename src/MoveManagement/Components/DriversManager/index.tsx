@@ -9,7 +9,7 @@ import {MoveDriver} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import DriverForm from '../DriverForm';
 
-const LocationsManager = () => {
+const DriversManager = () => {
   const [drivers, setDrivers] = useState<MoveDriver[]>();
   const [reload, setReload] = useState(false);
 
@@ -73,8 +73,7 @@ const LocationsManager = () => {
   ];
 
   return (
-    <div>
-      <h2>Conductores</h2>
+    <>
       <Row gutter={20}>
         <Col span={12}>
           <TableList columns={columns} dataSource={drivers} />
@@ -83,8 +82,8 @@ const LocationsManager = () => {
           <DriverForm onCompleted={() => setReload(!reload)} />
         </Col>
       </Row>
-    </div>
+    </>
   );
 };
 
-export default LocationsManager;
+export default DriversManager;
