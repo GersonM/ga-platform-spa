@@ -3,7 +3,7 @@ import {useLocation} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
-import {TbCashBanknote, TbMailStar} from 'react-icons/tb';
+import {TbCashBanknote, TbMailStar, TbReceipt2, TbUserCheck} from 'react-icons/tb';
 import {HiOutlineCog} from 'react-icons/hi';
 import {IoApps} from 'react-icons/io5';
 import axios from 'axios';
@@ -27,6 +27,7 @@ import ScreenModeSelector from './ScreenModeSelector';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
 import {BsDeviceHdd} from 'react-icons/bs';
 import NavItem from './NavItem';
+import {GrUserExpert} from 'react-icons/gr';
 
 const menuItems: ItemType[] = [
   {
@@ -95,7 +96,10 @@ const Navigation = () => {
             <NavItem label={'Gestor de Archivos'} icon={<BsDeviceHdd />} path={'/file-management'} />
           )}
           {config?.modules.includes('commercial') && (
-            <NavItem label={'Comercial'} icon={<PiHandshakeLight />} path={'/commercial'} />
+            <NavItem label={'Comercial'} icon={<PiHandshakeLight />}>
+              <NavItem icon={<TbUserCheck />} label={'Clientes'} path={'/commercial/clients'} />
+              <NavItem icon={<TbReceipt2 />} label={'Pagos'} path={'/commercial/payments'} />
+            </NavItem>
           )}
           {config?.modules.includes('move') && (
             <NavItem icon={<PiCarProfile />} label={'Transporte'}>

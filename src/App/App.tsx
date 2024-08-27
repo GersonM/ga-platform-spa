@@ -8,7 +8,7 @@ import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import CompanyContainers from '../FileManagement/Screens/CompanyContainers';
 import DashboardHome from '../Dashboard/Screens/DashboardHome';
-import CommercialHome from '../Commercial/Screens/CommercialHome';
+import CommercialClients from '../Commercial/Screens/CommercialClients';
 import InboxManager from '../InboxManagement/Screens/InboxManager';
 import MailMessagesViewer from '../InboxManagement/Screens/InboxManager/MailMessagesViewer';
 import MailAccountStats from '../InboxManagement/Screens/InboxManager/MailAccountStats';
@@ -110,7 +110,10 @@ const App = () => {
             <Route path={':tab'} />
           </Route>
         </Route>
-        <Route path={'commercial/*'} element={<CommercialHome />} />
+        <Route path={'commercial'}>
+          <Route path={'clients'} element={<CommercialClients />} />
+          <Route path={'payments'} element={<CommercialClients />} />
+        </Route>
         <Route
           path={'*'}
           element={

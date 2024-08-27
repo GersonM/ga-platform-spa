@@ -1,4 +1,4 @@
-@iconSize: 18px;
+@iconSize: 20px;
 
 .navigation-wrapper {
   background: var(--backgroung-color);
@@ -14,14 +14,23 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 
   .head {
-    margin: 15px 0 0 0;
+    margin: 12px 10px;
+    border-bottom: 1px solid var(--border-color);
 
     .logo-square {
+      transition: all 0.3s;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 40px;
-      margin: 0 8px 15px 8px;
+      height: 65px;
+      padding: 5px 0 10px 0;
+      margin-bottom: 10px;
+
+      &:hover {
+        border-radius: 10px;
+        background: var(--backgroung-color-body);
+      }
 
       img {
         max-height: 100%;
@@ -105,15 +114,32 @@
       a {
         display: flex;
         align-items: center;
-        padding: 7px 15px;
-        margin: 3px 5px;
+        padding: 8px 10px;
+        margin: 3px 0 3px 5px;
         flex: 1;
         color: #444;
         transition: all 0.3s;
-        border-radius: 45px;
+        border-radius: 9px 0 0 9px;
+        position: relative;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.07);
+        }
+
+        &.active {
+          opacity: 1;
+          font-weight: 600;
+          //background: var(--backgroung-color-body);
+          //color: var(--primary-color);
+          background: var(--primary-color);
+          color: #ffffff;
+          box-shadow: 3px 5px 16px rgba(0, 0, 0, 0.2);
+
+          .icon, svg {
+          }
+        }
 
         .label {
-          font-weight: 500;
           display: block;
           font-size: 13px;
           line-height: 13px;
@@ -127,20 +153,6 @@
           line-height: @iconSize;
           margin-right: 10px;
           display: inline-block;
-        }
-
-        &:hover {
-          background: rgba(0, 0, 0, 0.07);
-        }
-
-        &.active {
-          opacity: 1;
-          background: var(--primary-color);
-          color: #ffffff;
-          position: relative;
-
-          .icon {
-          }
         }
       }
 
@@ -171,10 +183,12 @@
         content: '';
         display: block;
         position: absolute;
-        width: 1px;
-        border-left: 1px dashed var(--border-color-active);
-        bottom: 0;
+        border: dashed var(--border-color-active);
+        border-width: 0 0 1px 1px;
+        border-radius: 0 0 0 10px;
+        bottom: 20px;
         left: 26px;
+        width: 10px;
         top: 0;
       }
 
@@ -186,7 +200,6 @@
 
       li {
         .item {
-
           a {
             margin-left: 33px;
           }
@@ -233,7 +246,22 @@
 }
 
 .dark-mode {
-  .navigation-wrapper {
-    border-right: 1px solid #2c2c2c;
+  .navigation-list {
+    li {
+      a {
+        color: #999;
+
+        &:hover {
+          color: #dfdfdf;
+          background: rgba(255, 255, 255, 0.07);
+        }
+      }
+
+      ul {
+        &:before {
+          border-color: #4e4e4e;
+        }
+      }
+    }
   }
 }
