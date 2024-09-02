@@ -39,9 +39,9 @@ const MoveVehiclesManager = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
-  const deleteRoute = (uuid: string) => {
+  const deleteVehicule = (uuid: string) => {
     axios
-      .delete(`move/routes/${uuid}`)
+      .delete(`move/vehicles/${uuid}`)
       .then(() => {
         setReload(!reload);
       })
@@ -76,7 +76,7 @@ const MoveVehiclesManager = () => {
             }}
             icon={<PencilIcon />}
           />
-          <Popconfirm title={'Eliminar ruta'} onConfirm={() => deleteRoute(uuid)}>
+          <Popconfirm title={'Eliminar ruta'} onConfirm={() => deleteVehicule(uuid)}>
             <IconButton danger icon={<TrashIcon />} />
           </Popconfirm>
         </Space>
@@ -86,7 +86,7 @@ const MoveVehiclesManager = () => {
 
   return (
     <>
-      <ContentHeader title={'Unidades'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)}>
+      <ContentHeader title={'Vehículos'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)}>
         <PrimaryButton icon={<UserIcon />} label={'Conductores'} onClick={() => setOpenDriverModal(true)} />
       </ContentHeader>
       <TableList columns={routesColumns} dataSource={vehicles} />
