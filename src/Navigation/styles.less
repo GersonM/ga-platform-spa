@@ -1,7 +1,7 @@
 @iconSize: 20px;
 
 .navigation-wrapper {
-  background: var(--backgroung-color);
+  background: linear-gradient(#ffffff, #f1f1f1);
   min-width: var(--main-nav-width);
   max-width: var(--main-nav-width);
   transition: all 0.3s;
@@ -11,7 +11,7 @@
   top: 0;
   height: 100dvh;
   z-index: 2;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 10px 15px rgba(0, 0, 0, 0.2);
 
   .head {
     margin: 12px 10px;
@@ -23,8 +23,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 65px;
-      padding: 5px 0 10px 0;
+      height: 50px;
+      padding: 5px 0 5px 0;
       margin-bottom: 10px;
 
       &:hover {
@@ -129,7 +129,7 @@
         &.active {
           opacity: 1;
           font-weight: 600;
-          //background: var(--backgroung-color-body);
+          //background: var(--background-color-body);
           //color: var(--primary-color);
           background: var(--primary-color);
           color: #ffffff;
@@ -142,7 +142,6 @@
         .label {
           display: block;
           font-size: 13px;
-          line-height: 13px;
           flex: 1;
         }
 
@@ -185,9 +184,9 @@
         position: absolute;
         border: dashed var(--border-color-active);
         border-width: 0 0 1px 1px;
-        border-radius: 0 0 0 10px;
+        border-radius: 0 0 0 6px;
         bottom: 20px;
-        left: 26px;
+        left: 22px;
         width: 10px;
         top: 0;
       }
@@ -201,7 +200,13 @@
       li {
         .item {
           a {
-            margin-left: 33px;
+            margin: 0 0 0 30px;
+            padding: 5px 0 5px 10px;
+
+            .label {
+              font-size: 12px;
+              line-height: 15px;
+            }
           }
         }
       }
@@ -214,7 +219,7 @@
     position: fixed;
     z-index: 5;
     top: 0;
-    transform: translateX(-100%);
+    transform: translateX(-110%);
 
     &.open {
       transform: translateX(0);
@@ -246,6 +251,11 @@
 }
 
 .dark-mode {
+  .navigation-wrapper {
+    background: linear-gradient(#202020, #191919);
+    border-right: 1px solid #232323;
+  }
+
   .navigation-list {
     li {
       a {

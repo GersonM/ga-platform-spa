@@ -8,15 +8,16 @@ interface IconButtonProps {
   loading?: boolean;
   small?: boolean;
   disabled?: boolean;
+  type?: 'text' | 'link' | 'default' | 'dashed' | 'primary';
   onClick?: () => void;
 }
 
-const IconButton = ({icon, small, ...props}: IconButtonProps) => {
+const IconButton = ({icon, small, type = 'text', ...props}: IconButtonProps) => {
   return (
     <Button
       {...props}
       size={small ? 'small' : 'middle'}
-      type={'text'}
+      type={type}
       className={`icon-button-wrapper ${small ? 'small' : ''}`}
       shape={'circle'}>
       {icon}

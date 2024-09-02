@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
-import {Col, Form, Input, InputNumber, Row, Select} from 'antd';
+import {Col, Divider, Form, Input, InputNumber, Modal, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {MoveDriver, MoveRoute, Profile} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
+import SearchProfile from '../../../CommonUI/SearchProfile';
+import CreateProfile from '../../../AccountManagement/Components/CreateProfile';
+import {PlusIcon} from '@heroicons/react/24/solid';
+import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 
 interface CountryFormProps {
   onCompleted: () => void;
@@ -40,44 +44,46 @@ const RouteForm = ({onCompleted, driver}: CountryFormProps) => {
 
   return (
     <>
-      <Form form={form} initialValues={driver} layout={'vertical'} onFinish={submitForm}>
-        <Form.Item name={'name'} label={'Name'} rules={[{required: true, message: 'El nombre es requerido'}]}>
-          <ProfileSelector onChange={(_uuid, option) => setProfile(option.entity)} />
+      <Form form={form} initialValues={driver} requiredMark={false} layout={'vertical'} onFinish={submitForm}>
+        <Form.Item
+          name={'fk_profile_uuid'}
+          label={'Información personal'}
+          rules={[{required: true, message: 'Información personal'}]}>
+          <ProfileSelector
+            onChange={(_uuid, p) => {
+              if (p) {
+                setProfile(p.entity);
+              } else {
+                setProfile(undefined);
+              }
+            }}
+          />
         </Form.Item>
-        {profile && <div>{profile.name}</div>}
-        <Form.Item name={'name'} label={'Name'} rules={[{required: true, message: 'El nombre es requerido'}]}>
-          <Input />
-        </Form.Item>
-        <Form.Item name={'last_name'} label={'Apellidos'} rules={[{required: true}]}>
-          <Input />
-        </Form.Item>
-        <Form.Item name={'email'} label={'E-mail'}>
-          <Input />
-        </Form.Item>
-        <Row gutter={15}>
-          <Col md={10}>
-            <Form.Item name={'doc_type'} label={'Tipo de documento'}>
-              <Select
-                placeholder={'Elige'}
-                options={[
-                  {label: 'DNI', value: 'dni'},
-                  {label: 'CE', value: 'ce'},
-                  {label: 'Pasaporte', value: 'passport'},
-                ]}
-              />
-            </Form.Item>
-          </Col>
-          <Col md={14}>
-            <Form.Item name={'doc_number'} label={'N° Documento'}>
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item name={'phone'} label={'Teléfono'}>
-          <Input />
-        </Form.Item>
+        <Divider>Información de conductor</Divider>
+        {profile && (
+          <div>
+            {profile.name} {profile.last_name}
+            <br />
+            <ProfileDocument profile={profile} />
+            <Divider />
+          </div>
+        )}
         <Form.Item name={'license_type'} label={'Tipo de licencia'}>
-          <Input />
+          <Select
+            showSearch
+            options={[
+              {label: 'A-I', value: 'AI'},
+              {label: 'A-IIa', value: 'AIIa'},
+              {label: 'A-IIb', value: 'AIIb'},
+              {label: 'A-IIIa', value: 'AIIIa'},
+              {label: 'A-IIIb', value: 'AIIIb'},
+              {label: 'A-IIIc', value: 'AIIIc'},
+              {label: 'B-I', value: 'BI'},
+              {label: 'B-IIa', value: 'BIIa'},
+              {label: 'B-IIb', value: 'BIIb'},
+              {label: 'B-IIc', value: 'BIIc'},
+            ]}
+          />
         </Form.Item>
         <Form.Item name={'license_number'} label={'Número de licencia'}>
           <Input />

@@ -11,9 +11,11 @@ interface SearchProfileProps {
   mode?: 'multiple' | 'tags';
   onChange?: (values: any, item: any) => void;
   value?: string | string[];
+  exclude_type?: string;
+  filter_type?: string;
 }
 
-const SearchProfile = ({style, value, mode, ...props}: SearchProfileProps) => {
+const SearchProfile = ({style, value, filter_type, exclude_type, mode, ...props}: SearchProfileProps) => {
   const [loading, setLoading] = useState(false);
   const [searchProfile, setSearchProfile] = useState<string>();
   const lastSearchText = useDebounce(searchProfile, 400);
@@ -23,7 +25,7 @@ const SearchProfile = ({style, value, mode, ...props}: SearchProfileProps) => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {search: lastSearchText},
+      params: {search: lastSearchText, exclude_type, filter_type},
     };
 
     setLoading(true);

@@ -92,7 +92,7 @@ const MoveVehiclesManager = () => {
       <TableList columns={routesColumns} dataSource={vehicles} />
       <Modal
         width={900}
-        title={'Condcutores'}
+        title={'Conductores'}
         footer={false}
         open={openDriverModal}
         destroyOnClose

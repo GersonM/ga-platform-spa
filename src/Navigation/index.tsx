@@ -3,31 +3,34 @@ import {useLocation} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
-import {TbCashBanknote, TbMailStar, TbReceipt2, TbUserCheck} from 'react-icons/tb';
-import {HiOutlineCog} from 'react-icons/hi';
-import {IoApps} from 'react-icons/io5';
 import axios from 'axios';
+import {
+  PiBoxArrowUp,
+  PiCarLight,
+  PiCarProfile,
+  PiCashRegister,
+  PiClockUser,
+  PiFingerprint,
+  PiGear,
+  PiGraduationCap,
+  PiHandshake,
+  PiHardDrives,
+  PiInvoiceDuotone,
+  PiMailboxDuotone,
+  PiSquaresFour,
+  PiUsers,
+  PiUsersThree,
+} from 'react-icons/pi';
+import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
 
-import './styles.less';
+import ScreenModeSelector from './ScreenModeSelector';
 import logo from '../Assets/logo_square.png';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
-import {
-  PiCarLight,
-  PiCarProfile,
-  PiClockUser,
-  PiGraduationCap,
-  PiHandshakeLight,
-  PiShieldCheck,
-  PiUsersThree,
-} from 'react-icons/pi';
-import ScreenModeSelector from './ScreenModeSelector';
-import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
-import {BsDeviceHdd} from 'react-icons/bs';
 import NavItem from './NavItem';
-import {GrUserExpert} from 'react-icons/gr';
+import './styles.less';
 
 const menuItems: ItemType[] = [
   {
@@ -91,14 +94,15 @@ const Navigation = () => {
       </div>
       <nav>
         <ul className="navigation-list">
-          <NavItem label={'Dashboard'} icon={<IoApps />} path={'/'} />
+          <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
           {config?.modules.includes('files') && (
-            <NavItem label={'Gestor de Archivos'} icon={<BsDeviceHdd />} path={'/file-management'} />
+            <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
           )}
           {config?.modules.includes('commercial') && (
-            <NavItem label={'Comercial'} icon={<PiHandshakeLight />}>
-              <NavItem icon={<TbUserCheck />} label={'Clientes'} path={'/commercial/clients'} />
-              <NavItem icon={<TbReceipt2 />} label={'Pagos'} path={'/commercial/payments'} />
+            <NavItem label={'Comercial'} icon={<PiHandshake />}>
+              <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
+              <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />
+              <NavItem icon={<PiBoxArrowUp />} label={'Productos'} path={'/commercial/products'} />
             </NavItem>
           )}
           {config?.modules.includes('move') && (
@@ -120,19 +124,19 @@ const Navigation = () => {
           )}
           {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
           {user?.roles?.includes('admin') && (
-            <NavItem label={'Seguridad'} icon={<PiShieldCheck />} path={'/accounts'} />
+            <NavItem label={'Seguridad'} icon={<PiFingerprint />} path={'/accounts'} />
           )}
           {config?.modules.includes('lms') && <NavItem label={'LMS'} icon={<PiGraduationCap />} path={'/lms'} />}
           {config?.modules.includes('attendance') && (
             <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />
           )}
           {config?.modules.includes('inbox') && (
-            <NavItem label={'E-mail'} icon={<TbMailStar />} path={'/inbox-management'} />
+            <NavItem label={'E-mail'} icon={<PiMailboxDuotone />} path={'/inbox-management'} />
           )}
           {config?.modules.includes('payments') && (
-            <NavItem label={'Pagos'} icon={<TbCashBanknote />} path={'/invoices'} />
+            <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
           )}
-          {user?.roles?.includes('admin') && <NavItem label={'Opciones'} icon={<HiOutlineCog />} path={'/config'} />}
+          {user?.roles?.includes('admin') && <NavItem label={'Opciones'} icon={<PiGear />} path={'/config'} />}
         </ul>
       </nav>
       <div className="bottom-nav">

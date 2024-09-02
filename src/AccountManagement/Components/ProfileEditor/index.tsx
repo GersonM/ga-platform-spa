@@ -246,11 +246,11 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                     showSearch
                     placeholder={'Buscar país'}
                     options={[
-                      {label: 'Brasil', value: 'passport'},
-                      {label: 'Ecuador', value: 'passport'},
-                      {label: 'Chile', value: 'passport'},
-                      {label: 'Perú', value: 'dni'},
-                      {label: 'Venezuela', value: 'ce'},
+                      {label: 'Perú', value: 'PE'},
+                      {label: 'Venezuela', value: 'VEN'},
+                      {label: 'Ecuador', value: 'ECU'},
+                      {label: 'Chile', value: 'CL'},
+                      {label: 'Brasil', value: 'BR'},
                     ]}
                   />
                 </Form.Item>
