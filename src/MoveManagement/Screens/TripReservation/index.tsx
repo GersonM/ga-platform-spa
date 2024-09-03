@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
 import {Steps} from 'antd';
-import axios from 'axios';
+import dayjs from 'dayjs';
 
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import TripForm from '../../Components/TripForm';
-import dayjs from 'dayjs';
 
 const TripReservation = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -15,18 +13,8 @@ const TripReservation = () => {
   const [loading, setLoading] = useState(false);
 
   const createTrip = (tripData: any) => {
-    setLoading(true);
-    axios
-      .post('move/trips', tripData)
-      .then(response => {
-        setLoading(false);
-        setSelectedTrip(response.data);
-        setCurrentStep(currentStep + 1);
-      })
-      .catch(error => {
-        setLoading(false);
-        ErrorHandler.showNotification(error);
-      });
+    setSelectedTrip(tripData);
+    setCurrentStep(currentStep + 1);
   };
 
   const steps = [

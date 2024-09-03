@@ -29,6 +29,9 @@
   animation-fill-mode: both;
   animation-name: loadingFadeIn;
 }
+.loader-container.remove-margin {
+  margin: -15px;
+}
 .loader-container.overlay {
   background-color: rgba(238, 240, 244, 0.73);
 }

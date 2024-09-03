@@ -2,16 +2,18 @@ import React, {useState} from 'react';
 import {Col, DatePicker, Divider, Form, Input, Row, Space, Tooltip} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
-import {Dayjs} from 'dayjs';
+import {IoInformationCircle} from 'react-icons/io5';
 import timeString from 'timestring';
+import {Dayjs} from 'dayjs';
+import axios from 'axios';
 
 import {MoveLocation, MoveRoute, MoveVehicle} from '../../../Types/api';
 import VehicleListSelector from '../../Screens/TripReservation/VehicleListSelector';
 import LocationsSelector from '../LocationsSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RouteSelector from '../RouteSelector';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 import Config from '../../../Config';
-import {IoInformationCircle} from 'react-icons/io5';
 
 interface TripFormProps {
   onCompleted: (data: any) => void;
@@ -27,6 +29,7 @@ const TripForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: Tr
   const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
   const [form] = useForm();
   const [durationSeconds, setDurationSeconds] = useState<number>(0);
+  const [creatingTrip, setCreatingTrip] = useState(false);
 
   const submitForm = (values: any) => {
     const departure: Dayjs = values.departure_time;
@@ -39,9 +42,18 @@ const TripForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: Tr
       location_to: values.location_to,
     };
 
-    if (onCompleted) {
-      onCompleted(data);
-    }
+    axios
+      .post('move/trips', data)
+      .then(response => {
+        setCreatingTrip(false);
+        if (onCompleted) {
+          onCompleted(response.data);
+        }
+      })
+      .catch(error => {
+        setCreatingTrip(false);
+        ErrorHandler.showNotification(error);
+      });
   };
 
   const addTime = (time: string, reset: boolean = false) => {
@@ -153,7 +165,7 @@ const TripForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: Tr
           disabled={!departureDate}
           block
           icon={<CheckIcon />}
-          loading={loading}
+          loading={creatingTrip || loading}
           label={'Continuar'}
           htmlType={'submit'}
         />

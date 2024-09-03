@@ -8,8 +8,8 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
-import VehicleForm from '../../Components/VehicleForm';
 import DriversManager from '../../Components/DriversManager';
+import VehicleForm from '../../Components/VehicleForm';
 import {MoveDriver, MoveVehicle} from '../../../Types/api';
 
 const MoveVehiclesManager = () => {
@@ -51,7 +51,7 @@ const MoveVehiclesManager = () => {
   };
 
   const routesColumns = [
-    {title: 'Placa', dataIndex: 'registration_plate'},
+    {title: 'Placa', dataIndex: 'registration_plate', width: 90, fixed: 'left'},
     {title: 'Fabricante', dataIndex: 'brand'},
     {title: 'Modelo', dataIndex: 'model'},
     {title: 'Color', dataIndex: 'color'},
@@ -67,6 +67,8 @@ const MoveVehiclesManager = () => {
     {
       title: 'Acciones',
       dataIndex: 'uuid',
+      width: 120,
+      fixed: 'right',
       render: (uuid: string, vehicle: MoveVehicle) => (
         <Space>
           <IconButton
@@ -89,7 +91,7 @@ const MoveVehiclesManager = () => {
       <ContentHeader title={'Vehículos'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)}>
         <PrimaryButton icon={<UserIcon />} label={'Conductores'} onClick={() => setOpenDriverModal(true)} />
       </ContentHeader>
-      <TableList columns={routesColumns} dataSource={vehicles} />
+      <TableList columns={routesColumns} dataSource={vehicles} scroll={{x: 1300}} />
       <Modal
         width={900}
         title={'Conductores'}
@@ -100,7 +102,7 @@ const MoveVehiclesManager = () => {
         <DriversManager />
       </Modal>
       <Modal
-        title={'Nuevo vehiculo'}
+        title={selectedVehicle ? 'Actualizar vehículo' : 'Nuevo vehículo'}
         footer={false}
         open={openVehicleForm}
         destroyOnClose

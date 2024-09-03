@@ -1,3 +1,14 @@
+.travel-info-wrapper {
+  position: relative;
+  min-height: 160px;
+
+  .tools-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+}
+
 .trip-card {
   h3 {
     margin-bottom: 0;
@@ -6,9 +17,8 @@
 
 .passenger-item {
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 7px;
-  background: var(--backgroung-color-body);
+  border-top: 1px solid var(--border-color);
 
   .content {
     display: flex;
@@ -30,7 +40,7 @@
       }
 
       .caption {
-        line-height: 11px;
+        line-height: 13px;
         font-size: 11px;
         opacity: 0.6;
         display: block;

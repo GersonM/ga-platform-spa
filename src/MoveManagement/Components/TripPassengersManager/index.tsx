@@ -1,19 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
-import {PlusIcon, TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
+import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {MdEmojiPeople} from 'react-icons/md';
 import {FaPersonWalkingLuggage} from 'react-icons/fa6';
-import {CiClock1} from 'react-icons/ci';
-import {PiCarLight} from 'react-icons/pi';
-import {TbSteeringWheel} from 'react-icons/tb';
+import {PiCalendarXBold, PiCarLight, PiCheckBold, PiUserPlusBold} from 'react-icons/pi';
+import {TbClock, TbSteeringWheel} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
+import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';
 import IconButton from '../../../CommonUI/IconButton';
-import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import DriverSelector from '../../../CommonUI/DriverSelector';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
@@ -98,54 +97,110 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
       });
   };
 
+  const completeTrip = () => {
+    axios
+      .post(`move/trips/${trip.uuid}/complete`)
+      .then(() => {
+        onChange && onChange();
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const deleteTrip = () => {
+    axios
+      .delete(`move/trips/${trip.uuid}`)
+      .then(() => {
+        onChange && onChange();
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   const isAbleToAssignDriver = user?.roles?.includes('admin');
   const driver = trip.driver || trip.vehicle?.driver;
   const driverCaption = driver ? <ProfileDocument profile={driver?.profile} /> : '';
-  const driverLabel = driver
-    ? `${driver.profile?.name} ${driver.profile?.last_name}`
-    : isAbleToAssignDriver
-    ? 'Asignar \n conductor'
-    : 'Sin conductor';
+  const driverLabel = driver ? (
+    `${driver.profile?.name} ${driver.profile?.last_name}`
+  ) : isAbleToAssignDriver ? (
+    <>
+      Asignar <br /> conductor
+    </>
+  ) : (
+    'Sin conductor'
+  );
 
   return (
-    <div style={{position: 'relative'}}>
-      <Space wrap style={{marginBottom: 15}}>
-        <Tooltip title={'Conductor'}>
+    <div className={'travel-info-wrapper'}>
+      <LoadingIndicator fitBox={false} visible={loading} />
+
+      <div className="tools-container">
+        <Space wrap>
+          <Tooltip title={'Conductor'}>
+            <InfoButton
+              onEdit={isAbleToAssignDriver ? () => setOpenAssignDriver(true) : undefined}
+              icon={<TbSteeringWheel className={'icon'} />}
+              caption={driverCaption}
+              label={driverLabel}
+            />
+          </Tooltip>
           <InfoButton
-            onEdit={isAbleToAssignDriver ? () => setOpenAssignDriver(true) : undefined}
-            icon={<TbSteeringWheel className={'icon'} />}
-            caption={driverCaption}
-            label={driverLabel}
+            icon={<TbClock className={'icon'} />}
+            onEdit={() => setOpenEditTime(true)}
+            caption={dayjs(trip.arrival_time).format('hh:mm a')}
+            label={dayjs(trip.departure_time).format('hh:mm a')}
           />
-        </Tooltip>
-        <InfoButton
-          icon={<CiClock1 className={'icon'} />}
-          onEdit={() => setOpenEditTime(true)}
-          caption={dayjs(trip.arrival_time).format('hh:mm a')}
-          label={dayjs(trip.departure_time).format('hh:mm a')}
-        />
-        <InfoButton
-          icon={<PiCarLight className={'icon'} />}
-          label={`${trip.vehicle?.brand} ${trip.vehicle?.color}`}
-          caption={trip.vehicle?.registration_plate}
-        />
-        <PrimaryButton
-          block
-          disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
-          icon={<PlusIcon />}
-          onClick={() => setOpenPassengerModal(true)}
-          label={'Agregar pasajero'}
-        />
-        <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
-          <Button block type={'primary'} icon={<TrashIcon />} danger>
-            Cancelar
-          </Button>
-        </Popconfirm>
-      </Space>
-      <LoadingIndicator visible={loading} />
+          <InfoButton
+            icon={<PiCarLight className={'icon'} />}
+            label={`${trip.vehicle?.brand} ${trip.vehicle?.color}`}
+            caption={trip.vehicle?.registration_plate}
+          />
+        </Space>
+        <Space wrap>
+          {trip.arrived_at && (
+            <PrimaryButton
+              ghost
+              size={'small'}
+              disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
+              icon={<PiUserPlusBold size={18} />}
+              onClick={() => setOpenPassengerModal(true)}
+              label={'Agregar pasajero'}
+            />
+          )}
+          {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && trip.arrived_at && (
+            <PrimaryButton
+              ghost
+              size={'small'}
+              disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
+              icon={<PiCheckBold size={17} />}
+              onClick={completeTrip}
+              label={'Completar viaje'}
+            />
+          )}
+
+          {trip.arrived_at && (
+            <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
+              <Button size={'small'} block ghost type={'primary'} icon={<PiCalendarXBold size={18} />} danger>
+                Cancelar
+              </Button>
+            </Popconfirm>
+          )}
+          {user?.roles?.includes('admin') && (
+            <Popconfirm title={'¿Seguro que quieres borrar este viaje?'} onConfirm={deleteTrip}>
+              <Button size={'small'} block type={'primary'} icon={<TrashIcon />} danger>
+                Borrar
+              </Button>
+            </Popconfirm>
+          )}
+        </Space>
+      </div>
+
       {passengers && passengers.length == 0 && (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'} />
       )}
+
       {passengers?.map(p => {
         return (
           <div key={p.uuid} className={'passenger-item'}>
@@ -158,25 +213,25 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
                   </span>
                 </div>
               </div>
-              {p.pickup_location && (
-                <div className={'passenger-label'}>
-                  <MdEmojiPeople className={'passenger-icon'} />
-                  <div>
-                    {p.pickup_location?.name}
-                    <span className={'caption'}>{p.pickup_location?.address}</span>
+              <Space wrap>
+                {p.pickup_location && (
+                  <div className={'passenger-label'}>
+                    <MdEmojiPeople className={'passenger-icon'} />
+                    <div>
+                      {p.pickup_location?.name}
+                      <span className={'caption'}>{p.pickup_location?.address}</span>
+                    </div>
                   </div>
-                </div>
-              )}
-              {p.drop_off_location && (
-                <div className={'passenger-label'}>
-                  <FaPersonWalkingLuggage className={'passenger-icon'} />
-                  <div>
-                    {p.drop_off_location?.name}
-                    <span className={'caption'}>{p.drop_off_location?.address}</span>
+                )}
+                {p.drop_off_location && (
+                  <div className={'passenger-label'}>
+                    <FaPersonWalkingLuggage className={'passenger-icon'} />
+                    <div>
+                      {p.drop_off_location?.name}
+                      <span className={'caption'}>{p.drop_off_location?.address}</span>
+                    </div>
                   </div>
-                </div>
-              )}
-              <Space>
+                )}
                 {user?.roles?.includes('driver') && (
                   <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
                 )}

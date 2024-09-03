@@ -89,7 +89,12 @@ const TicketsManager = () => {
               items={groupedTrips[g].trips?.map((trip: MoveTrip) => {
                 const percent = trip.vehicle && (trip.total_passengers * 100) / trip.vehicle?.max_capacity;
                 return {
-                  extra: <Progress percent={Math.round(percent || 0)} type={'circle'} size={35} />,
+                  extra: (
+                    <>
+                      <TripStatus trip={trip} />
+                      <Progress percent={Math.round(percent || 0)} type={'circle'} size={35} />
+                    </>
+                  ),
                   label: (
                     <div className={'trip-tab'}>
                       <div>
@@ -105,7 +110,6 @@ const TicketsManager = () => {
                             Reservado por: {trip.created_by?.name} {trip.created_by?.last_name} |{' '}
                             {trip.total_passengers} de {trip.vehicle?.max_capacity}
                           </small>
-                          <TripStatus trip={trip} />
                         </Space>
                       </div>
                     </div>
@@ -127,7 +131,12 @@ const TicketsManager = () => {
         onCancel={() => {
           setOpenTripModal(false);
         }}>
-        <TripForm onCompleted={() => setReload(!reload)} />
+        <TripForm
+          onCompleted={() => {
+            setReload(!reload);
+            setOpenTripModal(false);
+          }}
+        />
       </Modal>
     </>
   );

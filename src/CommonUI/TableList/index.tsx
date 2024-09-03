@@ -1,4 +1,4 @@
-import {ColumnsType, TablePaginationConfig} from 'antd/lib/table';
+import {ColumnType, TablePaginationConfig} from 'antd/lib/table';
 import {Table, TableProps} from 'antd';
 import {AnyObject} from 'antd/es/_util/type';
 import {ExpandableConfig} from 'antd/lib/table/interface';
@@ -6,7 +6,7 @@ import {ExpandableConfig} from 'antd/lib/table/interface';
 import './styles.less';
 
 interface TableListProps {
-  columns: ColumnsType<any>;
+  columns: any;
   components?: any;
   scroll?: any;
   loading?: boolean;

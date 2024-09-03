@@ -305,6 +305,7 @@ export type MoveRoute = {
   name: string;
   locations?: MoveLocation[];
   created_at: string;
+  circulation_card: string;
   updated_at: string;
   fk_route_uuid?: string;
   fk_vehicle_uuid?: string;

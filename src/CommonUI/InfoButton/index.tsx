@@ -1,10 +1,10 @@
 import React from 'react';
-import {PencilIcon} from '@heroicons/react/24/solid';
+import {TbPencil} from 'react-icons/tb';
 import './styles.less';
 
 interface InfoButtonProps {
   icon: React.ReactElement;
-  label: string;
+  label: string | React.ReactElement;
   caption?: string | React.ReactElement;
   onEdit?: () => void;
 }
@@ -17,7 +17,7 @@ const InfoButton = ({icon, label, onEdit, caption}: InfoButtonProps) => {
         {label}
         {caption && <span className={'caption'}>{caption}</span>}
       </div>
-      {onEdit && <PencilIcon width={16} className={'icon-edit'} />}
+      <div className="icon-wrapper">{onEdit && <TbPencil />}</div>
     </div>
   );
 };
