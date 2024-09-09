@@ -1,24 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Empty, Input, Pagination, Select, Space, Tabs} from 'antd';
+import {Divider, Empty, Input, Pagination, Select, Space} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import {CreditCardIcon, NoSymbolIcon} from '@heroicons/react/24/solid';
-import {useParams} from 'react-router-dom';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import IconButton from '../../../CommonUI/IconButton';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
-import {Invoice, InvoicePayment, Plan, ResponsePagination, Subscription} from '../../../Types/api';
+import {Invoice, ResponsePagination} from '../../../Types/api';
 import PersonSubscription from '../../Components/PersonSubscription';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 import TableList from '../../../CommonUI/TableList';
-import TextMoney from '../../../CommonUI/TextMoney';
 
 const Invoices = () => {
-  const params = useParams();
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -51,12 +48,13 @@ const Invoices = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage]);
+  }, [pageSize, search, currentPage, reload]);
 
   const columns = [
     {
-      title: 'Voucher',
+      title: 'Comprobante N°',
       dataIndex: 'voucher_code',
+      width: 160,
     },
     {
       title: 'Creado',
@@ -78,7 +76,7 @@ const Invoices = () => {
     },
     {
       title: 'Monto',
-      dataIndex: 'amount',
+      dataIndex: 'amount_string',
     },
     {
       title: 'Método de pago',
@@ -90,7 +88,7 @@ const Invoices = () => {
     <>
       <ModuleSidebar
         loading={loading}
-        title={'Usuarios registrados'}
+        title={'Pagos'}
         header={
           <Space>
             <Input.Search
@@ -140,7 +138,7 @@ const Invoices = () => {
               onClick={() => setSelectedInvoice(p)}
               key={index}
               name={`${p.invoiceable?.plan?.name || 'Sin plan'} - ${p.invoiceable?.billing_currency || 'Money'} ${
-                p.amount
+                p.amount_string
               }`}
               caption={dayjs(p.created_at).fromNow() + (p.customer.name ? ' | ' + p.customer?.name : '')}
               icon={p.payments.length > 0 ? <CreditCardIcon /> : <NoSymbolIcon />}

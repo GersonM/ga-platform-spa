@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Collapse, DatePicker, Empty, Modal, Progress, Space} from 'antd';
+import {Checkbox, Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
 
@@ -18,6 +18,7 @@ const TicketsManager = () => {
   const [reload, setReload] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
   const [selectedRouteUuid, setSelectedRouteUuid] = useState<string>();
+  const [selectedStatus, setSelectedStatus] = useState<string>();
   const [trips, setTrips] = useState<MoveTrip[]>();
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +29,7 @@ const TicketsManager = () => {
       params: {
         date: selectedDate?.format('YYYY-MM-DD'),
         route_uuid: selectedRouteUuid,
+        status: selectedStatus,
       },
     };
     setLoading(true);
@@ -45,7 +47,7 @@ const TicketsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, selectedDate, selectedRouteUuid]);
+  }, [reload, selectedDate, selectedRouteUuid, selectedStatus]);
 
   const groupedTrips = useMemo(() => {
     const groups: any = {};
@@ -75,9 +77,21 @@ const TicketsManager = () => {
               setSelectedRouteUuid(value);
             }}
           />
+          <Select
+            style={{width: 120}}
+            onChange={val => setSelectedStatus(val)}
+            placeholder={'Todos'}
+            allowClear
+            options={[
+              {label: 'Pendientes', value: 'pending'},
+              {label: 'Completados', value: 'completed'},
+              {label: 'Cancelados', value: 'canceled'},
+              {label: 'Confirmados', value: 'confirmed'},
+            ]}
+          />
         </Space>
       </ContentHeader>
-      <LoadingIndicator visible={loading} message={'Listando viajes...'} />
+      <LoadingIndicator visible={loading} fitBox={false} message={'Listando viajes...'} />
       {trips && trips.length === 0 && (
         <Empty description={'No hay viajes programados'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}

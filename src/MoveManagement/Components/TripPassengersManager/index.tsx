@@ -159,7 +159,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
           />
         </Space>
         <Space wrap>
-          {trip.arrived_at && (
+          {!trip.arrived_at && (
             <PrimaryButton
               ghost
               size={'small'}
@@ -169,7 +169,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
               label={'Agregar pasajero'}
             />
           )}
-          {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && trip.arrived_at && (
+          {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && !trip.arrived_at && (
             <PrimaryButton
               ghost
               size={'small'}
@@ -180,7 +180,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
             />
           )}
 
-          {trip.arrived_at && (
+          {!trip.arrived_at && (
             <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
               <Button size={'small'} block ghost type={'primary'} icon={<PiCalendarXBold size={18} />} danger>
                 Cancelar

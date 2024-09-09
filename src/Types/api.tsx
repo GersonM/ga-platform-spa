@@ -47,12 +47,17 @@ export type Profile = {
   phone?: string;
   address?: string;
   employees?: Employee[];
+  contracts?: Contract[];
+  client?: any[];
   created_at?: string;
   login_method?: string;
   user?: User;
   avatar?: File;
 };
 
+export type Contract = {
+  uuid: string;
+};
 export type Employee = {
   uuid: string;
   bank_account?: string;
@@ -74,6 +79,7 @@ export type Employee = {
   work_regime?: string;
   working_department?: string;
   working_place?: string;
+  contracts?: Contract[];
 };
 
 export type SharedProfile = {
@@ -276,6 +282,7 @@ export type InvoicePayment = {
 export type Invoice = {
   uuid: string;
   amount: number;
+  amount_string: string;
   concept: string;
   created_at: string;
   customer: Profile;
@@ -350,6 +357,7 @@ export type MoveDriver = {
   created_at: string;
   updated_at: string;
 };
+
 export type MoveVehicle = {
   uuid: string;
   model?: string;
@@ -364,4 +372,16 @@ export type MoveVehicle = {
   color?: string;
   created_at: string;
   updated_at: string;
+};
+
+export type TaxonomyDefinition = {
+  uuid: string;
+  name: string;
+  code: string;
+  cover?: File;
+  description?: string;
+  items: any[];
+  order: number;
+  parent?: TaxonomyDefinition;
+  children?: TaxonomyDefinition[];
 };

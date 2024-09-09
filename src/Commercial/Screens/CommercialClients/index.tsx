@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Pagination, Popconfirm, Select, Space, Tooltip} from 'antd';
+import {Input, Pagination, Popconfirm, Popover, Select, Space, Tag, Tooltip} from 'antd';
 import {ArrowRightIcon, TrashIcon} from '@heroicons/react/24/solid';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
@@ -14,13 +14,14 @@ import {Profile, ResponsePagination} from '../../../Types/api';
 
 const CommercialClients = () => {
   const navigate = useNavigate();
-  const [clients, setClients] = useState();
+  const [clients, setClients] = useState<Profile[]>();
   const [searchText, setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [stageFilter, setStageFilter] = useState<string>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -30,6 +31,7 @@ const CommercialClients = () => {
         search: searchText,
         page: currentPage,
         page_size: pageSize,
+        stage: stageFilter,
       },
     };
 
@@ -49,7 +51,7 @@ const CommercialClients = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [searchText, currentPage, pageSize, reload]);
+  }, [searchText, currentPage, pageSize, reload, stageFilter]);
 
   const deleteClient = (uuid: string) => {
     axios
@@ -63,43 +65,53 @@ const CommercialClients = () => {
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'entity',
-      render: (entity: Profile) => {
-        return entity.name + ' ' + entity.last_name;
+      dataIndex: 'uuid',
+      render: (_uuid: string, row: Profile) => {
+        return row.name + ' ' + row.last_name;
       },
     },
     {
       title: 'Documento',
-      dataIndex: 'entity',
-      render: (entity: Profile) => {
+      dataIndex: 'uuid',
+      render: (_uuid: string, entity: Profile) => {
         return <ProfileDocument profile={entity} />;
       },
     },
     {
       title: 'Dirección',
-      dataIndex: 'entity',
-      render: (entity: Profile) => {
-        return entity.address;
-      },
+      dataIndex: 'address',
     },
     {
       title: 'E-mail',
-      dataIndex: 'entity',
-      render: (entity: Profile) => {
-        return entity.email;
-      },
-    },
-    {title: 'Restringido', dataIndex: 'is_disabled', render: (value: boolean) => (value ? 'Si' : 'No')},
-    {
-      title: 'Configurado',
-      dataIndex: 'setup_completed',
-      render: (value: boolean) => (value ? 'Si' : 'No'),
+      dataIndex: 'personal_email',
     },
     {
       title: 'Contratos',
-      dataIndex: 'contracts',
-      render: (contracts: any[]) => {
-        return contracts.map(c => c.amount_string);
+      dataIndex: 'client',
+      render: (client: any) => {
+        return client?.contracts?.map((c: any, index: number) => {
+          return (
+            <div key={index}>
+              <Popover
+                placement={'left'}
+                content={
+                  <div>
+                    <ul>
+                      {c.items.map((item: any, index: number) => {
+                        return (
+                          <li key={index}>
+                            {item.description}: {item.value}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                }>
+                {c.amount_string} {c.provided_at && <Tag>asdf</Tag>}
+              </Popover>
+            </div>
+          );
+        });
       },
     },
     {
@@ -134,17 +146,23 @@ const CommercialClients = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title={'Clientes'} onRefresh={() => setReload(!reload)}>
+      <ContentHeader tools={'Total: ' + pagination?.total} title={'Clientes'} onRefresh={() => setReload(!reload)}>
         <Space>
-          <Input.Search onSearch={value => setSearchText(value)} placeholder={'Buscar por nombre, dni o correo'} />
+          <Input.Search
+            allowClear
+            onSearch={value => setSearchText(value)}
+            placeholder={'Buscar por nombre, dni o correo'}
+          />
           <Select
             placeholder={'Etapa'}
+            allowClear
+            onChange={value => setStageFilter(value)}
             style={{width: 100}}
             options={[
-              {label: 'Etapa IV', value: 4},
-              {label: 'Etapa III', value: 3},
-              {label: 'Etapa II', value: 2},
-              {label: 'Etapa I', value: 1},
+              {label: 'Etapa IV', value: 'IV'},
+              {label: 'Etapa III', value: 'III'},
+              {label: 'Etapa II', value: 'II'},
+              {label: 'Etapa I', value: 'I'},
             ]}
           />
         </Space>

@@ -57,7 +57,7 @@ const MoveRoutesManager = () => {
       title: 'Lugares',
       dataIndex: 'locations',
       render: (locations: MoveLocation[]) => {
-        return locations.map((location: MoveLocation) => <Tag>{location.name}</Tag>);
+        return locations.map((location: MoveLocation, index) => <Tag key={index}>{location.name}</Tag>);
       },
     },
     {title: 'Distancia', dataIndex: 'distance'},

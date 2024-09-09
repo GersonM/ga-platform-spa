@@ -1,0 +1,47 @@
+.taxonomy-item-wrapper {
+    margin-top: 10px;
+
+  .item-block {
+    outline: 2px solid var(--backgroung-color-higlight);
+    background: var(--backgroung-color);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 340px;
+
+    .cover {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      margin-right: 15px;
+      overflow: hidden;
+      border-radius: 10px;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .content {
+      margin-right: 15px;
+      flex:1;
+    }
+
+    .tools {
+      display: flex;
+      padding-left: 5px;
+      border-left: 1px solid var(--border-color);
+    }
+  }
+
+  .children-block {
+    border-left: 1px dashed var(--border-color-active);
+    position: relative;
+    margin-left: 20px;
+    padding: 10px 0 5px 20px;
+    border-radius:  0 0 0 15px;
+  }
+}
