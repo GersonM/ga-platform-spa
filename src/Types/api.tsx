@@ -48,15 +48,40 @@ export type Profile = {
   address?: string;
   employees?: Employee[];
   contracts?: Contract[];
-  client?: any[];
+  client?: Client;
   created_at?: string;
   login_method?: string;
   user?: User;
   avatar?: File;
 };
 
+export type Client = {
+  uuid: string;
+  contracts?: Contract[];
+};
 export type Contract = {
   uuid: string;
+  amount: number;
+  amount_string?: string;
+  approved_at?: string;
+  budget_details?: string;
+  created_at: string;
+  date_end?: string;
+  date_start: string;
+  dead_line?: string;
+  include_taxes: boolean;
+  observations?: string;
+  payment_conditions?: string;
+  payment_type?: string;
+  period: string;
+  proposal?: string;
+  provided_at?: string;
+  service_details?: string;
+  signed_at?: string;
+  terminated_at?: string;
+  updated_at?: string;
+  invoices?: Invoice[];
+  items?: [{uuid: string; description: string; group: string; value: string}];
 };
 export type Employee = {
   uuid: string;
@@ -284,6 +309,7 @@ export type Invoice = {
   amount: number;
   amount_string: string;
   concept: string;
+  pending_payment?: number;
   created_at: string;
   customer: Profile;
   customer_id: string;
@@ -294,8 +320,21 @@ export type Invoice = {
   invoiceable_type: string;
   issued_on: string;
   paid_at?: string;
-  payments: InvoicePayment[];
+  payments?: InvoicePayment[];
+  items?: InvoiceItem[];
   purchase_token?: string;
+  updated_at: string;
+};
+
+export type InvoiceItem = {
+  uuid: string;
+  amount: number;
+  concept: string;
+  created_at: string;
+  fk_invoice_uuid: string;
+  itemable_id: string;
+  itemable_type: string;
+  quantity: number;
   updated_at: string;
 };
 

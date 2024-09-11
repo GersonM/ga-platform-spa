@@ -74,13 +74,13 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
           .post('file-management/chunked-files', formData, config)
 
           /*fetch(import.meta.env.VITE_API_UPLOAD + 'file-management/chunked-files', {
-                      method: 'POST',
-                      body: formData,
-                      headers: {
-                        'X-Tenant': 'app',
-                        Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
-                      },
-                    })*/
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                              'X-Tenant': 'app',
+                              Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
+                            },
+                          })*/
           //.then(response => response.json())
           .then(data => {
             console.log({data});
@@ -135,12 +135,6 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
     [containerUuid, reload],
   );
 
-  const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
-    onDrop,
-    noKeyboard: true,
-    noClick: true,
-  });
-
   useEffect(() => {
     setSelectedFile(undefined);
   }, [containerUuid]);
@@ -190,6 +184,12 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
       }
     }
   };
+
+  const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
+    onDrop,
+    noKeyboard: true,
+    noClick: true,
+  });
 
   return (
     <div {...getRootProps()} className={'content-viewer-wrapper'}>

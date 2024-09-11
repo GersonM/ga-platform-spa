@@ -1,7 +1,8 @@
 import React from 'react';
-import {File} from '../../../Types/api';
-import {BsFileEarmarkPdf} from 'react-icons/bs';
 import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
+import {PiFilePdfLight, PiFileSqlLight, PiFileXlsLight} from 'react-icons/pi';
+
+import {File} from '../../../Types/api';
 
 interface FileIconProps {
   file: File;
@@ -10,7 +11,11 @@ interface FileIconProps {
 const FileIcon = ({file}: FileIconProps) => {
   switch (true) {
     case file.type.includes('pdf'):
-      return <BsFileEarmarkPdf className={'icon'} />;
+      return <PiFilePdfLight className={'icon'} />;
+    case file.name.includes('sql'):
+      return <PiFileSqlLight className={'icon'} />;
+    case file.name.includes('csv') || file.name.includes('xlsx'):
+      return <PiFileXlsLight className={'icon'} />;
     case file.type.includes('image'):
       return <span className="icon icon-file-image"></span>;
     case file.type.includes('zip'):

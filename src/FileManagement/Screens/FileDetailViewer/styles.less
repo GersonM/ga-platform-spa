@@ -1,4 +1,6 @@
 .file-detail-wrapper {
+  flex: 1;
+
   .footer {
     text-align: center;
     margin: 20px 0;
@@ -35,7 +37,6 @@
 
   .logo {
     width: 120px;
-    margin-bottom: 15px;
   }
 
   .file-container {
@@ -44,6 +45,33 @@
     justify-content: center;
     text-align: center;
     flex-direction: column;
+
+    .file-preview-item {
+      background: var(--backgroung-color-body);
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      border-radius: 12px;
+
+      .icon {
+        font-size: 55px;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+    }
+
+    .file-description {
+      display: flex;
+      margin-bottom: 15px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pdf-viewer-iframe {
+      box-sizing: border-box;
+      border: none;
+      height: 120lvh;
+    }
 
     img {
       width: auto;

@@ -1,11 +1,12 @@
 import React from 'react';
-import {Form, Image, Input} from 'antd';
+import {Form, Input} from 'antd';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import {File} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import FileUploader from '../../../CommonUI/FileUploader';
 
 interface RenameFileProps {
   file: File;
@@ -28,7 +29,10 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
   return (
     <Form layout={'vertical'} onFinish={sendForm} initialValues={file}>
       <h2>Editar archivo</h2>
-      <p>Al cambiar el nombre de un archivos no se modifica las url compartidas</p>
+      <p>
+        Al cambiar el nombre o reemplazar el archivos no se modifica la url compartida, se recomienda mantener el
+        formato de archivo para evitar problemas
+      </p>
       <Form.Item
         name={'name'}
         label={'Nombre'}
@@ -46,8 +50,8 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
       <Form.Item name={'description'} label={'Descripción'}>
         <Input.TextArea />
       </Form.Item>
-      <Form.Item label={'Previsualización'}>
-        <Image src={file.thumbnail} preview={{src: file.source}} />
+      <Form.Item label={'Actualizar archivo'}>
+        <FileUploader fileUuid={file.uuid} height={180} imagePath={file.thumbnail} showPreview />
       </Form.Item>
       <PrimaryButton icon={<CheckIcon />} label={'Guardar'} htmlType={'submit'} block />
     </Form>

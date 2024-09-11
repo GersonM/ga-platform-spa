@@ -29,7 +29,14 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
       case 'color':
         return <ColorPicker value={value} onChange={value => onChangeValue(value.toHexString())} />;
       case 'image':
-        return <FileUploader showPreview imagePath={value} onFilesUploaded={file => onChangeValue(file.uuid)} />;
+        return (
+          <FileUploader
+            fileUuid={preference.value}
+            showPreview
+            imagePath={value}
+            onFilesUploaded={file => onChangeValue(file.uuid)}
+          />
+        );
       default:
         return <Input placeholder={'Value'} value={value} onChange={e => onChangeValue(e.target.value)} />;
     }

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Empty, Input, Pagination, Select, Space} from 'antd';
+import {Divider, Empty, Input, Pagination, Select, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import {CreditCardIcon, NoSymbolIcon} from '@heroicons/react/24/solid';
 import dayjs from 'dayjs';
@@ -14,6 +14,9 @@ import PersonSubscription from '../../Components/PersonSubscription';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 import TableList from '../../../CommonUI/TableList';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
+import MoneyString from '../../../CommonUI/MoneyString';
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -153,7 +156,16 @@ const Invoices = () => {
       <ModuleContent>
         {selectedInvoice && (
           <>
+            <ContentHeader
+              title={selectedInvoice?.concept + ' - ' + selectedInvoice?.amount_string}
+              description={`S/ ${selectedInvoice?.invoiceable.amount / 100}`}>
+              {selectedInvoice?.invoiceable.uuid} <br />
+              <Tag color={selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
+                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
+              </Tag>
+            </ContentHeader>
             <ProfileCard profile={selectedInvoice.customer} />
+            <InvoiceTableDetails invoice={selectedInvoice} />
             <Divider>Pagos</Divider>
             <TableList columns={columns} dataSource={selectedInvoice.payments} />
             <Divider>Otras subscripciones</Divider>

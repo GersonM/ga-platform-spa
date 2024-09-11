@@ -6,6 +6,8 @@ import {TaxonomyDefinition, File} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
+import {CheckIcon} from '@heroicons/react/24/solid';
+import taxonomyItem from '../TaxonomyItem';
 
 interface TaxonomyFormProps {
   entity?: TaxonomyDefinition;
@@ -30,6 +32,8 @@ const TaxonomyForm = ({entity, onComplete, parentUuid}: TaxonomyFormProps) => {
       });
   };
 
+  console.log(entity?.cover?.thumbnail);
+
   return (
     <Form onFinish={onSubmit} layout="vertical" initialValues={entity}>
       <Form.Item name={'name'} label={'Nombre'} rules={[{required: true}]}>
@@ -41,13 +45,17 @@ const TaxonomyForm = ({entity, onComplete, parentUuid}: TaxonomyFormProps) => {
       <Form.Item name={'description'} label={'Descripción'}>
         <Input.TextArea />
       </Form.Item>
-      <FileUploader
-        onFilesUploaded={file => {
-          setUploadedFile(file);
-          console.log(file);
-        }}
-      />
-      <PrimaryButton htmlType={'submit'} label={'Guardar'} />
+      <Form.Item label={'Portada'}>
+        <FileUploader
+          showPreview
+          imagePath={entity?.cover?.thumbnail}
+          onFilesUploaded={file => {
+            setUploadedFile(file);
+            console.log(file);
+          }}
+        />
+      </Form.Item>
+      <PrimaryButton block icon={<CheckIcon />} htmlType={'submit'} label={'Guardar'} />
     </Form>
   );
 };

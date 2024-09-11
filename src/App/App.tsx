@@ -31,6 +31,7 @@ import TaxonomyManager from '../TaxonomyManagement/Screens/TaxonomyManager';
 import HRManagementLayout from '../HRManagement/Screens/HRManagementLayout';
 import TripsSchedule from '../MoveManagement/Screens/TripsSchedule';
 import DocumentGeneratorScreen from '../HRManagement/Screens/DocumentGeneratorScreen';
+import CommercialContractDetail from '../Commercial/Screens/CommercialContractDetail';
 
 const App = () => {
   useEffect(() => {
@@ -112,6 +113,7 @@ const App = () => {
         </Route>
         <Route path={'commercial'}>
           <Route path={'clients'} element={<CommercialClients />} />
+          <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
           <Route path={'payments'} element={<CommercialClients />} />
         </Route>
         <Route

@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {message, Progress} from 'antd';
 import axios from 'axios';
 import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
@@ -13,9 +13,11 @@ interface FileUploaderProps {
   onFilesUploaded?: (file: ApiFile) => void;
   showPreview?: boolean;
   imagePath?: string;
+  fileUuid?: string;
+  height?: number;
 }
 
-const FileUploader = ({onFilesUploaded, imagePath, showPreview = false}: FileUploaderProps) => {
+const FileUploader = ({height, onFilesUploaded, imagePath, fileUuid, showPreview = false}: FileUploaderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [files, setFiles] = useState<File[]>();
@@ -47,7 +49,34 @@ const FileUploader = ({onFilesUploaded, imagePath, showPreview = false}: FileUpl
       onFilesUploaded && onFilesUploaded(response.data);
 
       setLoading(false);
-      message.success('File uploaded successfully!');
+      message.success('Archivo cargado!');
+    } catch (error) {
+      setLoading(false);
+      ErrorHandler.showNotification(error, 5);
+    }
+  };
+
+  const handleFileUpdate = async (file: File) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    console.log('updating');
+    try {
+      setLoading(true);
+
+      const response = await axios.post(`file-management/files/${fileUuid}`, formData, {
+        onUploadProgress: progressEvent => {
+          const total = progressEvent.total || 0;
+          const percentCompleted = Math.floor((progressEvent.loaded / total) * 100);
+          setProgress(percentCompleted);
+        },
+      });
+
+      //setUploadedFile(response.data);
+      //onFilesUploaded && onFilesUploaded(response.data);
+
+      setLoading(false);
+      message.success('Archivo cargado!');
     } catch (error) {
       setLoading(false);
       ErrorHandler.showNotification(error, 5);
@@ -56,22 +85,23 @@ const FileUploader = ({onFilesUploaded, imagePath, showPreview = false}: FileUpl
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 1) {
-      message.warning({content: 'Choose only one file'}).then();
+      message.warning({content: 'Seleccionar solo un archivo'}).then();
       return;
     }
     setFiles(acceptedFiles);
-    handleFileUpload(acceptedFiles[0]).then();
+    console.log(fileUuid, 'update');
+    if (fileUuid) {
+      handleFileUpdate(acceptedFiles[0]).then();
+    } else {
+      handleFileUpload(acceptedFiles[0]).then();
+    }
   }, []);
 
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, noDragEventsBubbling: true});
 
   return (
     <>
-      <div {...getRootProps()} className={`file-uploader-wrapper`}>
-        {showPreview && uploadedFile && (
-          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}} />
-        )}
-        {showPreview && imagePath && <div className={'preview'} style={{backgroundImage: 'url(' + imagePath + ')'}} />}
+      <div {...getRootProps()} className={`file-uploader-wrapper`} style={{height}}>
         <input {...getInputProps()} />
         {files && (
           <span className={'file-name'}>
@@ -86,11 +116,19 @@ const FileUploader = ({onFilesUploaded, imagePath, showPreview = false}: FileUpl
           </span>
         )}
         {loading && <Progress percent={progress} size={'small'} />}
-        {(isDragActive || (!files && !imagePath)) && (
+        {(isDragActive || !files) && (
           <div className={'content-label'}>
             <ArrowUpTrayIcon width={25} />
-            {isDragActive ? <>Drop the files here</> : <>Drag & drop</>}
+            {isDragActive ? <>Suelta tus archivos aquí</> : <>Arrastra archivos aquí</>}
           </div>
+        )}
+        {showPreview && uploadedFile && (
+          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}} />
+        )}
+        {showPreview && imagePath && (
+          <>
+            <div className={'preview'} style={{backgroundImage: 'url(' + imagePath + ')'}} />
+          </>
         )}
       </div>
     </>

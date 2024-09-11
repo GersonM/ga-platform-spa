@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
 import {Dropdown, Modal} from 'antd';
+import {TrashIcon} from '@heroicons/react/16/solid';
 import axios from 'axios';
 
 import RenameFile from './RenameFile';
 import {File} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {PiArrowsOutCardinal, PiPencilSimple} from 'react-icons/pi';
 
 const items = [
-  {label: 'Editar', key: 'rename', icon: <span className={'icon icon-pencil-line'} />},
-  {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
-  {label: 'Actualizar', key: 'update', icon: <span className={'icon icon-repeat'} />, disabled: true},
+  {label: 'Editar', key: 'rename', icon: <PiPencilSimple size={15} />},
+  {label: 'Mover a otra ubicación', key: 'move', icon: <PiArrowsOutCardinal size={15} />, disabled: true},
   {type: 'divider', label: '', key: 'divider'},
-  {label: 'Borrar', key: 'delete', danger: true, icon: <span className={'icon icon-trash'} />},
+  {label: 'Borrar', key: 'delete', danger: true, icon: <TrashIcon width={16} />},
 ];
 
 interface FileDropdownActionsProps {

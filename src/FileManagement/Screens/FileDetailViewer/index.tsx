@@ -1,19 +1,23 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import {Button, Col, Divider, Image, Row, Space, Timeline} from 'antd';
-import {BiDownload} from 'react-icons/bi';
-import dayjs from 'dayjs';
+import {Col, Divider, Image, Row, Space, Timeline} from 'antd';
 import {ChatBubbleBottomCenterIcon, ClockIcon} from '@heroicons/react/24/outline';
+import {PiDownloadDuotone} from 'react-icons/pi';
+import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {File} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
+import logo from '../../../Assets/logo_full.png';
 
 import './styles.less';
-import logo from '../../../Assets/logo_full.png';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import FileIcon from '../../Components/FileIcon';
+import FileItem from '../../Components/ContainerContentViewer/FileItem';
+import FileSize from '../../../CommonUI/FileSize';
 
 const FileDetailViewer = () => {
   const params = useParams();
@@ -45,6 +49,31 @@ const FileDetailViewer = () => {
 
   const showAnnotations = file?.activity && file?.activity?.filter(a => a.action !== 'created').length > 0;
   const tenantLogo = darkMode ? config?.dark_logo : config?.white_logo;
+
+  const getViewer = (f: File) => {
+    switch (true) {
+      case f.type.includes('pdf'):
+        return <iframe className={'pdf-viewer-iframe'} src={f.source} height={'100vwh'} />;
+      case f.type.includes('image'):
+        return <Image placeholder={'Imagen'} title={f.name} src={f.source} />;
+      case f.type.includes('vid') || f.type.includes('aud'):
+        return <MediaPlayer startTime={initTime} onActivityChange={() => setReload(!reload)} media={f} />;
+      default:
+        return (
+          <div className={'file-preview-item'}>
+            <FileIcon file={f} />
+            <p>
+              {f.name}
+              <small> {f.type}</small>
+            </p>
+            <p>
+              <FileSize size={f.size} />
+            </p>
+            <small>Vista previa no disponible para este tipo de archivos</small>
+          </div>
+        );
+    }
+  };
 
   return (
     <div className={'file-detail-wrapper'}>
@@ -91,21 +120,17 @@ const FileDetailViewer = () => {
           <Col md={showAnnotations ? 19 : 24}>
             {file && (
               <div className={'file-container'}>
-                {file.type.includes('image') && <Image placeholder={'Imagen'} title={file.name} src={file.source} />}
-                {(file.type.includes('vid') || file.type.includes('aud')) && (
-                  <MediaPlayer startTime={initTime} onActivityChange={() => setReload(!reload)} media={file} />
-                )}
+                <div className={'file-description'}>
+                  <p>{file.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
+                  <PrimaryButton
+                    icon={<PiDownloadDuotone className={'button-icon'} />}
+                    label={'Descargar'}
+                    href={file?.download}
+                  />
+                </div>
+                {getViewer(file)}
               </div>
             )}
-            <Button
-              shape={'round'}
-              icon={<BiDownload className={'button-icon'} />}
-              type={'primary'}
-              href={file?.download}>
-              Descargar
-            </Button>
-            <Divider />
-            <p>{file?.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
           </Col>
         </Row>
       </div>
