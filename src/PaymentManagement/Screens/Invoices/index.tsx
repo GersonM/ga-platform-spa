@@ -144,7 +144,7 @@ const Invoices = () => {
                 p.amount_string
               }`}
               caption={dayjs(p.created_at).fromNow() + (p.customer.name ? ' | ' + p.customer?.name : '')}
-              icon={p.payments.length > 0 ? <CreditCardIcon /> : <NoSymbolIcon />}
+              icon={p.payments && p.payments.length > 0 ? <CreditCardIcon /> : <NoSymbolIcon />}
               path={`/invoices/${p.uuid}`}
             />
           ))}
@@ -160,7 +160,7 @@ const Invoices = () => {
               title={selectedInvoice?.concept + ' - ' + selectedInvoice?.amount_string}
               description={`S/ ${selectedInvoice?.invoiceable.amount / 100}`}>
               {selectedInvoice?.invoiceable.uuid} <br />
-              <Tag color={selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
+              <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
                 Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
               </Tag>
             </ContentHeader>

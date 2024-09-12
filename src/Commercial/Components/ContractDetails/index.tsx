@@ -11,7 +11,7 @@ const ContractDetails = ({contract}: ContractDetailsProps) => {
     <div>
       <NavList>
         {contract.items?.map((item: any, iIndex: number) => {
-          return <NavListItem key={iIndex} path={false} name={item.value} caption={item.description} />;
+          return <NavListItem key={iIndex} path={''} name={item.value} caption={item.description} />;
         })}
       </NavList>
     </div>

@@ -318,7 +318,7 @@ export type Invoice = {
   customer_id: string;
   customer_type: string;
   expires_on: string;
-  invoiceable: Subscription;
+  invoiceable: Subscription | any;
   invoiceable_id: string;
   invoiceable_type: string;
   issued_on: string;

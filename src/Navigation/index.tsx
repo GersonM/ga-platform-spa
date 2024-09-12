@@ -6,6 +6,9 @@ import {UploadOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {
   PiBoxArrowUp,
+  PiCalendarBlankLight,
+  PiCalendarCheckLight,
+  PiCalendarXBold,
   PiCarLight,
   PiCarProfile,
   PiCashRegister,
@@ -117,6 +120,23 @@ const Navigation = () => {
                     path={'/move/vehicles'}
                   />
                   <NavItem icon={<MapPinIcon />} label={'Rutas & lugares'} path={'/move/routes'} />
+                </>
+              )}
+              <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
+            </NavItem>
+          )}
+          {config?.modules.includes('reservations') && (
+            <NavItem icon={<PiCalendarCheckLight />} label={'Reservas'}>
+              <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/reservations/create'} />
+              <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/trips'} />
+              {user?.roles?.includes('admin') && (
+                <>
+                  <NavItem
+                    icon={<PiCarLight className={'icon'} />}
+                    label={'Espacios'}
+                    path={'/reservations/vehicles'}
+                  />
+                  <NavItem icon={<MapPinIcon />} label={'Servicios'} path={'/reservations/routes'} />
                 </>
               )}
               <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />

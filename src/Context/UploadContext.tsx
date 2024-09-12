@@ -2,19 +2,11 @@ import React, {createContext, useState} from 'react';
 import axios from 'axios';
 import {message} from 'antd';
 
-import {File as ApiFile, SessionUser, TenantConfig} from '../Types/api';
+import {File as ApiFile, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface UploadContextDefaults {
-  user: SessionUser | null;
-  sessionToken?: string;
-  setUser: (data: any) => void;
-  logout: () => Promise<any>;
   config?: TenantConfig;
-  setPreferredMode: (value: string) => void;
-  setDarkMode: (value: boolean) => void;
-  preferredMode?: string;
-  darkMode?: boolean;
   openMenu: boolean;
   uploadProgress?: any;
   setOpenMenu: (value: boolean) => void;
@@ -26,13 +18,6 @@ interface UploadContextProp {
 }
 
 const UploadContext = createContext<UploadContextDefaults>({
-  logout(): Promise<any> {
-    return Promise.resolve(undefined);
-  },
-  setUser(): void {},
-  setPreferredMode(): void {},
-  setDarkMode(): void {},
-  user: null,
   openMenu: false,
   setOpenMenu(): void {},
 });
@@ -117,10 +102,6 @@ const UploadContextProvider = ({children, config}: UploadContextProp) => {
     <UploadContext.Provider
       value={{
         config,
-        setPreferredMode,
-        setDarkMode,
-        preferredMode,
-        darkMode,
         openMenu,
         setOpenMenu,
         uploadProgress,
