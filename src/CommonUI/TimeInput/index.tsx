@@ -24,7 +24,7 @@ const TimeInput = () => {
     let date = new Date(seconds * 1000);
     let hh = date.getUTCHours();
     let mm = date.getUTCMinutes();
-    return hh > 0 ? hh + 'h ' : '--' + (mm > 0) ? mm + 'm' : '-';
+    return (hh > 0 ? hh + 'h ' : '') + (mm > 0 ? mm + 'm' : '');
   };
 
   return (

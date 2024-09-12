@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {MoveVehicle} from '../../../Types/api';
+import {MoveLocation, MoveRoute} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
-interface VehicleSelectorProps {
+interface RouteSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -15,8 +15,8 @@ interface VehicleSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) => {
-  const [vehicles, setVehicles] = useState<MoveVehicle | any>([]);
+const RouteSelector = ({placeholder, mode, style, ...props}: RouteSelectorProps) => {
+  const [routes, setRoutes] = useState<MoveRoute | any>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,16 +27,13 @@ const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) =>
     };
 
     axios
-      .get(`move/vehicles`, config)
+      .get(`move/routes`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setVehicles(
-            response.data.map((item: MoveVehicle) => {
-              return {
-                value: item.uuid,
-                label: `${item.registration_plate} - ${item.brand} - ${item.type} (${item.max_capacity})`,
-              };
+          setRoutes(
+            response.data.map((item: MoveLocation) => {
+              return {value: item.uuid, label: `${item.name}`, entity: item};
             }),
           );
         }
@@ -53,14 +50,24 @@ const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) =>
     <Select
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige un vehículo'}
+      placeholder={placeholder || 'Elige una ruta'}
       showSearch={true}
+      style={{width: '100%', ...style}}
       optionFilterProp={'label'}
       loading={loading}
-      options={vehicles}
+      options={routes}
+      optionRender={option => {
+        return (
+          <div>
+            {option.label} <br />
+            {option.data.entity.duration}
+            <small>{option.data.entity.locations.map((location: MoveLocation) => location.name).join(' - ')}</small>
+          </div>
+        );
+      }}
       mode={mode || undefined}
     />
   );
 };
 
-export default VehicleSelector;
+export default RouteSelector;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
 import {MoveVehicle} from '../../../Types/api';
@@ -10,7 +10,6 @@ interface VehicleSelectorProps {
   bordered?: boolean;
   disabled?: boolean;
   value?: any;
-  style?: React.CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
@@ -53,7 +52,7 @@ const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) =>
     <Select
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige un vehículo'}
+      placeholder={placeholder || 'Elige un persona'}
       showSearch={true}
       optionFilterProp={'label'}
       loading={loading}

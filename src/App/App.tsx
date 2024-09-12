@@ -34,6 +34,7 @@ import DocumentGeneratorScreen from '../HRManagement/Screens/DocumentGeneratorSc
 import CommercialContractDetail from '../Commercial/Screens/CommercialContractDetail';
 import ReservationsLayout from '../ReservationsManagement/Screens/ReservationsLayout';
 import NewReservation from '../ReservationsManagement/Screens/NewReservation';
+import ReservationsManager from '../ReservationsManagement/Screens/ReservationsManager';
 
 const App = () => {
   useEffect(() => {
@@ -109,7 +110,7 @@ const App = () => {
         </Route>
         <Route path={'reservations'} element={<ReservationsLayout />}>
           <Route path={'create'} element={<NewReservation />} />
-          <Route path={'trips'} element={<TicketsManager />} />
+          <Route path={'manager'} element={<ReservationsManager />} />
           <Route path={'routes'} element={<MoveRoutesManager />} />
           <Route path={'vehicles'} element={<MoveVehiclesManager />} />
           <Route path={'schedule'} element={<TripsSchedule />} />

@@ -34,6 +34,7 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
+import {TbBuildingEstate} from 'react-icons/tb';
 
 const menuItems: ItemType[] = [
   {
@@ -128,11 +129,11 @@ const Navigation = () => {
           {config?.modules.includes('reservations') && (
             <NavItem icon={<PiCalendarCheckLight />} label={'Reservas'}>
               <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/reservations/create'} />
-              <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/trips'} />
+              <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/manager'} />
               {user?.roles?.includes('admin') && (
                 <>
                   <NavItem
-                    icon={<PiCarLight className={'icon'} />}
+                    icon={<TbBuildingEstate className={'icon'} />}
                     label={'Espacios'}
                     path={'/reservations/vehicles'}
                   />
