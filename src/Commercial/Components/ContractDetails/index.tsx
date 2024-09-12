@@ -1,5 +1,6 @@
 import React from 'react';
 import {Contract} from '../../../Types/api';
+import NavList, {NavListItem} from '../../../CommonUI/NavList';
 
 interface ContractDetailsProps {
   contract: Contract;
@@ -8,16 +9,11 @@ interface ContractDetailsProps {
 const ContractDetails = ({contract}: ContractDetailsProps) => {
   return (
     <div>
-      <ul>
+      <NavList>
         {contract.items?.map((item: any, iIndex: number) => {
-          return (
-            <li key={iIndex}>
-              <strong>{item.description}:</strong>
-              {item.value}
-            </li>
-          );
+          return <NavListItem key={iIndex} path={false} name={item.value} caption={item.description} />;
         })}
-      </ul>
+      </NavList>
     </div>
   );
 };

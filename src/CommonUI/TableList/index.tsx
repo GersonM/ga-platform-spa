@@ -1,4 +1,4 @@
-import {ColumnType, TablePaginationConfig} from 'antd/lib/table';
+import {TablePaginationConfig} from 'antd/lib/table';
 import {Table, TableProps} from 'antd';
 import {AnyObject} from 'antd/es/_util/type';
 import {ExpandableConfig} from 'antd/lib/table/interface';

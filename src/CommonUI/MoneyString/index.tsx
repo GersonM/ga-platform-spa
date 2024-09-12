@@ -5,7 +5,7 @@ interface MoneyStringProps {
 }
 
 const MoneyString = ({value}: MoneyStringProps) => {
-  if (value === undefined) return '';
+  if (value === undefined) return null;
   const amount = value !== 0 ? value / 100 : value;
   const string = new Intl.NumberFormat('es-PE', {style: 'currency', currency: 'PEN'}).format(amount);
 

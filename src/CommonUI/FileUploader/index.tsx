@@ -19,8 +19,8 @@ interface FileUploaderProps {
 
 const FileUploader = ({height, onFilesUploaded, imagePath, fileUuid, showPreview = false}: FileUploaderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
   const [files, setFiles] = useState<File[]>();
+  const [progress, setProgress] = useState<number>(0);
   const [uploadedFile, setUploadedFile] = useState<ApiFile>();
 
   const handleFileUpload = async (file: File) => {

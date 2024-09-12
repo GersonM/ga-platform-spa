@@ -13,9 +13,9 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
       <div className={'contract-invoice'}>
         {contract.provided_at && <Tag>Entregado</Tag>} {contract.amount_string}{' '}
       </div>
-      {contract.invoices?.map(i => {
+      {contract.invoices?.map((i, index) => {
         return (
-          <div className={'contract-invoice'}>
+          <div key={index} className={'contract-invoice'}>
             {i.concept}:{' '}
             <Tag
               color={i.paid_at ? 'green' : 'red'}

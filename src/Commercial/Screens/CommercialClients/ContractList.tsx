@@ -18,8 +18,8 @@ const ContractList = ({contracts}: ContractListProps) => {
     <div className={'contract-list-wrapper'}>
       {contracts?.map((c: Contract, cIndex: number) => {
         return (
-          <Popover placement={'left'} content={<ContractDetails contract={c} />}>
-            <div className={'contract-item'} key={cIndex}>
+          <Popover key={cIndex} placement={'left'} content={<ContractDetails contract={c} />}>
+            <div className={'contract-item'}>
               <IconButton
                 onClick={() => {
                   navigate(`/commercial/contracts/${c.uuid}`);

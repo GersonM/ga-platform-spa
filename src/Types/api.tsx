@@ -57,11 +57,13 @@ export type Profile = {
 
 export type Client = {
   uuid: string;
+  entity?: Profile | Company | any;
   contracts?: Contract[];
 };
 export type Contract = {
   uuid: string;
   amount: number;
+  client?: Client;
   amount_string?: string;
   approved_at?: string;
   budget_details?: string;
@@ -152,6 +154,7 @@ export type FileActivity = {
   uuid: number;
   user: User;
   comment: string;
+  attachments: File[];
   requested_at?: string;
   created_at: string;
   time?: number;

@@ -9,6 +9,7 @@ import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 
 import {AuthContextProvider} from './Context/AuthContext';
+import {UploadContextProvider} from './Context/UploadContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
@@ -29,11 +30,13 @@ axios
   .then(response => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthContextProvider config={response.data}>
-        <TenantAppConfig tenant={response.data}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </TenantAppConfig>
+        <UploadContextProvider>
+          <TenantAppConfig tenant={response.data}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </TenantAppConfig>
+        </UploadContextProvider>
       </AuthContextProvider>,
     );
   })
