@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {Modal} from 'antd';
 
 import TableList from '../../../CommonUI/TableList';
 import {Invoice} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import InvoicePaymentForm from '../InvoicePaymentForm';
 
 interface InvoiceTablePayments {
   invoice: Invoice;
 }
 
 const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
+  const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
+
   const columns = [
     {
       title: 'Descripción',
@@ -31,7 +35,21 @@ const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
   return (
     <div>
       <TableList small columns={columns} dataSource={invoice.payments} pagination={false} />
-      <PrimaryButton label={'Registrar nuevo pago'} block ghost size={'small'} />
+      <PrimaryButton
+        label={'Registrar nuevo pago'}
+        block
+        ghost
+        size={'small'}
+        onClick={() => setOpenInvoiceForm(true)}
+      />
+      <Modal open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
+        <InvoicePaymentForm
+          invoice={invoice}
+          onCompleted={() => {
+            setOpenInvoiceForm(false);
+          }}
+        />
+      </Modal>
     </div>
   );
 };

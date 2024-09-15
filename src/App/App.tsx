@@ -35,6 +35,7 @@ import CommercialContractDetail from '../Commercial/Screens/CommercialContractDe
 import ReservationsLayout from '../ReservationsManagement/Screens/ReservationsLayout';
 import NewReservation from '../ReservationsManagement/Screens/NewReservation';
 import ReservationsManager from '../ReservationsManagement/Screens/ReservationsManager';
+import CoursesManagement from '../LMSManagement/Screens/CoursesManagement';
 
 const App = () => {
   useEffect(() => {
@@ -106,6 +107,11 @@ const App = () => {
           <Route path={'trips'} element={<TicketsManager />} />
           <Route path={'routes'} element={<MoveRoutesManager />} />
           <Route path={'vehicles'} element={<MoveVehiclesManager />} />
+          <Route path={'schedule'} element={<TripsSchedule />} />
+        </Route>
+        <Route path={'lms'}>
+          <Route path={'courses'} element={<CoursesManagement />} />
+          <Route path={'courses/:course'} element={<CommercialContractDetail />} />
           <Route path={'schedule'} element={<TripsSchedule />} />
         </Route>
         <Route path={'reservations'} element={<ReservationsLayout />}>

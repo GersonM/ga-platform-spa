@@ -5,6 +5,7 @@ import {Avatar, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {
+  PiBooksLight,
   PiBoxArrowUp,
   PiCalendarBlankLight,
   PiCalendarCheckLight,
@@ -12,6 +13,7 @@ import {
   PiCarLight,
   PiCarProfile,
   PiCashRegister,
+  PiChalkboardLight,
   PiClockUser,
   PiFingerprint,
   PiGear,
@@ -21,6 +23,9 @@ import {
   PiInvoiceDuotone,
   PiMailboxDuotone,
   PiSquaresFour,
+  PiStudent,
+  PiStudentBold,
+  PiStudentLight,
   PiUsers,
   PiUsersThree,
 } from 'react-icons/pi';
@@ -35,6 +40,8 @@ import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
 import {TbBuildingEstate} from 'react-icons/tb';
+import {BsPersonWorkspace} from 'react-icons/bs';
+import {FaChalkboardTeacher} from 'react-icons/fa';
 
 const menuItems: ItemType[] = [
   {
@@ -147,7 +154,14 @@ const Navigation = () => {
           {user?.roles?.includes('admin') && (
             <NavItem label={'Seguridad'} icon={<PiFingerprint />} path={'/accounts'} />
           )}
-          {config?.modules.includes('lms') && <NavItem label={'LMS'} icon={<PiGraduationCap />} path={'/lms'} />}
+          {config?.modules.includes('lms') && (
+            <NavItem label={'LMS'} icon={<PiGraduationCap />}>
+              <NavItem label={'Cursos'} icon={<PiBooksLight />} path={'/lms/courses'} />
+              <NavItem label={'Estudiantes'} icon={<PiStudent />} path={'/lms/students'} />
+              <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
+            </NavItem>
+          )}
+
           {config?.modules.includes('attendance') && (
             <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />
           )}
