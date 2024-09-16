@@ -36,7 +36,7 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
 
   const generateString = (length: number) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = ' ';
+    let result = '';
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -76,9 +76,11 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
         <Form.Item name={'retype-password'} label={'Nueva contraseña'}>
           <Input.Password />
         </Form.Item>
-        <Button block htmlType={'submit'} type={'primary'}>
-          Cambiar contraseña
-        </Button>
+        <Form.Item>
+          <Button block htmlType={'submit'} type={'primary'}>
+            Cambiar contraseña
+          </Button>
+        </Form.Item>
         {generatedPassword && (
           <Alert
             type={'warning'}
