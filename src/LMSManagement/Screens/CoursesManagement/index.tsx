@@ -5,8 +5,10 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Modal} from 'antd';
+import {Modal, Space} from 'antd';
 import CourseForm from '../../Components/CourseForm';
+import IconButton from '../../../CommonUI/IconButton';
+import {ArrowRightIcon, TrashIcon} from '@heroicons/react/24/solid';
 
 const CoursesManagement = () => {
   const [courses, setCourses] = useState<any[]>();
@@ -39,10 +41,6 @@ const CoursesManagement = () => {
 
   const columns = [
     {
-      title: 'UUID',
-      dataIndex: 'uuid',
-    },
-    {
       title: 'Nombre',
       dataIndex: 'name',
     },
@@ -50,13 +48,38 @@ const CoursesManagement = () => {
       title: 'Descripción',
       dataIndex: 'description',
     },
+    {
+      title: 'Categoría',
+      dataIndex: 'taxonomy_item',
+      render: item => {
+        return item?.definition?.name;
+      },
+    },
+    {
+      title: 'Acciones',
+      dataIndex: 'uuid',
+      width: 120,
+      render: (uuid: string) => {
+        return (
+          <Space>
+            <IconButton icon={<ArrowRightIcon />} onClick={() => {}} />
+            <IconButton danger icon={<TrashIcon />} onClick={() => {}} />
+          </Space>
+        );
+      },
+    },
   ];
 
   return (
     <ModuleContent>
       <ContentHeader title={'Cursos'} onAdd={() => setOpenCourseForm(true)} onRefresh={() => setReload(!reload)} />
       <TableList columns={columns} dataSource={courses} />
-      <Modal title={'Crear curso'} open={openCourseForm} onCancel={() => setOpenCourseForm(false)} footer={false}>
+      <Modal
+        destroyOnClose
+        title={'Crear curso'}
+        open={openCourseForm}
+        onCancel={() => setOpenCourseForm(false)}
+        footer={false}>
         <CourseForm
           onComplete={() => {
             setOpenCourseForm(false);

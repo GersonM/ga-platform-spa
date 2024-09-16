@@ -1,8 +1,9 @@
 import React from 'react';
-import {Form, Input} from 'antd';
+import {Checkbox, Form, Input} from 'antd';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import TaxonomySelector from '../../../TaxonomyManagement/Components/TaxonomySelector';
 
 interface ICourseFormProps {
   onComplete?: () => void;
@@ -25,11 +26,17 @@ const CourseForm = ({onComplete}: ICourseFormProps) => {
       <Form.Item name={'name'} label={'Nombre del curso'}>
         <Input />
       </Form.Item>
+      <Form.Item name={'category'} label={'Categoría y etiquetas'} extra={'Usa valores separados por comas'}>
+        <Input />
+      </Form.Item>
       <Form.Item name={'description'} label={'Descripción'}>
         <Input.TextArea />
       </Form.Item>
-      <Form.Item name={'category'} label={'Categoría y etiquetas'} help={'Usa valores separados por comas'}>
-        <Input />
+      <Form.Item name={'is_public'} label={'Estado de publicación'}>
+        <Checkbox>Publicar</Checkbox>
+      </Form.Item>
+      <Form.Item name={'taxonomy_uuid'} label={'Estado de publicación'}>
+        <TaxonomySelector />
       </Form.Item>
       <PrimaryButton htmlType={'submit'} label={'Guardar'} block />
     </Form>
