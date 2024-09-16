@@ -51,7 +51,7 @@ const CoursesManagement = () => {
     {
       title: 'Categoría',
       dataIndex: 'taxonomy_item',
-      render: item => {
+      render: (item: any) => {
         return item?.definition?.name;
       },
     },
