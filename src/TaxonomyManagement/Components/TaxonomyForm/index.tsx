@@ -20,7 +20,7 @@ const TaxonomyForm = ({entity, onComplete, parentUuid}: TaxonomyFormProps) => {
   const onSubmit = (values: any) => {
     axios
       .request({
-        url: `taxonomy/definitions/${entity ? entity.uuid : ''}`,
+        url: `taxonomy/definitions${entity ? '/' + entity.uuid : ''}`,
         method: entity ? 'PUT' : 'POST',
         data: {...values, parent_uuid: parentUuid, cover_uuid: uploadedFile?.uuid},
       })
