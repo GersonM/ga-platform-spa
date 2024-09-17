@@ -78,15 +78,15 @@ const CommercialContractDetail = () => {
         </Space>
       </ContentHeader>
       <Row gutter={[30, 30]}>
-        <Col md={8}>
+        <Col xs={24} lg={8}>
           <h3>Incidencias</h3>
           <EntityActivityManager uuid={params.contract} type={'commercial-contract'} />
         </Col>
-        <Col md={6}>
+        <Col xs={24} lg={6}>
           <h3>Detalle del contrato</h3>
           {contract && <ContractDetails contract={contract} />}
         </Col>
-        <Col md={10}>
+        <Col xs={24} lg={10}>
           <h3>Facturas</h3>
           <Collapse
             items={contract?.invoices?.map(invoice => {

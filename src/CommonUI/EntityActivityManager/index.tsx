@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Dropdown, Empty, Form, Image, Input, MenuProps, Tag} from 'antd';
+import {DatePicker, Dropdown, Empty, Form, Image, Input, MenuProps, Space, Tag, Tooltip} from 'antd';
 import {AiOutlineAlert} from 'react-icons/ai';
 import {useDropzone} from 'react-dropzone';
 import {GrSend} from 'react-icons/gr';
-import dayjs from 'dayjs';
+import dayjs, {Dayjs} from 'dayjs';
 import {CalendarDaysIcon, ChatBubbleLeftIcon, ClockIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 
 import ErrorHandler from '../../Utils/ErrorHandler';
@@ -13,6 +13,10 @@ import IconButton from '../IconButton';
 import {File} from '../../Types/api';
 
 import './styles.less';
+import Config from '../../Config';
+import {IoAttach} from 'react-icons/io5';
+import FileIcon from '../../FileManagement/Components/FileIcon';
+import SearchProfile from '../SearchProfile';
 
 interface EntityActivityManagerProps {
   uuid: string;
@@ -21,9 +25,11 @@ interface EntityActivityManagerProps {
 
 const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
   const [activity, setActivity] = useState<any[]>();
-  const [message, setMessage] = useState<string>();
   const [reload, setReload] = useState(false);
+  const [message, setMessage] = useState<string>();
   const [messageType, setMessageType] = useState<string>('entry');
+  const [messageDate, setMessageDate] = useState<Dayjs>();
+  const [messageAssignedTo, setMessageAssignedTo] = useState();
   const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
@@ -54,13 +60,17 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
       .post(`entity-activity`, {
         message,
         entity_type: type,
+        expired_at: messageDate?.format(Config.dateFormatServer),
         type: messageType,
+        assigned_uuid: messageAssignedTo,
         uuid,
         files: files.map(f => f.uuid),
       })
       .then(() => {
         setMessage(undefined);
         setReload(!reload);
+        setMessageDate(undefined);
+        setMessageAssignedTo(undefined);
         setFiles([]);
       })
       .catch(error => {
@@ -137,37 +147,75 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
             <div className="message-type-icon">{getTypeIcon(messageType)}</div>
           </Dropdown>
           <Form.Item noStyle>
-            <Input allowClear variant={'borderless'} value={message} onChange={e => setMessage(e.target.value)} />
+            <Input
+              placeholder={'Mensaje'}
+              allowClear
+              variant={'borderless'}
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+            />
           </Form.Item>
 
           <IconButton onClick={open} icon={<PaperClipIcon />} />
-          <PrimaryButton disabled={!message} icon={<GrSend size={16} />} label={'Enviar'} htmlType={'submit'} />
+          <PrimaryButton
+            disabled={files.length == 0 && !message}
+            icon={<GrSend size={16} />}
+            label={'Enviar'}
+            htmlType={'submit'}
+          />
         </Form>
-        <div>
-          {files.map((f, index) => {
-            return (
-              <Tag
-                key={index}
-                closable
-                onClose={() => {
-                  const newFiles = [...files];
-                  newFiles.splice(
-                    files.findIndex(fi => f.uuid === fi.uuid),
-                    1,
+        {(messageType != 'entry' || files.length > 0) && (
+          <div className={'message-form-addons'}>
+            <DatePicker
+              allowClear
+              value={messageDate}
+              size={'small'}
+              placeholder={'Fecha de límite para solución'}
+              style={{width: '100%'}}
+              onChange={date => setMessageDate(date)}
+            />
+            <SearchProfile
+              placeholder={'Asignar tarea (opcional)'}
+              style={{marginTop: 5}}
+              onChange={value => setMessageAssignedTo(value)}
+              filter_type={'employee'}
+              size={'small'}
+            />
+            {files.length > 0 && (
+              <Space wrap style={{marginTop: '5px'}}>
+                {files.map((f, index) => {
+                  return (
+                    <Tag
+                      icon={<IoAttach size={14} style={{verticalAlign: 'middle'}} />}
+                      bordered={false}
+                      color={'blue'}
+                      key={index}
+                      closable
+                      onClose={() => {
+                        const newFiles = [...files];
+                        newFiles.splice(
+                          files.findIndex(fi => f.uuid === fi.uuid),
+                          1,
+                        );
+                        setFiles(newFiles);
+                      }}>
+                      {f.name}
+                    </Tag>
                   );
-                  setFiles(newFiles);
-                }}>
-                {f.name}
-              </Tag>
-            );
-          })}
-        </div>
+                })}
+              </Space>
+            )}
+          </div>
+        )}
       </div>
       {activity?.length == 0 && <Empty description={'Aún no hay actividad'} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       {activity?.map(a => {
         return (
           <div key={a.uuid} className={`activity-item ${a.type}`}>
-            <div className={'author'}>{getTypeIcon(a.type, 25)}</div>
+            <div className={'author'}>
+              {getTypeIcon(a.type, 25)} <br />
+              {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
+            </div>
             <div className={'message'}>
               <p>{a.comment}</p>
               <small>
@@ -175,16 +223,26 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
               </small>
               <Image.PreviewGroup>
                 {a.attachments?.map((at: File) => (
-                  <Image
-                    key={at.uuid}
-                    preview={{
-                      destroyOnClose: true,
-                      src: at.source,
-                    }}
-                    loading={'lazy'}
-                    src={at.thumbnail}
-                    width={20}
-                  />
+                  <>
+                    {at.type.includes('ima') ? (
+                      <Image
+                        key={at.uuid}
+                        preview={{
+                          destroyOnClose: true,
+                          src: at.source,
+                        }}
+                        loading={'lazy'}
+                        src={at.thumbnail}
+                        width={30}
+                      />
+                    ) : (
+                      <Tooltip title={at.name}>
+                        <a href={at.source} target={'_blank'}>
+                          <FileIcon file={at} size={25} />
+                        </a>
+                      </Tooltip>
+                    )}
+                  </>
                 ))}
               </Image.PreviewGroup>
             </div>

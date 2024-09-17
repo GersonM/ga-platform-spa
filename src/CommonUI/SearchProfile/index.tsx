@@ -9,8 +9,10 @@ import ErrorHandler from '../../Utils/ErrorHandler';
 interface SearchProfileProps {
   style?: React.CSSProperties;
   mode?: 'multiple' | 'tags';
+  size?: 'small' | 'large';
   onChange?: (values: any, item: any) => void;
   value?: string | string[];
+  placeholder?: string;
   exclude_type?: string;
   filter_type?: string;
 }

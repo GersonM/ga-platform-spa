@@ -1,0 +1,21 @@
+.contract-list-wrapper {
+  .contract-item {
+    display: flex;
+
+    .contract-invoice {
+      display: inline-block;
+    }
+
+    .contract-invoice:not(:last-child) {
+      border-right: 1px solid var(--border-color-active);
+      padding-right: 5px;
+      margin-right: 10px;
+    }
+  }
+
+  .contract-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color-active);
+    padding-bottom: 7px;
+    margin-bottom: 7px;
+  }
+}

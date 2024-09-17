@@ -36,6 +36,7 @@ import ReservationsLayout from '../ReservationsManagement/Screens/ReservationsLa
 import NewReservation from '../ReservationsManagement/Screens/NewReservation';
 import ReservationsManager from '../ReservationsManagement/Screens/ReservationsManager';
 import CoursesManagement from '../LMSManagement/Screens/CoursesManagement';
+import CommercialIncidents from '../Commercial/Screens/CommercialIncidents';
 
 const App = () => {
   useEffect(() => {
@@ -128,6 +129,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'commercial'}>
+          <Route path={'incidents'} element={<CommercialIncidents />} />
           <Route path={'clients'} element={<CommercialClients />} />
           <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
           <Route path={'payments'} element={<CommercialClients />} />
