@@ -40,7 +40,8 @@ export type Profile = {
   name: string;
   last_name: string;
   birthday?: string;
-  email: string;
+  personal_email?: string;
+  email?: string;
   doc_number?: string;
   doc_type?: string;
   gender?: string;

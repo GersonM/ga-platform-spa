@@ -3,7 +3,6 @@ import {Col, DatePicker, Form, Row, Tooltip} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import {IoInformationCircle} from 'react-icons/io5';
-import timeString from 'timestring';
 import {Dayjs} from 'dayjs';
 import axios from 'axios';
 
@@ -28,14 +27,13 @@ const ReservationForm = ({onCompleted, route, vehicle, loading, showVehicle = tr
   const [departureDate, setDepartureDate] = useState<Dayjs>();
   const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
   const [form] = useForm();
-  const [durationSeconds, setDurationSeconds] = useState<number>(0);
   const [creatingTrip, setCreatingTrip] = useState(false);
 
   const submitForm = (values: any) => {
     const departure: Dayjs = values.departure_time;
     const data = {
       departure_time: values.departure_time.format(Config.datetimeFormatServer),
-      arrival_time: departure.add(durationSeconds, 's').format(Config.datetimeFormatServer),
+      arrival_time: departure.add(values.duration, 's').format(Config.datetimeFormatServer),
       fk_vehicule_uuid: vehicle ? vehicle.uuid : values.fk_vehicle_uuid,
       fk_route_uuid: selectedRoute?.uuid,
       location_from: values.location_from,
@@ -54,24 +52,6 @@ const ReservationForm = ({onCompleted, route, vehicle, loading, showVehicle = tr
         setCreatingTrip(false);
         ErrorHandler.showNotification(error);
       });
-  };
-
-  const addTime = (time: string, reset: boolean = false) => {
-    if (time === '' && reset) {
-      setDurationSeconds(0);
-      return;
-    }
-    const parseTime = timeString(time) + (reset ? 0 : durationSeconds);
-    setDurationSeconds(parseTime);
-    setArrivalDate(departureDate?.add(durationSeconds, 's'));
-    form.setFieldValue('duration', timeToString(parseTime));
-  };
-
-  const timeToString = (seconds: number) => {
-    let date = new Date(seconds * 1000);
-    let hh = date.getUTCHours();
-    let mm = date.getUTCMinutes();
-    return hh > 0 ? hh + 'h ' : '' + (mm > 0) ? mm + 'm' : '';
   };
 
   return (
@@ -110,7 +90,11 @@ const ReservationForm = ({onCompleted, route, vehicle, loading, showVehicle = tr
                   </Tooltip>
                 </>
               }>
-              <TimeInput />
+              <TimeInput
+                onChange={value => {
+                  setArrivalDate(departureDate?.add(value, 's'));
+                }}
+              />
             </Form.Item>
           </Col>
         </Row>

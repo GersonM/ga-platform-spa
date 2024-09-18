@@ -1,24 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import {FaHelmetSafety} from 'react-icons/fa6';
+import {PiCarProfile} from 'react-icons/pi';
+import {Dayjs} from 'dayjs';
 import {Empty, Tag} from 'antd';
+import axios from 'axios';
 
 import {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import './styles.less';
-import {Dayjs} from 'dayjs';
 import Config from '../../../Config';
-import {GrCar} from 'react-icons/gr';
-import {PiCarProfile} from 'react-icons/pi';
-import {
-  ExclamationTriangleIcon,
-  InboxIcon,
-  PaperAirplaneIcon,
-  PaperClipIcon,
-  PencilSquareIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
-import {FaHelmetSafety, FaHelmetUn} from 'react-icons/fa6';
 
 interface VehicleListSelectorProps {
   value?: string;

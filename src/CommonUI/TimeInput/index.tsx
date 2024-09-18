@@ -4,7 +4,12 @@ import timeString from 'timestring';
 
 import PrimaryButton from '../PrimaryButton';
 
-const TimeInput = () => {
+interface TimeInputProps {
+  onChange?: (value: number) => void;
+  value?: string;
+}
+
+const TimeInput = ({onChange, value, ...props}: TimeInputProps) => {
   const [durationSeconds, setDurationSeconds] = useState<number>(0);
   const [timeStringValue, setTimeStringValue] = useState<string>();
 
@@ -15,6 +20,7 @@ const TimeInput = () => {
     }
     const parseTime = timeString(time) + (reset ? 0 : durationSeconds);
     setDurationSeconds(parseTime);
+    onChange && onChange(parseTime);
     if (!reset) {
       setTimeStringValue(timeToString(parseTime));
     }
@@ -30,6 +36,7 @@ const TimeInput = () => {
   return (
     <>
       <Input
+        {...props}
         value={timeStringValue}
         allowClear
         onChange={event => {

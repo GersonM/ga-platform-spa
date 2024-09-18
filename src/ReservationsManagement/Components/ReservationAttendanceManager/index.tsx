@@ -2,8 +2,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {MdEmojiPeople} from 'react-icons/md';
-import {FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
-import {PiCalendarXBold, PiCarLight, PiCheckBold, PiUserPlusBold} from 'react-icons/pi';
+import {FaPersonCircleCheck, FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
+import {PiCalendarXBold, PiCarLight, PiCheckBold, PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
 import {TbBuildingEstate, TbClock, TbSteeringWheel} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -20,6 +20,8 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import InfoButton from '../../../CommonUI/InfoButton';
 import TripTimeEditor from './TripTimeEditor';
 import './styles.less';
+import ContractList from '../../../Commercial/Screens/CommercialClients/ContractList';
+import ContractDetails from '../../../Commercial/Components/ContractDetails';
 
 interface ReservationAttendanceManagerProps {
   trip: MoveTrip;
@@ -166,7 +168,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
               disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
               icon={<PiUserPlusBold size={18} />}
               onClick={() => setOpenPassengerModal(true)}
-              label={'Agregar pasajero'}
+              label={'Agregar persona'}
             />
           )}
           {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && !trip.arrived_at && (
@@ -176,7 +178,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
               disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
               icon={<PiCheckBold size={17} />}
               onClick={completeTrip}
-              label={'Completar viaje'}
+              label={'Completar servicio'}
             />
           )}
 
@@ -201,59 +203,47 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'} />
       )}
 
-      {passengers?.map(p => {
+      {passengers?.map((p, index) => {
         return (
-          <div key={p.uuid} className={'passenger-item'}>
-            <div className={'content'}>
-              <div className={'passenger-label'}>
-                <div>
-                  {p.profile?.name} {p.profile?.last_name} | <ProfileDocument profile={p.profile} />
-                  <span className={'caption'}>
-                    {p.profile?.email} | {p.profile?.phone}
-                  </span>
+          <div key={p.uuid} className={'assistant-item'}>
+            <div className={'icon'}>#{index + 1}</div>
+            <div style={{flex: 1}}>
+              <div className={'content'}>
+                <div className={'passenger-label'}>
+                  <div>
+                    <ProfileDocument profile={p.profile} /> | {p.profile?.name} {p.profile?.last_name}
+                    <span className={'caption'}>
+                      <PiEnvelope /> {p.profile?.personal_email || 'Sin correo'} | <PiPhoneCall /> {p.profile?.phone}
+                    </span>
+                  </div>
                 </div>
+                <Space wrap>
+                  {p.profile?.commercial_client?.contracts.map(c => {
+                    return <ContractDetails contract={c} />;
+                  })}
+                  {user?.roles?.includes('driver') && (
+                    <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
+                  )}
+                  <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
+                </Space>
               </div>
-              <Space wrap>
-                {p.pickup_location && (
-                  <div className={'passenger-label'}>
-                    <MdEmojiPeople className={'passenger-icon'} />
-                    <div>
-                      {p.pickup_location?.name}
-                      <span className={'caption'}>{p.pickup_location?.address}</span>
-                    </div>
-                  </div>
-                )}
-                {p.drop_off_location && (
-                  <div className={'passenger-label'}>
-                    <FaPersonWalkingLuggage className={'passenger-icon'} />
-                    <div>
-                      {p.drop_off_location?.name}
-                      <span className={'caption'}>{p.drop_off_location?.address}</span>
-                    </div>
-                  </div>
-                )}
-                {user?.roles?.includes('driver') && (
-                  <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
-                )}
-                <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
-              </Space>
-            </div>
 
-            {(p.observations ||
-              (p.profile?.employees && p.profile?.employees[0] && p.profile?.employees[0].cost_center)) && (
-              <div className={'addons'}>
-                {p.profile?.employees && p.profile?.employees[0] && (
-                  <div>
-                    <span className={'label'}>Centro de costos:</span> {p.profile?.employees[0].cost_center}
-                  </div>
-                )}
-                {p.observations && (
-                  <div>
-                    <span className={'label'}>Observaciones:</span> {p.observations}
-                  </div>
-                )}
-              </div>
-            )}
+              {(p.observations ||
+                (p.profile?.employees && p.profile?.employees[0] && p.profile?.employees[0].cost_center)) && (
+                <div className={'addons'}>
+                  {p.profile?.employees && p.profile?.employees[0] && (
+                    <div>
+                      <span className={'label'}>Centro de costos:</span> {p.profile?.employees[0].cost_center}
+                    </div>
+                  )}
+                  {p.observations && (
+                    <div>
+                      <span className={'label'}>Observaciones:</span> {p.observations}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         );
       })}
