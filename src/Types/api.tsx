@@ -50,6 +50,7 @@ export type Profile = {
   employees?: Employee[];
   contracts?: Contract[];
   client?: Client;
+  commercial_client?: Client;
   created_at?: string;
   login_method?: string;
   user?: User;

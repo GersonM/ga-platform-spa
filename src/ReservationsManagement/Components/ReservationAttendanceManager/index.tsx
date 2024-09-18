@@ -218,7 +218,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
                   </div>
                 </div>
                 <Space wrap>
-                  {p.profile?.commercial_client?.contracts.map(c => {
+                  {p.profile?.commercial_client?.contracts?.map(c => {
                     return <ContractDetails contract={c} />;
                   })}
                   {user?.roles?.includes('driver') && (
