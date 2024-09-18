@@ -1,7 +1,8 @@
 import React from 'react';
-import {Tag} from 'antd';
+import {Tag, Tooltip} from 'antd';
 
 import {Contract} from '../../../Types/api';
+import MoneyString from '../../../CommonUI/MoneyString';
 
 interface ContractFinancialBriefProps {
   contract: Contract;
@@ -11,17 +12,25 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
   return (
     <>
       <div className={'contract-invoice'}>
-        {contract.provided_at && <Tag>Entregado</Tag>} {contract.amount_string}{' '}
+        {contract.provided_at && <Tag color={'blue'}>Entregado</Tag>} {contract.amount_string}{' '}
       </div>
       {contract.invoices?.map((i, index) => {
         return (
           <div key={index} className={'contract-invoice'}>
-            {i.concept}:{' '}
-            <Tag
-              color={i.paid_at ? 'green' : 'red'}
-              title={'Pendiente por pagar' + (i.pending_payment ? i.pending_payment / 100 : 'No pagos')}>
-              S/ {(i.amount / 100).toFixed(2)}
-            </Tag>
+            <Tooltip
+              title={
+                <>
+                  Total <MoneyString value={i.amount} />
+                  <br />
+                  {i.pending_payment && (
+                    <>
+                      Pendiente por pagar: <MoneyString value={i.pending_payment} />
+                    </>
+                  )}
+                </>
+              }>
+              <Tag color={i.paid_at ? 'green' : 'red'}>{i.concept}</Tag>
+            </Tooltip>
           </div>
         );
       })}

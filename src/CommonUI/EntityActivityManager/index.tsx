@@ -21,9 +21,10 @@ import SearchProfile from '../SearchProfile';
 interface EntityActivityManagerProps {
   uuid: string;
   type: string;
+  refresh: boolean;
 }
 
-const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
+const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps) => {
   const [activity, setActivity] = useState<any[]>();
   const [reload, setReload] = useState(false);
   const [message, setMessage] = useState<string>();
@@ -31,6 +32,8 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
   const [messageDate, setMessageDate] = useState<Dayjs>();
   const [messageAssignedTo, setMessageAssignedTo] = useState();
   const [files, setFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -40,20 +43,22 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
         type,
       },
     };
-
+    setLoading(true);
     axios
       .get(`entity-activity/${uuid}`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           setActivity(response.data);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 
     return cancelTokenSource.cancel;
-  }, [reload]);
+  }, [reload, refresh]);
 
   const submitMessage = () => {
     axios
@@ -114,19 +119,20 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
   };
 
   const onDrop = (acceptedFiles: Array<Blob>) => {
-    //console.log(acceptedFiles);
     const formData = new FormData();
     acceptedFiles.forEach(item => {
       formData.append('file[]', item);
     });
     const config = {baseURL: import.meta.env.VITE_API_UPLOAD};
+    setUploading(true);
     axios
       .post('file-management/files', formData, config)
       .then(response => {
+        setUploading(false);
         setFiles([...files, ...response.data]);
       })
       .catch(error => {
-        setReload(!reload);
+        setUploading(false);
         ErrorHandler.showNotification(error);
       });
   };
@@ -156,7 +162,7 @@ const EntityActivityManager = ({uuid, type}: EntityActivityManagerProps) => {
             />
           </Form.Item>
 
-          <IconButton onClick={open} icon={<PaperClipIcon />} />
+          <IconButton onClick={open} loading={loading} icon={<PaperClipIcon />} />
           <PrimaryButton
             disabled={files.length == 0 && !message}
             icon={<GrSend size={16} />}

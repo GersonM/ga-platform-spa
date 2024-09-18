@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import {Col, Collapse, Divider, Row, Space, Tag} from 'antd';
+import {Col, Collapse, Divider, Popconfirm, Row, Space, Tag} from 'antd';
+import {PiHandshake} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -16,8 +17,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import ContractDetails from '../../Components/ContractDetails';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {KeyIcon} from '@heroicons/react/16/solid';
-import {PiHandshake} from 'react-icons/pi';
+import Config from '../../../Config';
 
 const CommercialContractDetail = () => {
   const navigate = useNavigate();
@@ -55,6 +55,17 @@ const CommercialContractDetail = () => {
     return null;
   }
 
+  const provide = () => {
+    axios
+      .post(`commercial/contracts/${params.contract}/provide`, {})
+      .then(response => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   return (
     <ModuleContent>
       <ContentHeader
@@ -63,6 +74,15 @@ const CommercialContractDetail = () => {
         onBack={() => {
           navigate('/commercial/clients');
         }}
+        tools={
+          <>
+            {contract?.provided_at ? (
+              <Tag color={'green'}>Entregado el {dayjs(contract.provided_at).format('DD/MM/YYYY [a las ] hh:m a')}</Tag>
+            ) : (
+              <Tag color={'orange'}>Pendiente de entrega</Tag>
+            )}
+          </>
+        }
         title={
           <>
             {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}{' '}
@@ -74,13 +94,17 @@ const CommercialContractDetail = () => {
           {contract?.signed_at ? dayjs(contract?.signed_at).format('YYYY-MM-DD HH:mm:ss') : 'Sin firma de contrato'}
         </p>
         <Space>
-          <PrimaryButton icon={<PiHandshake size={17} />} label={'Registrar entrega'} />
+          {!contract?.provided_at && (
+            <Popconfirm title={'Vas a registrar la entrega de esta propiedad'} onConfirm={provide}>
+              <PrimaryButton icon={<PiHandshake size={17} />} label={'Registrar entrega'} />
+            </Popconfirm>
+          )}
         </Space>
       </ContentHeader>
       <Row gutter={[30, 30]}>
         <Col xs={24} lg={8}>
           <h3>Incidencias</h3>
-          <EntityActivityManager uuid={params.contract} type={'commercial-contract'} />
+          <EntityActivityManager refresh={reload} uuid={params.contract} type={'commercial-contract'} />
         </Col>
         <Col xs={24} lg={6}>
           <h3>Detalle del contrato</h3>

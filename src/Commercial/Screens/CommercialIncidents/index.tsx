@@ -11,13 +11,14 @@ import {Client, Profile, ResponsePagination} from '../../../Types/api';
 
 import './styles.less';
 import dayjs from 'dayjs';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
   const [searchText, setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>();
+  const [pageSize, setPageSize] = useState<number>(100);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [stageFilter, setStageFilter] = useState<string>();
@@ -40,7 +41,7 @@ const CommercialIncidents = () => {
       .then(response => {
         setLoading(false);
         if (response) {
-          setClients(response.data);
+          setClients(response.data.data);
           setPagination(response.data.meta);
         }
       })
@@ -54,23 +55,51 @@ const CommercialIncidents = () => {
 
   const columns = [
     {
-      title: 'Reportado por',
-      dataIndex: 'uuid',
+      title: 'Mensaje',
+      dataIndex: 'comment',
+      fixed: 'left',
       width: 280,
-      render: (_uuid: string, row: Profile) => {
+    },
+    {
+      title: 'Reportado por',
+      dataIndex: 'profile',
+      width: 280,
+      render: (profile: Profile) => {
         return (
           <>
-            {row.name} {row.last_name} <br />
+            {profile.name} {profile.last_name} <br />
             <small>
-              <ProfileDocument profile={row} />
+              <ProfileDocument profile={profile} />
             </small>
           </>
         );
       },
     },
     {
-      title: 'Mensaje',
-      dataIndex: 'comment',
+      title: 'Reportado por',
+      dataIndex: 'assigned_to',
+      width: 280,
+      render: (profile: Profile) => {
+        return (
+          <>
+            {profile ? (
+              <>
+                {profile.name} {profile.last_name} <br />
+                <small>
+                  <ProfileDocument profile={profile} />
+                </small>
+              </>
+            ) : (
+              <PrimaryButton ghost size={'small'} label={'Asignar'} />
+            )}
+          </>
+        );
+      },
+    },
+
+    {
+      title: 'Entidad',
+      dataIndex: 'type',
     },
     {
       title: 'Fecha',
@@ -78,6 +107,14 @@ const CommercialIncidents = () => {
       width: 160,
       render: (date: string) => {
         return dayjs(date).format('DD-MM-YYYY HH:mm:ss');
+      },
+    },
+    {
+      title: 'Expira',
+      dataIndex: 'expired_at',
+      width: 160,
+      render: (date: string) => {
+        return date ? dayjs(date).fromNow() : <PrimaryButton ghost size={'small'} label={'Asignar fecha'} />;
       },
     },
   ];
@@ -105,7 +142,9 @@ const CommercialIncidents = () => {
           />
         </Space>
       </ContentHeader>
-      <TableList loading={loading} columns={columns} dataSource={clients} pagination={false} />
+      <div>
+        <TableList scroll={{x: 1200}} loading={loading} columns={columns} dataSource={clients} pagination={false} />
+      </div>
       {pagination && (
         <Pagination
           size="small"
