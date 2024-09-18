@@ -4,7 +4,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import axios from 'axios';
 
 const EnrollmentsManagement = () => {
-  const [enrollments, setEnrollments] = useState();
+  const [enrollments, setEnrollments] = useState<any[]>();
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
 
