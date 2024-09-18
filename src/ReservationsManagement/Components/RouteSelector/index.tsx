@@ -60,7 +60,7 @@ const RouteSelector = ({placeholder, mode, style, ...props}: RouteSelectorProps)
         return (
           <div>
             {option.label} <br />
-            {option.data.entity.duration}
+            Duración: {option.data.entity.duration} min
             <small>{option.data.entity.locations.map((location: MoveLocation) => location.name).join(' - ')}</small>
           </div>
         );

@@ -20,7 +20,28 @@ const CommercialClients = () => {
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
+  const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+    };
+
+    axios
+      .get(`commercial/stats`, config)
+      .then(response => {
+        if (response) {
+          setCommercialStats(response.data);
+        }
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [stageFilter]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();

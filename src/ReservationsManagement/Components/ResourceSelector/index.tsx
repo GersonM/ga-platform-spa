@@ -4,7 +4,7 @@ import axios from 'axios';
 import {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
-interface VehicleSelectorProps {
+interface ResourceSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -14,7 +14,7 @@ interface VehicleSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) => {
+const ResourceSelector = ({placeholder, mode, ...props}: ResourceSelectorProps) => {
   const [vehicles, setVehicles] = useState<MoveVehicle | any>([]);
   const [loading, setLoading] = useState(false);
 
@@ -62,4 +62,4 @@ const VehicleSelector = ({placeholder, mode, ...props}: VehicleSelectorProps) =>
   );
 };
 
-export default VehicleSelector;
+export default ResourceSelector;

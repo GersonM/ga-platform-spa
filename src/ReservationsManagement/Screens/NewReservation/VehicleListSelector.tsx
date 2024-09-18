@@ -10,6 +10,15 @@ import {Dayjs} from 'dayjs';
 import Config from '../../../Config';
 import {GrCar} from 'react-icons/gr';
 import {PiCarProfile} from 'react-icons/pi';
+import {
+  ExclamationTriangleIcon,
+  InboxIcon,
+  PaperAirplaneIcon,
+  PaperClipIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
+import {FaHelmetSafety, FaHelmetUn} from 'react-icons/fa6';
 
 interface VehicleListSelectorProps {
   value?: string;
@@ -50,6 +59,16 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
     return cancelTokenSource.cancel;
   }, [arrivalTime, departureTime]);
 
+  const getIcon = (path?: string) => {
+    path = path?.toLowerCase();
+    switch (path) {
+      case 'equipo':
+        return <FaHelmetSafety className={'icon'} />;
+      default:
+        return <PiCarProfile className={'icon'} />;
+    }
+  };
+
   return (
     <div>
       <LoadingIndicator visible={loading} />
@@ -66,12 +85,12 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
                 setSelectedVehicle(vehicle);
                 onChange && onChange(vehicle.uuid, vehicle);
               }}>
-              <PiCarProfile className={'icon'} />
+              {getIcon(vehicle.type)}
               <div className={'vehicle-info'}>
                 {vehicle.brand} {vehicle.model} {vehicle.color}
                 <br />
                 <small>
-                  {vehicle.type} {vehicle.max_capacity} pasajeros
+                  {vehicle.type}: Max. {vehicle.max_capacity} personas
                 </small>
               </div>
               <div>
