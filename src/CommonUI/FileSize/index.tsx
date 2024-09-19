@@ -23,7 +23,6 @@ const FileSize = ({size, showUnit = true, binary = false}: FileSizeProps) => {
 
     unit = 'GB';
     stepSize = stepSize / unitSize;
-    console.log({stepSize});
     if (stepSize < unitSize) {
       return stepSize.toFixed(2) + (showUnit ? unit : '');
     }

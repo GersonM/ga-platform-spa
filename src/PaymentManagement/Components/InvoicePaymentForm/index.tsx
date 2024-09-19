@@ -16,15 +16,21 @@ interface InvoicePaymentProps {
 const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps) => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<Profile>();
+  const [fileUuid, setFileUuid] = useState<string>();
   const [form] = useForm();
 
-  const submitForm = (values: InvoicePayment) => {
+  const submitForm = (values: any) => {
+    const data = {
+      invoice_uuid: invoice.uuid,
+      file_uuid: fileUuid,
+      ...values,
+    };
     setLoading(true);
     axios
       .request({
         url: payment ? `payment-management/payments/${payment.uuid}` : 'payment-management/payments',
         method: payment ? 'put' : 'post',
-        data: {...values, invoice_uuid: invoice.uuid},
+        data,
       })
       .then(() => {
         setLoading(false);
@@ -57,11 +63,16 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'voucher_code'} label={'Comprobante'} rules={[{required: true}]}>
+        <Form.Item name={'voucher_code'} label={'Número de comprobante'} rules={[{required: true}]}>
           <Input />
         </Form.Item>
-        <Form.Item name={'voucher_code'} label={'Comprobante'} rules={[{required: true}]}>
-          <FileUploader />
+        <Form.Item label={'Foto del comprobante'}>
+          <FileUploader
+            onFilesUploaded={file => {
+              setFileUuid(file.uuid);
+              console.log(file);
+            }}
+          />
         </Form.Item>
         <Form.Item name={'transaction_info'} label={'Información adicional (opcional)'}>
           <Input />

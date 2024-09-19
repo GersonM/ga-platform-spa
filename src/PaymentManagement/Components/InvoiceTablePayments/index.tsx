@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import {Modal} from 'antd';
 
 import TableList from '../../../CommonUI/TableList';
-import {Invoice} from '../../../Types/api';
+import {Invoice, File} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
+import {DocumentIcon} from '@heroicons/react/24/outline';
 
 interface InvoiceTablePayments {
   invoice: Invoice;
@@ -31,6 +32,20 @@ const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
       dataIndex: 'voucher_code',
       width: 110,
     },
+    {
+      title: 'Doc.',
+      dataIndex: 'attachments',
+      width: 50,
+      render: (attachments: File[]) => {
+        if (attachments && attachments.length > 0) {
+          return (
+            <a href={attachments[0].source} target={'_blank'}>
+              <DocumentIcon width={16} color={'#000'} />
+            </a>
+          );
+        }
+      },
+    },
   ];
   return (
     <div>
@@ -42,7 +57,7 @@ const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
         size={'small'}
         onClick={() => setOpenInvoiceForm(true)}
       />
-      <Modal open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
+      <Modal destroyOnClose open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
         <InvoicePaymentForm
           invoice={invoice}
           onCompleted={() => {

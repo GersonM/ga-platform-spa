@@ -60,7 +60,6 @@ const FileUploader = ({height, onFilesUploaded, imagePath, fileUuid, showPreview
     setLoading(true);
     const formData = new FormData();
     formData.append('file', file);
-    console.log('updating');
     try {
       setLoading(true);
 
@@ -89,7 +88,6 @@ const FileUploader = ({height, onFilesUploaded, imagePath, fileUuid, showPreview
       return;
     }
     setFiles(acceptedFiles);
-    console.log(fileUuid, 'update');
     if (fileUuid) {
       handleFileUpdate(acceptedFiles[0]).then();
     } else {

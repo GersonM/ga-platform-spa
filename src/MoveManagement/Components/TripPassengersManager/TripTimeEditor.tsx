@@ -37,8 +37,6 @@ const TripTimeEditor = ({trip, onCompleted}: TripTimeEditorProps) => {
       });
   };
 
-  const departureTime = dayjs(trip.departure_time);
-  console.log(departureTime, trip.departure_time);
   return (
     <div>
       <Form onFinish={updateTrip}>

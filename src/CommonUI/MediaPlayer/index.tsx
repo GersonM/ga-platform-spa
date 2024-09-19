@@ -31,7 +31,6 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
         ref.current.seekTo(startTime);
       }
       setTime(startTime);
-      console.log('time ----', {startTime});
     }
   }, [startTime]);
 

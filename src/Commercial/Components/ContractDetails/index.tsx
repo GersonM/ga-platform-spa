@@ -21,7 +21,6 @@ const ContractDetails = ({contract}: ContractDetailsProps) => {
     setGroups(Object.groupBy(contract.items, ({group}: ContractItem) => group));
   }, [contract]);
 
-  console.log(contract.items?.find(i => i.description == 'Manzana'));
   return (
     <div>
       <Statistic

@@ -83,11 +83,9 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
                           })*/
           //.then(response => response.json())
           .then(data => {
-            console.log({data});
             const temp = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
             //setStatus(temp);
             setProgress(Number((chunkNumber + 1) * chunkProgress));
-            console.log(temp);
             chunkNumber++;
             start = end;
             end = start + chunkSize;

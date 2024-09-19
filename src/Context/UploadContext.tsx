@@ -67,7 +67,6 @@ const UploadContextProvider = ({children, config}: UploadContextProp) => {
     setLoading(true);
     const formData = new FormData();
     formData.append('file', file);
-    console.log('updating');
     try {
       setLoading(true);
 

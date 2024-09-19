@@ -19,11 +19,9 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
   const [form] = useForm();
 
   const changePassword = (values: any) => {
-    console.log(values);
     axios
       .post('authentication/change-password', {...values, user_uuid: profile.user?.uuid, profile_uuid: profile.uuid})
       .then(response => {
-        console.log(response);
         if (onChange) {
           onChange();
           notification.success({message: 'Tu contraseña se actualizo correctamente'});

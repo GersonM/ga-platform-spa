@@ -103,7 +103,6 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
   ];
 
   const updateMessageType = (type: any) => {
-    console.log(type);
     setMessageType(type.key);
   };
 

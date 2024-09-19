@@ -35,7 +35,6 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
     axios
       .post('move/passengers', data)
       .then(response => {
-        console.log(response);
         onComplete && onComplete();
       })
       .catch(error => {
