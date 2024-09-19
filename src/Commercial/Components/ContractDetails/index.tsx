@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Contract, ContractItem} from '../../../Types/api';
 import {Statistic, Tag} from 'antd';
 

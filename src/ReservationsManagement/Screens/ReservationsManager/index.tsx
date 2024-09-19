@@ -1,19 +1,19 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Checkbox, Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
+import {Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TripForm from '../../Components/ReservationForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip, MoveVehicle} from '../../../Types/api';
-import TripPassengersManager from '../../Components/ReservationAttendanceManager';
+import {MoveTrip} from '../../../Types/api';
 import RouteSelector from '../../Components/RouteSelector';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import TripStatus from '../../Components/TripStatus';
-import './styles.less';
 import VehicleSelector from '../../../MoveManagement/Components/VehicleSelector';
 import ReservationAttendanceManager from '../../Components/ReservationAttendanceManager';
+import './styles.less';
+import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
 
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -75,13 +75,9 @@ const ReservationsManager = () => {
         <span>Filtros: </span>
         <Space wrap>
           <DatePicker style={{width: 130}} onChange={val => setSelectedDate(val)} />
-          <VehicleSelector
-            placeholder={'Ambiente'}
-            style={{width: 190}}
-            onChange={value => setSelectedVehicle(value)}
-          />
+          <VehicleSelector placeholder={'Equipo'} style={{width: 190}} onChange={value => setSelectedVehicle(value)} />
           <RouteSelector
-            placeholder={'Servicio'}
+            placeholder={'Tipo'}
             style={{width: 190}}
             onChange={value => {
               setSelectedRouteUuid(value);
@@ -90,7 +86,7 @@ const ReservationsManager = () => {
           <Select
             style={{width: 120}}
             onChange={val => setSelectedStatus(val)}
-            placeholder={'Todos'}
+            placeholder={'Estado'}
             allowClear
             options={[
               {label: 'Pendientes', value: 'pending'},
@@ -110,6 +106,7 @@ const ReservationsManager = () => {
           <div key={g}>
             <div className={'trip-day-divider'}>{groupedTrips[g].date.format('dddd DD [de] MMMM - YYYY')}</div>
             <Collapse
+              destroyInactivePanel
               items={groupedTrips[g].trips?.map((trip: MoveTrip) => {
                 const percent = trip.vehicle && (trip.total_passengers * 100) / trip.vehicle?.max_capacity;
                 return {
@@ -120,13 +117,14 @@ const ReservationsManager = () => {
                     </>
                   ),
                   label: (
-                    <div className={'trip-tab'}>
-                      <div>
-                        <div className={'departure-time'}>
-                          {dayjs(trip.departure_time).format('hh:mm')} <br />
-                          <span>{dayjs(trip.departure_time).format('A')}</span>
-                        </div>
+                    <div className={'reservation-tab'}>
+                      <div className={'departure-time'}>
+                        {dayjs(trip.departure_time).format('hh:mm')} <br />
+                        <span>{dayjs(trip.departure_time).format('A')}</span>
                       </div>
+                      {trip.contracts?.map((c, index) => {
+                        return <EstateContractAddress key={index} contract={c} />;
+                      })}
                       <div className={'tab-label'}>
                         {trip.route?.name} <br />
                         <Space>

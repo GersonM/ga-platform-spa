@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Card, Empty, Modal, Popconfirm, Space, Statistic, Tooltip} from 'antd';
+import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
-import {MdEmojiPeople} from 'react-icons/md';
-import {FaPersonCircleCheck, FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
-import {PiCalendarXBold, PiCarLight, PiCheckBold, PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
-import {TbBuildingEstate, TbClock, TbSteeringWheel} from 'react-icons/tb';
+import {FaUserTie} from 'react-icons/fa6';
+import {PiCalendarXBold, PiCheckBold, PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
+import {TbBuildingEstate, TbClock} from 'react-icons/tb';
+import {HomeModernIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -20,10 +20,7 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import InfoButton from '../../../CommonUI/InfoButton';
 import TripTimeEditor from './TripTimeEditor';
 import './styles.less';
-import ContractList from '../../../Commercial/Screens/CommercialClients/ContractList';
-import ContractDetails from '../../../Commercial/Components/ContractDetails';
-import {FaHome} from 'react-icons/fa';
-import {HomeModernIcon} from '@heroicons/react/24/outline';
+import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
 
 interface ReservationAttendanceManagerProps {
   trip: MoveTrip;
@@ -220,18 +217,8 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
                   </div>
                 </div>
                 <Space wrap>
-                  {p.profile?.commercial_client?.contracts?.map(c => {
-                    return (
-                      <InfoButton
-                        icon={<HomeModernIcon width={20} className={'icon'} />}
-                        caption={'Dirección'}
-                        label={`
-                              ${c.items?.find(i => i.description == 'Manzana')?.value} -
-                              ${c.items?.find(i => i.description == 'Lote')?.value}
-                              Etapa ${c.items?.find(i => i.description == 'Etapa')?.value}
-                            `}
-                      />
-                    );
+                  {p.profile?.commercial_client?.contracts?.map((c, index) => {
+                    return <EstateContractAddress key={index} contract={c} />;
                   })}
                   {user?.roles?.includes('driver') && (
                     <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />

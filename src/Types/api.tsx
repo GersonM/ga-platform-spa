@@ -371,6 +371,7 @@ export type MoveRoute = {
 };
 export type MoveTrip = {
   uuid: string;
+  contracts?: Contract[];
   route?: MoveRoute;
   vehicle?: MoveVehicle;
   driver?: MoveDriver;
