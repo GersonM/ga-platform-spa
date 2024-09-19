@@ -13,9 +13,9 @@ const InfoButton = ({icon, label, onEdit, caption}: InfoButtonProps) => {
   return (
     <div className={`info-button ${onEdit ? 'button' : ''}`} onClick={onEdit}>
       {icon}
-      <div className={'content'}>
+      <div className={'button-content'}>
         {label}
-        {caption && <span className={'caption'}>{caption}</span>}
+        {caption && <span className={'info-button-caption'}>{caption}</span>}
       </div>
       <div className="icon-wrapper">{onEdit && <TbPencil />}</div>
     </div>

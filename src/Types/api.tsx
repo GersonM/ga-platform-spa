@@ -85,7 +85,15 @@ export type Contract = {
   terminated_at?: string;
   updated_at?: string;
   invoices?: Invoice[];
-  items?: [{uuid: string; description: string; group: string; value: string}];
+  items?: ContractItem[];
+};
+export type ContractItem = {
+  uuid: string;
+  amount?: number;
+  description: string;
+  group: string;
+  value: string;
+  type: string;
 };
 export type Employee = {
   uuid: string;

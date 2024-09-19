@@ -1,19 +1,47 @@
-import React from 'react';
-import {Contract} from '../../../Types/api';
-import NavList, {NavListItem} from '../../../CommonUI/NavList';
+import React, {useEffect, useMemo, useState} from 'react';
+import {Contract, ContractItem} from '../../../Types/api';
+import {Statistic, Tag} from 'antd';
 
 interface ContractDetailsProps {
   contract: Contract;
 }
 
+const GROUPS: any = {
+  address: 'Dirección',
+  stage: 'Etapa',
+  financial: 'Financiamiento',
+  sale: 'Venta',
+};
+
 const ContractDetails = ({contract}: ContractDetailsProps) => {
+  const [groups, setGroups] = useState<any>();
+
+  useEffect(() => {
+    // @ts-ignore
+    setGroups(Object.groupBy(contract.items, ({group}: ContractItem) => group));
+  }, [contract]);
+
+  console.log(contract.items?.find(i => i.description == 'Manzana'));
   return (
     <div>
-      <NavList>
-        {contract.items?.map((item: any, iIndex: number) => {
-          return <NavListItem key={iIndex} path={''} name={item.value} caption={item.description} />;
-        })}
-      </NavList>
+      <Statistic
+        valueStyle={{fontSize: 15}}
+        title={'Dirección'}
+        value={`
+            ${contract.items?.find(i => i.description == 'Manzana')?.value} -
+            ${contract.items?.find(i => i.description == 'Lote')?.value}
+            Etapa ${contract.items?.find(i => i.description == 'Etapa')?.value}
+          `}
+      />
+
+      {contract?.items?.map((item: ContractItem, iIndex: number) => {
+        return (
+          <Tag key={iIndex}>
+            <strong>{item.description}:</strong> <br />
+            {item.value}
+          </Tag>
+        );
+      })}
     </div>
   );
 };

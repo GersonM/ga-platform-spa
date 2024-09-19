@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
+import {Button, Card, Empty, Modal, Popconfirm, Space, Statistic, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {MdEmojiPeople} from 'react-icons/md';
 import {FaPersonCircleCheck, FaPersonWalkingLuggage, FaUserTie} from 'react-icons/fa6';
@@ -22,6 +22,8 @@ import TripTimeEditor from './TripTimeEditor';
 import './styles.less';
 import ContractList from '../../../Commercial/Screens/CommercialClients/ContractList';
 import ContractDetails from '../../../Commercial/Components/ContractDetails';
+import {FaHome} from 'react-icons/fa';
+import {HomeModernIcon} from '@heroicons/react/24/outline';
 
 interface ReservationAttendanceManagerProps {
   trip: MoveTrip;
@@ -219,7 +221,17 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
                 </div>
                 <Space wrap>
                   {p.profile?.commercial_client?.contracts?.map(c => {
-                    return <ContractDetails contract={c} />;
+                    return (
+                      <InfoButton
+                        icon={<HomeModernIcon width={20} className={'icon'} />}
+                        caption={'Dirección'}
+                        label={`
+                              ${c.items?.find(i => i.description == 'Manzana')?.value} -
+                              ${c.items?.find(i => i.description == 'Lote')?.value}
+                              Etapa ${c.items?.find(i => i.description == 'Etapa')?.value}
+                            `}
+                      />
+                    );
                   })}
                   {user?.roles?.includes('driver') && (
                     <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
