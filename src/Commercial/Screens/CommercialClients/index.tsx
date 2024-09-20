@@ -11,6 +11,8 @@ import {Client, Profile, ResponsePagination} from '../../../Types/api';
 import ContractList from './ContractList';
 
 import './styles.less';
+import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
+import {useNavigate} from 'react-router-dom';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -22,6 +24,7 @@ const CommercialClients = () => {
   const [reload, setReload] = useState(false);
   const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -99,16 +102,31 @@ const CommercialClients = () => {
       },
     },
     {
-      title: 'Dirección',
-      dataIndex: 'address',
-    },
-    {
       title: 'Teléfono',
       dataIndex: 'phone',
-      width: 110,
+      width: 70,
     },
     {
       title: 'Contratos',
+      dataIndex: 'client',
+      render: (client: Client) => (
+        <Space>
+          {client.contracts?.map(c => {
+            return (
+              <EstateContractAddress
+                contract={c}
+                key={c.uuid}
+                onEdit={() => {
+                  navigate(`/commercial/contracts/${c.uuid}`);
+                }}
+              />
+            );
+          })}
+        </Space>
+      ),
+    },
+    {
+      title: 'Pagos',
       dataIndex: 'client',
       render: (client: Client) => <ContractList contracts={client.contracts} />,
     },

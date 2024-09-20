@@ -5,13 +5,15 @@ import {Contract} from '../../../../Types/api';
 
 interface EstateContractAddressProps {
   contract: Contract;
+  onEdit: () => void;
 }
 
-const EstateContractAddress = ({contract}: EstateContractAddressProps) => {
+const EstateContractAddress = ({contract, onEdit}: EstateContractAddressProps) => {
   return (
     <InfoButton
       icon={<HomeModernIcon width={20} className={'icon'} />}
       caption={'Dirección'}
+      onEdit={onEdit}
       label={`
         ${contract.items?.find(i => i.description == 'Manzana')?.value} -
         ${contract.items?.find(i => i.description == 'Lote')?.value}
