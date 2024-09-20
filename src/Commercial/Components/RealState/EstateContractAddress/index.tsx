@@ -5,7 +5,7 @@ import {Contract} from '../../../../Types/api';
 
 interface EstateContractAddressProps {
   contract: Contract;
-  onEdit: () => void;
+  onEdit?: () => void;
 }
 
 const EstateContractAddress = ({contract, onEdit}: EstateContractAddressProps) => {
