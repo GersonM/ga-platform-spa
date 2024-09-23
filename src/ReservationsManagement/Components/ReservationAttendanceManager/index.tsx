@@ -4,7 +4,6 @@ import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {FaUserTie} from 'react-icons/fa6';
 import {PiCalendarXBold, PiCheckBold, PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
 import {TbBuildingEstate, TbClock} from 'react-icons/tb';
-import {HomeModernIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -19,8 +18,8 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import InfoButton from '../../../CommonUI/InfoButton';
 import TripTimeEditor from './TripTimeEditor';
-import './styles.less';
 import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
+import './styles.less';
 
 interface ReservationAttendanceManagerProps {
   trip: MoveTrip;
@@ -159,7 +158,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
             caption={trip.vehicle?.brand}
           />
         </Space>
-        <Space wrap>
+        <Space wrap size={'small'}>
           {!trip.arrived_at && (
             <PrimaryButton
               ghost

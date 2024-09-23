@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
+import {Button, Collapse, DatePicker, Empty, Form, Input, Modal, Popover, Select, Space} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
+import {BiSave} from 'react-icons/bi';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import TripForm from '../../Components/ReservationForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {MoveTrip} from '../../../Types/api';
 import RouteSelector from '../../Components/RouteSelector';
@@ -12,8 +12,12 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import TripStatus from '../../Components/TripStatus';
 import VehicleSelector from '../../../MoveManagement/Components/VehicleSelector';
 import ReservationAttendanceManager from '../../Components/ReservationAttendanceManager';
-import './styles.less';
 import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
+import ReservationForm from '../../Components/ReservationForm';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import LoadTripsTemplate from '../../Components/LoadTripsTemplate';
+import Config from '../../../Config';
+import './styles.less';
 
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -24,6 +28,7 @@ const ReservationsManager = () => {
   const [trips, setTrips] = useState<MoveTrip[]>();
   const [loading, setLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<string>();
+  const [openLoadTemplate, setOpenLoadTemplate] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -65,14 +70,26 @@ const ReservationsManager = () => {
     return groups;
   }, [trips]);
 
+  const saveTemplate = (values: any) => {
+    console.log(values);
+    axios
+      .post('move/templates', values)
+      .then(response => {})
+      .catch(e => {});
+  };
+
   return (
     <>
       <ContentHeader
         title={'Reservas'}
         loading={loading}
+        tools={
+          <>
+            <PrimaryButton label={'Cargar plantilla'} onClick={() => setOpenLoadTemplate(true)} ghost size={'small'} />
+          </>
+        }
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenTripModal(true)}>
-        <span>Filtros: </span>
         <Space wrap>
           <DatePicker style={{width: 130}} onChange={val => setSelectedDate(val)} />
           <VehicleSelector placeholder={'Equipo'} style={{width: 190}} onChange={value => setSelectedVehicle(value)} />
@@ -104,17 +121,49 @@ const ReservationsManager = () => {
       {Object.keys(groupedTrips).map(g => {
         return (
           <div key={g}>
-            <div className={'trip-day-divider'}>{groupedTrips[g].date.format('dddd DD [de] MMMM - YYYY')}</div>
+            <div className={'reservation-day-divider'}>
+              {groupedTrips[g].date.format('dddd DD [de] MMMM - YYYY')}
+              <Popover
+                trigger={'click'}
+                content={
+                  <>
+                    <Form
+                      layout="vertical"
+                      onFinish={saveTemplate}
+                      initialValues={{date: groupedTrips[g].date.format(Config.dateFormatServer)}}>
+                      <h4>Crear plantilla</h4>
+                      <Form.Item name={'date'}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item name={'name'}>
+                        <Input placeholder={'Nombre de la plantilla'} />
+                      </Form.Item>
+                      <PrimaryButton block htmlType={'submit'} label={'Guardar'} />
+                    </Form>
+                  </>
+                }>
+                <Button size={'small'} ghost type={'link'} icon={<BiSave size={16} />}>
+                  Guardar como plantilla
+                </Button>
+              </Popover>
+            </div>
             <Collapse
               destroyInactivePanel
               items={groupedTrips[g].trips?.map((trip: MoveTrip) => {
-                const percent = trip.vehicle && (trip.total_passengers * 100) / trip.vehicle?.max_capacity;
                 return {
                   extra: (
-                    <>
-                      <TripStatus trip={trip} />
-                      <Progress percent={Math.round(percent || 0)} type={'circle'} size={35} />
-                    </>
+                    <Popover
+                      content={
+                        <>
+                          Reservado por: {trip.created_by?.name} {trip.created_by?.last_name} | {trip.total_passengers}{' '}
+                          de {trip.vehicle?.max_capacity}
+                        </>
+                      }>
+                      <div className={'reservation-tab-label'}>
+                        {trip.route?.name} <br />
+                        <TripStatus trip={trip} />
+                      </div>
+                    </Popover>
                   ),
                   label: (
                     <div className={'reservation-tab'}>
@@ -122,18 +171,11 @@ const ReservationsManager = () => {
                         {dayjs(trip.departure_time).format('hh:mm')} <br />
                         <span>{dayjs(trip.departure_time).format('A')}</span>
                       </div>
-                      {trip.contracts?.map((c, index) => {
-                        return <EstateContractAddress key={index} contract={c} />;
-                      })}
-                      <div className={'tab-label'}>
-                        {trip.route?.name} <br />
-                        <Space>
-                          <small>
-                            Reservado por: {trip.created_by?.name} {trip.created_by?.last_name} |{' '}
-                            {trip.total_passengers} de {trip.vehicle?.max_capacity}
-                          </small>
-                        </Space>
-                      </div>
+                      <Space wrap>
+                        {trip.contracts?.map((c, index) => {
+                          return <EstateContractAddress key={index} contract={c} />;
+                        })}
+                      </Space>
                     </div>
                   ),
                   key: trip.uuid,
@@ -146,17 +188,32 @@ const ReservationsManager = () => {
       })}
 
       <Modal
-        title={'Nuevo viaje'}
+        title={'Nueva reservas'}
         footer={false}
         open={openTripModal}
         destroyOnClose
         onCancel={() => {
           setOpenTripModal(false);
         }}>
-        <TripForm
+        <ReservationForm
           onCompleted={() => {
             setReload(!reload);
             setOpenTripModal(false);
+          }}
+        />
+      </Modal>
+      <Modal
+        title={'Cargar plantilla'}
+        footer={false}
+        open={openLoadTemplate}
+        destroyOnClose
+        onCancel={() => {
+          setOpenLoadTemplate(false);
+        }}>
+        <LoadTripsTemplate
+          onCompleted={() => {
+            setOpenLoadTemplate(false);
+            setReload(!reload);
           }}
         />
       </Modal>

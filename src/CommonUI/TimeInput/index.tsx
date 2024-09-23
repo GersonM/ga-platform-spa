@@ -50,7 +50,6 @@ const TimeInput = ({onChange, value, ...props}: TimeInputProps) => {
           </Space>
         }
       />
-      {durationSeconds}
     </>
   );
 };
