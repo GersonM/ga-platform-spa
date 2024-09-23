@@ -109,9 +109,9 @@ const CommercialClients = () => {
     {
       title: 'Contratos',
       dataIndex: 'client',
-      render: (client: Client) => (
+      render: (client?: Client) => (
         <Space>
-          {client.contracts?.map(c => {
+          {client?.contracts?.map(c => {
             return (
               <EstateContractAddress
                 contract={c}
