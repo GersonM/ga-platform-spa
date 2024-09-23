@@ -380,6 +380,7 @@ export type MoveTrip = {
   max_passengers: number;
   total_passengers: number;
   departure_time: string;
+  started_at: string;
   arrived_at: string;
   cancelled_at: string;
   confirmed_at: string;

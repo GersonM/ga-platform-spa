@@ -97,6 +97,28 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
       });
   };
 
+  const confirmTrip = () => {
+    axios
+      .post(`move/trips/${trip.uuid}/confirm`)
+      .then(() => {
+        onChange && onChange();
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const startTrip = () => {
+    axios
+      .post(`move/trips/${trip.uuid}/start`)
+      .then(() => {
+        onChange && onChange();
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   const completeTrip = () => {
     axios
       .post(`move/trips/${trip.uuid}/complete`)
@@ -131,6 +153,44 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
   ) : (
     'Sin asesor'
   );
+
+  const getTripButton = () => {
+    switch (true) {
+      case trip.confirmed_at === null:
+        return (
+          <PrimaryButton
+            ghost
+            size={'small'}
+            disabled={!trip.vehicle}
+            icon={<PiCheckBold size={17} />}
+            onClick={confirmTrip}
+            label={'Confirmar'}
+          />
+        );
+      case trip.started_at === null:
+        return (
+          <PrimaryButton
+            ghost
+            size={'small'}
+            disabled={!trip.vehicle}
+            icon={<PiCheckBold size={17} />}
+            onClick={startTrip}
+            label={'Iniciar servicio'}
+          />
+        );
+      case trip.arrived_at === null:
+        return (
+          <PrimaryButton
+            ghost
+            size={'small'}
+            disabled={!trip.vehicle}
+            icon={<PiCheckBold size={17} />}
+            onClick={completeTrip}
+            label={'Completar viaje'}
+          />
+        );
+    }
+  };
 
   return (
     <div className={'travel-info-wrapper'}>
@@ -169,16 +229,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
               label={'Agregar persona'}
             />
           )}
-          {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && !trip.arrived_at && (
-            <PrimaryButton
-              ghost
-              size={'small'}
-              disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
-              icon={<PiCheckBold size={17} />}
-              onClick={completeTrip}
-              label={'Completar servicio'}
-            />
-          )}
+          {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && !trip.arrived_at && getTripButton()}
 
           {!trip.arrived_at && (
             <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
