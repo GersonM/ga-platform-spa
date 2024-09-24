@@ -113,9 +113,13 @@ const Navigation = () => {
           {config?.modules.includes('commercial') && (
             <NavItem label={'Comercial'} icon={<PiHandshake />}>
               <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
-              <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
-              <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />
-              <NavItem icon={<PiBoxArrowUp />} label={'Productos'} path={'/commercial/products'} />
+              {user?.roles?.includes('admin') && (
+                <>
+                  <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
+                  <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />
+                  <NavItem icon={<PiBoxArrowUp />} label={'Productos'} path={'/commercial/products'} />
+                </>
+              )}
             </NavItem>
           )}
           {config?.modules.includes('move') && (
