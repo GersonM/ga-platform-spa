@@ -21,7 +21,7 @@ import SearchProfile from '../SearchProfile';
 interface EntityActivityManagerProps {
   uuid: string;
   type: string;
-  refresh: boolean;
+  refresh?: boolean;
 }
 
 const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps) => {

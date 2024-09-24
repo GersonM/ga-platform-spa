@@ -4,20 +4,22 @@ import InfoButton from '../../../../CommonUI/InfoButton';
 import {Contract} from '../../../../Types/api';
 
 interface EstateContractAddressProps {
-  contract: Contract;
+  contract?: Contract;
+  tooltip?: string;
   onEdit?: () => void;
 }
 
-const EstateContractAddress = ({contract, onEdit}: EstateContractAddressProps) => {
+const EstateContractAddress = ({contract, onEdit, tooltip}: EstateContractAddressProps) => {
   return (
     <InfoButton
+      tooltip={tooltip}
       icon={<HomeModernIcon width={20} className={'icon'} />}
       caption={'Dirección'}
       onEdit={onEdit}
       label={`
-        ${contract.items?.find(i => i.description == 'Manzana')?.value} -
-        ${contract.items?.find(i => i.description == 'Lote')?.value}
-        Etapa ${contract.items?.find(i => i.description == 'Etapa')?.value}
+        ${contract?.items?.find(i => i.description == 'Manzana')?.value} -
+        ${contract?.items?.find(i => i.description == 'Lote')?.value}
+        Etapa ${contract?.items?.find(i => i.description == 'Etapa')?.value}
       `}
     />
   );

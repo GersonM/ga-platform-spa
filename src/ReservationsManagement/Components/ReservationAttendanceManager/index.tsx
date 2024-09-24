@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
+import {Drawer, Empty, Modal, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {FaUserTie} from 'react-icons/fa6';
-import {PiCalendarXBold, PiCheckBold, PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
+import {PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
 import {TbBuildingEstate, TbClock} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
+import {Contract, MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';
@@ -19,7 +19,11 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import InfoButton from '../../../CommonUI/InfoButton';
 import TripTimeEditor from './TripTimeEditor';
 import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
+import TripControls from '../TripControls';
 import './styles.less';
+import CommercialIncidents from '../../../Commercial/Screens/CommercialIncidents';
+import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
+import {Link, useNavigate} from 'react-router-dom';
 
 interface ReservationAttendanceManagerProps {
   trip: MoveTrip;
@@ -28,6 +32,7 @@ interface ReservationAttendanceManagerProps {
 
 const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceManagerProps) => {
   const {user} = useContext(AuthContext);
+  const navigate = useNavigate();
   const [passengers, setPassengers] = useState<MovePassenger[]>();
   const [reload, setReload] = useState(false);
   const [openPassengerModal, setOpenPassengerModal] = useState(false);
@@ -35,6 +40,8 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
   const [openEditTime, setOpenEditTime] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState<MoveDriver>();
   const [loading, setLoading] = useState(false);
+  const [openContractIncidents, setOpenContractIncidents] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<Contract>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -86,61 +93,6 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
       });
   };
 
-  const cancelTrip = () => {
-    axios
-      .post(`move/trips/${trip.uuid}/cancel`)
-      .then(() => {
-        onChange && onChange();
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const confirmTrip = () => {
-    axios
-      .post(`move/trips/${trip.uuid}/confirm`)
-      .then(() => {
-        onChange && onChange();
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const startTrip = () => {
-    axios
-      .post(`move/trips/${trip.uuid}/start`)
-      .then(() => {
-        onChange && onChange();
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const completeTrip = () => {
-    axios
-      .post(`move/trips/${trip.uuid}/complete`)
-      .then(() => {
-        onChange && onChange();
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const deleteTrip = () => {
-    axios
-      .delete(`move/trips/${trip.uuid}`)
-      .then(() => {
-        onChange && onChange();
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-  };
-
   const isAbleToAssignDriver = user?.roles?.includes('admin');
   const driver = trip.driver || trip.vehicle?.driver;
   const driverCaption = driver ? <ProfileDocument profile={driver?.profile} /> : '';
@@ -153,44 +105,6 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
   ) : (
     'Sin asesor'
   );
-
-  const getTripButton = () => {
-    switch (true) {
-      case trip.confirmed_at === null:
-        return (
-          <PrimaryButton
-            ghost
-            size={'small'}
-            disabled={!trip.vehicle}
-            icon={<PiCheckBold size={17} />}
-            onClick={confirmTrip}
-            label={'Confirmar'}
-          />
-        );
-      case trip.started_at === null:
-        return (
-          <PrimaryButton
-            ghost
-            size={'small'}
-            disabled={!trip.vehicle}
-            icon={<PiCheckBold size={17} />}
-            onClick={startTrip}
-            label={'Iniciar servicio'}
-          />
-        );
-      case trip.arrived_at === null:
-        return (
-          <PrimaryButton
-            ghost
-            size={'small'}
-            disabled={!trip.vehicle}
-            icon={<PiCheckBold size={17} />}
-            onClick={completeTrip}
-            label={'Completar viaje'}
-          />
-        );
-    }
-  };
 
   return (
     <div className={'travel-info-wrapper'}>
@@ -218,7 +132,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
             caption={trip.vehicle?.brand}
           />
         </Space>
-        <Space wrap size={'small'}>
+        <Space wrap>
           {!trip.arrived_at && (
             <PrimaryButton
               ghost
@@ -229,22 +143,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
               label={'Agregar persona'}
             />
           )}
-          {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && !trip.arrived_at && getTripButton()}
-
-          {!trip.arrived_at && (
-            <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
-              <Button size={'small'} block ghost type={'primary'} icon={<PiCalendarXBold size={18} />} danger>
-                Cancelar
-              </Button>
-            </Popconfirm>
-          )}
-          {user?.roles?.includes('admin') && (
-            <Popconfirm title={'¿Seguro que quieres borrar este viaje?'} onConfirm={deleteTrip}>
-              <Button size={'small'} block type={'primary'} icon={<TrashIcon />} danger>
-                Borrar
-              </Button>
-            </Popconfirm>
-          )}
+          <TripControls trip={trip} onChange={onChange} />
         </Space>
       </div>
 
@@ -268,7 +167,17 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
                 </div>
                 <Space wrap>
                   {p.profile?.commercial_client?.contracts?.map((c, index) => {
-                    return <EstateContractAddress key={index} contract={c} />;
+                    return (
+                      <EstateContractAddress
+                        tooltip={'Ver incidencias'}
+                        key={index}
+                        contract={c}
+                        onEdit={() => {
+                          setSelectedContract(c);
+                          setOpenContractIncidents(true);
+                        }}
+                      />
+                    );
                   })}
                   {user?.roles?.includes('driver') && (
                     <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
@@ -343,12 +252,22 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
         <TripTimeEditor
           trip={trip}
           onCompleted={() => {
-            //setReload(!reload);
             setOpenEditTime(false);
             onChange && onChange();
           }}
         />
       </Modal>
+      <Drawer
+        open={openContractIncidents}
+        destroyOnClose
+        title={
+          <Link to={`/commercial/contracts/${selectedContract?.uuid}`} target={'_blank'}>
+            <EstateContractAddress contract={selectedContract} tooltip={'Abrir en otra pestaña'} />
+          </Link>
+        }
+        onClose={() => setOpenContractIncidents(false)}>
+        {selectedContract && <EntityActivityManager uuid={selectedContract?.uuid} type={'commercial-contract'} />}
+      </Drawer>
     </div>
   );
 };
