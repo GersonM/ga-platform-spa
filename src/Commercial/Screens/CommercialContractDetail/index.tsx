@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import {Col, Collapse, Divider, Popconfirm, Row, Space, Tag} from 'antd';
+import {Col, Collapse, Divider, Modal, Popconfirm, Row, Space, Tag} from 'antd';
 import {PiHandshake} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -17,7 +17,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import ContractDetails from '../../Components/ContractDetails';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import Config from '../../../Config';
+import ContractProvideForm from '../../Components/ContractProvideForm';
 
 const CommercialContractDetail = () => {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ const CommercialContractDetail = () => {
   const [reload, setReload] = useState(false);
   const [contract, setContract] = useState<Contract>();
   const [loading, setLoading] = useState(false);
+  const [openContractProvideForm, setOpenContractProvideForm] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -55,17 +56,6 @@ const CommercialContractDetail = () => {
     return null;
   }
 
-  const provide = () => {
-    axios
-      .post(`commercial/contracts/${params.contract}/provide`, {})
-      .then(response => {
-        setReload(!reload);
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-  };
-
   return (
     <ModuleContent>
       <ContentHeader
@@ -95,9 +85,11 @@ const CommercialContractDetail = () => {
         </p>
         <Space>
           {!contract?.provided_at && (
-            <Popconfirm title={'Vas a registrar la entrega de esta propiedad'} onConfirm={provide}>
-              <PrimaryButton icon={<PiHandshake size={17} />} label={'Registrar entrega'} />
-            </Popconfirm>
+            <PrimaryButton
+              icon={<PiHandshake size={17} />}
+              label={'Registrar entrega'}
+              onClick={() => setOpenContractProvideForm(true)}
+            />
           )}
         </Space>
       </ContentHeader>
@@ -145,6 +137,20 @@ const CommercialContractDetail = () => {
           />
         </Col>
       </Row>
+      <Modal
+        open={openContractProvideForm}
+        onCancel={() => setOpenContractProvideForm(false)}
+        destroyOnClose
+        footer={null}
+        title={'Registrar entrega'}>
+        <ContractProvideForm
+          contract={contract}
+          onComplete={() => {
+            setReload(!reload);
+            setOpenContractProvideForm(false);
+          }}
+        />
+      </Modal>
     </ModuleContent>
   );
 };
