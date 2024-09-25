@@ -1,8 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Button, Collapse, DatePicker, Empty, Form, Input, Modal, Popover, Select, Space} from 'antd';
+import {PiStampBold} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
-import {BiSave} from 'react-icons/bi';
+import {BiPrinter, BiSave} from 'react-icons/bi';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -29,6 +30,10 @@ const ReservationsManager = () => {
   const [loading, setLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<string>();
   const [openLoadTemplate, setOpenLoadTemplate] = useState(false);
+  const [openPrintDocuments, setOpenPrintDocuments] = useState(false);
+  const [openCreateTemplate, setOpenCreateTemplate] = useState(false);
+  const [selectedDateForTemplate, setSelectedDateForTemplate] = useState<Dayjs>();
+  const [savingTemplate, setSavingTemplate] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -71,11 +76,17 @@ const ReservationsManager = () => {
   }, [trips]);
 
   const saveTemplate = (values: any) => {
-    console.log(values);
+    setSavingTemplate(true);
     axios
       .post('move/templates', values)
-      .then(response => {})
-      .catch(e => {});
+      .then(response => {
+        setSavingTemplate(false);
+        setOpenCreateTemplate(false);
+      })
+      .catch(e => {
+        setSavingTemplate(false);
+        ErrorHandler.showNotification(e);
+      });
   };
 
   return (
@@ -85,7 +96,13 @@ const ReservationsManager = () => {
         loading={loading}
         tools={
           <>
-            <PrimaryButton label={'Cargar plantilla'} onClick={() => setOpenLoadTemplate(true)} ghost size={'small'} />
+            <PrimaryButton
+              label={'Cargar plantilla'}
+              icon={<PiStampBold size={16} />}
+              onClick={() => setOpenLoadTemplate(true)}
+              ghost
+              size={'small'}
+            />
           </>
         }
         onRefresh={() => setReload(!reload)}
@@ -114,38 +131,36 @@ const ReservationsManager = () => {
           />
         </Space>
       </ContentHeader>
-      <LoadingIndicator visible={loading} fitBox={false} message={'Listando viajes...'} />
+      <LoadingIndicator visible={loading} fitBox={false} message={'Listando reservas...'} />
       {trips && trips.length === 0 && (
-        <Empty description={'No hay viajes programados'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description={'No hay reservas programadas'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
       {Object.keys(groupedTrips).map(g => {
         return (
           <div key={g}>
             <div className={'reservation-day-divider'}>
               {groupedTrips[g].date.format('dddd DD [de] MMMM - YYYY')}
-              <Popover
-                trigger={'click'}
-                content={
-                  <>
-                    <Form
-                      layout="vertical"
-                      onFinish={saveTemplate}
-                      initialValues={{date: groupedTrips[g].date.format(Config.dateFormatServer)}}>
-                      <h4>Crear plantilla</h4>
-                      <Form.Item name={'date'}>
-                        <Input />
-                      </Form.Item>
-                      <Form.Item name={'name'}>
-                        <Input placeholder={'Nombre de la plantilla'} />
-                      </Form.Item>
-                      <PrimaryButton block htmlType={'submit'} label={'Guardar'} />
-                    </Form>
-                  </>
-                }>
-                <Button size={'small'} ghost type={'link'} icon={<BiSave size={16} />}>
+              <Space>
+                <Button
+                  size={'small'}
+                  ghost
+                  type={'link'}
+                  icon={<BiSave size={16} />}
+                  onClick={() => {
+                    setOpenCreateTemplate(true);
+                    setSelectedDateForTemplate(groupedTrips[g].date);
+                  }}>
                   Guardar como plantilla
                 </Button>
-              </Popover>
+                <Button
+                  size={'small'}
+                  ghost
+                  type={'link'}
+                  icon={<BiPrinter size={16} />}
+                  onClick={() => setOpenPrintDocuments(true)}>
+                  Imprimir documentos
+                </Button>
+              </Space>
             </div>
             <Collapse
               destroyInactivePanel
@@ -216,6 +231,41 @@ const ReservationsManager = () => {
             setReload(!reload);
           }}
         />
+      </Modal>
+      <Modal
+        title={'Imprimir documentos'}
+        footer={false}
+        open={openPrintDocuments}
+        destroyOnClose
+        onCancel={() => {
+          setOpenPrintDocuments(false);
+        }}>
+        asdfasdf
+      </Modal>
+      <Modal
+        title={'Crear plantilla'}
+        footer={false}
+        open={openCreateTemplate}
+        destroyOnClose
+        onCancel={() => {
+          setOpenCreateTemplate(false);
+        }}>
+        <Form
+          layout="vertical"
+          onFinish={saveTemplate}
+          initialValues={{date: selectedDateForTemplate?.format(Config.dateFormatServer)}}>
+          <p>
+            La programación del {selectedDateForTemplate?.format(Config.dateFormatServer)} estará disponible para ser
+            usado como plantilla para otros días.
+          </p>
+          <Form.Item name={'date'} hidden>
+            <Input />
+          </Form.Item>
+          <Form.Item name={'name'}>
+            <Input placeholder={'Nombre de la plantilla'} />
+          </Form.Item>
+          <PrimaryButton loading={savingTemplate} block htmlType={'submit'} label={'Guardar'} />
+        </Form>
       </Modal>
     </>
   );

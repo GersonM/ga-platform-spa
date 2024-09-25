@@ -68,7 +68,7 @@ const TripsSchedule = () => {
 
   return (
     <div>
-      <ContentHeader title="Programación de viajes" onRefresh={() => setReload(!reload)} loading={loading} />
+      <ContentHeader title="Programación" onRefresh={() => setReload(!reload)} loading={loading} />
       <div style={{height: 800, width: '100%'}}>
         <Calendar
           messages={calendarLabels}

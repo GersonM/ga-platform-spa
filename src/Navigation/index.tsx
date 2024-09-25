@@ -113,7 +113,7 @@ const Navigation = () => {
           {config?.modules.includes('commercial') && (
             <NavItem label={'Comercial'} icon={<PiHandshake />}>
               <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
-              {(user?.roles?.includes('admin') || user?.roles?.includes('cajero')) && (
+              {(user?.roles?.includes('admin') || user?.roles?.includes('Cajero')) && (
                 <>
                   <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
                   <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />

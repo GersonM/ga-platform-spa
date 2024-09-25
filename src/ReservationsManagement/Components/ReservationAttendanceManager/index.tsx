@@ -3,6 +3,7 @@ import {Drawer, Empty, Modal, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {FaUserTie} from 'react-icons/fa6';
 import {PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
+import {Link} from 'react-router-dom';
 import {TbBuildingEstate, TbClock} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -20,10 +21,8 @@ import InfoButton from '../../../CommonUI/InfoButton';
 import TripTimeEditor from './TripTimeEditor';
 import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
 import TripControls from '../TripControls';
-import './styles.less';
-import CommercialIncidents from '../../../Commercial/Screens/CommercialIncidents';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
-import {Link, useNavigate} from 'react-router-dom';
+import './styles.less';
 
 interface ReservationAttendanceManagerProps {
   trip: MoveTrip;
@@ -32,7 +31,6 @@ interface ReservationAttendanceManagerProps {
 
 const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceManagerProps) => {
   const {user} = useContext(AuthContext);
-  const navigate = useNavigate();
   const [passengers, setPassengers] = useState<MovePassenger[]>();
   const [reload, setReload] = useState(false);
   const [openPassengerModal, setOpenPassengerModal] = useState(false);
