@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
-import {Col, Collapse, Divider, Modal, Popconfirm, Row, Space, Tag} from 'antd';
+import {Col, Collapse, Divider, Modal, Row, Space, Tag} from 'antd';
 import {PiHandshake} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';

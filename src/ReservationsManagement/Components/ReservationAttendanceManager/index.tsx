@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Drawer, Empty, Modal, Space, Tooltip} from 'antd';
+import {Button, Drawer, Empty, Modal, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {FaUserTie} from 'react-icons/fa6';
 import {PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
@@ -264,7 +264,12 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
           </Link>
         }
         onClose={() => setOpenContractIncidents(false)}>
-        {selectedContract && <EntityActivityManager uuid={selectedContract?.uuid} type={'commercial-contract'} />}
+        <>
+          <Button type={'primary'} ghost size={'small'} block>
+            Registrar entrega
+          </Button>
+          {selectedContract && <EntityActivityManager uuid={selectedContract?.uuid} type={'commercial-contract'} />}
+        </>
       </Drawer>
     </div>
   );

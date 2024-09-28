@@ -7,13 +7,10 @@ import axios from 'axios';
 import {
   PiBooksLight,
   PiBoxArrowUp,
-  PiCalendarBlankLight,
   PiCalendarCheckLight,
-  PiCalendarXBold,
   PiCarLight,
   PiCarProfile,
   PiCashRegister,
-  PiChalkboardLight,
   PiClockUser,
   PiFingerprint,
   PiGear,
@@ -24,8 +21,7 @@ import {
   PiMailboxDuotone,
   PiSquaresFour,
   PiStudent,
-  PiStudentBold,
-  PiStudentLight,
+  PiUserFocus,
   PiUsers,
   PiUsersThree,
   PiWarningDiamond,
@@ -41,7 +37,6 @@ import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
 import {TbBuildingEstate} from 'react-icons/tb';
-import {BsPersonWorkspace} from 'react-icons/bs';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 
 const menuItems: ItemType[] = [
@@ -113,6 +108,7 @@ const Navigation = () => {
           {config?.modules.includes('commercial') && (
             <NavItem label={'Comercial'} icon={<PiHandshake />}>
               <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
+              <NavItem icon={<PiUserFocus />} label={'Leads'} path={'/commercial/leads'} />
               {(user?.roles?.includes('admin') || user?.roles?.includes('Cajero')) && (
                 <>
                   <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />

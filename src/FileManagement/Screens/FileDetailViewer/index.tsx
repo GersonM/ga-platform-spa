@@ -16,7 +16,6 @@ import logo from '../../../Assets/logo_full.png';
 import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileIcon from '../../Components/FileIcon';
-import FileItem from '../../Components/ContainerContentViewer/FileItem';
 import FileSize from '../../../CommonUI/FileSize';
 
 const FileDetailViewer = () => {

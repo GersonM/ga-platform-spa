@@ -24,6 +24,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;
 axios.defaults.headers.common['X-Tenant'] = tenantID;
 axios.defaults.headers.common.Authorization = 'Bearer ' + token;
+axios.defaults.withXSRFToken = true;
 
 axios
   .get('/version')

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, ColorPicker, Input, Row, Space} from 'antd';
+import {Col, ColorPicker, Input, InputNumber, Row, Space, Switch} from 'antd';
 
 import {SettingValue} from '../../../Types/api';
 import './styles.less';
@@ -37,6 +37,10 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
             onFilesUploaded={file => onChangeValue(file.uuid)}
           />
         );
+      case 'boolean':
+        return <Switch defaultValue={preference.value == '1'} onChange={value => onChangeValue(value ? '1' : '0')} />;
+      case 'number':
+        return <InputNumber placeholder={'Value'} value={value} onChange={e => e && onChangeValue(e)} />;
       default:
         return <Input placeholder={'Value'} value={value} onChange={e => onChangeValue(e.target.value)} />;
     }

@@ -10,6 +10,7 @@ interface TableListProps {
   components?: any;
   scroll?: any;
   loading?: boolean;
+  size?: string;
   small?: boolean;
   dataSource?: TableProps<AnyObject>['dataSource'];
   expandable?: ExpandableConfig<AnyObject>;
@@ -25,6 +26,7 @@ const TableList = ({
   dataSource,
   expandable,
   onClick,
+  size,
   rowKey = 'uuid',
   ...props
 }: TableListProps) => {

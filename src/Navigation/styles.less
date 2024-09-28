@@ -13,6 +13,11 @@
   z-index: 2;
   box-shadow: 2px 10px 15px rgba(0, 0, 0, 0.2);
 
+  animation-duration: .7s;
+  animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
+  animation-fill-mode: both;
+  animation-name: sidebarFadeIn;
+
   .head {
     margin: 12px 10px;
     border-bottom: 1px solid var(--border-color);
@@ -220,6 +225,7 @@
     z-index: 5;
     top: 0;
     transform: translateX(-110%);
+    animation-name: none;
 
     &.open {
       transform: translateX(0);

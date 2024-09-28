@@ -38,6 +38,7 @@ import ReservationsManager from '../ReservationsManagement/Screens/ReservationsM
 import CoursesManagement from '../LMSManagement/Screens/CoursesManagement';
 import CommercialIncidents from '../Commercial/Screens/CommercialIncidents';
 import EnrollmentsManagement from '../LMSManagement/Screens/EnrollmentsManagement';
+import CommercialLeads from '../Commercial/Screens/CommercialLeads';
 
 const App = () => {
   useEffect(() => {
@@ -58,7 +59,7 @@ const App = () => {
             if (window.location.pathname.indexOf('/auth/login') === -1) {
               window.location.href = '/auth/login';
             }
-            break;
+            return Promise.reject(error);
           default:
             return Promise.reject(error);
         }
@@ -131,6 +132,7 @@ const App = () => {
         </Route>
         <Route path={'commercial'}>
           <Route path={'incidents'} element={<CommercialIncidents />} />
+          <Route path={'leads/:campaign?'} element={<CommercialLeads />} />
           <Route path={'clients'} element={<CommercialClients />} />
           <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
           <Route path={'payments'} element={<CommercialClients />} />

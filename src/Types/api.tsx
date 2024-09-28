@@ -62,6 +62,19 @@ export type Client = {
   entity?: Profile | Company | any;
   contracts?: Contract[];
 };
+export type Lead = {
+  uuid: string;
+  score: number;
+  observations?: string;
+  profile: Profile;
+  referer?: Profile;
+  campaign?: Campaign;
+};
+export type Campaign = {
+  uuid: string;
+  name: string;
+  description?: string;
+};
 export type Contract = {
   uuid: string;
   amount: number;

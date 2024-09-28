@@ -19,6 +19,7 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import LoadTripsTemplate from '../../Components/LoadTripsTemplate';
 import Config from '../../../Config';
 import './styles.less';
+import PrintContractsDocuments from '../../Components/PrintContractsDocuments';
 
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -157,7 +158,10 @@ const ReservationsManager = () => {
                   ghost
                   type={'link'}
                   icon={<BiPrinter size={16} />}
-                  onClick={() => setOpenPrintDocuments(true)}>
+                  onClick={() => {
+                    setOpenPrintDocuments(true);
+                    setSelectedDateForTemplate(groupedTrips[g].date);
+                  }}>
                   Imprimir documentos
                 </Button>
               </Space>
@@ -240,7 +244,7 @@ const ReservationsManager = () => {
         onCancel={() => {
           setOpenPrintDocuments(false);
         }}>
-        asdfasdf
+        <PrintContractsDocuments date={selectedDateForTemplate} />
       </Modal>
       <Modal
         title={'Crear plantilla'}

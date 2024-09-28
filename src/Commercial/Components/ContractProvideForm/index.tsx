@@ -32,6 +32,7 @@ const ContractProvideForm = ({contract, onComplete}: ContractProvideFormProps) =
     <>
       <LoadingIndicator visible={loading} message={'Registrando entrega'} />
       <Form onFinish={provide}>
+        <p>Si la fecha de entrega se deja en blanco se registrará con la fecha de hoy.</p>
         <Form.Item name={'date'}>
           <DatePicker placeholder={'Hoy'} />
         </Form.Item>
