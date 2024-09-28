@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Card, Checkbox, Form, Input, InputNumber} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
+import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
@@ -9,7 +10,6 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Profile} from '../../../Types/api';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {useForm} from 'antd/lib/form/Form';
 
 interface CreateLeadFormProps {
   onComplete?: () => void;
@@ -22,9 +22,14 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
   const [loading, setLoading] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>();
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
+  const [saving, setSaving] = useState(false);
   const [form] = useForm();
 
   useEffect(() => {
+    if (!lastSearchText || lastSearchText.length < 4) {
+      return;
+    }
+
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -52,22 +57,24 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
 
   const createLead = (values: any) => {
     const data = {campaign_uuid: campaignUuid, ...values};
+    setSaving(true);
     axios
       .post('commercial/leads', data)
       .then(res => {
         setSelectedProfile(undefined);
-        //form.resetFields();
+        setSaving(false);
         onComplete && onComplete();
       })
       .catch(e => {
+        setSaving(false);
         ErrorHandler.showNotification(e);
       });
   };
 
   return (
     <div>
-      <LoadingIndicator visible={loading} />
-      {profiles && profiles.length > 0 && (
+      <LoadingIndicator visible={saving} message={'Guardando datos'} />
+      {searchProfile && profiles && profiles.length > 0 && (
         <Card
           title={'Perfiles encontrados'}
           size={'small'}
@@ -84,8 +91,14 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
               label={'Usar datos'}
             />
           }>
-          {profiles[0].name} {profiles[0].last_name} <br />
-          <ProfileDocument profile={profiles[0]} />
+          {loading ? (
+            'Buscando...'
+          ) : (
+            <>
+              {profiles[0].name} {profiles[0].last_name} <br />
+              <ProfileDocument profile={profiles[0]} />
+            </>
+          )}
         </Card>
       )}
       <Form form={form} layout={'vertical'} initialValues={selectedProfile} onFinish={createLead}>
@@ -117,7 +130,7 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
             <Checkbox value={'Tiene familia'}>Tiene familia</Checkbox>
           </Checkbox.Group>
         </Form.Item>
-        <PrimaryButton loading={loading} label={'Registrar'} htmlType={'submit'} block />
+        <PrimaryButton loading={saving} label={'Registrar'} htmlType={'submit'} block />
       </Form>
     </div>
   );
