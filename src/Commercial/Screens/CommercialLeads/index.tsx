@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Checkbox, Col, Drawer, Empty, Form, Input, InputNumber, Row} from 'antd';
 import axios from 'axios';
 
@@ -13,11 +13,12 @@ import CreateLeadForm from '../../Components/CreateLeadForm';
 import CampaignSelector from '../../Components/CampaignSelector';
 import {useNavigate, useParams} from 'react-router-dom';
 import {BiCog} from 'react-icons/bi';
+import AuthContext from '../../../Context/AuthContext';
 
 const CommercialLeads = () => {
+  const {user} = useContext(AuthContext);
   const [leads, setLeads] = useState<Lead[]>();
   const [openCampaignManager, setOpenCampaignManager] = useState(false);
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign>();
   const [reload, setReload] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -86,17 +87,19 @@ const CommercialLeads = () => {
                 }
               }}
             />
-            <PrimaryButton
-              icon={<BiCog size={17} />}
-              label={'Gestionar campañas'}
-              ghost
-              onClick={() => setOpenCampaignManager(true)}
-            />
+            {user?.roles?.includes('admin') && (
+              <PrimaryButton
+                icon={<BiCog size={17} />}
+                label={'Gestionar campañas'}
+                ghost
+                onClick={() => setOpenCampaignManager(true)}
+              />
+            )}
           </>
         }
       />
       <Row gutter={[20, 20]}>
-        <Col md={12}>
+        <Col lg={12}>
           {params.campaign ? (
             <CreateLeadForm
               campaignUuid={params.campaign}
@@ -108,7 +111,7 @@ const CommercialLeads = () => {
             <Empty description={'Selecciona una campaña'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </Col>
-        <Col md={12}>
+        <Col lg={12}>
           <TableList columns={columns} dataSource={leads} />
         </Col>
       </Row>
