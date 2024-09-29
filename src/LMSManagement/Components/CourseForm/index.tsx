@@ -32,6 +32,9 @@ const CourseForm = ({onComplete}: ICourseFormProps) => {
       <Form.Item name={'description'} label={'Descripción'}>
         <Input.TextArea />
       </Form.Item>
+      <Form.Item name={'benefits'} label={'Beneficios'}>
+        <Input.TextArea />
+      </Form.Item>
       <Form.Item name={'is_public'} label={'Estado de publicación'}>
         <Checkbox>Publicar</Checkbox>
       </Form.Item>

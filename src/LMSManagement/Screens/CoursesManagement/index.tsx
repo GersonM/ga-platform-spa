@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {ArrowRightIcon, TrashIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -8,7 +9,6 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Modal, Space} from 'antd';
 import CourseForm from '../../Components/CourseForm';
 import IconButton from '../../../CommonUI/IconButton';
-import {ArrowRightIcon, TrashIcon} from '@heroicons/react/24/solid';
 
 const CoursesManagement = () => {
   const [courses, setCourses] = useState<any[]>();
@@ -47,6 +47,13 @@ const CoursesManagement = () => {
     {
       title: 'Descripción',
       dataIndex: 'description',
+    },
+    {
+      title: 'Publicado',
+      dataIndex: 'is_public',
+      render: (is_public: any) => {
+        return is_public ? 'Si' : 'No';
+      },
     },
     {
       title: 'Categoría',
