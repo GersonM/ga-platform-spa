@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
+import {TrashIcon} from '@heroicons/react/16/solid';
+import {IoReload} from 'react-icons/io5';
+import dayjs from 'dayjs';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Token} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
-import dayjs from 'dayjs';
 import IconButton from '../../../CommonUI/IconButton';
-import {TrashIcon} from '@heroicons/react/16/solid';
+import {Space} from 'antd';
 
 interface IUserSessionsManager {
   profileUuid: string;
@@ -22,7 +25,7 @@ const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
     };
 
     axios
-      .get(`/authentication/users/${profileUuid}/tokens`, config)
+      .get(`/authentication/profiles/${profileUuid}/tokens`, config)
       .then(response => {
         if (response) {
           setTokens(response.data);
@@ -33,7 +36,7 @@ const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload]);
+  }, [reload, profileUuid]);
 
   const deleteToken = (id: number) => {
     axios
@@ -62,9 +65,12 @@ const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
 
   return (
     <div>
-      <h2>Dispositivos autorizados</h2>
+      <Space>
+        <h2>Dispositivos autorizados</h2>
+        <IconButton icon={<IoReload size={18} />} onClick={() => setReload(!reload)} />
+      </Space>
       <p>Estos son los dispositivos donde este usuario a iniciado sesión</p>
-      <TableList columns={columns} dataSource={tokens} />
+      <TableList rowKey={'id'} columns={columns} dataSource={tokens} />
     </div>
   );
 };
