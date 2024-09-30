@@ -15,6 +15,7 @@ import CreateUser from '../../Components/CreateUser';
 import IconButton from '../../../CommonUI/IconButton';
 import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
+import UserSessionsManager from '../../Components/UserSessionsManager';
 
 const Users = () => {
   const params = useParams();
@@ -163,6 +164,11 @@ const Users = () => {
                 label: 'Información personal',
                 key: 'info',
                 children: <ProfileEditor profileUuid={params.uuid} onCompleted={() => setReload(!reload)} />,
+              },
+              {
+                label: 'Sesiones',
+                key: 'sessions',
+                children: <UserSessionsManager profileUuid={params.uuid} />,
               },
               {
                 label: 'Suscripciones',

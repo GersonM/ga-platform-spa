@@ -151,6 +151,15 @@ export type Permission = {
   guard_name: string;
 };
 
+export type Token = {
+  id: 14;
+  abilities: ['*'];
+  name: string;
+  created_at: string;
+  last_used_at: string;
+  updated_at: string;
+};
+
 export type User = {
   uuid: number;
   //email: string;
