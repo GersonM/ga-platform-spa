@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, Collapse, Form, Input, List, Modal, Row, Space} from 'antd';
+import {Checkbox, Col, Collapse, Form, Input, InputNumber, List, Modal, Row, Space} from 'antd';
 import {useParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
@@ -11,13 +11,15 @@ import CourseForm from '../../Components/CourseForm';
 import TaxonomySelector from '../../../TaxonomyManagement/Components/TaxonomySelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {Course} from '../../../Types/api';
-import {PlusIcon} from '@heroicons/react/24/solid';
+import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
+import IconButton from '../../../CommonUI/IconButton';
 
 const CourseDetail = () => {
   const [course, setCourse] = useState<Course>();
   const [loading, setLoading] = useState(false);
   const [openCourseForm, setOpenCourseForm] = useState(false);
   const [reload, setReload] = useState(false);
+  const [openCreateModule, setOpenCreateModule] = useState(false);
   const params = useParams();
   const [form] = useForm();
 
@@ -80,13 +82,16 @@ const CourseDetail = () => {
             <Form.Item name={'category'} label={'Categoría y etiquetas'} extra={'Usa valores separados por comas'}>
               <Input />
             </Form.Item>
+            <Form.Item name={'price'} label={'Precio'}>
+              <InputNumber />
+            </Form.Item>
             <Form.Item name={'description'} label={'Descripción'}>
-              <Input.TextArea />
+              <Input.TextArea style={{height: 200}} />
             </Form.Item>
             <Form.Item name={'benefits'} label={'Beneficios'}>
-              <Input.TextArea />
+              <Input.TextArea style={{height: 200}} />
             </Form.Item>
-            <Form.Item name={'is_public'} label={'Estado de publicación'}>
+            <Form.Item name={'is_public'} valuePropName={'checked'} label={'Estado de publicación'}>
               <Checkbox>Publicar</Checkbox>
             </Form.Item>
             <Form.Item name={'taxonomy_uuid'} label={'Estado de publicación'}>
@@ -97,23 +102,35 @@ const CourseDetail = () => {
         </Col>
         <Col span={12}>
           <Space style={{marginBottom: 10}}>
-            <h3>Lista de sesiones</h3>
-            <PrimaryButton icon={<PlusIcon />} label={'Nuevo modulo'} ghost size={'small'} />
+            <h3>Contenido del curso</h3>
+            <PrimaryButton
+              onClick={() => setOpenCreateModule(true)}
+              icon={<PlusIcon />}
+              label={'Nuevo modulo'}
+              ghost
+              size={'small'}
+            />
           </Space>
           <Collapse size={'small'}>
             <Collapse.Panel key={'c1'} header={'Modulo 1'}>
               <List size={'small'}>
-                <List.Item>Sesión 1</List.Item>
-                <List.Item>Sesión 2</List.Item>
+                <List.Item extra={<IconButton icon={<TrashIcon />} small danger />}>Sesión 1</List.Item>
+                <List.Item extra={<IconButton icon={<TrashIcon />} small danger />}>Sesión 2</List.Item>
               </List>
-              <PrimaryButton label={'Agregar sesión'} ghost size={'small'} />
+              <Space>
+                <PrimaryButton icon={<PlusIcon />} label={'Agregar sesión'} ghost size={'small'} />
+                <PrimaryButton icon={<TrashIcon />} danger label={'Borrar'} ghost size={'small'} />
+              </Space>
             </Collapse.Panel>
             <Collapse.Panel key={'c1'} header={'Modulo 2'}>
               <List size={'small'}>
                 <List.Item>Sesión 1</List.Item>
                 <List.Item>Sesión 2</List.Item>
               </List>
-              <PrimaryButton label={'Agregar sesión'} ghost size={'small'} />
+              <Space>
+                <PrimaryButton icon={<PlusIcon />} label={'Agregar sesión'} ghost size={'small'} />
+                <PrimaryButton icon={<TrashIcon />} danger label={'Borrar'} ghost size={'small'} />
+              </Space>
             </Collapse.Panel>
           </Collapse>
         </Col>
@@ -130,6 +147,19 @@ const CourseDetail = () => {
             setReload(!reload);
           }}
         />
+      </Modal>
+      <Modal
+        destroyOnClose
+        title={'Crear módulo'}
+        open={openCreateModule}
+        onCancel={() => setOpenCreateModule(false)}
+        footer={false}>
+        <Form form={form} layout="vertical" onFinish={submitForm}>
+          <Form.Item label={'Nombre del módulo'}>
+            <Input />
+          </Form.Item>
+          <PrimaryButton icon={<PlusIcon />} label={'Nuevo modulo'} block />
+        </Form>
       </Modal>
     </ModuleContent>
   );
