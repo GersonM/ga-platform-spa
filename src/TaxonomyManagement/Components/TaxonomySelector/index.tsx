@@ -65,7 +65,6 @@ const TaxonomySelector = ({value, ...props}: ITaxonomySelectorProps) => {
   const onSelected = (newValue: string) => {
     console.log(newValue);
   };
-  console.log({taxonomy});
   return (
     <TreeSelect
       treeDataSimpleMode

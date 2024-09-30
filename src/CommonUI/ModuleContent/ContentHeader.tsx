@@ -14,6 +14,7 @@ interface ContentHeaderProps {
   onAdd?: () => void;
   onEdit?: () => void;
   onBack?: () => void;
+  showBack?: boolean;
   onRefresh?: () => void;
   loading?: boolean;
   bordered?: boolean;
@@ -30,6 +31,7 @@ const ContentHeader = ({
   onBack,
   onAdd,
   loading,
+  showBack,
   bordered = false,
 }: ContentHeaderProps) => {
   const navigate = useNavigate();
@@ -37,12 +39,15 @@ const ContentHeader = ({
   return (
     <div className={`content-header ${bordered ? 'bordered' : ''}`}>
       <Space wrap>
-        {(onBack || backLocation) && (
+        {(onBack || backLocation || showBack) && (
           <Tooltip title={'Back'}>
             <IconButton
               onClick={() => {
-                onBack && onBack();
-                backLocation && navigate(backLocation);
+                if (backLocation) {
+                  navigate(backLocation);
+                } else {
+                  onBack ? onBack() : navigate(-1);
+                }
               }}
               icon={<ArrowUturnLeftIcon />}
             />

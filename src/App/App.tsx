@@ -39,6 +39,7 @@ import CoursesManagement from '../LMSManagement/Screens/CoursesManagement';
 import CommercialIncidents from '../Commercial/Screens/CommercialIncidents';
 import EnrollmentsManagement from '../LMSManagement/Screens/EnrollmentsManagement';
 import CommercialLeads from '../Commercial/Screens/CommercialLeads';
+import CourseDetail from '../LMSManagement/Screens/CourseDetail';
 
 const App = () => {
   useEffect(() => {
@@ -114,7 +115,7 @@ const App = () => {
         </Route>
         <Route path={'lms'}>
           <Route path={'courses'} element={<CoursesManagement />} />
-          <Route path={'courses/:course'} element={<CommercialContractDetail />} />
+          <Route path={'courses/:course'} element={<CourseDetail />} />
           <Route path={'students'} element={<EnrollmentsManagement />} />
         </Route>
         <Route path={'reservations'} element={<ReservationsLayout />}>

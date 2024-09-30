@@ -452,3 +452,25 @@ export type TaxonomyDefinition = {
   parent?: TaxonomyDefinition;
   children?: TaxonomyDefinition[];
 };
+
+export type Course = {
+  uuid: string;
+  benefits?: string;
+  category: string;
+  created_at: string;
+  description: string;
+  duration?: number;
+  chat_room: ChatRoom;
+  teacher_profile: Profile;
+  is_public: boolean;
+  language: string;
+  max_attendance?: number;
+  name: string;
+  price?: number;
+  syllabus?: string;
+};
+
+export type ChatRoom = {
+  uuid: string;
+  name?: string;
+};
