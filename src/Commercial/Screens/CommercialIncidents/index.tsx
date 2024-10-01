@@ -7,11 +7,14 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import {Client, Profile, ResponsePagination} from '../../../Types/api';
+import {Profile, ResponsePagination} from '../../../Types/api';
 
 import './styles.less';
 import dayjs from 'dayjs';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
+import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
+import {useNavigate} from 'react-router-dom';
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -23,6 +26,8 @@ const CommercialIncidents = () => {
   const [reload, setReload] = useState(false);
   const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
+  const [typeFilter, setTypeFilter] = useState<string>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -33,6 +38,7 @@ const CommercialIncidents = () => {
         page: currentPage,
         page_size: pageSize,
         stage: stageFilter,
+        type: typeFilter,
       },
     };
 
@@ -52,43 +58,42 @@ const CommercialIncidents = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [searchText, currentPage, pageSize, reload, stageFilter]);
+  }, [searchText, currentPage, pageSize, reload, stageFilter, typeFilter]);
 
   const columns = [
+    {
+      title: 'Tipo',
+      width: 50,
+      align: 'center',
+      dataIndex: 'type',
+      render: (type: string) => {
+        return <EntityActivityIcon type={type} size={25} />;
+      },
+    },
     {
       title: 'Mensaje',
       dataIndex: 'comment',
       fixed: 'left',
-      width: 280,
+      width: 320,
     },
     {
       title: 'Reportado por',
       dataIndex: 'profile',
-      width: 280,
+      width: 160,
       render: (profile: Profile) => {
-        return (
-          <>
-            {profile.name} {profile.last_name} <br />
-            <small>
-              <ProfileDocument profile={profile} />
-            </small>
-          </>
-        );
+        return <>{profile.name}</>;
       },
     },
     {
-      title: 'Reportado por',
+      title: 'Responsable',
       dataIndex: 'assigned_to',
-      width: 280,
+      width: 150,
       render: (profile: Profile) => {
         return (
           <>
             {profile ? (
               <>
-                {profile.name} {profile.last_name} <br />
-                <small>
-                  <ProfileDocument profile={profile} />
-                </small>
+                {profile.name} <br />
               </>
             ) : (
               <PrimaryButton ghost size={'small'} label={'Asignar'} />
@@ -97,13 +102,23 @@ const CommercialIncidents = () => {
         );
       },
     },
-
     {
-      title: 'Entidad',
-      dataIndex: 'type',
+      title: 'Asunto',
+      dataIndex: 'entity',
+      width: 200,
+      render: (entity: any) => {
+        return (
+          <EstateContractAddress
+            contract={entity}
+            onEdit={() => {
+              navigate(`/commercial/contracts/${entity.uuid}`);
+            }}
+          />
+        );
+      },
     },
     {
-      title: 'Fecha',
+      title: 'Fecha del reporte',
       dataIndex: 'created_at',
       width: 160,
       render: (date: string) => {
@@ -113,7 +128,7 @@ const CommercialIncidents = () => {
     {
       title: 'Expira',
       dataIndex: 'expired_at',
-      width: 160,
+      width: 110,
       render: (date: string) => {
         return date ? dayjs(date).fromNow() : <PrimaryButton ghost size={'small'} label={'Asignar fecha'} />;
       },
@@ -139,6 +154,16 @@ const CommercialIncidents = () => {
               {label: 'Etapa III', value: 'III'},
               {label: 'Etapa II', value: 'II'},
               {label: 'Etapa I', value: 'I'},
+            ]}
+          />
+          <Select
+            placeholder={'Tipo'}
+            allowClear
+            onChange={value => setTypeFilter(value)}
+            style={{width: 100}}
+            options={[
+              {label: 'Alertas', value: 'alert'},
+              {label: 'Mensaje', value: 'entry'},
             ]}
           />
         </Space>

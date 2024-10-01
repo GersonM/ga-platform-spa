@@ -17,6 +17,7 @@ import Config from '../../Config';
 import {IoAttach} from 'react-icons/io5';
 import FileIcon from '../../FileManagement/Components/FileIcon';
 import SearchProfile from '../SearchProfile';
+import EntityActivityIcon from './EntityActivityIcon';
 
 interface EntityActivityManagerProps {
   uuid: string;
@@ -106,17 +107,6 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
     setMessageType(type.key);
   };
 
-  const getTypeIcon = (type: string, size = 18) => {
-    switch (type) {
-      case 'alert':
-        return <AiOutlineAlert size={size} color={'#ff0000'} />;
-      case 'schedule':
-        return <CalendarDaysIcon width={size} />;
-      case 'entry':
-        return <ChatBubbleLeftIcon width={size} />;
-    }
-  };
-
   const onDrop = (acceptedFiles: Array<Blob>) => {
     const formData = new FormData();
     acceptedFiles.forEach(item => {
@@ -149,7 +139,9 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
         {isDragActive && <div className={'drop-message'}>Suelta archivos para cargar</div>}
         <Form onFinish={submitMessage}>
           <Dropdown menu={{items, onClick: updateMessageType}} arrow>
-            <div className="message-type-icon">{getTypeIcon(messageType)}</div>
+            <div className="message-type-icon">
+              <EntityActivityIcon type={messageType} />
+            </div>
           </Dropdown>
           <Form.Item noStyle>
             <Input
@@ -218,7 +210,8 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
         return (
           <div key={a.uuid} className={`activity-item ${a.type}`}>
             <div className={'author'}>
-              {getTypeIcon(a.type, 25)} <br />
+              <EntityActivityIcon type={a.type} size={25} />
+              <br />
               {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
             </div>
             <div className={'message'}>

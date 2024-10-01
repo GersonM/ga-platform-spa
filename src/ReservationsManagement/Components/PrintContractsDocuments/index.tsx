@@ -4,7 +4,7 @@ import {MovePassenger} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Dayjs} from 'dayjs';
 import Config from '../../../Config';
-import {List} from 'antd';
+import {Checkbox, Col, List, Row} from 'antd';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface PrintContractsDocumentsProps {
@@ -13,6 +13,7 @@ interface PrintContractsDocumentsProps {
 
 const PrintContractsDocuments = ({date}: PrintContractsDocumentsProps) => {
   const [passengers, setPassengers] = useState<MovePassenger[]>();
+  const [selectedProfiles, setSelectedProfiles] = useState<string[]>([]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -34,31 +35,67 @@ const PrintContractsDocuments = ({date}: PrintContractsDocumentsProps) => {
 
     return cancelTokenSource.cancel;
   }, []);
+  const toggleSelection = (value: string, add: boolean) => {
+    const exist = selectedProfiles.indexOf(value);
 
+    if (add) {
+      if (exist == -1) {
+        setSelectedProfiles([...selectedProfiles, value]);
+      }
+    } else {
+      if (exist != -1) {
+        const newItem = [...selectedProfiles];
+        newItem.splice(exist, 1);
+        setSelectedProfiles(newItem);
+      }
+    }
+  };
+
+  console.log(selectedProfiles);
   return (
     <div>
-      <List>
-        {passengers?.map((p, index) => {
-          return (
-            <List.Item
-              key={index}
-              extra={
-                <>
-                  <PrimaryButton
-                    ghost
-                    label={'Imprimir'}
-                    size={'small'}
-                    onClick={() => {
-                      console.log(p.profile?.commercial_client?.contracts);
+      <Row gutter={[20, 20]}>
+        <Col md={12}>
+          <h3>Personas</h3>
+          <List>
+            {passengers?.map((p, index) => {
+              return (
+                <List.Item key={index}>
+                  <Checkbox onChange={e => toggleSelection(e.target.value, e.target.checked)} value={p.profile?.uuid}>
+                    {p.profile?.name} {p.profile?.last_name}
+                  </Checkbox>
+                </List.Item>
+              );
+            })}
+          </List>
+        </Col>
+        <Col md={12}>
+          <h3>Documentos disponibles</h3>
+          <List>
+            {passengers?.map((p, index) => {
+              return (
+                <List.Item key={index}>
+                  <Checkbox
+                    onChange={e => {
+                      console.log(e.target.checked, e.target.value);
+                      if (selectedProfiles.findIndex(e.target.value) == -1) {
+                        setSelectedProfiles([...selectedProfiles, e.target.value]);
+                      }
                     }}
-                  />
-                </>
-              }>
-              {p.profile?.name}
-            </List.Item>
-          );
-        })}
-      </List>
+                    value={p.profile?.uuid}>
+                    {p.profile?.name} {p.profile?.last_name}
+                  </Checkbox>
+                </List.Item>
+              );
+            })}
+          </List>
+        </Col>
+      </Row>
+      <PrimaryButton
+        disabled={selectedProfiles?.length === 0}
+        block
+        label={'Imprimir ' + selectedProfiles?.length + ' documentos'}
+      />
     </div>
   );
 };

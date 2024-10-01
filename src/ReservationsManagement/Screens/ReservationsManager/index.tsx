@@ -238,6 +238,7 @@ const ReservationsManager = () => {
       </Modal>
       <Modal
         title={'Imprimir documentos'}
+        width={700}
         footer={false}
         open={openPrintDocuments}
         destroyOnClose
