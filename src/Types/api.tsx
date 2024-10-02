@@ -483,3 +483,16 @@ export type ChatRoom = {
   uuid: string;
   name?: string;
 };
+
+export type EntityActivity = {
+  attachments?: File[];
+  assigned_to?: Profile;
+  comment?: string;
+  completed_at?: string;
+  created_at: string;
+  entity?: any;
+  expired_at?: string;
+  profile?: Profile;
+  type: string;
+  uuid: string;
+};

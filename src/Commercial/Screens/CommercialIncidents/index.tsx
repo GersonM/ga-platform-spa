@@ -1,20 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Pagination, Select, Space} from 'antd';
+import {Input, Modal, Pagination, Popconfirm, Select, Space, Tooltip} from 'antd';
+import {TrashIcon} from '@heroicons/react/16/solid';
+import {useNavigate} from 'react-router-dom';
+import {PiCheckBold} from 'react-icons/pi';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import {Profile, ResponsePagination} from '../../../Types/api';
+import {EntityActivity, Profile, ResponsePagination} from '../../../Types/api';
 
-import './styles.less';
-import dayjs from 'dayjs';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
-import {useNavigate} from 'react-router-dom';
+import IconButton from '../../../CommonUI/IconButton';
+import ScheduleActivityForm from '../../../EntityActivity/Components/ScheduleActivityForm';
+import './styles.less';
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -24,10 +27,12 @@ const CommercialIncidents = () => {
   const [pageSize, setPageSize] = useState<number>(100);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
   const [typeFilter, setTypeFilter] = useState<string>();
+  const [statusFilter, setStatusFilter] = useState<string>();
   const navigate = useNavigate();
+  const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
+  const [openActivityEditor, setOpenActivityEditor] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -39,6 +44,7 @@ const CommercialIncidents = () => {
         page_size: pageSize,
         stage: stageFilter,
         type: typeFilter,
+        status: statusFilter,
       },
     };
 
@@ -58,7 +64,29 @@ const CommercialIncidents = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [searchText, currentPage, pageSize, reload, stageFilter, typeFilter]);
+  }, [searchText, currentPage, pageSize, reload, stageFilter, typeFilter, statusFilter]);
+
+  const completeTask = (uuid: string) => {
+    axios
+      .post(`entity-activity/${uuid}/complete`, {})
+      .then(response => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const deleteTask = (uuid: string) => {
+    axios
+      .delete(`entity-activity/${uuid}`, {})
+      .then(response => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
 
   const columns = [
     {
@@ -66,8 +94,8 @@ const CommercialIncidents = () => {
       width: 50,
       align: 'center',
       dataIndex: 'type',
-      render: (type: string) => {
-        return <EntityActivityIcon type={type} size={25} />;
+      render: (type: string, activity: EntityActivity) => {
+        return <EntityActivityIcon type={type} size={25} activity={activity} />;
       },
     },
     {
@@ -79,25 +107,29 @@ const CommercialIncidents = () => {
     {
       title: 'Reportado por',
       dataIndex: 'profile',
-      width: 160,
-      render: (profile: Profile) => {
-        return <>{profile.name}</>;
-      },
-    },
-    {
-      title: 'Responsable',
-      dataIndex: 'assigned_to',
-      width: 150,
-      render: (profile: Profile) => {
+      width: 190,
+      render: (profile: Profile, row: any) => {
         return (
           <>
-            {profile ? (
-              <>
-                {profile.name} <br />
-              </>
-            ) : (
-              <PrimaryButton ghost size={'small'} label={'Asignar'} />
-            )}
+            <strong>Autor:</strong> {profile.name} <br />
+            <strong>Responsable:</strong>{' '}
+            <>
+              {row.assigned_to ? (
+                <>
+                  {row.assigned_to.name} <br />
+                </>
+              ) : (
+                <PrimaryButton
+                  ghost
+                  size={'small'}
+                  label={'Asignar'}
+                  onClick={() => {
+                    setOpenActivityEditor(true);
+                    setSelectedActivity(row);
+                  }}
+                />
+              )}
+            </>
           </>
         );
       },
@@ -122,15 +154,49 @@ const CommercialIncidents = () => {
       dataIndex: 'created_at',
       width: 160,
       render: (date: string) => {
-        return dayjs(date).format('DD-MM-YYYY HH:mm:ss');
+        return dayjs(date).format('DD-MM-YYYY HH:mm a');
       },
     },
     {
       title: 'Expira',
       dataIndex: 'expired_at',
       width: 110,
-      render: (date: string) => {
-        return date ? dayjs(date).fromNow() : <PrimaryButton ghost size={'small'} label={'Asignar fecha'} />;
+      render: (date: string, row: any) => {
+        return date ? (
+          dayjs(date).fromNow()
+        ) : (
+          <PrimaryButton
+            ghost
+            size={'small'}
+            label={'Asignar fecha'}
+            onClick={() => {
+              setOpenActivityEditor(true);
+              setSelectedActivity(row);
+            }}
+          />
+        );
+      },
+    },
+    {
+      title: 'Acciones',
+      dataIndex: 'uuid',
+      width: 90,
+      render: (uuid: string) => {
+        return (
+          <Space>
+            <Popconfirm
+              onConfirm={() => completeTask(uuid)}
+              title={'Vas a marcar esta tarea como completada'}
+              description={'No se emitirán nuevas alertas'}>
+              <Tooltip title={'Marcar como resuelto'} placement={'bottom'}>
+                <IconButton icon={<PiCheckBold size={17} />} />
+              </Tooltip>
+            </Popconfirm>
+            <Popconfirm title={'Seguro que quieres eliminar esta incidencia?'} onConfirm={() => deleteTask(uuid)}>
+              <IconButton small icon={<TrashIcon />} danger />
+            </Popconfirm>
+          </Space>
+        );
       },
     },
   ];
@@ -166,9 +232,19 @@ const CommercialIncidents = () => {
               {label: 'Mensaje', value: 'entry'},
             ]}
           />
+          <Select
+            placeholder={'Estado'}
+            allowClear
+            onChange={value => setStatusFilter(value)}
+            style={{width: 120}}
+            options={[
+              {label: 'Completados', value: 'completed'},
+              {label: 'Pendientes', value: 'pending'},
+            ]}
+          />
         </Space>
       </ContentHeader>
-      <div>
+      <div style={{marginBottom: '10px'}}>
         <TableList scroll={{x: 1200}} loading={loading} columns={columns} dataSource={clients} pagination={false} />
       </div>
       {pagination && (
@@ -183,6 +259,15 @@ const CommercialIncidents = () => {
           pageSize={pagination.per_page}
         />
       )}
+      <Modal
+        open={openActivityEditor}
+        title={'Editar actividad'}
+        footer={false}
+        onCancel={() => setOpenActivityEditor(false)}>
+        {selectedActivity && (
+          <ScheduleActivityForm activity={selectedActivity} onComplete={() => setOpenActivityEditor(false)} />
+        )}
+      </Modal>
     </ModuleContent>
   );
 };
