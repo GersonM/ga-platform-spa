@@ -1,30 +1,51 @@
 import React, {useState} from 'react';
 import {DatePicker, Form} from 'antd';
-import {Dayjs} from 'dayjs';
+import dayjs, {Dayjs} from 'dayjs';
+import {useForm} from 'antd/lib/form/Form';
+import axios from 'axios';
+
 import {EntityActivity} from '../../../Types/api';
-import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import SearchProfile from '../../../CommonUI/SearchProfile';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface ScheduleActivityFormProps {
   activity: EntityActivity;
   onComplete?: () => void;
 }
 
-const ScheduleActivityForm = ({activity}: ScheduleActivityFormProps) => {
+const ScheduleActivityForm = ({activity, onComplete}: ScheduleActivityFormProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const [loading, setLoading] = useState(false);
+  const [form] = useForm();
 
-  const submitForm = () => {};
+  const submitForm = (data: any) => {
+    axios
+      .put(`/entity-activity/${activity.uuid}/`, data)
+      .then(response => {
+        setLoading(false);
+        onComplete && onComplete();
+      })
+      .catch(error => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      });
+  };
 
   return (
     <div>
-      <Form layout="vertical">
-        <Form.Item name={'profile_uuid'} label={'Responsable'}>
+      <Form layout="vertical" onFinish={submitForm}>
+        <Form.Item name={'assigned_uuid'} label={'Responsable'}>
           <SearchProfile />
         </Form.Item>
-        <Form.Item name={'date'} label={'Fecha'}>
-          <DatePicker onChange={date => setSelectedDate(date)} />
+        <Form.Item
+          name={'expired_at'}
+          label={'Fecha'}
+          initialValue={activity.expired_at ? dayjs(activity.expired_at) : undefined}>
+          <DatePicker style={{width: '100%'}} onChange={date => setSelectedDate(date)} />
         </Form.Item>
         {selectedDate?.format('YYYY-MM-DD HH:mm:ss')}
+        <PrimaryButton htmlType={'submit'} block label={'Guardar'} loading={loading} />
       </Form>
     </div>
   );

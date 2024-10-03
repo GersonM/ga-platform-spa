@@ -18,6 +18,8 @@ interface AuthContextDefaults {
   preferredMode?: string;
   darkMode?: boolean;
   openMenu: boolean;
+  activityCount?: number;
+  updateActivityCount?: () => void;
   uploadProgress?: any;
   setOpenMenu: (value: boolean) => void;
 }
@@ -46,6 +48,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [openMenu, setOpenMenu] = useState(false);
   const [preferredMode, setPreferredMode] = useState<string>('auto');
   const [uploadProgress, setUploadProgress] = useState<any>();
+  const [activityCount, setActivityCount] = useState<number>();
+  const [reloadActivity, setReloadActivity] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -92,6 +96,25 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      axios
+        .get('/entity-activity/my-tasks')
+        .then(userResponse => {
+          if (userResponse) {
+            setUser(userResponse.data);
+          } else {
+            if (window.location.pathname.indexOf('/auth/login') === -1) {
+              window.location.href = '/auth/login';
+            }
+          }
+        })
+        .catch(error => {
+          ErrorHandler.showNotification(error);
+        });
+    }
+  }, [user]);
+
+  useEffect(() => {
     const localVersion = localStorage.getItem('version');
     if (localVersion !== version) {
       setTimeout(() => {
@@ -100,7 +123,12 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           placement: 'bottomLeft',
           className: 'deploy-alert-wrapper',
           description: (
-            <ul style={{padding: '5px 5px 5px 20px', backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: '5px'}}>
+            <ul
+              style={{
+                padding: '5px 5px 5px 20px',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                borderRadius: '5px',
+              }}>
               <li>Nuevo módulo de reservas</li>
             </ul>
           ),
@@ -110,6 +138,10 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
       localStorage.setItem('version', version);
     }
   }, []);
+
+  const updateActivityCount = () => {
+    setReloadActivity(!reloadActivity);
+  };
 
   const logout = async () => {
     await axios.get('authentication/logout');
@@ -132,6 +164,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         openMenu,
         setOpenMenu,
         uploadProgress,
+        activityCount,
+        updateActivityCount,
         sessionToken: token,
       }}>
       {children}

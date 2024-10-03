@@ -39,6 +39,7 @@ import NavItem from './NavItem';
 import './styles.less';
 import {TbBuildingEstate} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
+import {GoTasklist} from 'react-icons/go';
 
 const menuItems: ItemType[] = [
   {
@@ -103,6 +104,7 @@ const Navigation = () => {
       <nav>
         <ul className="navigation-list">
           <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
+          <NavItem label={'Mis tareas'} icon={<GoTasklist />} path={'/'} notifications={3} />
           {config?.modules.includes('files') && (
             <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
           )}

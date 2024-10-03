@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Modal, Pagination, Popconfirm, Select, Space, Tooltip} from 'antd';
+import {Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tooltip} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useNavigate} from 'react-router-dom';
-import {PiCheckBold} from 'react-icons/pi';
+import {PiCheckBold, PiCross, PiProhibit} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {EntityActivity, Profile, ResponsePagination} from '../../../Types/api';
 
@@ -27,7 +26,6 @@ const CommercialIncidents = () => {
   const [pageSize, setPageSize] = useState<number>(100);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [stageFilter, setStageFilter] = useState<string>();
   const [typeFilter, setTypeFilter] = useState<string>();
   const [statusFilter, setStatusFilter] = useState<string>();
   const navigate = useNavigate();
@@ -42,7 +40,6 @@ const CommercialIncidents = () => {
         search: searchText,
         page: currentPage,
         page_size: pageSize,
-        stage: stageFilter,
         type: typeFilter,
         status: statusFilter,
       },
@@ -64,11 +61,11 @@ const CommercialIncidents = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [searchText, currentPage, pageSize, reload, stageFilter, typeFilter, statusFilter]);
+  }, [searchText, currentPage, pageSize, reload, typeFilter, statusFilter]);
 
-  const completeTask = (uuid: string) => {
+  const completeTask = (uuid: string, resolve: boolean) => {
     axios
-      .post(`entity-activity/${uuid}/complete`, {})
+      .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
       .then(response => {
         setReload(!reload);
       })
@@ -88,7 +85,7 @@ const CommercialIncidents = () => {
       });
   };
 
-  const columns = [
+  const columns: any[] = [
     {
       title: 'Tipo',
       width: 50,
@@ -108,28 +105,31 @@ const CommercialIncidents = () => {
       title: 'Reportado por',
       dataIndex: 'profile',
       width: 190,
-      render: (profile: Profile, row: any) => {
+      render: (profile: Profile, row: EntityActivity) => {
         return (
           <>
-            <strong>Autor:</strong> {profile.name} <br />
-            <strong>Responsable:</strong>{' '}
-            <>
-              {row.assigned_to ? (
+            <strong>Autor:</strong> {profile.name}
+            {row.type !== 'entry' && (
+              <>
+                <br />
+                <strong>Responsable:</strong>{' '}
                 <>
-                  {row.assigned_to.name} <br />
+                  {row.assigned_to ? (
+                    <>{row.assigned_to.name}</>
+                  ) : (
+                    <PrimaryButton
+                      ghost
+                      size={'small'}
+                      label={'Asignar'}
+                      onClick={() => {
+                        setOpenActivityEditor(true);
+                        setSelectedActivity(row);
+                      }}
+                    />
+                  )}
                 </>
-              ) : (
-                <PrimaryButton
-                  ghost
-                  size={'small'}
-                  label={'Asignar'}
-                  onClick={() => {
-                    setOpenActivityEditor(true);
-                    setSelectedActivity(row);
-                  }}
-                />
-              )}
-            </>
+              </>
+            )}
           </>
         );
       },
@@ -181,15 +181,19 @@ const CommercialIncidents = () => {
       title: 'Acciones',
       dataIndex: 'uuid',
       width: 90,
-      render: (uuid: string) => {
+      render: (uuid: string, row: EntityActivity) => {
         return (
           <Space>
             <Popconfirm
-              onConfirm={() => completeTask(uuid)}
-              title={'Vas a marcar esta tarea como completada'}
-              description={'No se emitirán nuevas alertas'}>
-              <Tooltip title={'Marcar como resuelto'} placement={'bottom'}>
-                <IconButton icon={<PiCheckBold size={17} />} />
+              onConfirm={() => completeTask(uuid, !!row.completed_at)}
+              title={row.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
+              description={
+                row.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
+              }>
+              <Tooltip
+                title={row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
+                placement={'bottom'}>
+                <IconButton icon={row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
               </Tooltip>
             </Popconfirm>
             <Popconfirm title={'Seguro que quieres eliminar esta incidencia?'} onConfirm={() => deleteTask(uuid)}>
@@ -211,18 +215,6 @@ const CommercialIncidents = () => {
             placeholder={'Buscar por nombre, dni o correo'}
           />
           <Select
-            placeholder={'Etapa'}
-            allowClear
-            onChange={value => setStageFilter(value)}
-            style={{width: 100}}
-            options={[
-              {label: 'Etapa IV', value: 'IV'},
-              {label: 'Etapa III', value: 'III'},
-              {label: 'Etapa II', value: 'II'},
-              {label: 'Etapa I', value: 'I'},
-            ]}
-          />
-          <Select
             placeholder={'Tipo'}
             allowClear
             onChange={value => setTypeFilter(value)}
@@ -233,19 +225,27 @@ const CommercialIncidents = () => {
             ]}
           />
           <Select
-            placeholder={'Estado'}
+            placeholder={'Pendientes'}
             allowClear
             onChange={value => setStatusFilter(value)}
             style={{width: 120}}
             options={[
               {label: 'Completados', value: 'completed'},
               {label: 'Pendientes', value: 'pending'},
+              {label: 'Todos', value: 'all'},
             ]}
           />
         </Space>
       </ContentHeader>
       <div style={{marginBottom: '10px'}}>
-        <TableList scroll={{x: 1200}} loading={loading} columns={columns} dataSource={clients} pagination={false} />
+        <Table
+          size="small"
+          scroll={{x: 1200}}
+          loading={loading}
+          columns={columns}
+          dataSource={clients}
+          pagination={false}
+        />
       </div>
       {pagination && (
         <Pagination
@@ -262,10 +262,17 @@ const CommercialIncidents = () => {
       <Modal
         open={openActivityEditor}
         title={'Editar actividad'}
+        destroyOnClose
         footer={false}
         onCancel={() => setOpenActivityEditor(false)}>
         {selectedActivity && (
-          <ScheduleActivityForm activity={selectedActivity} onComplete={() => setOpenActivityEditor(false)} />
+          <ScheduleActivityForm
+            activity={selectedActivity}
+            onComplete={() => {
+              setOpenActivityEditor(false);
+              setReload(!reload);
+            }}
+          />
         )}
       </Modal>
     </ModuleContent>

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
 import {Col, Collapse, Divider, Modal, Row, Space, Tag} from 'antd';
 import {PiHandshake} from 'react-icons/pi';
@@ -20,7 +19,6 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContractProvideForm from '../../Components/ContractProvideForm';
 
 const CommercialContractDetail = () => {
-  const navigate = useNavigate();
   const params = useParams();
   const [reload, setReload] = useState(false);
   const [contract, setContract] = useState<Contract>();
@@ -61,9 +59,7 @@ const CommercialContractDetail = () => {
       <ContentHeader
         loading={loading}
         onRefresh={() => setReload(!reload)}
-        onBack={() => {
-          navigate('/commercial/clients');
-        }}
+        showBack
         tools={
           <>
             {contract?.provided_at ? (
