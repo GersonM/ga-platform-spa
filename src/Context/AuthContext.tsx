@@ -95,7 +95,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
     }
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (user) {
       axios
         .get('/entity-activity/my-tasks')
@@ -112,7 +112,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           ErrorHandler.showNotification(error);
         });
     }
-  }, [user]);
+  }, [user]);*/
 
   useEffect(() => {
     const localVersion = localStorage.getItem('version');
