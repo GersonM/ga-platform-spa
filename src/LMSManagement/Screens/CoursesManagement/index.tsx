@@ -64,7 +64,7 @@ const CoursesManagement = () => {
     },
     {
       title: 'Descripción',
-      dataIndex: 'description',
+      dataIndex: 'brief',
     },
     {
       title: 'Publicado',

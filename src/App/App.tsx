@@ -40,6 +40,7 @@ import CommercialIncidents from '../Commercial/Screens/CommercialIncidents';
 import EnrollmentsManagement from '../LMSManagement/Screens/EnrollmentsManagement';
 import CommercialLeads from '../Commercial/Screens/CommercialLeads';
 import CourseDetail from '../LMSManagement/Screens/CourseDetail';
+import MyTasks from '../EntityActivity/Screens/MyTasks';
 
 const App = () => {
   useEffect(() => {
@@ -78,6 +79,7 @@ const App = () => {
       <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
       <Route path={'/'} element={<AuthenticatedLayout />}>
         <Route index element={<DashboardHome />} />
+        <Route path={'/my-tasks'} element={<MyTasks />} />
         <Route path={'file-management'} element={<CompanyContainers />}>
           <Route path={':uuid'} element={<CompanyContainers />} />
           <Route path={':uuid/containers/:child_uuid'} element={<CompanyContainers />} />

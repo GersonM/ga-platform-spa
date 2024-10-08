@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {ChevronDownIcon} from '@heroicons/react/24/outline';
-import {Badge, Tag} from 'antd';
+import {Badge} from 'antd';
 
 interface NavItemProps {
   label: string;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {DatePicker, Form} from 'antd';
 import dayjs, {Dayjs} from 'dayjs';
 import {useForm} from 'antd/lib/form/Form';
@@ -8,6 +8,7 @@ import {EntityActivity} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import AuthContext from '../../../Context/AuthContext';
 
 interface ScheduleActivityFormProps {
   activity: EntityActivity;
@@ -16,6 +17,7 @@ interface ScheduleActivityFormProps {
 
 const ScheduleActivityForm = ({activity, onComplete}: ScheduleActivityFormProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const {updateActivityCount} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
@@ -25,6 +27,7 @@ const ScheduleActivityForm = ({activity, onComplete}: ScheduleActivityFormProps)
       .then(response => {
         setLoading(false);
         onComplete && onComplete();
+        updateActivityCount && updateActivityCount();
       })
       .catch(error => {
         setLoading(false);

@@ -1,23 +1,42 @@
 import React from 'react';
 import {Form, Input} from 'antd';
-import {PlusIcon} from '@heroicons/react/24/solid';
 import {useForm} from 'antd/lib/form/Form';
+import {PlusIcon} from '@heroicons/react/24/solid';
+import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 
-const CourseModule = () => {
+interface CourseModuleFormProps {
+  onComplete?: () => void;
+  courseUUID: string;
+}
+
+const CourseModuleForm = ({onComplete, courseUUID}: CourseModuleFormProps) => {
   const [form] = useForm();
 
-  const submitForm = () => {};
+  const submitForm = (values: any) => {
+    axios
+      .post('/lms/modules', {...values, course_uuid: courseUUID})
+      .then(() => {
+        onComplete && onComplete();
+      })
+      .catch(err => {
+        ErrorHandler.showNotification(err);
+      });
+  };
 
   return (
     <Form form={form} layout="vertical" onFinish={submitForm}>
-      <Form.Item label={'Nombre del módulo'}>
+      <Form.Item name={'name'} label={'Nombre del módulo'}>
         <Input />
       </Form.Item>
-      <PrimaryButton icon={<PlusIcon />} label={'Nuevo modulo'} block />
+      <Form.Item name={'description'} label={'Descripción'}>
+        <Input.TextArea />
+      </Form.Item>
+      <PrimaryButton icon={<PlusIcon />} htmlType={'submit'} label={'Nuevo modulo'} block />
     </Form>
   );
 };
 
-export default CourseModule;
+export default CourseModuleForm;

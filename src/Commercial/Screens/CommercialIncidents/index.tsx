@@ -239,6 +239,7 @@ const CommercialIncidents = () => {
       </ContentHeader>
       <div style={{marginBottom: '10px'}}>
         <Table
+          rowKey={'uuid'}
           size="small"
           scroll={{x: 1200}}
           loading={loading}

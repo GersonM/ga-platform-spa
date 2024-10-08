@@ -477,6 +477,20 @@ export type Course = {
   name: string;
   price?: number;
   syllabus?: string;
+  cover?: File;
+};
+
+export type CourseModule = {
+  uuid: string;
+  name: string;
+  description?: string;
+  sessions?: ModuleSession[];
+};
+
+export type ModuleSession = {
+  uuid: string;
+  title: string;
+  file: File;
 };
 
 export type ChatRoom = {

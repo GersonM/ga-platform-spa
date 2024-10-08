@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Checkbox, Col, Collapse, Form, Input, InputNumber, List, Modal, Row, Space} from 'antd';
+import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
 import {useParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
@@ -11,8 +12,9 @@ import CourseForm from '../../Components/CourseForm';
 import TaxonomySelector from '../../../TaxonomyManagement/Components/TaxonomySelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {Course} from '../../../Types/api';
-import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
-import IconButton from '../../../CommonUI/IconButton';
+import FileUploader from '../../../CommonUI/FileUploader';
+import CourseModuleForm from '../../Components/CourseModuleForm';
+import CourseModulesManager from '../../Components/CourseModulesManager';
 
 const CourseDetail = () => {
   const [course, setCourse] = useState<Course>();
@@ -76,11 +78,17 @@ const CourseDetail = () => {
         <Col span={12}>
           <h3>Información del curso</h3>
           <Form form={form} layout="vertical" onFinish={submitForm} initialValues={course}>
+            <Form.Item name={'fk_file_uuid'} label={'Imagen de portada'}>
+              <FileUploader showPreview imagePath={course?.cover?.source} />
+            </Form.Item>
             <Form.Item name={'name'} label={'Nombre del curso'}>
               <Input />
             </Form.Item>
             <Form.Item name={'category'} label={'Categoría y etiquetas'} extra={'Usa valores separados por comas'}>
               <Input />
+            </Form.Item>
+            <Form.Item name={'brief'} label={'Descripción corta'}>
+              <Input.TextArea style={{height: 70}} />
             </Form.Item>
             <Form.Item name={'price'} label={'Precio'}>
               <InputNumber />
@@ -111,55 +119,24 @@ const CourseDetail = () => {
               size={'small'}
             />
           </Space>
-          <Collapse size={'small'}>
-            <Collapse.Panel key={'c1'} header={'Modulo 1'}>
-              <List size={'small'}>
-                <List.Item extra={<IconButton icon={<TrashIcon />} small danger />}>Sesión 1</List.Item>
-                <List.Item extra={<IconButton icon={<TrashIcon />} small danger />}>Sesión 2</List.Item>
-              </List>
-              <Space>
-                <PrimaryButton icon={<PlusIcon />} label={'Agregar sesión'} ghost size={'small'} />
-                <PrimaryButton icon={<TrashIcon />} danger label={'Borrar'} ghost size={'small'} />
-              </Space>
-            </Collapse.Panel>
-            <Collapse.Panel key={'c1'} header={'Modulo 2'}>
-              <List size={'small'}>
-                <List.Item>Sesión 1</List.Item>
-                <List.Item>Sesión 2</List.Item>
-              </List>
-              <Space>
-                <PrimaryButton icon={<PlusIcon />} label={'Agregar sesión'} ghost size={'small'} />
-                <PrimaryButton icon={<TrashIcon />} danger label={'Borrar'} ghost size={'small'} />
-              </Space>
-            </Collapse.Panel>
-          </Collapse>
+          {params.course && <CourseModulesManager refresh={reload} courseUUID={params.course} />}
         </Col>
       </Row>
-      <Modal
-        destroyOnClose
-        title={'Crear curso'}
-        open={openCourseForm}
-        onCancel={() => setOpenCourseForm(false)}
-        footer={false}>
-        <CourseForm
-          onComplete={() => {
-            setOpenCourseForm(false);
-            setReload(!reload);
-          }}
-        />
-      </Modal>
       <Modal
         destroyOnClose
         title={'Crear módulo'}
         open={openCreateModule}
         onCancel={() => setOpenCreateModule(false)}
         footer={false}>
-        <Form form={form} layout="vertical" onFinish={submitForm}>
-          <Form.Item label={'Nombre del módulo'}>
-            <Input />
-          </Form.Item>
-          <PrimaryButton icon={<PlusIcon />} label={'Nuevo modulo'} block />
-        </Form>
+        {params.course && (
+          <CourseModuleForm
+            courseUUID={params.course}
+            onComplete={() => {
+              setOpenCreateModule(false);
+              setReload(!reload);
+            }}
+          />
+        )}
       </Modal>
     </ModuleContent>
   );

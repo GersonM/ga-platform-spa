@@ -15,9 +15,17 @@ interface FileUploaderProps {
   imagePath?: string;
   fileUuid?: string;
   height?: number;
+  onChange?: (uuid: string) => void;
 }
 
-const FileUploader = ({height, onFilesUploaded, imagePath, fileUuid, showPreview = false}: FileUploaderProps) => {
+const FileUploader = ({
+  height,
+  onChange,
+  onFilesUploaded,
+  imagePath,
+  fileUuid,
+  showPreview = false,
+}: FileUploaderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>();
   const [progress, setProgress] = useState<number>(0);
@@ -47,6 +55,7 @@ const FileUploader = ({height, onFilesUploaded, imagePath, fileUuid, showPreview
 
       setUploadedFile(response.data);
       onFilesUploaded && onFilesUploaded(response.data);
+      onChange && onChange(response.data.uuid);
 
       setLoading(false);
       message.success('Archivo cargado!');

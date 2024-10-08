@@ -95,24 +95,19 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
     }
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
+    console.log('reload activity');
     if (user) {
       axios
-        .get('/entity-activity/my-tasks')
-        .then(userResponse => {
-          if (userResponse) {
-            setUser(userResponse.data);
-          } else {
-            if (window.location.pathname.indexOf('/auth/login') === -1) {
-              window.location.href = '/auth/login';
-            }
-          }
+        .get('/entity-activity/my-tasks-stats')
+        .then(response => {
+          setActivityCount(response.data.total);
         })
         .catch(error => {
           ErrorHandler.showNotification(error);
         });
     }
-  }, [user]);*/
+  }, [user, reloadActivity]);
 
   useEffect(() => {
     const localVersion = localStorage.getItem('version');
@@ -140,6 +135,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   }, []);
 
   const updateActivityCount = () => {
+    console.log('asdasdf - terminasdf');
     setReloadActivity(!reloadActivity);
   };
 

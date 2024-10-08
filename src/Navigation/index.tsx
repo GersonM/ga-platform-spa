@@ -58,7 +58,8 @@ const menuItems: ItemType[] = [
 ];
 
 const Navigation = () => {
-  const {uploadProgress, user, logout, config, darkMode, setOpenMenu, openMenu} = useContext(AuthContext);
+  const {uploadProgress, user, logout, config, darkMode, setOpenMenu, openMenu, activityCount} =
+    useContext(AuthContext);
   const {pathname} = useLocation();
 
   useEffect(() => {
@@ -104,7 +105,7 @@ const Navigation = () => {
       <nav>
         <ul className="navigation-list">
           <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
-          <NavItem label={'Mis tareas'} icon={<GoTasklist />} path={'/'} notifications={3} />
+          <NavItem label={'Mis tareas'} icon={<GoTasklist />} path={'/my-tasks'} notifications={activityCount} />
           {config?.modules.includes('files') && (
             <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
           )}

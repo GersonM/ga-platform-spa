@@ -6,18 +6,19 @@ import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import FileUploader from '../../../CommonUI/FileUploader';
 
 interface CourseModuleFormProps {
   onComplete?: () => void;
-  courseUUID: string;
+  moduleUUID: string;
 }
 
-const CourseModuleForm = ({onComplete, courseUUID}: CourseModuleFormProps) => {
+const ModuleSessionForm = ({onComplete, moduleUUID}: CourseModuleFormProps) => {
   const [form] = useForm();
 
   const submitForm = (values: any) => {
     axios
-      .post('/lms/modules', {...values, course_uuid: courseUUID})
+      .post('/lms/sessions', {...values, module_uuid: moduleUUID})
       .then(() => {
         onComplete && onComplete();
       })
@@ -28,15 +29,15 @@ const CourseModuleForm = ({onComplete, courseUUID}: CourseModuleFormProps) => {
 
   return (
     <Form form={form} layout="vertical" onFinish={submitForm}>
-      <Form.Item name={'name'} label={'Nombre del módulo'}>
+      <Form.Item name={'title'} label={'Nombre de la sesión'}>
         <Input />
       </Form.Item>
-      <Form.Item name={'description'} label={'Descripción'}>
-        <Input.TextArea />
+      <Form.Item name={'fk_file_uuid'} label={'Videos'}>
+        <FileUploader />
       </Form.Item>
       <PrimaryButton icon={<PlusIcon />} htmlType={'submit'} label={'Nuevo modulo'} block />
     </Form>
   );
 };
 
-export default CourseModuleForm;
+export default ModuleSessionForm;
