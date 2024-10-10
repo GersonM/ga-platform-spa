@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Pagination, Popconfirm, Space, Table, Tooltip} from 'antd';
+import {Avatar, Image, Pagination, Popconfirm, Space, Table, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {EntityActivity, Profile, ResponsePagination} from '../../../Types/api';
+import {EntityActivity, File, Profile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -13,9 +13,11 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import FileIcon from '../../../FileManagement/Components/FileIcon';
+import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 
 const MyComponent = () => {
-  const [clients, setClients] = useState<Profile[]>();
+  const [activities, setActivities] = useState<EntityActivity[]>();
   const [searchText, setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -43,11 +45,11 @@ const MyComponent = () => {
 
     setLoading(true);
     axios
-      .get(`entity-activity`, config)
+      .get(`entity-activity/my-tasks`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setClients(response.data.data);
+          setActivities(response.data.data);
           setPagination(response.data.meta);
         }
       })
@@ -81,40 +83,50 @@ const MyComponent = () => {
       },
     },
     {
+      title: 'Reportado',
+      dataIndex: 'profile',
+      width: 180,
+      render: (profile: Profile, row: EntityActivity) => {
+        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
+      },
+    },
+    {
       title: 'Mensaje',
       dataIndex: 'comment',
       fixed: 'left',
       width: 320,
     },
     {
-      title: 'Reportado por',
-      dataIndex: 'profile',
+      title: 'Archivos',
+      dataIndex: 'attachments',
       width: 190,
-      render: (profile: Profile, row: EntityActivity) => {
+      render: (attachments: File[], row: EntityActivity) => {
         return (
           <>
-            <strong>Autor:</strong> {profile.name}
-            {row.type !== 'entry' && (
-              <>
-                <br />
-                <strong>Responsable:</strong>{' '}
+            <Image.PreviewGroup>
+              {attachments?.map((at: File) => (
                 <>
-                  {row.assigned_to ? (
-                    <>{row.assigned_to.name}</>
-                  ) : (
-                    <PrimaryButton
-                      ghost
-                      size={'small'}
-                      label={'Asignar'}
-                      onClick={() => {
-                        setOpenActivityEditor(true);
-                        setSelectedActivity(row);
+                  {at.type.includes('ima') ? (
+                    <Image
+                      key={at.uuid}
+                      preview={{
+                        destroyOnClose: true,
+                        src: at.source,
                       }}
+                      loading={'lazy'}
+                      src={at.thumbnail}
+                      width={30}
                     />
+                  ) : (
+                    <Tooltip title={at.name}>
+                      <a href={at.source} target={'_blank'}>
+                        <FileIcon file={at} size={25} />
+                      </a>
+                    </Tooltip>
                   )}
                 </>
-              </>
-            )}
+              ))}
+            </Image.PreviewGroup>
           </>
         );
       },
@@ -123,7 +135,7 @@ const MyComponent = () => {
       title: 'Asunto',
       dataIndex: 'entity',
       width: 200,
-      render: (entity: any) => {
+      render: (entity?: any) => {
         return (
           <EstateContractAddress
             contract={entity}
@@ -132,14 +144,6 @@ const MyComponent = () => {
             }}
           />
         );
-      },
-    },
-    {
-      title: 'Fecha del reporte',
-      dataIndex: 'created_at',
-      width: 160,
-      render: (date: string) => {
-        return dayjs(date).format('DD-MM-YYYY HH:mm a');
       },
     },
     {
@@ -189,7 +193,7 @@ const MyComponent = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title={'Mis tareas asignadas'} />
+      <ContentHeader title={'Mis tareas asignadas'} onRefresh={() => setReload(!reload)} loading={loading} />
       <div style={{marginBottom: '10px'}}>
         <Table
           rowKey={'uuid'}
@@ -197,7 +201,7 @@ const MyComponent = () => {
           scroll={{x: 1200}}
           loading={loading}
           columns={columns}
-          dataSource={clients}
+          dataSource={activities}
           pagination={false}
         />
       </div>

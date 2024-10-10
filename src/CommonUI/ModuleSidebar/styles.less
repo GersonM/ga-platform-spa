@@ -5,6 +5,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: all 0.7s;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -84,15 +85,14 @@
 
 @media screen and (max-width: 700px) {
   .module-sidebar-wrapper {
-    position: fixed;
+    position: absolute;
     z-index: 1;
-    height: calc(100dvh - 85px);
-    border-radius: 0 10px 10px 0;
-    top: 75px;
-    //transform: translateX(-110%);
-    transition: all 0.7s;
-    box-shadow: none;
-
+    height: calc(100dvh - 90px);
+    top: 30px;
+    max-width: 100dvw;
+    min-width: 100px;
+    transform: translateX(-120%);
+    border-radius: 9px;
     &.open {
       left: var(--main-nav-width);
       transform: translateX(0%);

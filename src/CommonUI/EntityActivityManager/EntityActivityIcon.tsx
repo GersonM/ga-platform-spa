@@ -1,7 +1,6 @@
 import React from 'react';
-import {AiOutlineAlert} from 'react-icons/ai';
-import {CalendarDaysIcon, ChatBubbleLeftIcon} from '@heroicons/react/24/outline';
 import {EntityActivity} from '../../Types/api';
+import {PiCalendarDots, PiInfo, PiWarningDiamond} from 'react-icons/pi';
 
 interface EntityActivityIconProps {
   type: string;
@@ -22,13 +21,13 @@ const EntityActivityIcon = ({type, size = 18, activity}: EntityActivityIconProps
 
   switch (type) {
     case 'alert':
-      return <AiOutlineAlert size={size} color={color} />;
+      return <PiWarningDiamond size={size} color={color} />;
     case 'schedule':
-      return <CalendarDaysIcon width={size} color={color} />;
+      return <PiCalendarDots size={size} color={color} />;
     case 'entry':
-      return <ChatBubbleLeftIcon width={size} color={color} />;
+      return <PiInfo size={size} color={color} />;
     default:
-      return <CalendarDaysIcon width={size} color={color} />;
+      return <PiCalendarDots size={size} color={color} />;
   }
 };
 

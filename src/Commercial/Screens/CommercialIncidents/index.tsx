@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tooltip} from 'antd';
+import {Image, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tooltip} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useNavigate} from 'react-router-dom';
 import {PiCheckBold, PiCross, PiProhibit} from 'react-icons/pi';
@@ -9,7 +9,7 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {EntityActivity, Profile, ResponsePagination} from '../../../Types/api';
+import {EntityActivity, File, Profile, ResponsePagination} from '../../../Types/api';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -17,6 +17,8 @@ import EstateContractAddress from '../../Components/RealState/EstateContractAddr
 import IconButton from '../../../CommonUI/IconButton';
 import ScheduleActivityForm from '../../../EntityActivity/Components/ScheduleActivityForm';
 import './styles.less';
+import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
+import FileIcon from '../../../FileManagement/Components/FileIcon';
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -90,9 +92,18 @@ const CommercialIncidents = () => {
       title: 'Tipo',
       width: 50,
       align: 'center',
+      fixed: 'left',
       dataIndex: 'type',
       render: (type: string, activity: EntityActivity) => {
         return <EntityActivityIcon type={type} size={25} activity={activity} />;
+      },
+    },
+    {
+      title: 'Reportado',
+      dataIndex: 'profile',
+      width: 190,
+      render: (profile: Profile, row: EntityActivity) => {
+        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
       },
     },
     {
@@ -102,20 +113,51 @@ const CommercialIncidents = () => {
       width: 320,
     },
     {
-      title: 'Reportado por',
-      dataIndex: 'profile',
-      width: 190,
-      render: (profile: Profile, row: EntityActivity) => {
+      title: 'Archivos',
+      dataIndex: 'attachments',
+      render: (attachments: File[], row: EntityActivity) => {
         return (
           <>
-            <strong>Autor:</strong> {profile.name}
+            <Image.PreviewGroup>
+              {attachments?.map((at: File) => (
+                <>
+                  {at.type.includes('ima') ? (
+                    <Image
+                      key={at.uuid}
+                      preview={{
+                        destroyOnClose: true,
+                        src: at.source,
+                      }}
+                      loading={'lazy'}
+                      src={at.thumbnail}
+                      width={30}
+                    />
+                  ) : (
+                    <Tooltip title={at.name}>
+                      <a href={at.source} target={'_blank'}>
+                        <FileIcon file={at} size={25} />
+                      </a>
+                    </Tooltip>
+                  )}
+                </>
+              ))}
+            </Image.PreviewGroup>
+          </>
+        );
+      },
+    },
+    {
+      title: 'Responsable',
+      dataIndex: 'profile',
+      width: 120,
+      render: (assigned_to: Profile, row: EntityActivity) => {
+        return (
+          <>
             {row.type !== 'entry' && (
               <>
-                <br />
-                <strong>Responsable:</strong>{' '}
                 <>
-                  {row.assigned_to ? (
-                    <>{row.assigned_to.name}</>
+                  {assigned_to ? (
+                    <>{assigned_to.name}</>
                   ) : (
                     <PrimaryButton
                       ghost
@@ -137,7 +179,7 @@ const CommercialIncidents = () => {
     {
       title: 'Asunto',
       dataIndex: 'entity',
-      width: 200,
+      width: 210,
       render: (entity: any) => {
         return (
           <EstateContractAddress
@@ -147,14 +189,6 @@ const CommercialIncidents = () => {
             }}
           />
         );
-      },
-    },
-    {
-      title: 'Fecha del reporte',
-      dataIndex: 'created_at',
-      width: 160,
-      render: (date: string) => {
-        return dayjs(date).format('DD-MM-YYYY HH:mm a');
       },
     },
     {
