@@ -148,29 +148,23 @@ const CommercialIncidents = () => {
     },
     {
       title: 'Responsable',
-      dataIndex: 'profile',
+      dataIndex: 'assigned_to',
       width: 120,
       render: (assigned_to: Profile, row: EntityActivity) => {
         return (
           <>
-            {row.type !== 'entry' && (
-              <>
-                <>
-                  {assigned_to ? (
-                    <>{assigned_to.name}</>
-                  ) : (
-                    <PrimaryButton
-                      ghost
-                      size={'small'}
-                      label={'Asignar'}
-                      onClick={() => {
-                        setOpenActivityEditor(true);
-                        setSelectedActivity(row);
-                      }}
-                    />
-                  )}
-                </>
-              </>
+            {assigned_to ? (
+              <ProfileChip profile={assigned_to} />
+            ) : (
+              <PrimaryButton
+                ghost
+                size={'small'}
+                label={'Asignar'}
+                onClick={() => {
+                  setOpenActivityEditor(true);
+                  setSelectedActivity(row);
+                }}
+              />
             )}
           </>
         );
