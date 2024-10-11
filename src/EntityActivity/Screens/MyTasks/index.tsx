@@ -197,7 +197,7 @@ const MyComponent = () => {
   return (
     <ModuleContent>
       <ContentHeader title={'Mis tareas asignadas'} onRefresh={() => setReload(!reload)} loading={loading} />
-      <Space>
+      <Space size={'large'}>
         {activityCount && (
           <>
             <Progress

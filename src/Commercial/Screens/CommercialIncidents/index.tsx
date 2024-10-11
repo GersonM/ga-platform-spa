@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tooltip} from 'antd';
+import {Image, Input, Modal, Pagination, Popconfirm, Progress, Select, Space, Statistic, Table, Tooltip} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useNavigate} from 'react-router-dom';
 import {PiCheckBold, PiCross, PiProhibit} from 'react-icons/pi';
@@ -33,6 +33,18 @@ const CommercialIncidents = () => {
   const navigate = useNavigate();
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
+  const [stats, setStats] = useState();
+
+  useEffect(() => {
+    axios
+      .get('/entity-activity/tasks-stats')
+      .then(response => {
+        setStats(response.data);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  }, [reload]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -265,6 +277,20 @@ const CommercialIncidents = () => {
           />
         </Space>
       </ContentHeader>
+      <Space size={'large'}>
+        {stats && (
+          <>
+            <Progress
+              showInfo
+              type={'dashboard'}
+              size={40}
+              percent={((stats?.completed * 100) / stats.total).toFixed()}
+            />
+            <Statistic title={'Pendientes'} value={stats?.pending} />
+            <Statistic title={'Vencidas'} value={stats?.expired} />
+          </>
+        )}
+      </Space>
       <div style={{marginBottom: '10px'}}>
         <Table
           rowKey={'uuid'}
