@@ -498,6 +498,14 @@ export type ChatRoom = {
   name?: string;
 };
 
+export type EntityActivityStats = {
+  completed: number;
+  expired: number;
+  pending: number;
+  reviewed: number;
+  total: number;
+};
+
 export type EntityActivity = {
   attachments?: File[];
   assigned_to?: Profile;

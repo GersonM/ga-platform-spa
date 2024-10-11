@@ -4,7 +4,7 @@ import axios from 'axios';
 import {notification} from 'antd';
 
 import {version} from '../../package.json';
-import {SessionUser, TenantConfig} from '../Types/api';
+import {EntityActivityStats, SessionUser, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface AuthContextDefaults {
@@ -18,7 +18,7 @@ interface AuthContextDefaults {
   preferredMode?: string;
   darkMode?: boolean;
   openMenu: boolean;
-  activityCount?: number;
+  activityCount?: EntityActivityStats;
   updateActivityCount?: () => void;
   uploadProgress?: any;
   setOpenMenu: (value: boolean) => void;

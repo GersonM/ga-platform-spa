@@ -204,7 +204,7 @@ const MyComponent = () => {
               showInfo
               type={'dashboard'}
               size={40}
-              percent={((activityCount?.completed * 100) / activityCount.total).toFixed()}
+              percent={Math.round((activityCount?.completed * 100) / activityCount.total)}
             />
             <Statistic title={'Pendientes'} value={activityCount?.pending} />
             <Statistic title={'Vencidas'} value={activityCount?.expired} />

@@ -9,7 +9,7 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {EntityActivity, File, Profile, ResponsePagination} from '../../../Types/api';
+import {EntityActivity, EntityActivityStats, File, Profile, ResponsePagination} from '../../../Types/api';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -33,7 +33,7 @@ const CommercialIncidents = () => {
   const navigate = useNavigate();
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
-  const [stats, setStats] = useState();
+  const [stats, setStats] = useState<EntityActivityStats>();
 
   useEffect(() => {
     axios
@@ -284,7 +284,7 @@ const CommercialIncidents = () => {
               showInfo
               type={'dashboard'}
               size={40}
-              percent={((stats?.completed * 100) / stats.total).toFixed()}
+              percent={Math.round((stats?.completed * 100) / stats.total)}
             />
             <Statistic title={'Pendientes'} value={stats?.pending} />
             <Statistic title={'Vencidas'} value={stats?.expired} />
