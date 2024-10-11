@@ -149,7 +149,7 @@ const CommercialIncidents = () => {
     {
       title: 'Responsable',
       dataIndex: 'assigned_to',
-      width: 120,
+      width: 180,
       render: (assigned_to: Profile, row: EntityActivity) => {
         return (
           <>
