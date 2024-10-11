@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Avatar, Image, Pagination, Popconfirm, Space, Table, Tooltip} from 'antd';
+import React, {useContext, useEffect, useState} from 'react';
+import {Avatar, Card, Image, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -15,6 +15,7 @@ import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
+import AuthContext from '../../../Context/AuthContext';
 
 const MyComponent = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
@@ -29,6 +30,7 @@ const MyComponent = () => {
   const navigate = useNavigate();
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
+  const {updateActivityCount, activityCount} = useContext(AuthContext);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -66,6 +68,7 @@ const MyComponent = () => {
       .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
       .then(response => {
         setReload(!reload);
+        updateActivityCount && updateActivityCount();
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -194,6 +197,20 @@ const MyComponent = () => {
   return (
     <ModuleContent>
       <ContentHeader title={'Mis tareas asignadas'} onRefresh={() => setReload(!reload)} loading={loading} />
+      <Space>
+        {activityCount && (
+          <>
+            <Progress
+              showInfo
+              type={'dashboard'}
+              size={40}
+              percent={((activityCount?.completed * 100) / activityCount.total).toFixed()}
+            />
+            <Statistic title={'Pendientes'} value={activityCount?.pending} />
+            <Statistic title={'Vencidas'} value={activityCount?.expired} />
+          </>
+        )}
+      </Space>
       <div style={{marginBottom: '10px'}}>
         <Table
           rowKey={'uuid'}

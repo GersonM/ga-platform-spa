@@ -48,7 +48,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [openMenu, setOpenMenu] = useState(false);
   const [preferredMode, setPreferredMode] = useState<string>('auto');
   const [uploadProgress, setUploadProgress] = useState<any>();
-  const [activityCount, setActivityCount] = useState<number>();
+  const [activityCount, setActivityCount] = useState<any>();
   const [reloadActivity, setReloadActivity] = useState(false);
 
   useEffect(() => {
@@ -96,12 +96,11 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   }, []);
 
   useEffect(() => {
-    console.log('reload activity');
     if (user) {
       axios
         .get('/entity-activity/my-tasks-stats')
         .then(response => {
-          setActivityCount(response.data.total);
+          setActivityCount(response.data);
         })
         .catch(error => {
           ErrorHandler.showNotification(error);
@@ -135,7 +134,6 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   }, []);
 
   const updateActivityCount = () => {
-    console.log('asdasdf - terminasdf');
     setReloadActivity(!reloadActivity);
   };
 

@@ -105,7 +105,12 @@ const Navigation = () => {
       <nav>
         <ul className="navigation-list">
           <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
-          <NavItem label={'Mis tareas'} icon={<GoTasklist />} path={'/my-tasks'} notifications={activityCount} />
+          <NavItem
+            label={'Mis tareas'}
+            icon={<GoTasklist />}
+            path={'/my-tasks'}
+            notifications={activityCount?.pending}
+          />
           {config?.modules.includes('files') && (
             <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
           )}
