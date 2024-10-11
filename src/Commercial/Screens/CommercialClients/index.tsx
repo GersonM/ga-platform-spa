@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Pagination, Select, Space} from 'antd';
+import {Input, Pagination, Progress, Select, Space, Statistic} from 'antd';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -155,6 +155,20 @@ const CommercialClients = () => {
           />
         </Space>
       </ContentHeader>
+      <Space size={'large'}>
+        {commercialStats && (
+          <>
+            <Progress
+              showInfo
+              type={'dashboard'}
+              size={40}
+              percent={Math.round((commercialStats?.contracts.provided * 100) / commercialStats.contracts.total)}
+            />
+            <Statistic title={'Entregados'} value={commercialStats.contracts.provided} />
+            <Statistic title={'Vendidas'} value={commercialStats.contracts.total} />
+          </>
+        )}
+      </Space>
       <TableList loading={loading} columns={columns} dataSource={clients} pagination={false} />
       {pagination && (
         <Pagination
