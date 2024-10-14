@@ -13,6 +13,7 @@ import {UploadContextProvider} from './Context/UploadContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
+import {Button} from 'antd';
 
 dayjs.locale('es');
 
@@ -31,13 +32,11 @@ axios
   .then(response => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthContextProvider config={response.data}>
-        <UploadContextProvider>
-          <TenantAppConfig tenant={response.data}>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </TenantAppConfig>
-        </UploadContextProvider>
+        <TenantAppConfig tenant={response.data}>
+          <BrowserRouter>
+            <Button>App</Button>
+          </BrowserRouter>
+        </TenantAppConfig>
       </AuthContextProvider>,
     );
   })
