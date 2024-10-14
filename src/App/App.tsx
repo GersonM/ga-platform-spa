@@ -59,7 +59,7 @@ const App = () => {
         switch (error.response.status) {
           case 401:
             if (window.location.pathname.indexOf('/auth/login') === -1) {
-              window.location.href = '/auth/login';
+              //window.location.href = '/auth/login';
             }
             return Promise.reject(error);
           default:

@@ -8,7 +8,7 @@ const AuthenticatedLayout = () => {
 
   if (!user) {
     if (!sessionToken) {
-      window.location.href = '/auth/login';
+      //window.location.href = '/auth/login';
     }
     return null;
   }
