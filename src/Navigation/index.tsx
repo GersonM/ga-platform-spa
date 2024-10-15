@@ -7,11 +7,16 @@ import axios from 'axios';
 import {
   PiBooksLight,
   PiBoxArrowUp,
+  PiBuildingsLight,
+  PiBulldozerLight,
   PiCalendarCheckLight,
   PiCarLight,
   PiCarProfile,
   PiCashRegister,
   PiClockUser,
+  PiDotsThree,
+  PiDotsThreeVertical,
+  PiDotsThreeVerticalBold,
   PiFingerprint,
   PiGear,
   PiGraduationCap,
@@ -25,6 +30,7 @@ import {
   PiUserFocus,
   PiUsers,
   PiUsersThree,
+  PiVectorThreeLight,
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
@@ -89,7 +95,7 @@ const Navigation = () => {
     }
   };
 
-  const navLogo = darkMode ? config?.dark_logo : config?.white_logo;
+  const navLogo = darkMode ? config?.white_logo : config?.white_logo;
 
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
@@ -113,6 +119,13 @@ const Navigation = () => {
           />
           {config?.modules.includes('files') && (
             <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
+          )}
+          {config?.modules.includes('real-estate') && (
+            <NavItem label={'Constructora'} icon={<PiBulldozerLight />}>
+              <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/real-estate/dashboard'} />
+              <NavItem icon={<PiBuildingsLight />} label={'Propiedades'} path={'/real-estate/estates'} />
+              <NavItem icon={<PiVectorThreeLight />} label={'Proyectos'} path={'/real-estate/projects'} />
+            </NavItem>
           )}
           {config?.modules.includes('commercial') && (
             <NavItem label={'Comercial'} icon={<PiHandshake />}>
@@ -183,7 +196,7 @@ const Navigation = () => {
           {config?.modules.includes('payments') && (
             <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
           )}
-          {user?.roles?.includes('admin') && <NavItem label={'Opciones'} icon={<PiGear />} path={'/config'} />}
+          {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
         </ul>
       </nav>
       <div className="bottom-nav">
@@ -212,12 +225,13 @@ const Navigation = () => {
           placement={'topLeft'}
           trigger={['click']}
           menu={{items: menuItems, onClick: handleUserMenuClick}}>
-          <div className={'avatar'}>
-            <Avatar>{user?.name.substring(0, 1)}</Avatar>
+          <div className={'user-menu'}>
+            <Avatar className={'avatar'}>{user?.name.substring(0, 1)}</Avatar>
             <div>
               {user?.profile.name}
               <small>{user?.profile.email}</small>
             </div>
+            <PiDotsThreeVerticalBold size={20} />
           </div>
         </Dropdown>
       </div>

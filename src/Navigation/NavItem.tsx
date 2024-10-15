@@ -13,20 +13,26 @@ interface NavItemProps {
 
 const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const content = (
+    <>
+      <span className={'label'}>{label}</span>
+      <Badge showZero={false} count={notifications} />
+    </>
+  );
+
   return (
     <li>
       <div className={'item'}>
         {path ? (
           <NavLink to={path}>
             {icon}
-            <span className={'label'}>{label}</span>
-            {notifications && <Badge count={notifications} />}
+            {content}
           </NavLink>
         ) : (
           <a href={'#'} onClick={() => setIsOpen(!isOpen)}>
             {icon}
-            <span className={'label'}>{label}</span>
-            {notifications && <Badge count={notifications} />}
+            {content}
             {children && (
               <div className={`open-button ${isOpen ? 'open' : ''}`}>
                 <ChevronDownIcon />

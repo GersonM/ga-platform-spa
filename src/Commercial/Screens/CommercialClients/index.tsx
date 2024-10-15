@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Pagination, Progress, Select, Space, Statistic} from 'antd';
+import {Form, Input, Pagination, Progress, Select, Space, Statistic} from 'antd';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -13,6 +13,8 @@ import ContractList from './ContractList';
 import './styles.less';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
 import {useNavigate} from 'react-router-dom';
+import FilterForm from '../../../CommonUI/FilterForm';
+import {useDebounce} from '@uidotdev/usehooks';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -24,7 +26,9 @@ const CommercialClients = () => {
   const [reload, setReload] = useState(false);
   const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
+  const [providedFilter, setProvidedFilter] = useState<string>();
   const navigate = useNavigate();
+  const lastSearchText = useDebounce(searchText, 300);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -51,10 +55,11 @@ const CommercialClients = () => {
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        search: searchText,
+        search: lastSearchText,
         page: currentPage,
         page_size: pageSize,
         stage: stageFilter,
+        provided: providedFilter,
       },
     };
 
@@ -74,7 +79,7 @@ const CommercialClients = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [searchText, currentPage, pageSize, reload, stageFilter]);
+  }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter]);
 
   const deleteClient = (uuid: string) => {
     axios
@@ -135,25 +140,46 @@ const CommercialClients = () => {
   return (
     <ModuleContent>
       <ContentHeader tools={'Total: ' + pagination?.total} title={'Clientes'} onRefresh={() => setReload(!reload)}>
-        <Space>
-          <Input.Search
-            allowClear
-            onSearch={value => setSearchText(value)}
-            placeholder={'Buscar por nombre, dni o correo'}
-          />
-          <Select
-            placeholder={'Etapa'}
-            allowClear
-            onChange={value => setStageFilter(value)}
-            style={{width: 100}}
-            options={[
-              {label: 'Etapa IV', value: 'IV'},
-              {label: 'Etapa III', value: 'III'},
-              {label: 'Etapa II', value: 'II'},
-              {label: 'Etapa I', value: 'I'},
-            ]}
-          />
-        </Space>
+        <FilterForm
+          onInitialValues={values => {
+            if (values?.search) setSearchText(values.search);
+            if (values?.stage) setStageFilter(values.stage);
+            if (values?.provided) setStageFilter(values.provided);
+          }}
+          onSubmit={values => {
+            setSearchText(values?.search);
+            setStageFilter(values?.stage);
+            setProvidedFilter(values?.provided);
+          }}>
+          <Form.Item name={'search'} label={'Buscar'}>
+            <Input allowClear placeholder={'Buscar por nombre, dni o correo'} />
+          </Form.Item>
+          <Form.Item name={'stage'} label={'Etapa'}>
+            <Select
+              placeholder={'Todas'}
+              allowClear
+              style={{width: 100}}
+              options={[
+                {label: 'Etapa IV-A', value: 'IV-A'},
+                {label: 'Etapa IV', value: 'IV'},
+                {label: 'Etapa III', value: 'III'},
+                {label: 'Etapa II', value: 'II'},
+                {label: 'Etapa I', value: 'I'},
+              ]}
+            />
+          </Form.Item>
+          <Form.Item name={'provided'} label={'Entregado'}>
+            <Select
+              placeholder={'Todas'}
+              allowClear
+              style={{width: 100}}
+              options={[
+                {label: 'Entregados', value: '1'},
+                {label: 'No entregados', value: '0'},
+              ]}
+            />
+          </Form.Item>
+        </FilterForm>
       </ContentHeader>
       <Space size={'large'}>
         {commercialStats && (

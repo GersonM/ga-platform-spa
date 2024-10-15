@@ -41,6 +41,10 @@ import EnrollmentsManagement from '../LMSManagement/Screens/EnrollmentsManagemen
 import CommercialLeads from '../Commercial/Screens/CommercialLeads';
 import CourseDetail from '../LMSManagement/Screens/CourseDetail';
 import MyTasks from '../EntityActivity/Screens/MyTasks';
+import EstatesManager from '../RealEstate/Screens/EstatesManager';
+import RealEstateDashboard from '../RealEstate/Screens/RealEstateDashboard';
+import EstateDetailView from '../RealEstate/Screens/EstateDetailView';
+import CommercialDashboard from '../Commercial/Screens/CommercialDashboard';
 
 const App = () => {
   useEffect(() => {
@@ -134,11 +138,17 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'commercial'}>
+          <Route path={'dashboard'} element={<CommercialDashboard />} />
           <Route path={'incidents'} element={<CommercialIncidents />} />
           <Route path={'leads/:campaign?'} element={<CommercialLeads />} />
           <Route path={'clients'} element={<CommercialClients />} />
           <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
           <Route path={'payments'} element={<CommercialClients />} />
+        </Route>
+        <Route path={'real-estate'}>
+          <Route path={'dashboard'} element={<RealEstateDashboard />} />
+          <Route path={'estates'} element={<EstatesManager />} />
+          <Route path={'estates/:state?'} element={<EstateDetailView />} />
         </Route>
         <Route
           path={'*'}
