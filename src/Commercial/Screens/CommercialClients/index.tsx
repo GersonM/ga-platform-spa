@@ -26,9 +26,11 @@ const CommercialClients = () => {
   const [reload, setReload] = useState(false);
   const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
+  const [blockFilter, setBlockFilter] = useState<string>();
   const [providedFilter, setProvidedFilter] = useState<string>();
   const navigate = useNavigate();
   const lastSearchText = useDebounce(searchText, 300);
+  const lastSearchBlock = useDebounce(blockFilter, 300);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -60,6 +62,7 @@ const CommercialClients = () => {
         page_size: pageSize,
         stage: stageFilter,
         provided: providedFilter,
+        block: lastSearchBlock,
       },
     };
 
@@ -79,7 +82,7 @@ const CommercialClients = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter]);
+  }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter, lastSearchBlock]);
 
   const deleteClient = (uuid: string) => {
     axios
@@ -145,11 +148,13 @@ const CommercialClients = () => {
             if (values?.search) setSearchText(values.search);
             if (values?.stage) setStageFilter(values.stage);
             if (values?.provided) setStageFilter(values.provided);
+            if (values?.block) setStageFilter(values.block);
           }}
           onSubmit={values => {
             setSearchText(values?.search);
             setStageFilter(values?.stage);
             setProvidedFilter(values?.provided);
+            setBlockFilter(values?.block);
           }}>
           <Form.Item name={'search'} label={'Buscar'}>
             <Input allowClear placeholder={'Buscar por nombre, dni o correo'} />
@@ -168,11 +173,14 @@ const CommercialClients = () => {
               ]}
             />
           </Form.Item>
+          <Form.Item name={'block'} label={'Manzana'}>
+            <Input placeholder={'Todas'} allowClear style={{width: 75}} />
+          </Form.Item>
           <Form.Item name={'provided'} label={'Entregado'}>
             <Select
               placeholder={'Todas'}
               allowClear
-              style={{width: 100}}
+              style={{width: 125}}
               options={[
                 {label: 'Entregados', value: '1'},
                 {label: 'No entregados', value: '0'},
