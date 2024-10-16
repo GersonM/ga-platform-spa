@@ -3,20 +3,19 @@
 .navigation-wrapper {
   background: linear-gradient(#2083ae, #125578);
   //background: linear-gradient(#20ae62, #4a7812);
-  min-width: var(--main-nav-width);
-  max-width: var(--main-nav-width);
+  min-width: calc(var(--main-nav-width) - 10px);
+  max-width: calc(var(--main-nav-width) - 10px);
   transition: all 0.3s;
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 0;
+  top: 10px;
   height: calc(100dvh - 20px);
   z-index: 2;
-  box-shadow: 10px 6px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
   color: #ffffff;
-  border-radius: 18px;
-  margin-top: 10px;
-  margin-left: 10px;
+  border-radius: 13px;
+  margin: 10px 10px 0 10px;
 
   animation-duration: .7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
@@ -24,7 +23,8 @@
   animation-name: sidebarFadeIn;
 
   .head {
-    margin: 12px 10px;
+    margin: 12px 0 0 0;
+    padding: 0 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .logo-square {
@@ -34,12 +34,12 @@
       align-items: center;
       justify-content: center;
       height: 50px;
-      padding: 5px 0 5px 0;
+      padding: 5px;
       margin-bottom: 10px;
+      border-radius: 8px;
 
       &:hover {
-        border-radius: 10px;
-        background: var(--backgroung-color-body);
+        background: rgba(0, 0, 0, 0.3);
       }
 
       img {
@@ -84,6 +84,11 @@
       display: flex;
       align-items: center;
       text-overflow: ellipsis;
+      transition: all 0.3s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
 
       .avatar {
         width: 30px;
@@ -252,28 +257,6 @@
   }
 }
 
-
-/* width */
-.navigation-wrapper::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-.navigation-wrapper::-webkit-scrollbar-track {
-  background: #efefef;
-
-}
-
-/* Handle */
-.navigation-wrapper::-webkit-scrollbar-thumb {
-  background: #dfdfdf;
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-.navigation-wrapper::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
-}
 
 .dark-mode {
   .navigation-wrapper {

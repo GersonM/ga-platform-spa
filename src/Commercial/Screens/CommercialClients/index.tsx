@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, Pagination, Progress, Select, Space, Statistic} from 'antd';
+import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -15,6 +15,8 @@ import EstateContractAddress from '../../Components/RealState/EstateContractAddr
 import {useNavigate} from 'react-router-dom';
 import FilterForm from '../../../CommonUI/FilterForm';
 import {useDebounce} from '@uidotdev/usehooks';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {PiExportBold, PiMicrosoftExcelLogo, PiMicrosoftExcelLogoBold, PiMicrosoftExcelLogoLight} from 'react-icons/pi';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -84,6 +86,42 @@ const CommercialClients = () => {
     return cancelTokenSource.cancel;
   }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter, lastSearchBlock]);
 
+  const exportSelection = () => {
+    const config = {
+      params: {
+        search: lastSearchText,
+        page: currentPage,
+        page_size: pageSize,
+        stage: stageFilter,
+        provided: providedFilter,
+        block: lastSearchBlock,
+      },
+    };
+
+    axios
+      .get(`commercial/clients/export`, config)
+      .then(response => {
+        if (response) {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `clientes_export.xlsx`);
+
+          // Append to html link element page
+          document.body.appendChild(link);
+
+          // Start download
+          link.click();
+
+          // Clean up and remove the link
+          link.parentNode?.removeChild(link);
+        }
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   const deleteClient = (uuid: string) => {
     axios
       .delete(`commercial/clients/${uuid}`)
@@ -142,7 +180,22 @@ const CommercialClients = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader tools={'Total: ' + pagination?.total} title={'Clientes'} onRefresh={() => setReload(!reload)}>
+      <ContentHeader
+        tools={
+          <>
+            Total: {pagination?.total}
+            <Tooltip title={'Exportar listado actual en formato excel'}>
+              <PrimaryButton
+                icon={<PiMicrosoftExcelLogo size={18} />}
+                onClick={exportSelection}
+                size={'small'}
+                label={'Exportar'}
+              />
+            </Tooltip>
+          </>
+        }
+        title={'Clientes'}
+        onRefresh={() => setReload(!reload)}>
         <FilterForm
           onInitialValues={values => {
             if (values?.search) setSearchText(values.search);

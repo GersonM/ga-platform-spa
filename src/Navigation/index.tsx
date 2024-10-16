@@ -14,8 +14,6 @@ import {
   PiCarProfile,
   PiCashRegister,
   PiClockUser,
-  PiDotsThree,
-  PiDotsThreeVertical,
   PiDotsThreeVerticalBold,
   PiFingerprint,
   PiGear,
@@ -95,7 +93,7 @@ const Navigation = () => {
     }
   };
 
-  const navLogo = darkMode ? config?.white_logo : config?.white_logo;
+  const navLogo = darkMode ? config?.dark_logo : config?.dark_logo;
 
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
