@@ -23,7 +23,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
   return (
     <div className={`file-item ${selected ? 'selected' : ''}`} onDoubleClick={onDoubleClick} onClick={onItemClick}>
       {image ? (
-        <div className={'file-image'} style={{backgroundImage: `url(${image})`}}></div>
+        <div className={'file-image'} style={{backgroundImage: `url(${image}?v=${Math.random()})`}}></div>
       ) : icon ? (
         icon
       ) : (
