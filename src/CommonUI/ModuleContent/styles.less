@@ -6,7 +6,11 @@
   flex: 1;
   margin: 25px;
   position: relative;
-  width: calc(100vw - var(--main-nav-width) - 60px);
+  width: calc(100vw - (var(--main-nav-width) + 60px));
+
+  &.with-sidebar {
+    width: calc(100vw - (var(--main-nav-width) + 330px));
+  }
 
   animation-duration: 0.7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);

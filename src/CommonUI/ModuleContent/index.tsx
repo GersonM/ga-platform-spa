@@ -10,15 +10,16 @@ import './styles.less';
 interface ModuleContentProps {
   children?: React.ReactNode;
   opaque?: boolean;
+  withSidebar?: boolean;
 }
 
-const ModuleContent = ({children, opaque}: ModuleContentProps) => {
+const ModuleContent = ({children, opaque, withSidebar = false}: ModuleContentProps) => {
   const {config, darkMode, openMenu, setOpenMenu} = useContext(AuthContext);
   const navLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
   return (
     <>
-      <div className={'module-content-wrapper' + (opaque ? ' opaque' : '')}>
+      <div className={`module-content-wrapper ${opaque ? ' opaque' : ''} ${withSidebar ? ' with-sidebar' : ''}`}>
         <div className={'mobile-header'}>
           <div
             className="logo-square"

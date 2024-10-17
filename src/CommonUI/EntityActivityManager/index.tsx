@@ -5,7 +5,7 @@ import {AiOutlineAlert} from 'react-icons/ai';
 import {useDropzone} from 'react-dropzone';
 import {GrSend} from 'react-icons/gr';
 import dayjs, {Dayjs} from 'dayjs';
-import {CalendarDaysIcon, ChatBubbleLeftIcon, ClockIcon, PaperClipIcon} from '@heroicons/react/24/outline';
+import {CalendarDaysIcon, ChatBubbleLeftIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 
 import ErrorHandler from '../../Utils/ErrorHandler';
 import PrimaryButton from '../PrimaryButton';
@@ -18,6 +18,7 @@ import {IoAttach} from 'react-icons/io5';
 import FileIcon from '../../FileManagement/Components/FileIcon';
 import SearchProfile from '../SearchProfile';
 import EntityActivityIcon from './EntityActivityIcon';
+import EntityActivityCardViewer from '../../EntityActivity/Components/EntityActivityCardViewer';
 
 interface EntityActivityManagerProps {
   uuid: string;
@@ -35,22 +36,23 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [selectedActivityUUID, setSelectedActivityUUID] = useState<string>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        type,
+        entity_id: uuid,
       },
     };
     setLoading(true);
     axios
-      .get(`entity-activity/${uuid}`, config)
+      .get(`entity-activity`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setActivity(response.data);
+          setActivity(response.data.data);
         }
       })
       .catch(e => {
@@ -208,7 +210,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
       {activity?.length == 0 && <Empty description={'Aún no hay actividad'} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       {activity?.map(a => {
         return (
-          <div key={a.uuid} className={`activity-item ${a.type}`}>
+          <div key={a.uuid} className={`activity-item ${a.type}`} onClick={() => setSelectedActivityUUID(a.uuid)}>
             <div className={'author'}>
               <EntityActivityIcon type={a.type} size={25} />
               <br />
@@ -217,7 +219,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
             <div className={'message'}>
               <p>{a.comment}</p>
               <small>
-                <ClockIcon width={12} /> {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
+                {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
               </small>
               <Image.PreviewGroup>
                 {a.attachments?.map((at: File) => (
@@ -247,6 +249,13 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
           </div>
         );
       })}
+      <EntityActivityCardViewer
+        onCancel={() => {
+          setSelectedActivityUUID(undefined);
+          setReload(!reload);
+        }}
+        entityActivityUUID={selectedActivityUUID}
+      />
     </div>
   );
 };

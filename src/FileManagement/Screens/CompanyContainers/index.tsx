@@ -103,7 +103,7 @@ const CompanyContainers = () => {
           )}
         </ul>
       </ModuleSidebar>
-      <ModuleContent>
+      <ModuleContent withSidebar>
         {currentContainer ? (
           <ContainerContentViewer containerUuid={currentContainer} onChange={navigateToFolder} />
         ) : (

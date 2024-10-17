@@ -29,7 +29,7 @@ const ModuleConfiguration = () => {
           <NavListItem icon={<QueueListIcon />} height={45} name={'Taxonomías'} path={'/config/taxonomy'} />
         </NavList>
       </ModuleSidebar>
-      <ModuleContent>
+      <ModuleContent withSidebar>
         <Outlet />
       </ModuleContent>
     </>
