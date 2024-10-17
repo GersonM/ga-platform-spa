@@ -17,6 +17,7 @@ import FilterForm from '../../../CommonUI/FilterForm';
 import {useDebounce} from '@uidotdev/usehooks';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {PiExportBold, PiMicrosoftExcelLogo, PiMicrosoftExcelLogoBold, PiMicrosoftExcelLogoLight} from 'react-icons/pi';
+import dayjs from 'dayjs';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -33,6 +34,7 @@ const CommercialClients = () => {
   const navigate = useNavigate();
   const lastSearchText = useDebounce(searchText, 300);
   const lastSearchBlock = useDebounce(blockFilter, 300);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -55,6 +57,7 @@ const CommercialClients = () => {
   }, [stageFilter]);
 
   useEffect(() => {
+    console.log({stageFilter});
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -88,6 +91,7 @@ const CommercialClients = () => {
 
   const exportSelection = () => {
     const config = {
+      responseType: 'blob',
       params: {
         search: lastSearchText,
         page: currentPage,
@@ -98,26 +102,30 @@ const CommercialClients = () => {
       },
     };
 
-    axios
-      .get(`commercial/clients/export`, config)
+    setDownloading(true);
+    axios({
+      url: 'commercial/clients/export', //your url
+      params: config.params,
+      method: 'GET',
+      responseType: 'blob', // important
+    })
       .then(response => {
+        setDownloading(false);
         if (response) {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', `clientes_export.xlsx`);
-
-          // Append to html link element page
+          link.download = 'ventas_' + dayjs().format('d_m_y') + '.xlsx';
           document.body.appendChild(link);
 
-          // Start download
           link.click();
 
-          // Clean up and remove the link
-          link.parentNode?.removeChild(link);
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
         }
       })
       .catch(e => {
+        setDownloading(false);
         ErrorHandler.showNotification(e);
       });
   };
@@ -189,6 +197,7 @@ const CommercialClients = () => {
                 icon={<PiMicrosoftExcelLogo size={18} />}
                 onClick={exportSelection}
                 size={'small'}
+                loading={downloading}
                 label={'Exportar'}
               />
             </Tooltip>
@@ -198,6 +207,7 @@ const CommercialClients = () => {
         onRefresh={() => setReload(!reload)}>
         <FilterForm
           onInitialValues={values => {
+            console.log({values});
             if (values?.search) setSearchText(values.search);
             if (values?.stage) setStageFilter(values.stage);
             if (values?.provided) setStageFilter(values.provided);
