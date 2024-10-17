@@ -36,13 +36,12 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
 
     const primaryColor = tenant.primary_color || defaultColor;
     const tColor = tinyColor(primaryColor);
-    tColor.brighten(40);
-    tColor.setAlpha(0.1);
+    tColor.darken(14);
     const r = document.querySelector(':root');
     //@ts-ignore
     r.style.setProperty('--primary-color', primaryColor);
     //@ts-ignore
-    r.style.setProperty('--primary-color-glass', tColor);
+    r.style.setProperty('--primary-color-darker', tColor);
   }, [tenant]);
 
   useEffect(() => {
