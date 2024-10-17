@@ -15,6 +15,7 @@ interface ContractProvideFormProps {
 
 const ContractProvideForm = ({contract, onComplete}: ContractProvideFormProps) => {
   const [loading, setLoading] = useState(false);
+
   const provide = (values: any) => {
     setLoading(true);
     axios
@@ -28,6 +29,7 @@ const ContractProvideForm = ({contract, onComplete}: ContractProvideFormProps) =
         ErrorHandler.showNotification(e);
       });
   };
+
   return (
     <>
       <LoadingIndicator visible={loading} message={'Registrando entrega'} />

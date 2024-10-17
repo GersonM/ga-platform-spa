@@ -32,6 +32,7 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   }, [searchParams]);
 
   useEffect(() => {
+    console.log({initialValues});
     form.resetFields();
     onInitialValues && onInitialValues(initialValues);
   }, [initialValues]);

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Col, Collapse, Divider, Modal, Row, Space, Tag} from 'antd';
-import {PiHandshake} from 'react-icons/pi';
+import {Col, Collapse, Divider, Form, Input, Modal, Row, Space, Tag} from 'antd';
+import {PiCodeBlock, PiCross, PiHandshake, PiProhibit, PiProhibitInset} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -24,6 +24,7 @@ const CommercialContractDetail = () => {
   const [contract, setContract] = useState<Contract>();
   const [loading, setLoading] = useState(false);
   const [openContractProvideForm, setOpenContractProvideForm] = useState(false);
+  const [openProvisionRevert, setOpenProvisionRevert] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -49,6 +50,21 @@ const CommercialContractDetail = () => {
 
     return cancelTokenSource.cancel;
   }, [params, reload]);
+
+  const submitProvisionRevert = (values: any) => {
+    setLoading(true);
+    axios
+      .post(`commercial/contracts/${contract?.uuid}/revert-provision`, values)
+      .then(() => {
+        setLoading(false);
+        setOpenProvisionRevert(false);
+        setReload(!reload);
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
 
   if (!params.contract) {
     return null;
@@ -80,11 +96,17 @@ const CommercialContractDetail = () => {
           {contract?.signed_at ? dayjs(contract?.signed_at).format('YYYY-MM-DD HH:mm:ss') : 'Sin firma de contrato'}
         </p>
         <Space>
-          {!contract?.provided_at && (
+          {!contract?.provided_at ? (
             <PrimaryButton
               icon={<PiHandshake size={17} />}
               label={'Registrar entrega'}
               onClick={() => setOpenContractProvideForm(true)}
+            />
+          ) : (
+            <PrimaryButton
+              icon={<PiProhibitInset size={17} />}
+              label={'Revertir entrega'}
+              onClick={() => setOpenProvisionRevert(true)}
             />
           )}
         </Space>
@@ -133,6 +155,16 @@ const CommercialContractDetail = () => {
           />
         </Col>
       </Row>
+      <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnClose footer={null}>
+        <h2>Revertir entrega</h2>
+        <p>Especifique el motivo de la reversión de la entrega</p>
+        <Form onFinish={submitProvisionRevert}>
+          <Form.Item name={'observations'} rules={[{required: true}]}>
+            <Input.TextArea autoFocus />
+          </Form.Item>
+          <PrimaryButton block label={'Enviar'} htmlType={'submit'} />
+        </Form>
+      </Modal>
       <Modal
         open={openContractProvideForm}
         onCancel={() => setOpenContractProvideForm(false)}

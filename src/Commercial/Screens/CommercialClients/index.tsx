@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
+import {useDebounce} from '@uidotdev/usehooks';
+import {RiFileExcel2Fill} from 'react-icons/ri';
+import {useNavigate} from 'react-router-dom';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -7,17 +11,12 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import {Client, Profile, ResponsePagination} from '../../../Types/api';
 import ContractList from './ContractList';
-
-import './styles.less';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
-import {useNavigate} from 'react-router-dom';
 import FilterForm from '../../../CommonUI/FilterForm';
-import {useDebounce} from '@uidotdev/usehooks';
+import {Client, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {PiExportBold, PiMicrosoftExcelLogo, PiMicrosoftExcelLogoBold, PiMicrosoftExcelLogoLight} from 'react-icons/pi';
-import dayjs from 'dayjs';
+import './styles.less';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -57,7 +56,6 @@ const CommercialClients = () => {
   }, [stageFilter]);
 
   useEffect(() => {
-    console.log({stageFilter});
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -194,7 +192,7 @@ const CommercialClients = () => {
             Total: {pagination?.total}
             <Tooltip title={'Exportar listado actual en formato excel'}>
               <PrimaryButton
-                icon={<PiMicrosoftExcelLogo size={18} />}
+                icon={<RiFileExcel2Fill size={18} />}
                 onClick={exportSelection}
                 size={'small'}
                 loading={downloading}
@@ -207,7 +205,6 @@ const CommercialClients = () => {
         onRefresh={() => setReload(!reload)}>
         <FilterForm
           onInitialValues={values => {
-            console.log({values});
             if (values?.search) setSearchText(values.search);
             if (values?.stage) setStageFilter(values.stage);
             if (values?.provided) setStageFilter(values.provided);
