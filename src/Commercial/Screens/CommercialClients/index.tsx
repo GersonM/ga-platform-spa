@@ -115,7 +115,7 @@ const CommercialClients = () => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
           link.href = url;
-          link.download = 'ventas_' + dayjs().format('d_m_y') + '.xlsx';
+          link.download = 'ventas_' + dayjs().format('D-M-YYYY') + '.xlsx';
           document.body.appendChild(link);
 
           link.click();
