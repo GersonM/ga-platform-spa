@@ -33,7 +33,7 @@ const CommercialDashboard = () => {
 
   const primaryAxis = React.useMemo(
     (): AxisOptions<any> => ({
-      getValue: datum => 'Techo propio',
+      getValue: datum => datum.label,
     }),
     [],
   );
@@ -42,7 +42,8 @@ const CommercialDashboard = () => {
     (): AxisOptions<any>[] => [
       {
         min: 0,
-        getValue: datum => 10,
+        getValue: datum => datum.total,
+        stacked: true,
       },
     ],
     [],
@@ -67,18 +68,6 @@ const CommercialDashboard = () => {
 
   if (!commercialStats) return null;
 
-  const dataGroups: any[] = [
-    {
-      label: 'Entregas por modalidad',
-      data: Object.keys(commercialStats.provisioning.groups).map(k => {
-        return {
-          date: k,
-          count: commercialStats.provisioning.dates[k],
-        };
-      }),
-    },
-  ];
-
   const data: any[] = [
     {
       label: 'Entregas por fecha',
@@ -86,32 +75,60 @@ const CommercialDashboard = () => {
     },
   ];
 
+  const salesData: any[] = [
+    {
+      label: 'Entregas por fecha',
+      data: commercialStats.sales.dates,
+    },
+  ];
+
   return (
     <ModuleContent>
       <ContentHeader title={'Dashboard'} onRefresh={() => setReload(!reload)} loading={loading} />
+
+      <Row gutter={[20, 20]}>
+        <Col md={24}>
+          <h3>Ventas por día</h3>
+          <div style={{height: 200}}>
+            <Chart
+              options={{
+                data: salesData,
+                primaryAxis: primaryAxisDate,
+                secondaryAxes: secondaryAxesDate,
+              }}
+            />
+          </div>
+        </Col>
+      </Row>
+
+      <Row gutter={[20, 20]}>
+        <Col md={24}>
+          <h3>Entregas por día</h3>
+          <div style={{height: 200}}>
+            <Chart
+              options={{
+                data,
+                primaryAxis: primaryAxisDate,
+                secondaryAxes: secondaryAxesDate,
+              }}
+            />
+          </div>
+        </Col>
+      </Row>
       <Row gutter={[20, 20]}>
         <Col md={12}>
           <h3>Ventas por etapa</h3>
           <div style={{height: 200}}>
             <Chart
               options={{
-                data: dataGroups,
+                data: commercialStats.provisioning.groups,
                 primaryAxis,
                 secondaryAxes,
               }}
             />
           </div>
         </Col>
-        <Col md={12}>
-          <h3>Entregas por día</h3>
-          <Chart
-            options={{
-              data,
-              primaryAxis: primaryAxisDate,
-              secondaryAxes: secondaryAxesDate,
-            }}
-          />
-        </Col>
+        <Col md={12}></Col>
       </Row>
     </ModuleContent>
   );
