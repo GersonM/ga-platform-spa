@@ -1,15 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Col, Row} from 'antd';
+import {Card, Col, Divider, Row} from 'antd';
 import {AxisOptions, Chart} from 'react-charts';
+import AuthContext from '../../../Context/AuthContext';
 
 const CommercialDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [commercialStats, setCommercialStats] = useState<any>();
+  const {darkMode} = useContext(AuthContext);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -88,10 +90,12 @@ const CommercialDashboard = () => {
 
       <Row gutter={[20, 20]}>
         <Col md={24}>
-          <h3>Ventas por día</h3>
-          <div style={{height: 200}}>
+          <h1>Ventas</h1>
+          <h3>Ventas por mes</h3>
+          <div style={{height: 250}}>
             <Chart
               options={{
+                dark: darkMode,
                 data: salesData,
                 primaryAxis: primaryAxisDate,
                 secondaryAxes: secondaryAxesDate,
@@ -100,11 +104,12 @@ const CommercialDashboard = () => {
           </div>
         </Col>
       </Row>
-
+      <Divider />
+      <h1>Entregas</h1>
       <Row gutter={[20, 20]}>
         <Col md={24}>
           <h3>Entregas por día</h3>
-          <div style={{height: 200}}>
+          <div style={{height: 250}}>
             <Chart
               options={{
                 data,
@@ -117,8 +122,10 @@ const CommercialDashboard = () => {
       </Row>
       <Row gutter={[20, 20]}>
         <Col md={12}>
-          <h3>Ventas por etapa</h3>
-          <div style={{height: 200}}>
+          <br />
+          <br />
+          <h3>Entregas por modalidad y etapa</h3>
+          <div style={{height: 250}}>
             <Chart
               options={{
                 data: commercialStats.provisioning.groups,
