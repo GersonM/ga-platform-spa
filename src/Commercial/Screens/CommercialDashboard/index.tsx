@@ -59,7 +59,7 @@ const CommercialDashboard = () => {
     (): AxisOptions<any>[] => [
       {
         min: 0,
-        getValue: datum => datum.count,
+        getValue: datum => datum.total,
       },
     ],
     [],
@@ -82,12 +82,7 @@ const CommercialDashboard = () => {
   const data: any[] = [
     {
       label: 'Entregas por fecha',
-      data: Object.keys(commercialStats.provisioning.dates).map(k => {
-        return {
-          date: k,
-          count: commercialStats.provisioning.dates[k],
-        };
-      }),
+      data: commercialStats.provisioning.dates,
     },
   ];
 
