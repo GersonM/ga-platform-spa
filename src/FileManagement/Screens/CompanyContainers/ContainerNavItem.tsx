@@ -21,7 +21,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
           {container.name}
           <small>
             {container.is_locked ? (
-              container.locked_type
+              container.lock_type
             ) : (
               <>
                 {container.num_files} archivos | {container.num_containers} carpetas
