@@ -16,25 +16,33 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
   return (
     <>
       <NavLink to={`/file-management/${container.uuid}`}>
-        <span className="icon icon-box"></span>
+        {container.is_locked ? <span className="icon icon-code" /> : <span className="icon icon-box" />}
         <span className="label">
           {container.name}
           <small>
-            {container.num_files} archivos | {container.num_containers} carpetas
+            {container.is_locked ? (
+              container.locked_type
+            ) : (
+              <>
+                {container.num_files} archivos | {container.num_containers} carpetas
+              </>
+            )}
           </small>
         </span>
       </NavLink>
       <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
-      <ContainerDropdownActions
-        container={container}
-        trigger={['click']}
-        onChange={() => {
-          if (onChange) {
-            onChange(container);
-          }
-        }}>
-        <IconButton icon={<EllipsisVerticalIcon />} />
-      </ContainerDropdownActions>
+      {!container.is_locked && (
+        <ContainerDropdownActions
+          container={container}
+          trigger={['click']}
+          onChange={() => {
+            if (onChange) {
+              onChange(container);
+            }
+          }}>
+          <IconButton icon={<EllipsisVerticalIcon />} />
+        </ContainerDropdownActions>
+      )}
     </>
   );
 };

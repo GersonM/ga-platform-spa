@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
 import {Empty, Popover, Tooltip} from 'antd';
@@ -16,6 +16,7 @@ import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
 import './styles.less';
+import AuthContext from '../../../Context/AuthContext';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -24,6 +25,7 @@ const CompanyContainers = () => {
   const [openContainerCreator, setOpenContainerCreator] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -88,11 +90,13 @@ const CompanyContainers = () => {
           )}
           {containers && (
             <>
-              {containers.map(c => (
-                <li key={c.uuid} className={params.uuid === c.uuid ? 'active' : ''}>
-                  <ContainerNavItem container={c} onChange={() => setReload(!reload)} />
-                </li>
-              ))}
+              {containers
+                .filter(c => !c.is_locked || user?.roles?.includes('admin'))
+                .map(c => (
+                  <li key={c.uuid} className={params.uuid === c.uuid ? 'active' : ''}>
+                    <ContainerNavItem container={c} onChange={() => setReload(!reload)} />
+                  </li>
+                ))}
               <li className={params.uuid === 'trash' ? 'active' : ''}>
                 <NavLink to={`/file-management/trash`}>
                   <span className="icon icon-trash3"></span>

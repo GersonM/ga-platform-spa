@@ -1,11 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {Col, Divider, Progress, Row, Select, Space, Tooltip} from 'antd';
+import {AxisOptions, Chart} from 'react-charts';
+import axios from 'axios';
+
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Card, Col, Divider, Row, Select, Space} from 'antd';
-import {AxisOptions, Chart} from 'react-charts';
 import AuthContext from '../../../Context/AuthContext';
+import MoneyString from '../../../CommonUI/MoneyString';
 
 const CommercialDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -94,7 +96,6 @@ const CommercialDashboard = () => {
   return (
     <ModuleContent>
       <ContentHeader title={'Dashboard'} onRefresh={() => setReload(!reload)} loading={loading} />
-
       <h1>Ventas</h1>
       <Row gutter={[20, 20]}>
         <Col md={12}>
@@ -131,6 +132,32 @@ const CommercialDashboard = () => {
                 primaryAxis: primaryAxisDate,
                 secondaryAxes: secondaryAxesDate,
               }}
+            />
+          </div>
+        </Col>
+      </Row>
+      <Row gutter={[20, 20]}>
+        <Col md={12}>
+          <div style={{height: 250}}>
+            <Chart
+              options={{
+                data: commercialStats.financial.groups,
+                primaryAxis,
+                secondaryAxes,
+              }}
+            />
+          </div>
+        </Col>
+        <Col md={12}>
+          <h2>Pagos</h2>
+          <p>
+            Total vendido: <MoneyString value={commercialStats.financial.total} /> <br />
+            Cobrado: <MoneyString value={commercialStats.financial.paid} />
+          </p>
+          <div>
+            <Progress
+              type={'dashboard'}
+              percent={Math.round((commercialStats.financial.paid * 100) / commercialStats.financial.total)}
             />
           </div>
         </Col>

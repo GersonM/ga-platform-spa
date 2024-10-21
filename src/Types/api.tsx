@@ -217,6 +217,8 @@ export type Container = {
   uuid: string;
   name: string;
   is_public: boolean;
+  is_locked: boolean;
+  locked_type: string;
   num_files?: number;
   num_containers?: number;
   description?: string;
