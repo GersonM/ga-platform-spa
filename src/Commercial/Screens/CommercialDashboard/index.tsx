@@ -3,7 +3,7 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Card, Col, Divider, Row} from 'antd';
+import {Card, Col, Divider, Row, Select, Space} from 'antd';
 import {AxisOptions, Chart} from 'react-charts';
 import AuthContext from '../../../Context/AuthContext';
 
@@ -77,10 +77,17 @@ const CommercialDashboard = () => {
     },
   ];
 
-  const salesData: any[] = [
+  const salesDataMonthly: any[] = [
     {
-      label: 'Entregas por fecha',
-      data: commercialStats.sales.dates,
+      label: 'Ventas por mes',
+      data: commercialStats.sales.monthly,
+    },
+  ];
+
+  const salesDataDaily: any[] = [
+    {
+      label: 'Ventas por día',
+      data: commercialStats.sales.daily,
     },
   ];
 
@@ -88,15 +95,39 @@ const CommercialDashboard = () => {
     <ModuleContent>
       <ContentHeader title={'Dashboard'} onRefresh={() => setReload(!reload)} loading={loading} />
 
+      <h1>Ventas</h1>
       <Row gutter={[20, 20]}>
-        <Col md={24}>
-          <h1>Ventas</h1>
-          <h3>Ventas por mes</h3>
+        <Col md={12}>
+          <Space>
+            <h3>Ventas por año</h3>
+            <Select
+              placeholder={'2024'}
+              style={{width: 90}}
+              options={[
+                {label: '2024', value: '2024'},
+                {label: '2023', value: '2023'},
+                {label: '2022', value: '2022'},
+              ]}
+            />
+          </Space>
           <div style={{height: 250}}>
             <Chart
               options={{
                 dark: darkMode,
-                data: salesData,
+                data: salesDataMonthly,
+                primaryAxis: primaryAxisDate,
+                secondaryAxes: secondaryAxesDate,
+              }}
+            />
+          </div>
+        </Col>
+        <Col md={12}>
+          <h3>Ventas del mes actual</h3>
+          <div style={{height: 250}}>
+            <Chart
+              options={{
+                dark: darkMode,
+                data: salesDataDaily,
                 primaryAxis: primaryAxisDate,
                 secondaryAxes: secondaryAxesDate,
               }}
