@@ -147,9 +147,9 @@ const CommercialDashboard = () => {
       </Card>
       <Card bordered={false} title={'Pagos'} style={{marginTop: 50}}>
         <Row gutter={[20, 20]}>
-          {commercialStats.financial.groups.map(g => {
+          {commercialStats.financial.groups.map((g: any, index: number) => {
             return (
-              <Col>
+              <Col key={index}>
                 <h2>{g.label}</h2>
                 <p>
                   Vendido: <MoneyString value={g.total} /> <br />
