@@ -149,40 +149,37 @@ const CommercialDashboard = () => {
         <Row gutter={[20, 20]}>
           {commercialStats.financial.groups.map((g: any, index: number) => {
             return (
-              <Col key={index}>
+              <Col sm={6} md={4} key={index} style={{textAlign: 'center'}}>
                 <h2>{g.label}</h2>
                 <p>
                   Vendido: <MoneyString value={g.total} /> <br />
                   Cobrado: <MoneyString value={g.paid} />
                 </p>
-                <div>
-                  <Progress type={'dashboard'} percent={Math.round((g.paid * 100) / g.total)} />
-                </div>
+                <Progress size={80} type={'dashboard'} percent={Math.round((g.paid * 100) / g.total)} />
               </Col>
             );
           })}
 
-          <Col>
+          <Col sm={6} md={4}>
             <h2>Total</h2>
             <p>
-              Total vendido: <MoneyString value={commercialStats.financial.total} /> <br />
+              Vendido: <MoneyString value={commercialStats.financial.total} /> <br />
               Cobrado: <MoneyString value={commercialStats.financial.paid} />
             </p>
-            <div>
-              <Progress
-                type={'dashboard'}
-                percent={Math.round((commercialStats.financial.paid * 100) / commercialStats.financial.total)}
-              />
-            </div>
+            <Progress
+              size={80}
+              type={'dashboard'}
+              percent={Math.round((commercialStats.financial.paid * 100) / commercialStats.financial.total)}
+            />
           </Col>
-          <Col md={12}>
+          <Col md={24}>
             <div style={{height: 250}}>
               <Chart
                 options={{
                   dark: darkMode,
                   data: [
                     {
-                      label: 'Pagos por mes',
+                      label: 'Pagos',
                       data: commercialStats.financial.monthly,
                     },
                   ],
