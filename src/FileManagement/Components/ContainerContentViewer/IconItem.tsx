@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface IconItemProps {
-  size?: 'large' | 'small';
+  size?: number;
   name: string;
   caption?: string;
   selected?: boolean;

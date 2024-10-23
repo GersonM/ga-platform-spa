@@ -14,6 +14,7 @@ import {
   PiCarProfile,
   PiCashRegister,
   PiClockUser,
+  PiDoorOpenLight,
   PiDotsThreeVerticalBold,
   PiFingerprint,
   PiGear,
@@ -22,6 +23,7 @@ import {
   PiHardDrives,
   PiInvoiceDuotone,
   PiMailboxDuotone,
+  PiPackageLight,
   PiPresentationChart,
   PiSquaresFour,
   PiStudent,
@@ -123,6 +125,7 @@ const Navigation = () => {
               <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/real-estate/dashboard'} />
               <NavItem icon={<PiBuildingsLight />} label={'Propiedades'} path={'/real-estate/estates'} />
               <NavItem icon={<PiVectorThreeLight />} label={'Proyectos'} path={'/real-estate/projects'} />
+              <NavItem icon={<PiDoorOpenLight />} label={'Entregas'} path={'/real-estate/providing'} />
             </NavItem>
           )}
           {config?.modules.includes('commercial') && (

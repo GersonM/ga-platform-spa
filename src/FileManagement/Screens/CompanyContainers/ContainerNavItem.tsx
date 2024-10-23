@@ -19,29 +19,27 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
         {container.is_locked ? <span className="icon icon-code" /> : <span className="icon icon-box" />}
         <span className="label">
           {container.name}
-          <small>
-            {container.is_locked ? (
-              container.lock_type
-            ) : (
-              <>
-                {container.num_files} archivos | {container.num_containers} carpetas
-              </>
-            )}
-          </small>
+          {!container.is_locked && (
+            <small>
+              {container.num_files} archivos | {container.num_containers} carpetas
+            </small>
+          )}
         </span>
       </NavLink>
-      <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
       {!container.is_locked && (
-        <ContainerDropdownActions
-          container={container}
-          trigger={['click']}
-          onChange={() => {
-            if (onChange) {
-              onChange(container);
-            }
-          }}>
-          <IconButton icon={<EllipsisVerticalIcon />} />
-        </ContainerDropdownActions>
+        <>
+          <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
+          <ContainerDropdownActions
+            container={container}
+            trigger={['click']}
+            onChange={() => {
+              if (onChange) {
+                onChange(container);
+              }
+            }}>
+            <IconButton icon={<EllipsisVerticalIcon />} />
+          </ContainerDropdownActions>
+        </>
       )}
     </>
   );

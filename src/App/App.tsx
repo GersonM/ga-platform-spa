@@ -45,6 +45,7 @@ import EstatesManager from '../RealEstate/Screens/EstatesManager';
 import RealEstateDashboard from '../RealEstate/Screens/RealEstateDashboard';
 import EstateDetailView from '../RealEstate/Screens/EstateDetailView';
 import CommercialDashboard from '../Commercial/Screens/CommercialDashboard';
+import EstateProvinding from '../RealEstate/Screens/EstateProvinding';
 
 const App = () => {
   useEffect(() => {
@@ -149,6 +150,7 @@ const App = () => {
           <Route path={'dashboard'} element={<RealEstateDashboard />} />
           <Route path={'estates'} element={<EstatesManager />} />
           <Route path={'estates/:state?'} element={<EstateDetailView />} />
+          <Route path={'providing'} element={<EstateProvinding />} />
         </Route>
         <Route
           path={'*'}

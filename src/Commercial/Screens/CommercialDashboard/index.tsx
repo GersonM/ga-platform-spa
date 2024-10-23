@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Divider, Progress, Row, Select, Space, Tooltip} from 'antd';
+import {Card, Col, Divider, Progress, Row, Select, Space, Tooltip} from 'antd';
 import {AxisOptions, Chart} from 'react-charts';
 import axios from 'axios';
 
@@ -8,6 +8,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import AuthContext from '../../../Context/AuthContext';
 import MoneyString from '../../../CommonUI/MoneyString';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 
 const CommercialDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -70,7 +71,7 @@ const CommercialDashboard = () => {
     [],
   );
 
-  if (!commercialStats) return null;
+  if (!commercialStats) return <LoadingIndicator message="Cargando datos" />;
 
   const data: any[] = [
     {
@@ -96,11 +97,10 @@ const CommercialDashboard = () => {
   return (
     <ModuleContent>
       <ContentHeader title={'Dashboard'} onRefresh={() => setReload(!reload)} loading={loading} />
-      <h1>Ventas</h1>
-      <Row gutter={[20, 20]}>
-        <Col md={12}>
-          <Space>
-            <h3>Ventas por año</h3>
+      <Card
+        bordered={false}
+        extra={
+          <>
             <Select
               placeholder={'2024'}
               style={{width: 90}}
@@ -110,58 +110,91 @@ const CommercialDashboard = () => {
                 {label: '2022', value: '2022'},
               ]}
             />
-          </Space>
-          <div style={{height: 250}}>
-            <Chart
-              options={{
-                dark: darkMode,
-                data: salesDataMonthly,
-                primaryAxis: primaryAxisDate,
-                secondaryAxes: secondaryAxesDate,
-              }}
-            />
-          </div>
-        </Col>
-        <Col md={12}>
-          <h3>Ventas del mes actual</h3>
-          <div style={{height: 250}}>
-            <Chart
-              options={{
-                dark: darkMode,
-                data: salesDataDaily,
-                primaryAxis: primaryAxisDate,
-                secondaryAxes: secondaryAxesDate,
-              }}
-            />
-          </div>
-        </Col>
-      </Row>
-      <Row gutter={[20, 20]}>
-        <Col md={12}>
-          <div style={{height: 250}}>
-            <Chart
-              options={{
-                data: commercialStats.financial.groups,
-                primaryAxis,
-                secondaryAxes,
-              }}
-            />
-          </div>
-        </Col>
-        <Col md={12}>
-          <h2>Pagos</h2>
-          <p>
-            Total vendido: <MoneyString value={commercialStats.financial.total} /> <br />
-            Cobrado: <MoneyString value={commercialStats.financial.paid} />
-          </p>
-          <div>
-            <Progress
-              type={'dashboard'}
-              percent={Math.round((commercialStats.financial.paid * 100) / commercialStats.financial.total)}
-            />
-          </div>
-        </Col>
-      </Row>
+          </>
+        }
+        title={'Ventas'}
+        loading={loading}>
+        <Row gutter={[20, 20]}>
+          <Col md={12}>
+            <Space>
+              <h3>Ventas por año</h3>
+            </Space>
+            <div style={{height: 250}}>
+              <Chart
+                options={{
+                  dark: darkMode,
+                  data: salesDataMonthly,
+                  primaryAxis: primaryAxisDate,
+                  secondaryAxes: secondaryAxesDate,
+                }}
+              />
+            </div>
+          </Col>
+          <Col md={12}>
+            <h3>Ventas del mes actual</h3>
+            <div style={{height: 250}}>
+              <Chart
+                options={{
+                  dark: darkMode,
+                  data: salesDataDaily,
+                  primaryAxis: primaryAxisDate,
+                  secondaryAxes: secondaryAxesDate,
+                }}
+              />
+            </div>
+          </Col>
+        </Row>
+      </Card>
+      <Card bordered={false} title={'Pagos'} style={{marginTop: 50}}>
+        <Row gutter={[20, 20]}>
+          {commercialStats.financial.groups.map(g => {
+            return (
+              <Col>
+                <h2>{g.label}</h2>
+                <p>
+                  Vendido: <MoneyString value={g.total} /> <br />
+                  Cobrado: <MoneyString value={g.paid} />
+                </p>
+                <div>
+                  <Progress type={'dashboard'} percent={Math.round((g.paid * 100) / g.total)} />
+                </div>
+              </Col>
+            );
+          })}
+
+          <Col>
+            <h2>Total</h2>
+            <p>
+              Total vendido: <MoneyString value={commercialStats.financial.total} /> <br />
+              Cobrado: <MoneyString value={commercialStats.financial.paid} />
+            </p>
+            <div>
+              <Progress
+                type={'dashboard'}
+                percent={Math.round((commercialStats.financial.paid * 100) / commercialStats.financial.total)}
+              />
+            </div>
+          </Col>
+          <Col md={12}>
+            <div style={{height: 250}}>
+              <Chart
+                options={{
+                  dark: darkMode,
+                  data: [
+                    {
+                      label: 'Pagos por mes',
+                      data: commercialStats.financial.monthly,
+                    },
+                  ],
+                  primaryAxis: primaryAxisDate,
+                  secondaryAxes: secondaryAxesDate,
+                }}
+              />
+            </div>
+          </Col>
+        </Row>
+      </Card>
+
       <Divider />
       <h1>Entregas</h1>
       <Row gutter={[20, 20]}>

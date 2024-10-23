@@ -1,8 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
-import {Empty, Popover, Tooltip} from 'antd';
+import {Empty, Popover, Space, Tooltip} from 'antd';
 import {PlusCircleIcon} from '@heroicons/react/24/outline';
+import {TbReload} from 'react-icons/tb';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateContainer from '../../Components/CreateContainer';
@@ -15,8 +16,8 @@ import {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
-import './styles.less';
 import AuthContext from '../../../Context/AuthContext';
+import './styles.less';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -63,24 +64,29 @@ const CompanyContainers = () => {
       <ModuleSidebar
         title={'Gestor de archivos'}
         actions={
-          <Popover
-            open={openContainerCreator}
-            content={
-              <CreateContainer
-                onCompleted={() => {
-                  setReload(!reload);
-                  setOpenContainerCreator(false);
-                }}
-              />
-            }
-            onOpenChange={value => {
-              setOpenContainerCreator(value);
-            }}
-            trigger={'click'}>
-            <Tooltip title={'Crear contenedor'} placement={'left'}>
-              <IconButton icon={<PlusCircleIcon />} />
+          <Space>
+            <Tooltip title={'Recargar lista de contenedores'}>
+              <IconButton icon={<TbReload size={18} />} small onClick={() => setReload(!reload)} />
             </Tooltip>
-          </Popover>
+            <Popover
+              open={openContainerCreator}
+              content={
+                <CreateContainer
+                  onCompleted={() => {
+                    setReload(!reload);
+                    setOpenContainerCreator(false);
+                  }}
+                />
+              }
+              onOpenChange={value => {
+                setOpenContainerCreator(value);
+              }}
+              trigger={'click'}>
+              <Tooltip title={'Crear contenedor'} placement={'left'}>
+                <IconButton icon={<PlusCircleIcon />} />
+              </Tooltip>
+            </Popover>
+          </Space>
         }
         footer={<ServiceStatus />}>
         <ul className="list-items">
