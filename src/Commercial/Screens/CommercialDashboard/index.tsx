@@ -173,6 +173,8 @@ const CommercialDashboard = () => {
             />
           </Col>
           <Col md={24}>
+            <Divider />
+            <h3>Pago por mes</h3>
             <div style={{height: 250}}>
               <Chart
                 options={{
