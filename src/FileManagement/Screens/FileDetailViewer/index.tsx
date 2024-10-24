@@ -52,8 +52,7 @@ const FileDetailViewer = () => {
   const getViewer = (f: File) => {
     switch (true) {
       case f.type.includes('pdf'):
-      case f.name.includes('.pdf'):
-        return <iframe className={'pdf-viewer-iframe'} src={f.public ? f.public : f.source} height={'100vwh'} />;
+        return <iframe className={'pdf-viewer-iframe'} src={f.source} height={'100vwh'} />;
       case f.type.includes('image'):
         return <Image placeholder={'Imagen'} title={f.name} src={f.source} />;
       case f.type.includes('vid') || f.type.includes('aud'):

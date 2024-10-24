@@ -15,7 +15,7 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
     case file.type.includes('dwg'):
       return <PiThreeD className={'icon'} size={size} />;
     case file.type.includes('pdf'):
-    case file.name.includes('.pdf'):
+      //case file.name.includes('.pdf'):
       return <PiFilePdfLight className={'icon'} size={size} />;
     case file.name.includes('sql'):
       return <PiFileSqlLight className={'icon'} size={size} />;
