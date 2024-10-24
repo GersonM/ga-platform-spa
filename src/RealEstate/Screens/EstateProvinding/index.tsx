@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
+import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {useNavigate} from 'react-router-dom';
@@ -12,9 +12,12 @@ import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import FilterForm from '../../../CommonUI/FilterForm';
-import {Profile, ResponsePagination} from '../../../Types/api';
+import {Client, Contract, Invoice, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import './styles.less';
+import MoneyString from '../../../CommonUI/MoneyString';
+import InvoiceTableDetails from '../../../PaymentManagement/Components/InvoiceTableDetails';
+import ContractFinancialBrief from '../../../Commercial/Components/ContractFinancialBrief';
 
 const EstateProviding = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -31,6 +34,7 @@ const EstateProviding = () => {
   const navigate = useNavigate();
   const lastSearchText = useDebounce(searchText, 300);
   const lastSearchBlock = useDebounce(blockFilter, 300);
+  const [paymentFilter, setPaymentFilter] = useState<string>();
   const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
@@ -44,6 +48,7 @@ const EstateProviding = () => {
         stage: stageFilter,
         provided: providedFilter,
         block: lastSearchBlock,
+        payments: paymentFilter,
       },
     };
 
@@ -63,7 +68,7 @@ const EstateProviding = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter, lastSearchBlock]);
+  }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter, lastSearchBlock, paymentFilter]);
 
   const exportSelection = () => {
     const config = {
@@ -117,27 +122,88 @@ const EstateProviding = () => {
 
   const columns = [
     {
+      title: 'Etapa',
+      align: 'center',
+      dataIndex: 'items',
+      width: 50,
+      render: (items: any[]) => items.find(i => i.description == 'Etapa').value,
+    },
+    {
+      title: 'Mz.',
+      align: 'center',
+      dataIndex: 'items',
+      width: 45,
+      render: (items: any[]) => items.find(i => i.description == 'Manzana').value,
+    },
+    {
+      title: 'Lote',
+      align: 'center',
+      dataIndex: 'items',
+      width: 40,
+      render: (items: any[]) => items.find(i => i.description == 'Lote').value,
+    },
+    {
+      title: 'Modalidad',
+      dataIndex: 'items',
+      width: 120,
+      render: (items: any[]) => items.find(i => i.description == 'Modalidad').value,
+    },
+    {
       title: 'Nombre',
-      dataIndex: 'uuid',
+      dataIndex: 'client',
       width: 280,
-      render: (_uuid: string, row: Profile) => {
+      render: (client: Client) => {
         return (
           <>
-            {row.name} {row.last_name} <br />
+            {client.entity.name} {client.entity.last_name} <br />
             <small>
-              <ProfileDocument profile={row} />
+              <ProfileDocument profile={client.entity} />
             </small>
           </>
         );
       },
     },
     {
-      title: 'Teléfono',
-      dataIndex: 'phone',
-      width: 70,
+      title: 'Monto',
+      dataIndex: 'amount',
+      render: (amount: number) => <MoneyString value={amount} />,
+    },
+    {
+      title: 'Fecha de compra',
+      dataIndex: 'date_start',
+      render: (date_start: string) => dayjs(date_start).format('DD-MM-YYYY'),
+    },
+    {
+      title: 'Fecha de entrega',
+      dataIndex: 'provided_at',
+      render: (provided_at: string) => (provided_at ? dayjs(provided_at).format('DD-MM-YYYY') : ''),
+    },
+    {
+      title: 'Deuda',
+      dataIndex: 'invoices',
+      render: (invoices: Invoice[]) => {
+        return invoices?.map((i, index) => {
+          return (
+            <Tooltip
+              title={
+                <>
+                  Total <MoneyString value={i.amount} />
+                  {i.pending_payment && (
+                    <>
+                      Pendiente por pagar: <MoneyString value={i.pending_payment} />
+                    </>
+                  )}
+                </>
+              }>
+              <Tag color={i.paid_at ? 'green' : 'red'}>
+                {i.concept}: <MoneyString value={i.pending_payment} />
+              </Tag>
+            </Tooltip>
+          );
+        });
+      },
     },
   ];
-
   return (
     <ModuleContent>
       <ContentHeader
@@ -155,16 +221,18 @@ const EstateProviding = () => {
             </Tooltip>
           </>
         }
-        title={'Clientes'}
+        title={'Ventas'}
         onRefresh={() => setReload(!reload)}>
         <FilterForm
           onInitialValues={values => {
             if (values?.search) setSearchText(values.search);
+            if (values?.payments) setPaymentFilter(values.payments);
             if (values?.stage) setStageFilter(values.stage);
             if (values?.provided) setStageFilter(values.provided);
             if (values?.block) setStageFilter(values.block);
           }}
           onSubmit={values => {
+            setPaymentFilter(values.payments);
             setSearchText(values?.search);
             setStageFilter(values?.stage);
             setProvidedFilter(values?.provided);
@@ -198,6 +266,17 @@ const EstateProviding = () => {
               options={[
                 {label: 'Entregados', value: '1'},
                 {label: 'No entregados', value: '0'},
+              ]}
+            />
+          </Form.Item>
+          <Form.Item name={'payments'} label={'Pagos'}>
+            <Select
+              placeholder={'Todos'}
+              allowClear
+              style={{width: 125}}
+              options={[
+                {label: 'Pagados', value: '1'},
+                {label: 'Con deuda', value: '0'},
               ]}
             />
           </Form.Item>
