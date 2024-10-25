@@ -12,9 +12,10 @@ interface FileItemProps {
   onDoubleClick?: () => void;
   onClick?: (selected: boolean) => void;
   onChange?: () => void;
+  size?: number;
 }
 
-const FileItem = ({file, onDoubleClick, onClick, selected, onChange}: FileItemProps) => {
+const FileItem = ({file, onDoubleClick, onClick, selected, onChange, size}: FileItemProps) => {
   const isImage = file.type.includes('image');
   return (
     <FileDropdownActions file={file} trigger={['contextMenu']} onChange={onChange}>
@@ -24,7 +25,7 @@ const FileItem = ({file, onDoubleClick, onClick, selected, onChange}: FileItemPr
           caption={dayjs(file.created_at).format(' D/MM/YYYY H:mm')}
           name={file.name}
           image={isImage ? file.thumbnail : undefined}
-          icon={<FileIcon file={file} size={45} />}
+          icon={<FileIcon file={file} size={size} />}
           onClick={onClick}
           onDoubleClick={onDoubleClick}
         />

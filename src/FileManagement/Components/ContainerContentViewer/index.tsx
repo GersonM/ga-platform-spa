@@ -27,6 +27,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
   const [viewMode, setViewMode] = useState<string | number>();
+  const [orderBy, setOrderBy] = useState('name');
   const [loadingInformation, setLoadingInformation] = useState<AxiosProgressEvent>();
   const [selectedFiles, setSelectedFiles] = useState<Array<any>>();
   const [progress, setProgress] = useState(0);
@@ -139,7 +140,12 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
-    const config = {cancelToken: cancelTokenSource.token};
+    const config = {
+      cancelToken: cancelTokenSource.token,
+      params: {
+        order_by: orderBy,
+      },
+    };
     setLoading(true);
     axios
       .get(`file-management/containers/${containerUuid}/view`, config)
@@ -155,7 +161,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
       });
 
     return cancelTokenSource.cancel;
-  }, [containerUuid, reload]);
+  }, [containerUuid, reload, orderBy]);
 
   const navigateToFolder = (container: Container) => {
     setSelectedFile(undefined);
@@ -200,6 +206,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
             upLevel={navigateToParent}
             onChange={() => setReload(!reload)}
             onReload={() => setReload(!reload)}
+            onChangeOrder={order => setOrderBy(order)}
             onOpenUpload={open}
             onChangeViewMode={mode => setViewMode(mode)}
             onToggleInformation={value => setShowFileInformation(value)}
@@ -246,6 +253,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
                 ))}
                 {containerContent.files.map(file => (
                   <FileItem
+                    size={viewMode == 'grid' ? 45 : 24}
                     key={file.uuid}
                     selected={selectedFile && file.uuid === selectedFile.uuid}
                     file={file}

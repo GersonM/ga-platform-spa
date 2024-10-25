@@ -2,10 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {Button, Popover, Segmented, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
+import {BsSortAlphaDown, BsSortNumericDown} from 'react-icons/bs';
+import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
 
 import CreateContainer from '../../Components/CreateContainer';
 import {Container} from '../../../Types/api';
-import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
@@ -15,6 +16,7 @@ interface ContainerHeaderProps {
   onToggleInformation?: (enabled: boolean) => void;
   upLevel?: () => void;
   onChangeViewMode?: (viewMode: string | number) => void;
+  onChangeOrder?: (order: string) => void;
   onOpenUpload?: () => void;
   onReload?: () => void;
 }
@@ -26,10 +28,12 @@ const ContainerHeader = ({
   upLevel,
   onChangeViewMode,
   onOpenUpload,
+  onChangeOrder,
   onReload,
 }: ContainerHeaderProps) => {
   const [viewMode, setViewMode] = useState<string | number>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
+  const [orderBy, setOrderBy] = useState('name');
 
   useEffect(() => {
     if (window.innerWidth < 600) {
@@ -38,16 +42,16 @@ const ContainerHeader = ({
   }, []);
 
   useEffect(() => {
-    if (onChangeViewMode) {
-      onChangeViewMode(viewMode);
-    }
+    onChangeViewMode && onChangeViewMode(viewMode);
   }, [onChangeViewMode, viewMode]);
 
   useEffect(() => {
-    if (onToggleInformation) {
-      onToggleInformation(informationEnabled);
-    }
+    onToggleInformation && onToggleInformation(informationEnabled);
   }, [informationEnabled, onToggleInformation]);
+
+  useEffect(() => {
+    onChangeOrder && onChangeOrder(orderBy);
+  }, [orderBy, onChangeOrder]);
 
   return (
     <ContentHeader
@@ -78,6 +82,26 @@ const ContainerHeader = ({
               trigger={'click'}>
               <Button type={'text'} icon={<FolderPlusIcon height={20} />} />
             </Popover>
+          </Tooltip>
+          <Tooltip title={'Ordenar nombre o fecha'}>
+            <Segmented
+              onResize={() => {}}
+              onResizeCapture={() => {}}
+              options={[
+                {
+                  value: 'name',
+                  icon: <BsSortAlphaDown />,
+                  title: 'Nombre',
+                },
+                {
+                  value: 'date',
+                  icon: <BsSortNumericDown />,
+                  title: 'Fecha',
+                },
+              ]}
+              value={orderBy}
+              onChange={setOrderBy}
+            />
           </Tooltip>
           <Segmented
             onResize={() => {}}
