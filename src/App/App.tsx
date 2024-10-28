@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import {Modal} from 'antd';
 import axios from 'axios';
@@ -46,8 +46,13 @@ import RealEstateDashboard from '../RealEstate/Screens/RealEstateDashboard';
 import EstateDetailView from '../RealEstate/Screens/EstateDetailView';
 import CommercialDashboard from '../Commercial/Screens/CommercialDashboard';
 import EstateProvinding from '../RealEstate/Screens/EstateProvinding';
+import ProfileEditor from '../AccountManagement/Components/ProfileEditor';
+import AuthContext from '../Context/AuthContext';
+import MyAccount from '../AccountTools/Screens/MyAccount';
 
 const App = () => {
+  const {user} = useContext(AuthContext);
+
   useEffect(() => {
     axios.interceptors.response.use(undefined, error => {
       console.error('Global error: ' + error.message);
@@ -153,6 +158,7 @@ const App = () => {
           <Route path={'estates/:state?'} element={<EstateDetailView />} />
           <Route path={'providing'} element={<EstateProvinding />} />
         </Route>
+        {user && <Route path={'my-account'} element={<MyAccount />} />}
         <Route
           path={'*'}
           element={

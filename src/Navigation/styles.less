@@ -13,7 +13,7 @@
   z-index: 2;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
   color: #ffffff;
-  border-radius: 13px;
+  border-radius: 18px;
   margin: 10px 0 0 10px;
 
   animation-duration: .7s;
@@ -53,7 +53,7 @@
     text-align: center;
 
     .user-tool {
-      border: 1px solid var(--border-color);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       width: 35px;
       height: 35px;
@@ -63,9 +63,10 @@
       border-radius: 35px;
       cursor: pointer;
       transition: all 0.4s;
+      color: #ffffff;
 
       &:hover {
-        background: var(--backgroung-color-higlight);
+        background: rgba(255, 255, 255, 0.2);
       }
 
       svg {
@@ -77,9 +78,10 @@
     .user-menu {
       text-align: left;
       cursor: pointer;
-      margin-top: 10px;
+      margin: 10px 10px 0 10px;
+      border-radius: 60px;
       background: rgba(255, 255, 255, 0.1);
-      padding: 10px;
+      padding: 5px;
       display: flex;
       align-items: center;
       text-overflow: ellipsis;
@@ -111,9 +113,6 @@
   }
 
   nav {
-    flex: 1;
-    overflow: auto;
-
   }
 
   .version-info {

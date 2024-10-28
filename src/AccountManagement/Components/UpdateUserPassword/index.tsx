@@ -20,8 +20,8 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
 
   const changePassword = (values: any) => {
     axios
-      .post('authentication/change-password', {...values, user_uuid: profile.user?.uuid, profile_uuid: profile.uuid})
-      .then(response => {
+      .post('authentication/change-password', {...values, profile_uuid: profile.uuid})
+      .then(() => {
         if (onChange) {
           onChange();
           notification.success({message: 'Tu contraseña se actualizo correctamente'});
@@ -52,12 +52,6 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
 
   return (
     <div>
-      {!profile.user && (
-        <p>
-          Esta persona no tiene un usuario asociado, al generar una contraseña se creará el usuario y este podrá acceder
-          a la plataforma
-        </p>
-      )}
       <Form form={form} layout={'vertical'} onFinish={changePassword}>
         <Form.Item name={'password'} label={'Nueva contraseña'}>
           <Input.Password

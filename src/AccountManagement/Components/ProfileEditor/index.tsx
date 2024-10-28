@@ -75,9 +75,8 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       .put(`hr-management/profiles/${profileUuid}`, values)
       .then(response => {
         if (response) {
-          setLoading(false);
           //const value = response.data.birthday ? dayjs(response.data.birthday) : null;
-          setProfile(response.data);
+          //setProfile(response.data);
           setReload(!reload);
           onCompleted && onCompleted();
         }

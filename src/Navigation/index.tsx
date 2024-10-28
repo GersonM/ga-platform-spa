@@ -1,8 +1,9 @@
 import React, {useContext, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
-import {Avatar, Dropdown, Popover, Progress, Space} from 'antd';
+import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
+import ScrollArea from 'react-scrollbar';
 import axios from 'axios';
 import {
   PiBooksLight,
@@ -23,10 +24,12 @@ import {
   PiHardDrives,
   PiInvoiceDuotone,
   PiMailboxDuotone,
-  PiPackageLight,
   PiPresentationChart,
+  PiSignOut,
   PiSquaresFour,
+  PiStar,
   PiStudent,
+  PiUserCircleCheck,
   PiUserFocus,
   PiUsers,
   PiUsersThree,
@@ -34,6 +37,9 @@ import {
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
+import {TbBuildingEstate} from 'react-icons/tb';
+import {FaChalkboardTeacher} from 'react-icons/fa';
+import {GoTasklist} from 'react-icons/go';
 
 import ScreenModeSelector from './ScreenModeSelector';
 import logo from '../Assets/logo_square.png';
@@ -43,23 +49,23 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
-import {TbBuildingEstate} from 'react-icons/tb';
-import {FaChalkboardTeacher} from 'react-icons/fa';
-import {GoTasklist} from 'react-icons/go';
 
 const menuItems: ItemType[] = [
   {
     label: 'Mi cuenta',
-    key: 'account',
-    disabled: true,
+    icon: <PiUserCircleCheck size={18} />,
+    key: 'my-account',
   },
   {
     label: 'Favoritos',
+    icon: <PiStar size={18} />,
     key: 'favorites',
   },
   {
     label: 'Cerrar sesión',
+    icon: <PiSignOut size={18} />,
     key: 'logout',
+    danger: true,
   },
 ];
 
@@ -67,6 +73,7 @@ const Navigation = () => {
   const {uploadProgress, user, logout, config, darkMode, setOpenMenu, openMenu, activityCount} =
     useContext(AuthContext);
   const {pathname} = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setOpenMenu(false);
@@ -85,6 +92,7 @@ const Navigation = () => {
 
   const handleUserMenuClick = (item: any) => {
     console.log(item.key);
+    navigate('/' + item.key);
     switch (item.key) {
       case 'logout':
         logout().then();
@@ -108,101 +116,105 @@ const Navigation = () => {
           <img src={navLogo || logo} alt="Logo" />
         </div>
       </div>
-      <nav>
-        <ul className="navigation-list">
-          <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
-          <NavItem
-            label={'Mis tareas'}
-            icon={<GoTasklist />}
-            path={'/my-tasks'}
-            notifications={activityCount?.pending}
-          />
-          {config?.modules.includes('files') && (
-            <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
-          )}
-          {config?.modules.includes('real-estate') && (
-            <NavItem label={'Constructora'} icon={<PiBulldozerLight />}>
-              <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/real-estate/dashboard'} />
-              <NavItem icon={<PiBuildingsLight />} label={'Propiedades'} path={'/real-estate/estates'} />
-              <NavItem icon={<PiVectorThreeLight />} label={'Proyectos'} path={'/real-estate/projects'} />
-              <NavItem icon={<PiDoorOpenLight />} label={'Entregas'} path={'/real-estate/providing'} />
-            </NavItem>
-          )}
-          {config?.modules.includes('commercial') && (
-            <NavItem label={'Comercial'} icon={<PiHandshake />}>
-              {user?.roles?.includes('admin') && (
-                <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/commercial/dashboard'} />
-              )}
-              <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
-              <NavItem icon={<PiUserFocus />} label={'Leads'} path={'/commercial/leads'} />
-              {(user?.roles?.includes('admin') || user?.roles?.includes('Cajero')) && (
-                <>
-                  <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
-                  <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />
-                  <NavItem icon={<PiBoxArrowUp />} label={'Productos'} path={'/commercial/products'} />
-                  <NavItem icon={<PiCashRegister />} label={'Ventas'} path={'/commercial/sales'} />
-                </>
-              )}
-            </NavItem>
-          )}
-          {config?.modules.includes('move') && (
-            <NavItem icon={<PiCarProfile />} label={'Transporte'}>
-              <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/move/reservation'} />
-              <NavItem icon={<QueueListIcon />} label={'Mis reservas'} path={'/move/trips'} />
-              {user?.roles?.includes('admin') && (
-                <>
-                  <NavItem
-                    icon={<PiCarLight className={'icon'} />}
-                    label={'Vehículos & conductores'}
-                    path={'/move/vehicles'}
-                  />
-                  <NavItem icon={<MapPinIcon />} label={'Rutas & lugares'} path={'/move/routes'} />
-                </>
-              )}
-              <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
-            </NavItem>
-          )}
-          {config?.modules.includes('reservations') && (
-            <NavItem icon={<PiCalendarCheckLight />} label={'Reservas'}>
-              <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/reservations/create'} />
-              <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/manager'} />
-              {user?.roles?.includes('admin') && (
-                <>
-                  <NavItem
-                    icon={<TbBuildingEstate className={'icon'} />}
-                    label={'Espacios'}
-                    path={'/reservations/vehicles'}
-                  />
-                  <NavItem icon={<MapPinIcon />} label={'Servicios'} path={'/reservations/routes'} />
-                </>
-              )}
-              <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
-            </NavItem>
-          )}
-          {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
-          {user?.roles?.includes('admin') && (
-            <NavItem label={'Seguridad'} icon={<PiFingerprint />} path={'/accounts'} />
-          )}
-          {config?.modules.includes('lms') && (
-            <NavItem label={'LMS'} icon={<PiGraduationCap />}>
-              <NavItem label={'Cursos'} icon={<PiBooksLight />} path={'/lms/courses'} />
-              <NavItem label={'Estudiantes'} icon={<PiStudent />} path={'/lms/students'} />
-              <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
-            </NavItem>
-          )}
 
-          {config?.modules.includes('attendance') && (
-            <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />
-          )}
-          {config?.modules.includes('inbox') && (
-            <NavItem label={'E-mail'} icon={<PiMailboxDuotone />} path={'/inbox-management'} />
-          )}
-          {config?.modules.includes('payments') && (
-            <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
-          )}
-          {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
-        </ul>
-      </nav>
+      <ScrollArea style={{flex: 1}} horizontal={false}>
+        <nav>
+          <ul className="navigation-list">
+            <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
+            <NavItem
+              label={'Mis tareas'}
+              icon={<GoTasklist />}
+              path={'/my-tasks'}
+              notifications={activityCount?.pending}
+            />
+            {config?.modules.includes('files') && (
+              <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
+            )}
+            {config?.modules.includes('real-estate') && (
+              <NavItem label={'Constructora'} icon={<PiBulldozerLight />}>
+                <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/real-estate/dashboard'} />
+                <NavItem icon={<PiBuildingsLight />} label={'Propiedades'} path={'/real-estate/estates'} />
+                <NavItem icon={<PiVectorThreeLight />} label={'Proyectos'} path={'/real-estate/projects'} />
+                <NavItem icon={<PiDoorOpenLight />} label={'Entregas'} path={'/real-estate/providing'} />
+              </NavItem>
+            )}
+            {config?.modules.includes('commercial') && (
+              <NavItem label={'Comercial'} icon={<PiHandshake />}>
+                {user?.roles?.includes('admin') && (
+                  <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/commercial/dashboard'} />
+                )}
+                <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
+                <NavItem icon={<PiUserFocus />} label={'Leads'} path={'/commercial/leads'} />
+                {(user?.roles?.includes('admin') || user?.roles?.includes('Cajero')) && (
+                  <>
+                    <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
+                    <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />
+                    <NavItem icon={<PiBoxArrowUp />} label={'Productos'} path={'/commercial/products'} />
+                    <NavItem icon={<PiCashRegister />} label={'Ventas'} path={'/commercial/sales'} />
+                  </>
+                )}
+              </NavItem>
+            )}
+            {config?.modules.includes('move') && (
+              <NavItem icon={<PiCarProfile />} label={'Transporte'}>
+                <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/move/reservation'} />
+                <NavItem icon={<QueueListIcon />} label={'Mis reservas'} path={'/move/trips'} />
+                {user?.roles?.includes('admin') && (
+                  <>
+                    <NavItem
+                      icon={<PiCarLight className={'icon'} />}
+                      label={'Vehículos & conductores'}
+                      path={'/move/vehicles'}
+                    />
+                    <NavItem icon={<MapPinIcon />} label={'Rutas & lugares'} path={'/move/routes'} />
+                  </>
+                )}
+                <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
+              </NavItem>
+            )}
+            {config?.modules.includes('reservations') && (
+              <NavItem icon={<PiCalendarCheckLight />} label={'Reservas'}>
+                <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/reservations/create'} />
+                <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/manager'} />
+                {user?.roles?.includes('admin') && (
+                  <>
+                    <NavItem
+                      icon={<TbBuildingEstate className={'icon'} />}
+                      label={'Espacios'}
+                      path={'/reservations/vehicles'}
+                    />
+                    <NavItem icon={<MapPinIcon />} label={'Servicios'} path={'/reservations/routes'} />
+                  </>
+                )}
+                <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
+              </NavItem>
+            )}
+            {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
+            {user?.roles?.includes('admin') && (
+              <NavItem label={'Seguridad'} icon={<PiFingerprint />} path={'/accounts'} />
+            )}
+            {config?.modules.includes('lms') && (
+              <NavItem label={'LMS'} icon={<PiGraduationCap />}>
+                <NavItem label={'Cursos'} icon={<PiBooksLight />} path={'/lms/courses'} />
+                <NavItem label={'Estudiantes'} icon={<PiStudent />} path={'/lms/students'} />
+                <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
+              </NavItem>
+            )}
+
+            {config?.modules.includes('attendance') && (
+              <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />
+            )}
+            {config?.modules.includes('inbox') && (
+              <NavItem label={'E-mail'} icon={<PiMailboxDuotone />} path={'/inbox-management'} />
+            )}
+            {config?.modules.includes('payments') && (
+              <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
+            )}
+            {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
+          </ul>
+        </nav>
+      </ScrollArea>
+
       <div className="bottom-nav">
         {uploadProgress && (
           <Popover
@@ -219,18 +231,16 @@ const Navigation = () => {
           </Popover>
         )}
         <Space>
-          <div className={'user-tool'}>
-            <BellIcon />
-          </div>
+          <Badge count={0}>
+            <div className={'user-tool'}>
+              <BellIcon />
+            </div>
+          </Badge>
           <ScreenModeSelector />
         </Space>
-        <Dropdown
-          arrow={true}
-          placement={'topLeft'}
-          trigger={['click']}
-          menu={{items: menuItems, onClick: handleUserMenuClick}}>
+        <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: handleUserMenuClick}}>
           <div className={'user-menu'}>
-            <Avatar className={'avatar'}>{user?.name.substring(0, 1)}</Avatar>
+            <Avatar className={'avatar'}>{user?.profile.name.substring(0, 1)}</Avatar>
             <div>
               {user?.profile.name}
               <small>{user?.profile.email}</small>
