@@ -3,7 +3,7 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ProfileEditor from '../../../AccountManagement/Components/ProfileEditor';
 import AuthContext from '../../../Context/AuthContext';
-import {Avatar, Col, Collapse, Divider, Drawer, Empty, List, Row, Space} from 'antd';
+import {Avatar, Card, Col, Collapse, Divider, Drawer, Empty, List, Row, Space} from 'antd';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {PiLock} from 'react-icons/pi';
 import PasswordRecovery from '../../../Authentication/Screen/PasswordRecovery';
@@ -20,7 +20,7 @@ const MyAccount = () => {
       <Row justify={'center'}>
         <Col md={14}>
           <ContentHeader title={'Mi cuenta'} />
-          <Divider style={{margin: '30px 0'}} dashed orientation={'left'}>
+          <Divider style={{margin: '0 0 30px 0'}} dashed orientation={'left'}>
             Seguridad
           </Divider>
           <Space align={'center'} size={'large'}>
@@ -44,7 +44,6 @@ const MyAccount = () => {
           <h3 style={{marginTop: '20px'}}>Sesiones</h3>
           <List size={'small'} bordered>
             <List.Item actions={['Actual', 'Escritorio']}>Sesión actual</List.Item>
-            <List.Item actions={['Móvil']}>iPhone 15 Plus</List.Item>
           </List>
           <Divider style={{margin: '30px 0'}} dashed orientation={'left'}>
             Información personal
@@ -81,8 +80,19 @@ const MyAccount = () => {
           <Empty description={'Nada por aquí'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         </Col>
       </Row>
-      <Drawer title={'Actualizar mi contraseña'} open={openPasswordModal} onClose={() => setOpenPasswordModal(false)}>
-        {user?.profile && <UpdateUserPassword onChange={() => {}} profile={user?.profile} />}
+      <Drawer
+        destroyOnClose
+        title={'Actualizar mi contraseña'}
+        open={openPasswordModal}
+        onClose={() => setOpenPasswordModal(false)}>
+        {user?.profile && (
+          <UpdateUserPassword
+            onChange={() => {
+              setOpenPasswordModal(false);
+            }}
+            profile={user?.profile}
+          />
+        )}
       </Drawer>
     </ModuleContent>
   );

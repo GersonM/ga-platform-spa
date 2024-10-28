@@ -7,6 +7,7 @@ import axios from 'axios';
 import {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import AlertMessage from '../../../CommonUI/AlertMessage';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 
 interface UpdateUserPasswordProps {
   onChange?: () => void;
@@ -16,18 +17,22 @@ interface UpdateUserPasswordProps {
 const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
   const [password, setPassword] = useState<string>();
   const [generatedPassword, setGeneratedPassword] = useState<string>();
+  const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
   const changePassword = (values: any) => {
+    setLoading(true);
     axios
       .post('authentication/change-password', {...values, profile_uuid: profile.uuid})
       .then(() => {
+        setLoading(false);
         if (onChange) {
           onChange();
           notification.success({message: 'Tu contraseña se actualizo correctamente'});
         }
       })
       .catch(error => {
+        setLoading(false);
         ErrorHandler.showNotification(error);
       });
   };
@@ -52,6 +57,7 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
 
   return (
     <div>
+      <LoadingIndicator visible={loading} />
       <Form form={form} layout={'vertical'} onFinish={changePassword}>
         <Form.Item name={'password'} label={'Nueva contraseña'}>
           <Input.Password
@@ -69,7 +75,7 @@ const UpdateUserPassword = ({onChange, profile}: UpdateUserPasswordProps) => {
           <Input.Password />
         </Form.Item>
         <Form.Item>
-          <Button block htmlType={'submit'} type={'primary'}>
+          <Button loading={loading} block htmlType={'submit'} type={'primary'}>
             Cambiar contraseña
           </Button>
         </Form.Item>

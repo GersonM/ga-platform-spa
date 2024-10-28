@@ -12,12 +12,10 @@ import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import FilterForm from '../../../CommonUI/FilterForm';
-import {Client, Contract, Invoice, Profile, ResponsePagination} from '../../../Types/api';
+import {Client, Invoice, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import './styles.less';
 import MoneyString from '../../../CommonUI/MoneyString';
-import InvoiceTableDetails from '../../../PaymentManagement/Components/InvoiceTableDetails';
-import ContractFinancialBrief from '../../../Commercial/Components/ContractFinancialBrief';
+import './styles.less';
 
 const EstateProviding = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -147,6 +145,12 @@ const EstateProviding = () => {
       dataIndex: 'items',
       width: 120,
       render: (items: any[]) => items.find(i => i.description == 'Modalidad').value,
+    },
+    {
+      title: 'Vendedor',
+      dataIndex: 'items',
+      width: 120,
+      render: (items: any[]) => items.find(i => i.description == 'Vendedor').value,
     },
     {
       title: 'Nombre',
