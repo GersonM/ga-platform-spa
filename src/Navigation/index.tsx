@@ -3,7 +3,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
-import ScrollArea from 'react-scrollbar';
+import {CustomScroll} from 'react-custom-scroll';
 import axios from 'axios';
 import {
   PiBooksLight,
@@ -117,7 +117,7 @@ const Navigation = () => {
         </div>
       </div>
 
-      <ScrollArea style={{flex: 1}} horizontal={false}>
+      <CustomScroll heightRelativeToParent="calc(100% - 20px)">
         <nav>
           <ul className="navigation-list">
             <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
@@ -213,7 +213,7 @@ const Navigation = () => {
             {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
           </ul>
         </nav>
-      </ScrollArea>
+      </CustomScroll>
 
       <div className="bottom-nav">
         {uploadProgress && (
