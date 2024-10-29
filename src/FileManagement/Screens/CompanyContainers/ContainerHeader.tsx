@@ -5,7 +5,7 @@ import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
 import {BsSortAlphaDown, BsSortNumericDown} from 'react-icons/bs';
 import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
 
-import CreateContainer from '../../Components/CreateContainer';
+import ContainerForm from '../../Components/ContainerForm';
 import {Container} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -78,7 +78,7 @@ const ContainerHeader = ({
           <Tooltip title={'Nuevo folder'}>
             <Popover
               placement={'bottomRight'}
-              content={<CreateContainer containerUuid={container.uuid} onCompleted={onChange} />}
+              content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange} />}
               trigger={'click'}>
               <Button type={'text'} icon={<FolderPlusIcon height={20} />} />
             </Popover>

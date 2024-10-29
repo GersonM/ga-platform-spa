@@ -16,6 +16,7 @@ import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
 import './styles.less';
+import {PiImage} from 'react-icons/pi';
 
 interface FileInformationProps {
   file?: File;
@@ -65,6 +66,17 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
         ErrorHandler.showNotification(error);
       });
   };
+  const generateThumbnail = () => {
+    axios
+      .post(`file-management/files/${file?.uuid}/generate-thumbnail`)
+      .then(() => {
+        setReload(!reload);
+        onChange && onChange();
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
 
   const copyText = (text?: string) => {
     if (text) {
@@ -104,7 +116,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                   </small>
                 </span>
               </div>
-              <Row gutter={10}>
+              <Row gutter={[10, 10]}>
                 <Col md={12}>
                   <Button
                     size={'small'}
@@ -123,6 +135,11 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                     target="_blank"
                     icon={<CloudArrowDownIcon className={'button-icon'} width={17} />}>
                     Descargar
+                  </Button>
+                </Col>
+                <Col md={24}>
+                  <Button size={'small'} onClick={generateThumbnail} block target="_blank" icon={<PiImage size={17} />}>
+                    Regenerar thumbnail
                   </Button>
                 </Col>
               </Row>

@@ -6,7 +6,7 @@ import {PlusCircleIcon} from '@heroicons/react/24/outline';
 import {TbReload} from 'react-icons/tb';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import CreateContainer from '../../Components/CreateContainer';
+import ContainerForm from '../../Components/ContainerForm';
 import ContainerNavItem from './ContainerNavItem';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ContainerContentViewer from '../../Components/ContainerContentViewer';
@@ -71,7 +71,7 @@ const CompanyContainers = () => {
             <Popover
               open={openContainerCreator}
               content={
-                <CreateContainer
+                <ContainerForm
                   onCompleted={() => {
                     setReload(!reload);
                     setOpenContainerCreator(false);

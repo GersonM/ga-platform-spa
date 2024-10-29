@@ -86,7 +86,7 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
       icon: container.is_public ? <LockOpenIcon width={16} /> : <LockClosedIcon width={16} />,
     },
     {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
-    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />, disabled: true},
+    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />},
     {label: 'Compartir', key: 'share', icon: <ShareIcon width={16} />},
     {label: 'Agregar como favorito', key: 'favorite', icon: <StarIcon width={16} />},
     {type: 'divider'},

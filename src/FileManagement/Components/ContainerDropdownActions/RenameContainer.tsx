@@ -12,7 +12,7 @@ interface RenameFileProps {
 const RenameContainer = ({container, onCompleted}: RenameFileProps) => {
   const sendForm = (values: any) => {
     axios
-      .put(`file-management/files/${container.uuid}`, values)
+      .put(`file-management/containers/${container.uuid}`, values)
       .then(() => {
         if (onCompleted) {
           onCompleted();

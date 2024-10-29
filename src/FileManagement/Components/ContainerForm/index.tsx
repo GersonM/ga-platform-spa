@@ -6,13 +6,13 @@ import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Container} from '../../../Types/api';
 
-interface CreateContainerProps {
+interface ContainerFormProps {
   containerUuid?: string;
   container?: Container;
   onCompleted?: (container: any) => void;
 }
 
-const CreateContainer = ({container, containerUuid, onCompleted}: CreateContainerProps) => {
+const ContainerForm = ({container, containerUuid, onCompleted}: ContainerFormProps) => {
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
@@ -76,4 +76,4 @@ const CreateContainer = ({container, containerUuid, onCompleted}: CreateContaine
   );
 };
 
-export default CreateContainer;
+export default ContainerForm;

@@ -3,6 +3,7 @@ import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
 import {PiFilePdfLight, PiFileSqlLight, PiFileXlsLight, PiThreeD} from 'react-icons/pi';
 
 import {File} from '../../../Types/api';
+import {DiPhotoshop} from 'react-icons/di';
 
 interface FileIconProps {
   file: File;
@@ -15,8 +16,9 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
     case file.type.includes('dwg'):
       return <PiThreeD className={'icon'} size={size} />;
     case file.type.includes('pdf'):
-      //case file.name.includes('.pdf'):
       return <PiFilePdfLight className={'icon'} size={size} />;
+    case file.type.includes('adobe'):
+      return <DiPhotoshop size={size} />;
     case file.name.includes('sql'):
       return <PiFileSqlLight className={'icon'} size={size} />;
     case file.name.includes('csv') || file.name.includes('xlsx'):
