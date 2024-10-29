@@ -4,22 +4,28 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {Container} from '../../../Types/api';
 
 interface CreateContainerProps {
   containerUuid?: string;
+  container?: Container;
   onCompleted?: (container: any) => void;
 }
 
-const CreateContainer = ({containerUuid, onCompleted}: CreateContainerProps) => {
+const CreateContainer = ({container, containerUuid, onCompleted}: CreateContainerProps) => {
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
   const submitForm = (values: any) => {
     setLoading(true);
     axios
-      .post(`file-management/containers`, {
-        ...values,
-        container_uuid: containerUuid,
+      .request({
+        url: container ? `file-management/containers/${container.uuid}` : 'file-management/containers',
+        method: container ? 'put' : 'post',
+        data: {
+          ...values,
+          container_uuid: containerUuid,
+        },
       })
       .then(response => {
         setLoading(false);
