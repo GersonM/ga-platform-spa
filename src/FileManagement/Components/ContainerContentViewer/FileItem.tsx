@@ -16,7 +16,7 @@ interface FileItemProps {
 }
 
 const FileItem = ({file, onDoubleClick, onClick, selected, onChange, size}: FileItemProps) => {
-  //const isImage = file.type.includes('image');
+  const isImage = file.type.includes('image');
   return (
     <FileDropdownActions file={file} trigger={['contextMenu']} onChange={onChange}>
       <div>
@@ -24,7 +24,7 @@ const FileItem = ({file, onDoubleClick, onClick, selected, onChange, size}: File
           selected={selected}
           caption={dayjs(file.created_at).format(' D/MM/YYYY H:mm')}
           name={file.name}
-          image={file.thumbnail}
+          image={isImage ? file.thumbnail : undefined}
           icon={<FileIcon file={file} size={size} />}
           onClick={onClick}
           onDoubleClick={onDoubleClick}
