@@ -134,6 +134,10 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 <Tag color={'blue'}>
                   <TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />
                 </Tag>
+                {''}/{' '}
+                <Tag color={'blue'}>
+                  <TextMoney money={subscription.amount} currency={subscription.billing_currency} />
+                </Tag>
               </>
             }>
             <>

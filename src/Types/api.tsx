@@ -324,6 +324,7 @@ export type Subscription = {
   is_active: boolean;
   code: string;
   plan: Plan;
+  amount: number;
   started_at: string;
   terminated_at: string;
   members: SubscriptionMember[];
