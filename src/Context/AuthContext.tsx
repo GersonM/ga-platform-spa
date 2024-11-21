@@ -90,6 +90,9 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
           }
         })
         .catch(error => {
+          if (window.location.pathname.indexOf('/auth/login') === -1) {
+            window.location.href = '/auth/login';
+          }
           ErrorHandler.showNotification(error);
         });
     }

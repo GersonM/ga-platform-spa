@@ -15,7 +15,9 @@ const ProfileChip = ({profile, caption}: IProfileCardProps) => {
       <LoadingIndicator visible={!profile} />
       {profile && (
         <>
-          <Avatar className={'avatar'}>G</Avatar>
+          <Avatar src={profile.avatar?.thumbnail} className={'avatar'}>
+            G
+          </Avatar>
           <div>
             {profile.name} {profile.last_name} <br />
             <small>{caption ? caption : profile.email}</small>

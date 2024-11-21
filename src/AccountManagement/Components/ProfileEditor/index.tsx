@@ -189,7 +189,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
             <AlertMessage message={'Este usuario está bloqueado y no podrá iniciar sesión'} />
           )}
         </Col>
-        <Col md={13}>
+        <Col md={18}>
           <Form form={form} initialValues={profile} layout={'vertical'} onFinish={onSubmit}>
             <Row gutter={15}>
               <Col md={12}>

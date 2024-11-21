@@ -79,7 +79,7 @@ const Users = () => {
         }
         title={'Usuarios registrados'}
         header={
-          <Space>
+          <Space direction={'vertical'}>
             <Input.Search
               allowClear
               placeholder={'Buscar por nombre'}
@@ -151,7 +151,7 @@ const Users = () => {
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay personas registradas'} />
         )}
       </ModuleSidebar>
-      <ModuleContent>
+      <ModuleContent withSidebar>
         {params.uuid && (
           <Tabs
             animated={{inkBar: true, tabPane: true}}

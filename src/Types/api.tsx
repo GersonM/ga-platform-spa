@@ -322,12 +322,19 @@ export type Subscription = {
   billing_period: string;
   email_verified_at: string;
   is_active: boolean;
+  code: string;
   plan: Plan;
   started_at: string;
   terminated_at: string;
+  members: SubscriptionMember[];
   uuid: string;
 };
 
+export type SubscriptionMember = {
+  uuid: string;
+  relation_type: string;
+  profile: Profile;
+};
 export type InvoicePayment = {
   amount: number;
   created_at: string;
