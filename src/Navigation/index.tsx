@@ -11,10 +11,14 @@ import {
   PiBuildingsLight,
   PiBulldozerLight,
   PiCalendarCheckLight,
+  PiCardholder,
+  PiCards,
+  PiCardsLight,
   PiCarLight,
   PiCarProfile,
   PiCashRegister,
   PiClockUser,
+  PiCreditCard,
   PiDoorOpenLight,
   PiDotsThreeVerticalBold,
   PiFingerprint,
@@ -24,6 +28,7 @@ import {
   PiHardDrives,
   PiInvoiceDuotone,
   PiMailboxDuotone,
+  PiPerson,
   PiPresentationChart,
   PiSignOut,
   PiSquaresFour,
@@ -200,6 +205,10 @@ const Navigation = () => {
                 <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
               </NavItem>
             )}
+            <NavItem label={'Club'} icon={<PiUsers />}>
+              <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
+              <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/members'} />
+            </NavItem>
 
             {config?.modules.includes('attendance') && (
               <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />

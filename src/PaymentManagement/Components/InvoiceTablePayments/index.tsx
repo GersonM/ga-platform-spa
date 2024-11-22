@@ -1,18 +1,20 @@
 import React, {useState} from 'react';
-import {Modal} from 'antd';
+import {Modal, Popconfirm, Space} from 'antd';
+import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
 
 import TableList from '../../../CommonUI/TableList';
 import {Invoice, File} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
-import {DocumentIcon} from '@heroicons/react/24/outline';
+import IconButton from '../../../CommonUI/IconButton';
 
 interface InvoiceTablePayments {
   invoice: Invoice;
+  onChange?: () => void;
 }
 
-const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
+const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
 
   const columns = [
@@ -46,6 +48,19 @@ const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
         }
       },
     },
+    {
+      title: '',
+      dataIndex: 'uuid',
+      render: (uuid: string) => {
+        return (
+          <Space>
+            <Popconfirm title={'¿Quieres eliminar este concepto?'}>
+              <IconButton disabled icon={<TrashIcon />} small danger />
+            </Popconfirm>
+          </Space>
+        );
+      },
+    },
   ];
   return (
     <div>
@@ -62,6 +77,7 @@ const InvoiceTablePayments = ({invoice}: InvoiceTablePayments) => {
           invoice={invoice}
           onCompleted={() => {
             setOpenInvoiceForm(false);
+            onChange && onChange();
           }}
         />
       </Modal>

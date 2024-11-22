@@ -144,10 +144,10 @@ const CommercialContractDetail = () => {
                 key: invoice.uuid,
                 children: (
                   <div>
-                    <InvoiceTableDetails invoice={invoice} />
+                    <InvoiceTableDetails invoice={invoice} onChange={() => setReload(!reload)} />
                     <Divider />
                     <h3>Pagos</h3>
-                    <InvoiceTablePayments invoice={invoice} />
+                    <InvoiceTablePayments invoice={invoice} onChange={() => setReload(!reload)} />
                   </div>
                 ),
               };

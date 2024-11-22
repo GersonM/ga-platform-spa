@@ -49,6 +49,7 @@ import EstateProvinding from '../RealEstate/Screens/EstateProvinding';
 import ProfileEditor from '../AccountManagement/Components/ProfileEditor';
 import AuthContext from '../Context/AuthContext';
 import MyAccount from '../AccountTools/Screens/MyAccount';
+import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl';
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -142,6 +143,9 @@ const App = () => {
           <Route path={':uuid'}>
             <Route path={':tab'} />
           </Route>
+        </Route>
+        <Route path={'club'}>
+          <Route path={'access-control'} element={<MembersAccessControl />} />
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard />} />
