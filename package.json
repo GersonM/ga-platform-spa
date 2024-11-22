@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
-    "@nicholasadamou/react-iframe": "^1.0.4",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.39.7",
@@ -21,7 +20,7 @@
     "js-cookie": "^3.0.5",
     "overlayscrollbars": "^2.4.7",
     "overlayscrollbars-react": "^0.5.4",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-big-calendar": "^1.13.2",
     "react-charts": "^3.0.0-beta.57",
     "react-custom-scroll": "^7.0.0",
