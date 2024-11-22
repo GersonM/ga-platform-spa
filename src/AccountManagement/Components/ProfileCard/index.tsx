@@ -13,7 +13,7 @@ interface ProfileCardProps {
   allowEdit?: boolean;
 }
 
-const ProfileCard = ({profile, allowEdit}: ProfileCardProps) => {
+const ProfileCard = ({profile, allowEdit = true}: ProfileCardProps) => {
   const [showUploader, setShowUploader] = useState(false);
   const [loading, setLoading] = useState(false);
 
