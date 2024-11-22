@@ -10,9 +10,10 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface ProfileCardProps {
   profile: Profile;
+  allowEdit?: boolean;
 }
 
-const ProfileCard = ({profile}: ProfileCardProps) => {
+const ProfileCard = ({profile, allowEdit}: ProfileCardProps) => {
   const [showUploader, setShowUploader] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +44,9 @@ const ProfileCard = ({profile}: ProfileCardProps) => {
           </Avatar>
         )}
       </div>
-      <PrimaryButton onClick={() => setShowUploader(!showUploader)} ghost size={'small'} label={'Actualizar foto'} />
+      {allowEdit && (
+        <PrimaryButton onClick={() => setShowUploader(!showUploader)} ghost size={'small'} label={'Actualizar foto'} />
+      )}
       <h2 className={'name'}>
         {profile.name} {profile.last_name}
       </h2>

@@ -335,6 +335,7 @@ export type SubscriptionMember = {
   uuid: string;
   relation_type: string;
   profile: Profile;
+  subscription?: Subscription;
 };
 export type InvoicePayment = {
   amount: number;

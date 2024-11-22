@@ -60,7 +60,6 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
     {
       title: 'Concepto',
       dataIndex: 'concept',
-      width: 160,
     },
     {
       title: 'Monto',
@@ -73,24 +72,19 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
     },
     {
       title: 'Estado',
-      width: 400,
+      width: 100,
       dataIndex: 'pending_payment',
       render: (pending_payment: number) => (
         <Tag color={pending_payment && pending_payment > 0 ? 'red' : 'green'}>
           {pending_payment > 0 ? (
             <>
-              Pago pendiente: <MoneyString value={pending_payment} />
+              <MoneyString value={pending_payment} />
             </>
           ) : (
             'Pagado'
           )}
         </Tag>
       ),
-    },
-
-    {
-      title: 'Método de pago',
-      dataIndex: 'fk_payment_method_uuid',
     },
   ];
 
