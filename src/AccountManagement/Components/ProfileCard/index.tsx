@@ -1,31 +1,32 @@
 import React, {useState} from 'react';
 import {Avatar} from 'antd';
+import axios from 'axios';
 
 import {Profile, File} from '../../../Types/api';
-import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
+import './styles.less';
 
 interface ProfileCardProps {
   profile: Profile;
   allowEdit?: boolean;
+  onChange?: () => void;
 }
 
-const ProfileCard = ({profile, allowEdit = true}: ProfileCardProps) => {
+const ProfileCard = ({profile, onChange, allowEdit = true}: ProfileCardProps) => {
   const [showUploader, setShowUploader] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onAvatarChange = (file: File) => {
-    console.log(file);
     setLoading(true);
     axios
       .put(`hr-management/profiles/${profile.uuid}`, {avatar_uuid: file.uuid})
-      .then(response => {
-        if (response) {
-          setShowUploader(false);
-        }
+      .then(() => {
+        setLoading(false);
+        onChange && onChange();
+        setShowUploader(false);
       })
       .catch(e => {
         setLoading(false);
@@ -35,9 +36,10 @@ const ProfileCard = ({profile, allowEdit = true}: ProfileCardProps) => {
 
   return (
     <div className={'profile-card-container'}>
+      <LoadingIndicator visible={loading} message={'Guardando foto...'} />
       <div className={'avatar'}>
         {showUploader ? (
-          <FileUploader onFilesUploaded={onAvatarChange} height={120} />
+          <FileUploader showPreview={true} onFilesUploaded={onAvatarChange} height={120} />
         ) : (
           <Avatar size={120} src={profile.avatar?.thumbnail}>
             {profile.name.substring(0, 1)}

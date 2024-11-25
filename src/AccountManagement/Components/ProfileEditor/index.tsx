@@ -143,7 +143,12 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       <LoadingIndicator visible={loading} message={'Guardando...'} />
       <Row gutter={30}>
         <Col md={6}>
-          <ProfileCard profile={profile} />
+          <ProfileCard
+            profile={profile}
+            onChange={() => {
+              setReload(!reload);
+            }}
+          />
           <Space.Compact block direction={'vertical'}>
             <PrimaryButton
               icon={<LockClosedIcon width={20} />}
