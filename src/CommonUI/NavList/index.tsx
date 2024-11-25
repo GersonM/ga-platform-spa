@@ -10,17 +10,18 @@ interface NavItemProps {
   name: string | React.ReactNode;
   caption?: string;
   path: string;
+  image: string;
   icon?: React.ReactNode;
   height?: number;
   onClick?: () => void;
   menuItems?: MenuProps;
 }
 
-const NavListItem = ({name, caption, icon, onClick, path, menuItems, height}: NavItemProps) => {
+const NavListItem = ({image, name, caption, icon, onClick, path, menuItems, height}: NavItemProps) => {
   return (
     <li className={'nav-list-item'}>
       <NavLink to={path} onClick={onClick} style={{height}}>
-        {icon && <span className={'icon'}>{icon}</span>}
+        {image ? <img className={'avatar'} src={image} alt="Imae" /> : icon && <span className={'icon'}>{icon}</span>}
         <span className="label">
           {name}
           {caption && <span className={'caption'}>{caption}</span>}

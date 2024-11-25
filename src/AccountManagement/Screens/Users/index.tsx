@@ -141,6 +141,7 @@ const Users = () => {
                   </Space>
                 }
                 caption={dayjs(p.created_at).fromNow() + ' | ' + (p.email || 'Sin correo')}
+                image={p.avatar?.thumbnail}
                 icon={p.user ? <IdentificationIcon /> : <UserIcon />}
                 path={`/accounts/${p.uuid}`}
               />
