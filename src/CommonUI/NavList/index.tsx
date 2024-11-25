@@ -10,7 +10,7 @@ interface NavItemProps {
   name: string | React.ReactNode;
   caption?: string;
   path: string;
-  image: string;
+  image?: string;
   icon?: React.ReactNode;
   height?: number;
   onClick?: () => void;
