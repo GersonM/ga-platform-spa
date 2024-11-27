@@ -3,7 +3,17 @@ import {TrashIcon} from '@heroicons/react/16/solid';
 import {CreditCardIcon} from '@heroicons/react/24/solid';
 import {PencilIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
-import {Collapse, Modal, Space, Tag} from 'antd';
+import {Divider, Modal, Space, Tag} from 'antd';
+import {
+  PiAcorn,
+  PiCalendar,
+  PiCalendarCheck,
+  PiCalendarX,
+  PiCashRegister,
+  PiControl,
+  PiMoney,
+  PiTicket,
+} from 'react-icons/pi';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -15,9 +25,12 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ProfileEditor from '../../../AccountManagement/Components/ProfileEditor';
-import Invoices from '../../Screens/Invoices';
-import InvoiceTableDetails from '../InvoiceTableDetails';
 import InvoicesTable from '../InvoicesTable';
+import InfoButton from '../../../CommonUI/InfoButton';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import './styles.less';
+import CommercialIncidents from '../../../Commercial/Screens/CommercialIncidents';
+import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -118,45 +131,57 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
 
   return (
     <div>
-      <Collapse defaultActiveKey={0}>
-        {subscriptions?.map((subscription: Subscription) => (
-          <Collapse.Panel
-            key={subscription.uuid}
-            extra={
-              <>
-                {subscription.is_active ? 'Activo' : 'Suspendido'}
-                <Tag>{subscription.code}</Tag>
-              </>
-            }
-            header={
-              <>
-                {subscription.plan.name}{' '}
-                <Tag color={'blue'}>
-                  <TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />
+      {subscriptions?.map((subscription: Subscription) => (
+        <div key={subscription.uuid}>
+          <ContentHeader
+            title={subscription.plan.name}
+            tools={
+              <Space>
+                <Tag color={'blue'}>{subscription.code}</Tag>
+                <Tag color={subscription.is_active ? 'green' : 'red'}>
+                  {subscription.is_active ? 'ACTIVO' : 'SUSPENDIDO'}
                 </Tag>
-                {''}/{' '}
-                <Tag color={'blue'}>
-                  <TextMoney money={subscription.amount} currency={subscription.billing_currency} />
-                </Tag>
-              </>
+              </Space>
             }>
-            <>
-              <strong>Inicio: </strong>
-              {dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')} <br />
-              <strong>Final: </strong>
-              {subscription.terminated_at
-                ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
-                  ' - ' +
-                  dayjs(subscription.started_at).diff(new Date(), 'days')
-                : 'Indefinido'}
-            </>
-            <h3>Miembros</h3>
-            <TableList loading={loading} columns={columns} dataSource={subscription.members} />
-            <h3>Pagos</h3>
-            <InvoicesTable entityUuid={subscription.uuid} />
-          </Collapse.Panel>
-        ))}
-      </Collapse>
+            <div className={'subscription-info'}>
+              <Space>
+                <InfoButton
+                  icon={<PiCalendarCheck className={'icon'} />}
+                  caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
+                  label={'Inicio'}
+                />
+                <InfoButton
+                  icon={<PiCalendarX className={'icon'} />}
+                  caption={
+                    subscription.terminated_at
+                      ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
+                        ' - ' +
+                        dayjs(subscription.started_at).diff(new Date(), 'days')
+                      : 'Indefinido'
+                  }
+                  label={'Terminado'}
+                />
+                <InfoButton
+                  icon={<PiTicket className={'icon'} />}
+                  caption={<TextMoney money={subscription.amount} currency={subscription.billing_currency} />}
+                  label={'Subscripción'}
+                />
+                <InfoButton
+                  icon={<PiTicket className={'icon'} />}
+                  caption={<TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />}
+                  label={'Plan'}
+                />
+              </Space>
+            </div>
+          </ContentHeader>
+          <Divider orientation={'left'}>Miembros</Divider>
+          <TableList loading={loading} columns={columns} dataSource={subscription.members} />
+          <Divider orientation={'left'}>Pagos</Divider>
+          <InvoicesTable entityUuid={subscription.uuid} />
+          <Divider orientation={'left'}>Actividad</Divider>
+          <EntityActivityManager uuid={subscription.uuid} type={'subscription'} />
+        </div>
+      ))}
       <Modal
         width={800}
         destroyOnClose
