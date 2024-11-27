@@ -60,7 +60,18 @@ const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
   ];
   return (
     <div>
-      <TableList small columns={columns} dataSource={invoice.items} pagination={false} />
+      <TableList
+        footer={() => (
+          <>
+            Total: <MoneyString value={invoice.amount} /> <br />
+            Saldo: <MoneyString value={invoice.pending_payment} />
+          </>
+        )}
+        small
+        columns={columns}
+        dataSource={invoice.items}
+        pagination={false}
+      />
     </div>
   );
 };

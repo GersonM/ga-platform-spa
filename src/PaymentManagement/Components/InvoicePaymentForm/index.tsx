@@ -15,7 +15,6 @@ interface InvoicePaymentProps {
 
 const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps) => {
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState<Profile>();
   const [fileUuid, setFileUuid] = useState<string>();
   const [form] = useForm();
 

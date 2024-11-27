@@ -1,22 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Empty, Input, Pagination, Select, Space, Tag} from 'antd';
+import {Divider, Empty, Modal, Pagination, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
-import {CreditCardIcon, NoSymbolIcon} from '@heroicons/react/24/solid';
+import {PiPencilSimple} from 'react-icons/pi';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import IconButton from '../../../CommonUI/IconButton';
-import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import {Invoice, ResponsePagination} from '../../../Types/api';
-import PersonSubscription from '../../Components/PersonSubscription';
-import ModuleContent from '../../../CommonUI/ModuleContent';
-import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 import TableList from '../../../CommonUI/TableList';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
+import InvoiceTablePayments from '../InvoiceTablePayments';
 
 interface InvoicesProps {
   entityUuid: string;
@@ -46,6 +41,9 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
         if (response) {
           setInvoices(response.data.data);
           setPagination(response.data.meta);
+          if (selectedInvoice) {
+            setSelectedInvoice(response.data.data.find((i: any) => i.uuid === selectedInvoice.uuid));
+          }
         }
       })
       .catch(e => {
@@ -86,6 +84,13 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
         </Tag>
       ),
     },
+    {
+      title: '',
+      dataIndex: 'uuid',
+      render: (uuid: string, row: Invoice) => (
+        <IconButton icon={<PiPencilSimple size={18} />} onClick={() => setSelectedInvoice(row)} />
+      ),
+    },
   ];
 
   return (
@@ -110,23 +115,19 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
           <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
         </Space>
       </div>
-      <div>
+      <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
           <>
-            <ContentHeader
-              title={selectedInvoice?.concept + ' - ' + selectedInvoice?.amount_string}
-              description={`S/ ${selectedInvoice?.invoiceable.amount / 100}`}>
-              {selectedInvoice?.invoiceable.uuid} <br />
-              <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
-                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
-              </Tag>
-            </ContentHeader>
-            <ProfileCard profile={selectedInvoice.customer} />
+            <h3>{selectedInvoice?.concept + ' - ' + selectedInvoice?.amount_string}</h3>
+            <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
+              Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
+            </Tag>
             <InvoiceTableDetails invoice={selectedInvoice} />
             <Divider>Pagos</Divider>
+            <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)} />
           </>
         )}
-      </div>
+      </Modal>
     </>
   );
 };

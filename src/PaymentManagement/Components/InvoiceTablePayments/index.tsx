@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Modal, Popconfirm, Space} from 'antd';
 import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
+import {PiPlus} from 'react-icons/pi';
 
 import TableList from '../../../CommonUI/TableList';
 import {Invoice, File} from '../../../Types/api';
@@ -66,10 +67,11 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
     <div>
       <TableList small columns={columns} dataSource={invoice.payments} pagination={false} />
       <PrimaryButton
+        icon={<PiPlus size={18} />}
+        style={{marginTop: '10px'}}
         label={'Registrar nuevo pago'}
         block
         ghost
-        size={'small'}
         onClick={() => setOpenInvoiceForm(true)}
       />
       <Modal destroyOnClose open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>

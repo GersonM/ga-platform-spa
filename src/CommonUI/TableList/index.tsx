@@ -9,6 +9,7 @@ interface TableListProps {
   columns: any;
   components?: any;
   scroll?: any;
+  footer?: any;
   loading?: boolean;
   size?: string;
   small?: boolean;
