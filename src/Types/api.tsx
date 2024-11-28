@@ -334,6 +334,7 @@ export type Subscription = {
 export type SubscriptionMember = {
   uuid: string;
   relation_type: string;
+  suspended_at?: string;
   profile: Profile;
   subscription?: Subscription;
 };

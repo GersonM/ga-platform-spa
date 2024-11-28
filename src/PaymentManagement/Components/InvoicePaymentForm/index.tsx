@@ -4,7 +4,7 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {Invoice, InvoicePayment, Profile} from '../../../Types/api';
+import {Invoice, InvoicePayment} from '../../../Types/api';
 import FileUploader from '../../../CommonUI/FileUploader';
 
 interface InvoicePaymentProps {

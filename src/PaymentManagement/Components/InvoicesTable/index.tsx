@@ -96,24 +96,27 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
   return (
     <>
       <div>
-        <TableList columns={columns} dataSource={invoices} />
-        {invoices?.length === 0 && (
+        {invoices?.length === 0 ? (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registradas'} />
+        ) : (
+          <>
+            <TableList columns={columns} dataSource={invoices} />
+            <Space>
+              <Pagination
+                showSizeChanger={false}
+                size={'small'}
+                total={pagination?.total}
+                pageSize={pagination?.per_page}
+                current={pagination?.current_page}
+                onChange={(page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                }}
+              />
+              <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
+            </Space>
+          </>
         )}
-        <Space>
-          <Pagination
-            showSizeChanger={false}
-            size={'small'}
-            total={pagination?.total}
-            pageSize={pagination?.per_page}
-            current={pagination?.current_page}
-            onChange={(page, size) => {
-              setCurrentPage(page);
-              setPageSize(size);
-            }}
-          />
-          <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
-        </Space>
       </div>
       <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (

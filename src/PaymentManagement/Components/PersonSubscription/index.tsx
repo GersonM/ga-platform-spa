@@ -3,15 +3,18 @@ import {TrashIcon} from '@heroicons/react/16/solid';
 import {CreditCardIcon} from '@heroicons/react/24/solid';
 import {PencilIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
-import {Divider, Modal, Space, Switch, Tag} from 'antd';
+import {Divider, Empty, Modal, Space, Switch, Tag, Tooltip} from 'antd';
 import {
-  PiAcorn,
-  PiCalendar,
   PiCalendarCheck,
   PiCalendarX,
-  PiCashRegister,
-  PiControl,
-  PiMoney,
+  PiCheck,
+  PiCodeBlock,
+  PiIdentificationCard,
+  PiPencil,
+  PiPencilSimple,
+  PiProhibit,
+  PiProhibitBold,
+  PiThumbsUp,
   PiTicket,
 } from 'react-icons/pi';
 import axios from 'axios';
@@ -28,9 +31,8 @@ import ProfileEditor from '../../../AccountManagement/Components/ProfileEditor';
 import InvoicesTable from '../InvoicesTable';
 import InfoButton from '../../../CommonUI/InfoButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import './styles.less';
-import CommercialIncidents from '../../../Commercial/Screens/CommercialIncidents';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
+import './styles.less';
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -44,6 +46,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   const [tempURL, setTempURL] = useState<string>();
   const [pdfWatermark, setPdfWatermark] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -66,7 +69,29 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [profileUuid]);
+  }, [profileUuid, reload]);
+
+  const disableMember = (uuid: string) => {
+    axios
+      .post(`subscriptions/members/${uuid}/disable`, {})
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const enableMember = (uuid: string) => {
+    axios
+      .post(`subscriptions/members/${uuid}/enable`, {})
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
 
   const columns = [
     {
@@ -95,10 +120,18 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       dataIndex: 'uuid',
       render: (uuid: string, row: SubscriptionMember) => (
         <Space>
-          <IconButton icon={<PencilIcon />} onClick={() => setSelectedProfile(row.profile)} small />
-          <IconButton icon={<TrashIcon />} danger small />
+          <IconButton icon={<PiPencilSimple size={18} />} onClick={() => setSelectedProfile(row.profile)} small />
+          {row.suspended_at ? (
+            <Tooltip title="Activar miembro">
+              <IconButton icon={<PiThumbsUp size={18} />} small onClick={() => enableMember(uuid)} />
+            </Tooltip>
+          ) : (
+            <Tooltip title="Desactivar miembro">
+              <IconButton icon={<PiProhibitBold size={18} />} danger small onClick={() => disableMember(uuid)} />
+            </Tooltip>
+          )}
           <IconButton
-            icon={<CreditCardIcon />}
+            icon={<PiIdentificationCard size={18} />}
             onClick={() => {
               getCredential(row);
             }}
@@ -135,9 +168,16 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
 
   return (
     <div>
+      {subscriptions?.length == 0 && (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay subscripciones para esta persona'} />
+      )}
       {subscriptions?.map((subscription: Subscription) => (
         <div key={subscription.uuid}>
           <ContentHeader
+            onEdit={() => {
+              console.log('asdadf');
+            }}
+            onRefresh={() => setReload(!reload)}
             title={subscription.plan.name}
             tools={
               <Space>

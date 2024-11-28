@@ -1,14 +1,12 @@
 import React, {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
-import {Col, Divider, Modal, Row} from 'antd';
+import {Alert, Avatar, Col, Divider, Modal, Row, Tag} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Profile, SubscriptionMember} from '../../../Types/api';
-import InvoiceTablePayments from '../../../PaymentManagement/Components/InvoiceTablePayments';
 import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
-import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 
@@ -42,10 +40,20 @@ const MembersAccessControl = () => {
       <Modal open={!!subscriptionMember} onCancel={() => setSubscriptionMember(undefined)} footer={false}>
         {subscriptionMember && (
           <div>
-            <ProfileCard allowEdit={false} profile={subscriptionMember.profile} />
-            <h3 style={{textAlign: 'center'}}>
-              <ProfileDocument profile={subscriptionMember.profile} />
-            </h3>
+            {subscriptionMember.suspended_at && (
+              <Alert
+                style={{marginBottom: 10}}
+                type={'error'}
+                message={'Suspendido desde ' + subscriptionMember.suspended_at}
+                showIcon
+              />
+            )}
+            <h2 style={{textAlign: 'center'}}>
+              <Avatar size={80} src={subscriptionMember.profile.avatar?.thumbnail} /> <br />
+              {subscriptionMember.profile.name} {subscriptionMember.profile.last_name} <br />
+              <ProfileDocument profile={subscriptionMember.profile} /> <br />
+              N° {subscriptionMember.subscription?.code}
+            </h2>
             <Divider>Pagos</Divider>
             {subscriptionMember.subscription && (
               <InvoicesTable entityUuid={subscriptionMember.subscription.uuid} {...profile} />

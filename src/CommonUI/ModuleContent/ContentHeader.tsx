@@ -1,7 +1,8 @@
 import React from 'react';
 import {Divider, Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
-import {PlusIcon, ArrowPathIcon, ArrowUturnLeftIcon, PencilIcon} from '@heroicons/react/24/solid';
+import {PlusIcon, ArrowPathIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
+import {PiPencilSimple} from 'react-icons/pi';
 
 import IconButton from '../IconButton';
 
@@ -72,7 +73,7 @@ const ContentHeader = ({
             )}
             {onEdit && (
               <Tooltip title={'Editar'}>
-                <IconButton icon={<PencilIcon />} onClick={onEdit} />
+                <IconButton icon={<PiPencilSimple size={18} />} onClick={onEdit} />
               </Tooltip>
             )}
             {tools}
