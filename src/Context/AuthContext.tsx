@@ -85,13 +85,13 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
             setUser(userResponse.data);
           } else {
             if (window.location.pathname.indexOf('/auth/login') === -1) {
-              window.location.href = '/auth/login';
+              //window.location.href = '/auth/login';
             }
           }
         })
         .catch(error => {
           if (window.location.pathname.indexOf('/auth/login') === -1) {
-            window.location.href = '/auth/login';
+            //window.location.href = '/auth/login';
           }
           ErrorHandler.showNotification(error);
         });
