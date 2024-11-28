@@ -3,7 +3,7 @@ import {TrashIcon} from '@heroicons/react/16/solid';
 import {CreditCardIcon} from '@heroicons/react/24/solid';
 import {PencilIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
-import {Divider, Modal, Space, Tag} from 'antd';
+import {Divider, Modal, Space, Switch, Tag} from 'antd';
 import {
   PiAcorn,
   PiCalendar,
@@ -42,6 +42,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   const [loading, setLoading] = useState(false);
   const [openPrint, setOpenPrint] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
+  const [pdfWatermark, setPdfWatermark] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
 
   useEffect(() => {
@@ -114,6 +115,9 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
     axios({
       url: 'subscriptions/credentials/' + subscription?.uuid,
       method: 'GET',
+      params: {
+        use_watermark: pdfWatermark ? '1' : '0',
+      },
       responseType: 'blob', // important
     })
       .then(response => {
@@ -171,6 +175,10 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                   caption={<TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />}
                   label={'Plan'}
                 />
+                <div>
+                  <span>Marca de agua</span> <br />
+                  <Switch size={'small'} onChange={value => setPdfWatermark(value)} />
+                </div>
               </Space>
             </div>
           </ContentHeader>
