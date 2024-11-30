@@ -4,6 +4,7 @@ import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import TaxonomySelector from '../../../TaxonomyManagement/Components/TaxonomySelector';
+import ProfileSelector from '../../../CommonUI/ProfileSelector';
 
 interface ICourseFormProps {
   onComplete?: () => void;
@@ -40,6 +41,9 @@ const CourseForm = ({onComplete}: ICourseFormProps) => {
       </Form.Item>
       <Form.Item name={'taxonomy_uuid'} label={'Estado de publicación'}>
         <TaxonomySelector />
+      </Form.Item>
+      <Form.Item name={'profile_uuid'} label={'Profesor'}>
+        <ProfileSelector />
       </Form.Item>
       <PrimaryButton htmlType={'submit'} label={'Guardar'} block />
     </Form>
