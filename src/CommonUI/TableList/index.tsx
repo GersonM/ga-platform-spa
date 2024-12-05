@@ -50,6 +50,7 @@ const TableList = ({
         }
         return rowColor;
       }}
+      pagination={false}
       rowKey={rowKey}
       expandable={expandable}
       dataSource={dataSource}

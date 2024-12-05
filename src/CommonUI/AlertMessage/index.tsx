@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {CheckIcon, XMarkIcon} from '@heroicons/react/24/solid';
-import {ExclamationTriangleIcon} from '@heroicons/react/24/solid';
+import {ExclamationTriangleIcon, InformationCircleIcon} from '@heroicons/react/24/solid';
 
 import IconButton from '../IconButton';
 import './styles.less';
@@ -8,7 +8,7 @@ import './styles.less';
 interface IAlertMessageProps {
   message: string;
   caption?: string;
-  type?: 'success' | 'warning' | 'error';
+  type?: 'success' | 'warning' | 'error' | 'info';
   float?: boolean;
   dismissible?: boolean;
 }
@@ -21,7 +21,9 @@ const AlertMessage = ({message, caption, type = 'warning', float, dismissible}: 
   return (
     <div className={`alert-message-wrapper ${type} ${float ? 'float' : ''}`}>
       <div className={'icon'}>
-        {type === 'success' ? <CheckIcon width={25} /> : <ExclamationTriangleIcon width={25} />}
+        {type === 'success' && <CheckIcon width={25} />}
+        {type === 'warning' && <ExclamationTriangleIcon width={25} />}
+        {type === 'info' && <InformationCircleIcon width={25} />}
       </div>
       <div>
         {message}

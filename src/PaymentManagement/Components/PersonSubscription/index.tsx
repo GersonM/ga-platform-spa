@@ -12,6 +12,7 @@ import {
   PiIdentificationCard,
   PiPencil,
   PiPencilSimple,
+  PiPlus,
   PiProhibit,
   PiProhibitBold,
   PiThumbsUp,
@@ -33,6 +34,8 @@ import InfoButton from '../../../CommonUI/InfoButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 import './styles.less';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import CreateSubscriptionForm from '../../../ClubManagement/Components/CreateSubscriptionForm';
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -224,6 +227,14 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
           </ContentHeader>
           <Divider orientation={'left'}>Miembros</Divider>
           <TableList loading={loading} columns={columns} dataSource={subscription.members} />
+          <PrimaryButton
+            icon={<PiPlus size={18} />}
+            label={'Agregar miembro'}
+            ghost
+            style={{marginTop: '10px'}}
+            onClick={() => {}}
+            size={'small'}
+          />
           <Divider orientation={'left'}>Pagos</Divider>
           <InvoicesTable entityUuid={subscription.uuid} />
           <Divider orientation={'left'}>Actividad</Divider>

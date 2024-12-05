@@ -50,6 +50,7 @@ import ProfileEditor from '../AccountManagement/Components/ProfileEditor';
 import AuthContext from '../Context/AuthContext';
 import MyAccount from '../AccountTools/Screens/MyAccount';
 import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl';
+import ClubMembersManagement from '../ClubManagement/Screens/ClubMembersManagement';
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -146,6 +147,7 @@ const App = () => {
         </Route>
         <Route path={'club'}>
           <Route path={'access-control'} element={<MembersAccessControl />} />
+          <Route path={'members'} element={<ClubMembersManagement />} />
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard />} />

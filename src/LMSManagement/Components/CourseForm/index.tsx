@@ -3,8 +3,8 @@ import {Checkbox, Form, Input} from 'antd';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import TaxonomySelector from '../../../TaxonomyManagement/Components/TaxonomySelector';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
+import SelectLarge from '../../../CommonUI/SelectLarge';
 
 interface ICourseFormProps {
   onComplete?: () => void;
@@ -39,11 +39,11 @@ const CourseForm = ({onComplete}: ICourseFormProps) => {
       <Form.Item name={'is_public'} label={'Estado de publicación'}>
         <Checkbox>Publicar</Checkbox>
       </Form.Item>
-      <Form.Item name={'taxonomy_uuid'} label={'Estado de publicación'}>
-        <TaxonomySelector />
-      </Form.Item>
-      <Form.Item name={'profile_uuid'} label={'Profesor'}>
-        <ProfileSelector />
+      <Form.Item name={'taxonomy_uuid'} label={'Categoría'}>
+        <SelectLarge value={'aasdfasdf'} items={['Value 1', 'Value 2', 'Value 3']} />
+        <Form.Item name={'profile_uuid'} label={'Profesor'}>
+          <ProfileSelector />
+        </Form.Item>
       </Form.Item>
       <PrimaryButton htmlType={'submit'} label={'Guardar'} block />
     </Form>

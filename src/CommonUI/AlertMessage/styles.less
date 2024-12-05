@@ -4,17 +4,17 @@
   border-radius: 16px;
   margin: 10px 0;
   padding: 10px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-  background: #ffffff;
   color: #000000;
+  align-items: center;
 
   .icon {
-    border-radius: 12px;
+    border-radius: 10px;
     min-width: 40px;
     display: flex;
+    padding: 5px;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
+    margin: -5px 15px -5px -5px;
   }
 
   .caption {
@@ -49,6 +49,15 @@
     .icon {
       background: #d7ffc3;
       color: #0ba525;
+    }
+  }
+
+  &.info {
+    background: #f1f9ff;
+
+    .icon {
+      background: #ffffff;
+      color: #2386c5;
     }
   }
 }
