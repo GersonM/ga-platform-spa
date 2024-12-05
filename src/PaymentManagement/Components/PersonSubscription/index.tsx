@@ -3,7 +3,7 @@ import {TrashIcon} from '@heroicons/react/16/solid';
 import {CreditCardIcon} from '@heroicons/react/24/solid';
 import {PencilIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
-import {Divider, Empty, Modal, Space, Switch, Tag, Tooltip} from 'antd';
+import {Divider, Empty, Modal, Popconfirm, Space, Switch, Tag, Tooltip} from 'antd';
 import {
   PiCalendarCheck,
   PiCalendarX,
@@ -36,6 +36,7 @@ import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import CreateSubscriptionForm from '../../../ClubManagement/Components/CreateSubscriptionForm';
+import AddMemberSubscription from '../AddMemberSubscription';
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -49,6 +50,8 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   const [tempURL, setTempURL] = useState<string>();
   const [pdfWatermark, setPdfWatermark] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
+  const [selectedSubscription, setSelectedSubscription] = useState<Subscription>();
+  const [openAddMember, setOpenAddMember] = useState(false);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -96,6 +99,17 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       });
   };
 
+  const deleteMember = (uuid: string) => {
+    axios
+      .delete(`subscriptions/members/${uuid}`, {})
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   const columns = [
     {
       title: 'Nombres',
@@ -124,6 +138,12 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       render: (uuid: string, row: SubscriptionMember) => (
         <Space>
           <IconButton icon={<PiPencilSimple size={18} />} onClick={() => setSelectedProfile(row.profile)} small />
+          <Popconfirm
+            title={'Eliminar miembro'}
+            onConfirm={() => deleteMember(uuid)}
+            description={'Esto no eliminará a la persona, solo su relación con esta subscripción'}>
+            <IconButton danger icon={<TrashIcon />} small />
+          </Popconfirm>
           {row.suspended_at ? (
             <Tooltip title="Activar miembro">
               <IconButton icon={<PiThumbsUp size={18} />} small onClick={() => enableMember(uuid)} />
@@ -232,7 +252,10 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
             label={'Agregar miembro'}
             ghost
             style={{marginTop: '10px'}}
-            onClick={() => {}}
+            onClick={() => {
+              setOpenAddMember(true);
+              setSelectedSubscription(subscription);
+            }}
             size={'small'}
           />
           <Divider orientation={'left'}>Pagos</Divider>
@@ -241,6 +264,25 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
           <EntityActivityManager uuid={subscription.uuid} type={'subscription'} />
         </div>
       ))}
+      <Modal
+        destroyOnClose
+        title={'Agregar miembro'}
+        footer={false}
+        open={openAddMember}
+        onCancel={() => {
+          setOpenAddMember(false);
+        }}>
+        {selectedSubscription && (
+          <AddMemberSubscription
+            onComplete={() => {
+              setOpenAddMember(false);
+              setSelectedSubscription(undefined);
+              setReload(!reload);
+            }}
+            subscription={selectedSubscription}
+          />
+        )}
+      </Modal>
       <Modal
         width={800}
         destroyOnClose
