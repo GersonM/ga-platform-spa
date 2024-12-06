@@ -1,7 +1,8 @@
 import React from 'react';
+import {useParams} from 'react-router-dom';
+
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
-import {useParams} from 'react-router-dom';
 
 const ClubSubscription = () => {
   const params = useParams();

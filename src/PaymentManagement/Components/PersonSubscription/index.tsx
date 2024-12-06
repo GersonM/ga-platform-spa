@@ -27,9 +27,10 @@ import InvoicesTable from '../InvoicesTable';
 import InfoButton from '../../../CommonUI/InfoButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
-import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AddMemberSubscription from '../AddMemberSubscription';
+
+import './styles.less';
 
 interface PersonSubscriptionProps {
   profileUuid: string;

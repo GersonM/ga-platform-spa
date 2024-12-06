@@ -14,6 +14,8 @@ interface FilterFormProps {
   liveUpdate?: boolean;
 }
 
+let timer: any = null;
+
 const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: FilterFormProps) => {
   const [searchParams] = useSearchParams();
   const [initialValues, setInitialValues] = useState<any>();
@@ -32,7 +34,6 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   }, [searchParams]);
 
   useEffect(() => {
-    console.log({initialValues});
     form.resetFields();
     onInitialValues && onInitialValues(initialValues);
   }, [initialValues]);
@@ -52,7 +53,12 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
       }
     });
     history.pushState(null, '', url);
-    onSubmit && onSubmit(o);
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      onSubmit && onSubmit(o);
+    }, 300);
   };
 
   const onFieldsChange = () => {
