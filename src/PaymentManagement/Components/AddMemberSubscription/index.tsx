@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {Form, Input, Select} from 'antd';
+import {Form, Select} from 'antd';
+import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import axios from 'axios';
 import {Subscription} from '../../../Types/api';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface AddMemberSubscriptionProps {
   subscription: Subscription;
@@ -19,12 +20,17 @@ const AddMemberSubscription = ({subscription, onComplete}: AddMemberSubscription
   };
 
   const submitForm = (values: any) => {
+    setLoading(true);
     axios
       .post('subscriptions/members', {...values, subscription_uuid: subscription.uuid})
       .then(res => {
+        setLoading(false);
         onComplete && onComplete();
       })
-      .catch(err => {});
+      .catch(err => {
+        setLoading(false);
+        ErrorHandler.showNotification(err);
+      });
   };
 
   return (

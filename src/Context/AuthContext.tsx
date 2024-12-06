@@ -126,7 +126,9 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
                 backgroundColor: 'rgba(255,255,255,0.8)',
                 borderRadius: '5px',
               }}>
-              <li>Nuevo módulo de reservas</li>
+              <li>Sección de socios actualizada</li>
+              <li>Búsqueda por código de socio</li>
+              <li>Opción para crear socios mejorada</li>
             </ul>
           ),
           duration: 0,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'antd';
+import {Button, Tooltip} from 'antd';
 import './styles.less';
 
 interface IconButtonProps {
@@ -7,13 +7,14 @@ interface IconButtonProps {
   danger?: boolean;
   loading?: boolean;
   small?: boolean;
+  title?: string;
   disabled?: boolean;
   type?: 'text' | 'link' | 'default' | 'dashed' | 'primary';
   onClick?: () => void;
 }
 
-const IconButton = ({icon, small, type = 'text', loading, ...props}: IconButtonProps) => {
-  return (
+const IconButton = ({title, icon, small, type = 'text', loading, ...props}: IconButtonProps) => {
+  const button = (
     <Button
       {...props}
       size={small ? 'small' : 'middle'}
@@ -24,6 +25,8 @@ const IconButton = ({icon, small, type = 'text', loading, ...props}: IconButtonP
       {loading ? null : icon}
     </Button>
   );
+
+  return title ? <Tooltip title={title}>{button}</Tooltip> : button;
 };
 
 export default IconButton;

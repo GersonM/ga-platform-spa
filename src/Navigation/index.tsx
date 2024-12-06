@@ -207,7 +207,7 @@ const Navigation = () => {
             )}
             <NavItem label={'Club'} icon={<PiUsers />}>
               <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
-              <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/members'} />
+              <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
             </NavItem>
 
             {config?.modules.includes('attendance') && (

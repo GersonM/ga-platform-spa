@@ -1,19 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/16/solid';
-import {CreditCardIcon} from '@heroicons/react/24/solid';
-import {PencilIcon} from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
 import {Divider, Empty, Modal, Popconfirm, Space, Switch, Tag, Tooltip} from 'antd';
 import {
   PiCalendarCheck,
   PiCalendarX,
-  PiCheck,
-  PiCodeBlock,
   PiIdentificationCard,
-  PiPencil,
   PiPencilSimple,
   PiPlus,
-  PiProhibit,
   PiProhibitBold,
   PiThumbsUp,
   PiTicket,
@@ -35,7 +29,6 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import CreateSubscriptionForm from '../../../ClubManagement/Components/CreateSubscriptionForm';
 import AddMemberSubscription from '../AddMemberSubscription';
 
 interface PersonSubscriptionProps {

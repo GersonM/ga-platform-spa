@@ -51,6 +51,7 @@ import AuthContext from '../Context/AuthContext';
 import MyAccount from '../AccountTools/Screens/MyAccount';
 import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl';
 import ClubMembersManagement from '../ClubManagement/Screens/ClubMembersManagement';
+import ClubSubscriptionViewer from '../ClubManagement/Screens/ClubSubscriptionViewer';
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -147,7 +148,8 @@ const App = () => {
         </Route>
         <Route path={'club'}>
           <Route path={'access-control'} element={<MembersAccessControl />} />
-          <Route path={'members'} element={<ClubMembersManagement />} />
+          <Route path={'subscriptions'} element={<ClubMembersManagement />} />
+          <Route path={'subscriptions/:subscription'} element={<ClubSubscriptionViewer />} />
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard />} />
