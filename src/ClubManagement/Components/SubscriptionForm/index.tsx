@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, InputNumber} from 'antd';
+import {Col, DatePicker, Form, Input, InputNumber, Row, Select} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
@@ -34,8 +34,23 @@ const CreateSubscriptionForm = ({onComplete}: CreateSubscriptionFormProps) => {
         <Form.Item name={'holder_uuid'} label={'Socio titular'} rules={[{required: true}]}>
           <ProfileSelector />
         </Form.Item>
+        <Row gutter={[20, 20]}>
+          <Col xs={12}>
+            <Form.Item name={'started_at'} label={'Fecha de inicio'} extra={'El socio estará activo desde esta fecha'}>
+              <DatePicker placeholder={'Hoy'} />
+            </Form.Item>
+          </Col>
+          <Col xs={12}>
+            <Form.Item name={'amount'} label={'Precio'}>
+              <InputNumber prefix={'S/'} />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item label={'Plan'} name={'plan_uuid'}>
+          <Select />
+        </Form.Item>
         <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-          <Input.TextArea></Input.TextArea>
+          <Input.TextArea />
         </Form.Item>
         <PrimaryButton label={'Crear'} htmlType={'submit'} block />
       </Form>
