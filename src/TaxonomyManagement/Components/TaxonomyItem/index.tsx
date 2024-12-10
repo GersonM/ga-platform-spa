@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {PlusIcon} from '@heroicons/react/24/solid';
-import {TbPencil, TbTrash} from 'react-icons/tb';
-import {Popconfirm} from 'antd';
+import {TbArrowsMoveVertical, TbPencil, TbTrash} from 'react-icons/tb';
+import {Modal, Popconfirm} from 'antd';
 import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import {TaxonomyDefinition} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
-import './styles.less';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import TaxonomyForm from '../TaxonomyForm';
+import './styles.less';
 
 interface TaxonomyItemProps {
   taxonomy: TaxonomyDefinition;
@@ -22,7 +23,9 @@ interface TaxonomyItemProps {
 const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) => {
   const [open, setOpen] = useState(false);
   const [definitionDetails, setDefinitionDetails] = useState<TaxonomyDefinition>();
+  const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openAddForm, setOpenAddForm] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -47,11 +50,27 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
       });
 
     return cancelTokenSource.cancel;
-  }, [open]);
+  }, [open, reload]);
+
+  const deleteTaxonomy = (uuid: string) => {
+    axios
+      .delete(`taxonomy/definitions/${uuid}`)
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(error => ErrorHandler.showNotification(error));
+  };
 
   return (
     <div className={'taxonomy-item-wrapper'}>
       <div className={'item-block'}>
+        <div
+          className={'item-switch'}
+          onClick={() => {
+            setOpen(!open);
+          }}>
+          {open ? <ChevronUpIcon height={12} /> : <ChevronDownIcon height={12} />}
+        </div>
         <div className={'cover'}>
           <img src={taxonomy.cover?.thumbnail} alt="" />
         </div>
@@ -61,6 +80,7 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
         </div>
         <div className={'tools'}>
           <IconButton
+            title={'Editar'}
             small
             icon={<TbPencil size={18} />}
             onClick={() => {
@@ -70,14 +90,15 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
           <Popconfirm
             title={'¿Seguro que quieres eliminar esta taxonomía?'}
             description={'Esto eliminar todas los elementos relacionados'}
-            onConfirm={() => onDelete && onDelete(taxonomy)}>
+            onConfirm={() => deleteTaxonomy(taxonomy.uuid)}>
             <IconButton small icon={<TbTrash size={18} />} danger />
           </Popconfirm>
           <IconButton
+            title={'Mover'}
             small
-            icon={open ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            icon={<TbArrowsMoveVertical size={18} />}
             onClick={() => {
-              setOpen(!open);
+              onEdit && onEdit(taxonomy);
             }}
           />
         </div>
@@ -92,14 +113,40 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
             label={'Agregar item'}
             icon={<PlusIcon />}
             onClick={() => {
-              onAdd && onAdd(taxonomy);
+              //onAdd && onAdd(taxonomy);
+              setOpenAddForm(true);
             }}
           />
           {definitionDetails?.children?.map((t, i) => (
-            <TaxonomyItem key={i} taxonomy={t} onDelete={onDelete} onAdd={onAdd} onEdit={onEdit} />
+            <TaxonomyItem
+              key={i}
+              taxonomy={t}
+              onDelete={onDelete}
+              onAdd={() => {
+                onAdd && onAdd(taxonomy);
+              }}
+              onEdit={onEdit}
+            />
           ))}
         </div>
       )}
+
+      <Modal
+        footer={false}
+        open={openAddForm}
+        destroyOnClose
+        onCancel={() => {
+          setOpenAddForm(false);
+        }}
+        title={'Crear nuevo'}>
+        <TaxonomyForm
+          parentUuid={taxonomy.uuid}
+          onComplete={() => {
+            setReload(!reload);
+            setOpenAddForm(false);
+          }}
+        />
+      </Modal>
     </div>
   );
 };

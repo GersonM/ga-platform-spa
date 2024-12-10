@@ -13,62 +13,43 @@
   .information-header {
     display: flex;
     align-items: center;
-    padding: 0 0 0 15px;
+    background: var(--backgroung-color-higlight);
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 10px;
 
-    h4.title {
-      flex: 1;
-      font-size: 14px;
-      font-weight: 500;
-      margin: 0;
-    }
+    .file-name {
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
 
-    .icon {
-      padding: 10px;
-      border-radius: 8px;
-      height: 38px;
-      width: 38px;
+      & > .icon {
+        font-size: 25px;
+      }
 
-      &:hover {
-        background: #222222;
+      .label {
+        flex: 1;
+        line-height: 17px;
+
+        small {
+          margin-top: 5px;
+          display: block;
+          color: #777777;
+        }
+      }
+
+      .button-delete {
+        text-align: center;
+
+        span {
+          font-size: 18px;
+        }
       }
     }
+
   }
 
   .information-content {
     padding: 0 15px 15px;
-  }
-
-  .file-name {
-    background: var(--backgroung-color-higlight);
-    padding: 10px 15px;
-    margin: 0 -15px 15px -15px;
-    display: flex;
-    align-items: center;
-
-    & > .icon {
-      font-size: 25px;
-    }
-
-    .label {
-      margin-left: 10px;
-      flex: 1;
-      line-height: 17px;
-      line-break: anywhere;
-
-      small {
-        margin-top: 5px;
-        display: block;
-        color: #777777;
-      }
-    }
-
-    .button-delete {
-      text-align: center;
-
-      span {
-        font-size: 18px;
-      }
-    }
   }
 
   .activities-wrapper {

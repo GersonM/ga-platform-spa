@@ -95,7 +95,14 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
       ) : (
         <>
           <div className={'information-header'}>
-            <h4 className={'title'}>Información del archivo</h4>
+            <div className={'file-name'}>
+              <span className={'label'}>
+                {file.name}
+                <small>
+                  <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
+                </small>
+              </span>
+            </div>
             <FileDropdownActions
               onChange={() => {
                 if (onChange) onChange();
@@ -107,15 +114,6 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
           </div>
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
             <div className="information-content">
-              <div className={'file-name'}>
-                <FileIcon file={file} />
-                <span className={'label'}>
-                  {file.name}
-                  <small>
-                    <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
-                  </small>
-                </span>
-              </div>
               <Row gutter={[10, 10]}>
                 <Col md={12}>
                   <Button

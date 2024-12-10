@@ -52,6 +52,7 @@ import MyAccount from '../AccountTools/Screens/MyAccount';
 import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl';
 import ClubMembersManagement from '../ClubManagement/Screens/ClubMembersManagement';
 import ClubSubscriptionViewer from '../ClubManagement/Screens/ClubSubscriptionViewer';
+import FileManagerPreferences from '../FileManagement/Screens/FileManagerPreferences';
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -115,6 +116,7 @@ const App = () => {
           <Route path={'inbox-management'} element={<ConfigOptions />}>
             <Route path={':tab'} element={null} />
           </Route>
+          <Route path={'file-management'} element={<FileManagerPreferences />} />
           <Route path={'preferences'} element={<PreferencesManager />} />
           <Route path={'permissions'} element={<PermissionsManager />} />
           <Route path={'taxonomy'} element={<TaxonomyManager />}>

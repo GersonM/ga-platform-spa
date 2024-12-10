@@ -1,6 +1,7 @@
 import React, {createContext, useState} from 'react';
 import axios from 'axios';
 import {message} from 'antd';
+import {sha256} from 'js-sha256';
 
 import {File as ApiFile, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
@@ -9,6 +10,7 @@ interface UploadContextDefaults {
   config?: TenantConfig;
   openMenu: boolean;
   uploadProgress?: any;
+  addFile: (file: File) => void;
   setOpenMenu: (value: boolean) => void;
 }
 
@@ -20,13 +22,12 @@ interface UploadContextProp {
 const UploadContext = createContext<UploadContextDefaults>({
   openMenu: false,
   setOpenMenu(): void {},
+  addFile(): void {},
 });
 
 const UploadContextProvider = ({children, config}: UploadContextProp) => {
-  const [uploadingFileList, setUploadingFileList] = useState();
-  const [darkMode, setDarkMode] = useState<boolean>();
+  const [uploadingFileList, setUploadingFileList] = useState<File[]>();
   const [openMenu, setOpenMenu] = useState(false);
-  const [preferredMode, setPreferredMode] = useState<string>('auto');
   const [uploadProgress, setUploadProgress] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<number>(0);
@@ -97,6 +98,57 @@ const UploadContextProvider = ({children, config}: UploadContextProp) => {
     }
   };
 
+  const addFile = async (file: File, data?: any) => {
+    const hash = sha256(file.name + '' + file.size + '' + file.lastModified + '' + file.webkitRelativePath);
+    const chunkSize = 2 * 1024 * 1024; // 5MB (adjust based on your requirements)
+    const totalChunks = Math.ceil(file.size / chunkSize);
+    console.log(hash, totalChunks);
+
+    try {
+      const savedQueue = localStorage.getItem('uploadQueue');
+      const queue: any[] = savedQueue ? JSON.parse(savedQueue) : [];
+      queue.push({hash, chunkSize, totalChunks});
+      localStorage.setItem('uploadQueue', JSON.stringify(queue));
+    } catch (error) {
+      ErrorHandler.showNotification(error, 5);
+    }
+  };
+
+  /*const uploadNextChunk = async () => {
+    if (end <= selectedFile.size) {
+      const chunk = selectedFile.slice(start, end);
+      const formData = new FormData();
+      formData.append('file', chunk);
+      formData.append('chunkNumber', chunkNumber);
+      formData.append('totalChunks', totalChunks);
+      formData.append('originalname', selectedFile.name);
+
+      fetch('http://localhost:8000/upload', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log({data});
+          const temp = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
+          setStatus(temp);
+          setProgress(Number((chunkNumber + 1) * chunkProgress));
+          console.log(temp);
+          chunkNumber++;
+          start = end;
+          end = start + chunkSize;
+          uploadNextChunk();
+        })
+        .catch(error => {
+          console.error('Error uploading chunk:', error);
+        });
+    } else {
+      setProgress(100);
+      setSelectedFile(null);
+      setStatus('File upload completed');
+    }
+  };*/
+
   return (
     <UploadContext.Provider
       value={{
@@ -104,6 +156,7 @@ const UploadContextProvider = ({children, config}: UploadContextProp) => {
         openMenu,
         setOpenMenu,
         uploadProgress,
+        addFile,
       }}>
       {children}
     </UploadContext.Provider>

@@ -3,7 +3,6 @@ import axios from 'axios';
 import {TbPencil, TbTrash} from 'react-icons/tb';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import {Modal, Popconfirm, Space, Tabs} from 'antd';
-import CascaderPanel from 'antd/lib/cascader/Panel';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
