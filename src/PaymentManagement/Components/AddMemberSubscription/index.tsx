@@ -23,7 +23,7 @@ const AddMemberSubscription = ({subscription, onComplete}: AddMemberSubscription
     setLoading(true);
     axios
       .post('subscriptions/members', {...values, subscription_uuid: subscription.uuid})
-      .then(res => {
+      .then(() => {
         setLoading(false);
         onComplete && onComplete();
       })
@@ -57,6 +57,8 @@ const AddMemberSubscription = ({subscription, onComplete}: AddMemberSubscription
               {label: 'Cuñado', value: 'CUÑADO'},
               {label: 'Suegro', value: 'SUEGRO'},
               {label: 'Suegra', value: 'SUEGRA'},
+              {label: 'Primo', value: 'PRIMO'},
+              {label: 'Prima', value: 'PRIMA'},
               {label: 'Otro', value: 'OTRO'},
             ]}
           />

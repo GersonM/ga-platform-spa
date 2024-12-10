@@ -249,7 +249,9 @@ const Navigation = () => {
         </Space>
         <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: handleUserMenuClick}}>
           <div className={'user-menu'}>
-            <Avatar className={'avatar'}>{user?.profile.name.substring(0, 1)}</Avatar>
+            <Avatar className={'avatar'} size={40} src={user?.profile?.avatar?.thumbnail}>
+              {user?.profile.name.substring(0, 1)}
+            </Avatar>
             <div>
               {user?.profile.name}
               <small>{user?.profile.email}</small>
