@@ -3,7 +3,6 @@ import {useDropzone} from 'react-dropzone';
 import {Button, Empty} from 'antd';
 import axios, {AxiosProgressEvent} from 'axios';
 
-import './styles.less';
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
 import FileInformation from '../FileInformation';
@@ -14,6 +13,7 @@ import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
 import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
+import './styles.less';
 
 interface ContainerContentViewerProps {
   containerUuid: string;

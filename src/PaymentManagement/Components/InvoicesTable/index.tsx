@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Divider, Empty, Modal, Pagination, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
-import {PiPencilSimple} from 'react-icons/pi';
+import {PiPencilSimple, PiPlus, PiPlusBold} from 'react-icons/pi';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -12,12 +12,15 @@ import TableList from '../../../CommonUI/TableList';
 import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
 import InvoiceTablePayments from '../InvoiceTablePayments';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import InvoiceForm from '../InvoiceForm';
 
 interface InvoicesProps {
   entityUuid: string;
+  type: string;
 }
 
-const InvoicesTable = ({entityUuid}: InvoicesProps) => {
+const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -26,6 +29,7 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
+  const [openNewInvoice, setOpenNewInvoice] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -117,6 +121,13 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
             </Space>
           </>
         )}
+        <PrimaryButton
+          size={'small'}
+          ghost
+          label={'Agregar factura'}
+          onClick={() => setOpenNewInvoice(true)}
+          icon={<PiPlusBold size={18} />}
+        />
       </div>
       <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
@@ -130,6 +141,15 @@ const InvoicesTable = ({entityUuid}: InvoicesProps) => {
             <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)} />
           </>
         )}
+      </Modal>
+      <Modal
+        open={openNewInvoice}
+        destroyOnClose
+        footer={false}
+        title={'Agregar factura'}
+        onCancel={() => setOpenNewInvoice(false)}
+        onOk={() => setOpenNewInvoice(true)}>
+        <InvoiceForm />
       </Modal>
     </>
   );

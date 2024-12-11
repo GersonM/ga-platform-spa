@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
-import {Divider, Empty, Modal, Popconfirm, Space, Switch, Tag, Tooltip} from 'antd';
+import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Space, Switch, Tag, Tooltip} from 'antd';
 import {
   PiCalendarCheck,
   PiCalendarX,
@@ -239,23 +239,35 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
               </Space>
             </div>
           </ContentHeader>
-          <Divider orientation={'left'}>Miembros</Divider>
-          <TableList loading={loading} columns={columns} dataSource={subscription.members} />
-          <PrimaryButton
-            icon={<PiPlus size={18} />}
-            label={'Agregar miembro'}
-            ghost
-            style={{marginTop: '10px'}}
-            onClick={() => {
-              setOpenAddMember(true);
-              setSelectedSubscription(subscription);
-            }}
-            size={'small'}
-          />
-          <Divider orientation={'left'}>Pagos</Divider>
-          <InvoicesTable entityUuid={subscription.uuid} />
-          <Divider orientation={'left'}>Actividad</Divider>
-          <EntityActivityManager uuid={subscription.uuid} type={'subscription'} />
+          <Row gutter={[30, 30]}>
+            <Col xs={16}>
+              <Card
+                title={'Miembros'}
+                size={'small'}
+                extra={
+                  <PrimaryButton
+                    icon={<PiPlus size={18} />}
+                    label={'Agregar miembro'}
+                    onClick={() => {
+                      setOpenAddMember(true);
+                      setSelectedSubscription(subscription);
+                    }}
+                    size={'small'}
+                  />
+                }>
+                <TableList loading={loading} columns={columns} dataSource={subscription.members} />
+              </Card>
+              <Card title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
+                <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} />
+              </Card>
+              <br />
+              <br />
+            </Col>
+            <Col xs={8}>
+              <Divider orientation={'left'}>Actividad</Divider>
+              <EntityActivityManager uuid={subscription.uuid} type={'subscription'} />
+            </Col>
+          </Row>
         </div>
       ))}
       <Modal
