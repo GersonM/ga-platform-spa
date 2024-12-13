@@ -123,12 +123,10 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
             <ul
               style={{
                 padding: '5px 5px 5px 20px',
-                backgroundColor: 'rgba(255,255,255,0.8)',
+                backgroundColor: 'rgba(255,255,255,0.6)',
                 borderRadius: '5px',
               }}>
-              <li>Sección de socios actualizada</li>
-              <li>Búsqueda por código de socio</li>
-              <li>Opción para crear socios mejorada</li>
+              <li>Menú de navegación se puede ocultar</li>
             </ul>
           ),
           duration: 0,
