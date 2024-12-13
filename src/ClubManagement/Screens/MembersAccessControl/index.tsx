@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
-import {Alert, Avatar, Col, Divider, Modal, Row, Tag} from 'antd';
+import {Alert, Avatar, Col, Divider, Modal, Row} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import axios from 'axios';
 
@@ -8,7 +8,6 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Profile, SubscriptionMember} from '../../../Types/api';
 import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 
 const MembersAccessControl = () => {
   const [token, setToken] = useState<any[]>();
@@ -56,7 +55,7 @@ const MembersAccessControl = () => {
             </h2>
             <Divider>Pagos</Divider>
             {subscriptionMember.subscription && (
-              <InvoicesTable entityUuid={subscriptionMember.subscription.uuid} {...profile} />
+              <InvoicesTable entityUuid={subscriptionMember.subscription.uuid} type={'subscription'} {...profile} />
             )}
           </div>
         )}
