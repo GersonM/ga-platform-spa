@@ -7,7 +7,7 @@ import {PiDownloadDuotone} from 'react-icons/pi';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
@@ -20,7 +20,7 @@ import FileSize from '../../../CommonUI/FileSize';
 
 const FileDetailViewer = () => {
   const params = useParams();
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<ApiFile>();
   const {config, darkMode} = useContext(AuthContext);
   const [reload, setReload] = useState(true);
   const [initTime, setInitTime] = useState<number>();
@@ -49,7 +49,7 @@ const FileDetailViewer = () => {
   const showAnnotations = file?.activity && file?.activity?.filter(a => a.action !== 'created').length > 0;
   const tenantLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
-  const getViewer = (f: File) => {
+  const getViewer = (f: ApiFile) => {
     switch (true) {
       case f.type.includes('pdf'):
         return <iframe className={'pdf-viewer-iframe'} src={f.source} height={'100vwh'} />;

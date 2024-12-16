@@ -53,6 +53,7 @@ import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl
 import ClubMembersManagement from '../ClubManagement/Screens/ClubMembersManagement';
 import ClubSubscriptionViewer from '../ClubManagement/Screens/ClubSubscriptionViewer';
 import FileManagerPreferences from '../FileManagement/Screens/FileManagerPreferences';
+import ImportPayments from '../ClubManagement/Screens/ImportPayments';
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -152,6 +153,7 @@ const App = () => {
           <Route path={'access-control'} element={<MembersAccessControl />} />
           <Route path={'subscriptions'} element={<ClubMembersManagement />} />
           <Route path={'subscriptions/:subscription'} element={<ClubSubscriptionViewer />} />
+          <Route path={'payments-import'} element={<ImportPayments />} />
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard />} />

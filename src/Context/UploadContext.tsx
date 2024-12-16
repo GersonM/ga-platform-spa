@@ -1,37 +1,104 @@
-import React, {createContext, useState} from 'react';
-import axios from 'axios';
+import React, {createContext, useEffect, useState} from 'react';
+import axios, {AxiosProgressEvent} from 'axios';
 import {message} from 'antd';
 import {sha256} from 'js-sha256';
 
-import {File as ApiFile, TenantConfig} from '../Types/api';
+import {ApiFile as ApiFile} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface UploadContextDefaults {
-  config?: TenantConfig;
-  openMenu: boolean;
-  uploadProgress?: any;
+  fileList?: any[];
   addFile: (file: File) => void;
-  setOpenMenu: (value: boolean) => void;
 }
 
 interface UploadContextProp {
   children?: React.ReactNode;
-  config?: TenantConfig;
 }
 
 const UploadContext = createContext<UploadContextDefaults>({
-  openMenu: false,
-  setOpenMenu(): void {},
   addFile(): void {},
 });
 
-const UploadContextProvider = ({children, config}: UploadContextProp) => {
-  const [uploadingFileList, setUploadingFileList] = useState<File[]>();
-  const [openMenu, setOpenMenu] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<any>();
+const chunkSize = 2 * 1024 * 1024; // 5MB (adjust based on your requirements)
+
+const UploadContextProvider = ({children}: UploadContextProp) => {
+  const [fileList, setFileList] = useState<any[]>();
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<number>(0);
   const [uploadedFile, setUploadedFile] = useState<ApiFile>();
+  const [isUploading, setIsUploading] = useState(false);
+  const [currentFile, setCurrentFile] = useState();
+
+  useEffect(() => {
+    uploadNextFile();
+  }, [fileList]);
+
+  useEffect(() => {
+    // Function to upload a chunk of the file
+    async function uploadChunk(data) {
+      if (!currentFile) return;
+      //const data = readerEvent.target.result;
+
+      // Set up the parameters for the request
+      const params = new URLSearchParams();
+      params.set('name', currentFile.file.name);
+      params.set('currentChunkIndex', currentChunkIndex.toString());
+      params.set('totalChunks', Math.ceil(currentFile.file.size / chunkSize).toString());
+
+      // Set up the headers for the request
+      const headers = {'Content-Type': 'application/octet-stream'};
+      const url = 'file-management/chunked-files' + params.toString();
+
+      let formData = new FormData();
+      formData.append('file', data, `chunk-${currentChunkIndex}`);
+      formData.set('name', currentFile.file.name);
+      formData.set('currentChunkIndex', currentChunkIndex.toString());
+      formData.set('totalChunks', Math.ceil(currentFile.file.size / chunkSize).toString());
+
+      const config = {
+        onUploadProgress: (r: AxiosProgressEvent) => {
+          //setLoadingInformation(r);
+        },
+        baseURL: import.meta.env.VITE_API_UPLOAD,
+        body: data,
+      };
+      let uploadPromise = await axios.post('file-management/chunked-files', formData, config);
+      // Make the POST request to the server
+      const isLastChunk = currentChunkIndex === Math.ceil(currentFile.file.size / chunkSize) - 1;
+      // If it is, set the final filename and reset the current chunk index
+      if (isLastChunk) {
+        currentFile.file.finalFilename = res.finalFilename;
+        setCurrentChunkIndex(0);
+      } else {
+        // If it's not, increment the current chunk index
+        setCurrentChunkIndex(currentChunkIndex + 1);
+      }
+    }
+
+    // Function to read and upload the current chunk
+    function readAndUploadCurrentChunk() {
+      if (!currentFile) return;
+      // Calculate the start and end of the current chunk
+      const from = currentChunkIndex * chunkSize;
+      const to =
+        (currentChunkIndex + 1) * chunkSize >= currentFile.file.size ? currentFile.file.size : from + chunkSize;
+
+      // Slice the file to get the current chunk
+      const blob = currentFile.file.slice(from, to);
+      uploadChunk(blob);
+      return;
+
+      const reader = new FileReader();
+      // Set the onload function to upload the chunk when it's read
+      reader.onload = e => uploadChunk(e);
+      // Read the blob as a data URL
+      reader.readAsDataURL(blob);
+    }
+
+    // If a chunk index is set, read and upload the current chunk
+    if (currentChunkIndex != null) readAndUploadCurrentChunk();
+  }, [chunkSize, currentChunkIndex, currentFile]);
 
   const handleFileUpload = async (file: File) => {
     setLoading(true);
@@ -98,64 +165,33 @@ const UploadContextProvider = ({children, config}: UploadContextProp) => {
     }
   };
 
-  const addFile = async (file: File, data?: any) => {
+  const addFile = (file: File, data?: any) => {
     const hash = sha256(file.name + '' + file.size + '' + file.lastModified + '' + file.webkitRelativePath);
-    const chunkSize = 2 * 1024 * 1024; // 5MB (adjust based on your requirements)
     const totalChunks = Math.ceil(file.size / chunkSize);
-    console.log(hash, totalChunks);
 
-    try {
-      const savedQueue = localStorage.getItem('uploadQueue');
-      const queue: any[] = savedQueue ? JSON.parse(savedQueue) : [];
-      queue.push({hash, chunkSize, totalChunks});
-      localStorage.setItem('uploadQueue', JSON.stringify(queue));
-    } catch (error) {
-      ErrorHandler.showNotification(error, 5);
-    }
+    setFileList(value => {
+      const q: any[] = value ? [...value] : [];
+      q.push({hash, chunkSize, totalChunks, file, data, progress: 0});
+      return q;
+    });
   };
 
-  /*const uploadNextChunk = async () => {
-    if (end <= selectedFile.size) {
-      const chunk = selectedFile.slice(start, end);
-      const formData = new FormData();
-      formData.append('file', chunk);
-      formData.append('chunkNumber', chunkNumber);
-      formData.append('totalChunks', totalChunks);
-      formData.append('originalname', selectedFile.name);
-
-      fetch('http://localhost:8000/upload', {
-        method: 'POST',
-        body: formData,
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log({data});
-          const temp = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
-          setStatus(temp);
-          setProgress(Number((chunkNumber + 1) * chunkProgress));
-          console.log(temp);
-          chunkNumber++;
-          start = end;
-          end = start + chunkSize;
-          uploadNextChunk();
-        })
-        .catch(error => {
-          console.error('Error uploading chunk:', error);
-        });
-    } else {
-      setProgress(100);
-      setSelectedFile(null);
-      setStatus('File upload completed');
+  const uploadNextFile = () => {
+    if (isUploading || !fileList || fileList?.length === 0) {
+      return;
     }
-  };*/
+
+    console.log('Starting upload...');
+    setIsUploading(true);
+    setCurrentFile(fileList[0]);
+  };
+
+  console.log({fileList});
 
   return (
     <UploadContext.Provider
       value={{
-        config,
-        openMenu,
-        setOpenMenu,
-        uploadProgress,
+        fileList,
         addFile,
       }}>
       {children}

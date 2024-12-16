@@ -54,7 +54,7 @@ export type Profile = {
   created_at?: string;
   login_method?: string;
   user?: User;
-  avatar?: File;
+  avatar?: ApiFile;
 };
 
 export type Client = {
@@ -186,16 +186,16 @@ export type FileActivity = {
   uuid: number;
   user: User;
   comment: string;
-  attachments: File[];
+  attachments: ApiFile[];
   requested_at?: string;
   created_at: string;
   time?: number;
   verified_at?: string;
   action: string;
-  file?: File;
+  file?: ApiFile;
 };
 
-export type File = {
+export type ApiFile = {
   uuid: string;
   name: string;
   description: string;
@@ -230,7 +230,7 @@ export type Container = {
 export type ContainerContent = {
   container: Container;
   containers: Array<Container>;
-  files: Array<File>;
+  files: Array<ApiFile>;
 };
 
 export type FileManagementStatus = {
@@ -466,7 +466,7 @@ export type TaxonomyDefinition = {
   uuid: string;
   name: string;
   code: string;
-  cover?: File;
+  cover?: ApiFile;
   description?: string;
   items: any[];
   order: number;
@@ -489,7 +489,7 @@ export type Course = {
   name: string;
   price?: number;
   syllabus?: string;
-  cover?: File;
+  cover?: ApiFile;
 };
 
 export type CourseModule = {
@@ -502,7 +502,7 @@ export type CourseModule = {
 export type ModuleSession = {
   uuid: string;
   title: string;
-  file: File;
+  file: ApiFile;
 };
 
 export type ChatRoom = {
@@ -519,12 +519,13 @@ export type EntityActivityStats = {
 };
 
 export type EntityActivity = {
-  attachments?: File[];
+  attachments?: ApiFile[];
   assigned_to?: Profile;
   comment?: string;
   completed_at?: string;
   created_at: string;
   entity?: any;
+  entity_type: string;
   expired_at?: string;
   profile?: Profile;
   type: string;

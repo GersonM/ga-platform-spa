@@ -9,7 +9,7 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {EntityActivity, EntityActivityStats, File, Profile, ResponsePagination} from '../../../Types/api';
+import {EntityActivity, EntityActivityStats, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -127,11 +127,11 @@ const CommercialIncidents = () => {
     {
       title: 'Archivos',
       dataIndex: 'attachments',
-      render: (attachments: File[], row: EntityActivity) => {
+      render: (attachments: ApiFile[], row: EntityActivity) => {
         return (
           <>
             <Image.PreviewGroup>
-              {attachments?.map((at: File) => (
+              {attachments?.map((at: ApiFile) => (
                 <>
                   {at.type.includes('ima') ? (
                     <Image

@@ -31,13 +31,13 @@ axios
   .then(response => {
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthContextProvider config={response.data}>
-        <UploadContextProvider>
-          <TenantAppConfig tenant={response.data}>
+        <TenantAppConfig tenant={response.data}>
+          <UploadContextProvider>
             <BrowserRouter>
               <App />
             </BrowserRouter>
-          </TenantAppConfig>
-        </UploadContextProvider>
+          </UploadContextProvider>
+        </TenantAppConfig>
       </AuthContextProvider>,
     );
   })

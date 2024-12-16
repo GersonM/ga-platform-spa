@@ -24,6 +24,7 @@ import {
   PiHardDrives,
   PiInvoiceDuotone,
   PiMailboxDuotone,
+  PiMoney,
   PiPerson,
   PiPresentationChart,
   PiSignOut,
@@ -190,6 +191,14 @@ const Navigation = () => {
                 <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
               </NavItem>
             )}
+            {config?.modules.includes('club') && (
+              <NavItem label={'Club'} icon={<PiUsers />}>
+                <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
+                <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
+                <NavItem label={'Importar pagos'} icon={<PiMoney />} path={'/club/payments-import'} />
+              </NavItem>
+            )}
+
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
             {user?.roles?.includes('admin') && (
               <NavItem label={'Seguridad'} icon={<PiFingerprint />} path={'/accounts'} />
@@ -201,10 +210,6 @@ const Navigation = () => {
                 <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
               </NavItem>
             )}
-            <NavItem label={'Club'} icon={<PiUsers />}>
-              <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
-              <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
-            </NavItem>
 
             {config?.modules.includes('attendance') && (
               <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />

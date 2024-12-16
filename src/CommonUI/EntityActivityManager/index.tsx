@@ -10,7 +10,7 @@ import {CalendarDaysIcon, ChatBubbleLeftIcon, PaperClipIcon} from '@heroicons/re
 import ErrorHandler from '../../Utils/ErrorHandler';
 import PrimaryButton from '../PrimaryButton';
 import IconButton from '../IconButton';
-import {File} from '../../Types/api';
+import {ApiFile} from '../../Types/api';
 
 import './styles.less';
 import Config from '../../Config';
@@ -33,7 +33,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
   const [messageType, setMessageType] = useState<string>('entry');
   const [messageDate, setMessageDate] = useState<Dayjs>();
   const [messageAssignedTo, setMessageAssignedTo] = useState();
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<ApiFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedActivityUUID, setSelectedActivityUUID] = useState<string>();
@@ -222,7 +222,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                 {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
               </small>
               <Image.PreviewGroup>
-                {a.attachments?.map((at: File) => (
+                {a.attachments?.map((at: ApiFile) => (
                   <>
                     {at.type.includes('ima') ? (
                       <Image

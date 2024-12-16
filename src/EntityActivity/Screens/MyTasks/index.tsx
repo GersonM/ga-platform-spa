@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Avatar, Card, Image, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
+import {Image, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {EntityActivity, File, Profile, ResponsePagination} from '../../../Types/api';
+import {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -103,11 +103,11 @@ const MyComponent = () => {
       title: 'Archivos',
       dataIndex: 'attachments',
       width: 190,
-      render: (attachments: File[], row: EntityActivity) => {
+      render: (attachments: ApiFile[], row: EntityActivity) => {
         return (
           <>
             <Image.PreviewGroup>
-              {attachments?.map((at: File) => (
+              {attachments?.map((at: ApiFile) => (
                 <>
                   {at.type.includes('ima') ? (
                     <Image
@@ -138,7 +138,10 @@ const MyComponent = () => {
       title: 'Asunto',
       dataIndex: 'entity',
       width: 200,
-      render: (entity?: any) => {
+      render: (entity?: any, row?: EntityActivity) => {
+        if (row?.entity_type.includes('Subscription')) {
+          return entity.code;
+        }
         return (
           <EstateContractAddress
             contract={entity}

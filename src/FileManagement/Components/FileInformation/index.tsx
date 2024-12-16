@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import FileIcon from '../FileIcon';
-import {Container, File, FileActivity} from '../../../Types/api';
+import {Container, ApiFile, FileActivity} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';
@@ -19,7 +19,7 @@ import './styles.less';
 import {PiImage} from 'react-icons/pi';
 
 interface FileInformationProps {
-  file?: File;
+  file?: ApiFile;
   fileContainer?: Container;
   onChange?: () => void;
 }

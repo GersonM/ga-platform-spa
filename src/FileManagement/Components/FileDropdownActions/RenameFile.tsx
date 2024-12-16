@@ -3,13 +3,13 @@ import {Form, Input} from 'antd';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
 
 interface RenameFileProps {
-  file: File;
+  file: ApiFile;
   onCompleted?: () => void;
 }
 

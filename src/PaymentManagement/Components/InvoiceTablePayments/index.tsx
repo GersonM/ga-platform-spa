@@ -4,7 +4,7 @@ import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
 import {PiPlus} from 'react-icons/pi';
 
 import TableList from '../../../CommonUI/TableList';
-import {Invoice, File} from '../../../Types/api';
+import {Invoice, ApiFile} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
@@ -39,7 +39,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       title: 'Doc.',
       dataIndex: 'attachments',
       width: 50,
-      render: (attachments: File[]) => {
+      render: (attachments: ApiFile[]) => {
         if (attachments && attachments.length > 0) {
           return (
             <a href={attachments[0].source} target={'_blank'}>

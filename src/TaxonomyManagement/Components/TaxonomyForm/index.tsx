@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Form, Input} from 'antd';
 import axios from 'axios';
 
-import {TaxonomyDefinition, File} from '../../../Types/api';
+import {TaxonomyDefinition, ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
@@ -16,7 +16,7 @@ interface TaxonomyFormProps {
 }
 
 const TaxonomyForm = ({entity, onComplete, parentUuid}: TaxonomyFormProps) => {
-  const [uploadedFile, setUploadedFile] = useState<File>();
+  const [uploadedFile, setUploadedFile] = useState<ApiFile>();
   const onSubmit = (values: any) => {
     axios
       .request({

@@ -2,11 +2,11 @@ import React from 'react';
 import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
 import {PiFilePdfLight, PiFileSqlLight, PiFileXlsLight, PiThreeD} from 'react-icons/pi';
 
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import {DiPhotoshop} from 'react-icons/di';
 
 interface FileIconProps {
-  file: File;
+  file: ApiFile;
   size?: number;
   width?: number;
 }

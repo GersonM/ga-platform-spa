@@ -5,7 +5,7 @@ import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';
 
 import IconButton from '../IconButton';
-import {File as ApiFile} from '../../Types/api';
+import {ApiFile} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
 import './styles.less';
 

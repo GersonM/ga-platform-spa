@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Avatar} from 'antd';
 import axios from 'axios';
 
-import {Profile, File} from '../../../Types/api';
+import {Profile, ApiFile} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -19,7 +19,7 @@ const ProfileCard = ({profile, onChange, allowEdit = true}: ProfileCardProps) =>
   const [showUploader, setShowUploader] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onAvatarChange = (file: File) => {
+  const onAvatarChange = (file: ApiFile) => {
     setLoading(true);
     axios
       .put(`hr-management/profiles/${profile.uuid}`, {avatar_uuid: file.uuid})

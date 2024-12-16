@@ -1,13 +1,13 @@
 import React from 'react';
 import dayjs from 'dayjs';
 
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import IconItem from './IconItem';
 import FileIcon from '../FileIcon';
 import FileDropdownActions from '../FileDropdownActions';
 
 interface FileItemProps {
-  file: File;
+  file: ApiFile;
   selected?: boolean;
   onDoubleClick?: () => void;
   onClick?: (selected: boolean) => void;

@@ -8,7 +8,7 @@ import FolderItem from './FolderItem';
 import FileInformation from '../FileInformation';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {Container, ContainerContent, File} from '../../../Types/api';
+import {Container, ContainerContent, ApiFile} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
@@ -22,7 +22,7 @@ interface ContainerContentViewerProps {
 
 const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
-  const [selectedFile, setSelectedFile] = useState<File>();
+  const [selectedFile, setSelectedFile] = useState<ApiFile>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
@@ -170,7 +170,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
     }
   };
 
-  const downloadFile = (file: File) => {
+  const downloadFile = (file: ApiFile) => {
     const tenant = axios.defaults.headers.common['X-Tenant'];
     const link =
       'https://' + import.meta.env.VITE_WEB + '/' + tenant + `/storage/file-management/files/${file.uuid}/download`;

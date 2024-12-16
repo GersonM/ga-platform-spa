@@ -4,7 +4,7 @@ import {TrashIcon} from '@heroicons/react/16/solid';
 import axios from 'axios';
 
 import RenameFile from './RenameFile';
-import {File} from '../../../Types/api';
+import {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {PiArrowsOutCardinal, PiPencilSimple} from 'react-icons/pi';
 
@@ -18,7 +18,7 @@ const items = [
 interface FileDropdownActionsProps {
   children: React.ReactNode;
   trigger?: ('click' | 'hover' | 'contextMenu')[];
-  file: File;
+  file: ApiFile;
   onChange?: () => void;
 }
 
