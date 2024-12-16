@@ -34,6 +34,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
     uploadNextFile();
   }, [fileList]);
 
+  /*
   useEffect(() => {
     // Function to upload a chunk of the file
     async function uploadChunk(data) {
@@ -99,7 +100,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
     // If a chunk index is set, read and upload the current chunk
     if (currentChunkIndex != null) readAndUploadCurrentChunk();
   }, [chunkSize, currentChunkIndex, currentFile]);
-
+*/
   const handleFileUpload = async (file: File) => {
     setLoading(true);
     const formData = new FormData();
