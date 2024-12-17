@@ -16,7 +16,8 @@ interface FileItemProps {
 }
 
 const FileItem = ({file, onDoubleClick, onClick, selected, onChange, size}: FileItemProps) => {
-  const isImage = file.type.includes('image');
+  const isImage = file.type.includes('image') && !file.type.includes('dwg');
+
   return (
     <FileDropdownActions file={file} trigger={['contextMenu']} onChange={onChange}>
       <div>

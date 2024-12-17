@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Image, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
+import {Image, Modal, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -237,6 +237,7 @@ const MyComponent = () => {
           pageSize={pagination.per_page}
         />
       )}
+      <Modal></Modal>
     </ModuleContent>
   );
 };
