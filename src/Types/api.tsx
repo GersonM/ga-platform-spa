@@ -213,6 +213,15 @@ export type ApiFile = {
   start_from?: number;
 };
 
+export type UploadQueueFile = {
+  hash: string;
+  chunkSize: number;
+  totalChunks: number;
+  file: File;
+  data: any;
+  progress: number;
+};
+
 export type Container = {
   uuid: string;
   name: string;

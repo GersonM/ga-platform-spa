@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
-import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Space, Switch, Tag, Tooltip} from 'antd';
+import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from 'antd';
 import {
   PiCalendarCheck,
   PiCalendarX,
@@ -43,6 +43,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   const [openPrint, setOpenPrint] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
   const [pdfWatermark, setPdfWatermark] = useState(false);
+  const [carnetTemplate, setCarnetTemplate] = useState<string>();
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription>();
   const [openAddMember, setOpenAddMember] = useState(false);
@@ -167,6 +168,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       method: 'GET',
       params: {
         use_watermark: pdfWatermark ? '1' : '0',
+        template: carnetTemplate,
       },
       responseType: 'blob', // important
     })
@@ -235,6 +237,17 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 <div>
                   <span>Marca de agua</span> <br />
                   <Switch size={'small'} onChange={value => setPdfWatermark(value)} />
+                </div>
+                <div>
+                  <span>Plantilla</span> <br />
+                  <Select
+                    onChange={value => setCarnetTemplate(value)}
+                    options={[
+                      {value: 'ilo', label: 'Ilo'},
+                      {value: 'moquegua', label: 'Moquegua'},
+                    ]}
+                    size={'small'}
+                  />
                 </div>
               </Space>
             </div>

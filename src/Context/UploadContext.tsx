@@ -3,7 +3,7 @@ import axios, {AxiosProgressEvent} from 'axios';
 import {message} from 'antd';
 import {sha256} from 'js-sha256';
 
-import {ApiFile as ApiFile} from '../Types/api';
+import {ApiFile as ApiFile, UploadQueueFile} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface UploadContextDefaults {
@@ -28,28 +28,16 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
   const [progress, setProgress] = useState<number>(0);
   const [uploadedFile, setUploadedFile] = useState<ApiFile>();
   const [isUploading, setIsUploading] = useState(false);
-  const [currentFile, setCurrentFile] = useState();
+  const [currentFile, setCurrentFile] = useState<UploadQueueFile>();
 
   useEffect(() => {
     uploadNextFile();
   }, [fileList]);
 
-  /*
   useEffect(() => {
     // Function to upload a chunk of the file
-    async function uploadChunk(data) {
+    async function uploadChunk(data: any) {
       if (!currentFile) return;
-      //const data = readerEvent.target.result;
-
-      // Set up the parameters for the request
-      const params = new URLSearchParams();
-      params.set('name', currentFile.file.name);
-      params.set('currentChunkIndex', currentChunkIndex.toString());
-      params.set('totalChunks', Math.ceil(currentFile.file.size / chunkSize).toString());
-
-      // Set up the headers for the request
-      const headers = {'Content-Type': 'application/octet-stream'};
-      const url = 'file-management/chunked-files' + params.toString();
 
       let formData = new FormData();
       formData.append('file', data, `chunk-${currentChunkIndex}`);
@@ -60,6 +48,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       const config = {
         onUploadProgress: (r: AxiosProgressEvent) => {
           //setLoadingInformation(r);
+          console.log(r.progress);
         },
         baseURL: import.meta.env.VITE_API_UPLOAD,
         body: data,
@@ -69,7 +58,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       const isLastChunk = currentChunkIndex === Math.ceil(currentFile.file.size / chunkSize) - 1;
       // If it is, set the final filename and reset the current chunk index
       if (isLastChunk) {
-        currentFile.file.finalFilename = res.finalFilename;
+        //currentFile.file.finalFilename = uploadPromise.data;
         setCurrentChunkIndex(0);
       } else {
         // If it's not, increment the current chunk index
@@ -80,27 +69,18 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
     // Function to read and upload the current chunk
     function readAndUploadCurrentChunk() {
       if (!currentFile) return;
-      // Calculate the start and end of the current chunk
       const from = currentChunkIndex * chunkSize;
       const to =
         (currentChunkIndex + 1) * chunkSize >= currentFile.file.size ? currentFile.file.size : from + chunkSize;
 
-      // Slice the file to get the current chunk
       const blob = currentFile.file.slice(from, to);
-      uploadChunk(blob);
-      return;
-
-      const reader = new FileReader();
-      // Set the onload function to upload the chunk when it's read
-      reader.onload = e => uploadChunk(e);
-      // Read the blob as a data URL
-      reader.readAsDataURL(blob);
+      uploadChunk(blob).then();
     }
 
     // If a chunk index is set, read and upload the current chunk
     if (currentChunkIndex != null) readAndUploadCurrentChunk();
   }, [chunkSize, currentChunkIndex, currentFile]);
-*/
+
   const handleFileUpload = async (file: File) => {
     setLoading(true);
     const formData = new FormData();

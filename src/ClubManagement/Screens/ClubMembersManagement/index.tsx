@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, InputNumber, Modal, Pagination, Select} from 'antd';
+import {Form, Input, InputNumber, Modal, Pagination} from 'antd';
 import {PiEye} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
@@ -88,10 +88,10 @@ const ClubMembersManagement = () => {
       render: (activity: EntityActivity) => {
         return (
           activity && (
-            <>
-              {activity?.comment} <br />
+            <div style={{lineHeight: '14px'}}>
+              <div>{activity?.comment}</div>
               <small>por {activity?.profile?.name}</small>
-            </>
+            </div>
           )
         );
       },

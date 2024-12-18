@@ -18,7 +18,11 @@ dayjs.locale('es');
 
 const token = Cookies.get('session_token');
 const isDevMode = window.location.hostname.includes('localhost');
-const tenantID = isDevMode ? 'country' : window.location.hostname.split('.')[0];
+let tenantID = isDevMode ? 'country' : window.location.hostname.split('.')[0];
+
+if (window.location.hostname.includes('countryclublavilla.pe')) {
+  tenantID = 'country-moquegua';
+}
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;

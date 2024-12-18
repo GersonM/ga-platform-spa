@@ -21,8 +21,9 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
   const columns = [
     {
       title: 'Descripción',
-      dataIndex: 'description',
+      dataIndex: 'method',
       width: 110,
+      render: (method: any) => method.number,
     },
     {
       title: 'Monto',
