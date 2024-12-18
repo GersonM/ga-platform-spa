@@ -50,6 +50,19 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
+    const template = localStorage.getItem('field_template');
+    const watermark = localStorage.getItem('field_watermark');
+
+    if (template) {
+      setCarnetTemplate(template);
+    }
+
+    if (watermark) {
+      setPdfWatermark(watermark === '1');
+    }
+  }, []);
+
+  useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -236,15 +249,27 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 />
                 <div>
                   <span>Marca de agua</span> <br />
-                  <Switch size={'small'} onChange={value => setPdfWatermark(value)} />
+                  <Switch
+                    size={'small'}
+                    defaultValue={pdfWatermark}
+                    onChange={value => {
+                      setPdfWatermark(value);
+                      localStorage.setItem('field_watermark', value ? '1' : '0');
+                    }}
+                  />
                 </div>
                 <div>
-                  <span>Plantilla</span> <br />
                   <Select
-                    onChange={value => setCarnetTemplate(value)}
+                    defaultValue={carnetTemplate}
+                    placeholder={'Plantilla'}
+                    style={{width: 150}}
+                    onChange={value => {
+                      setCarnetTemplate(value);
+                      localStorage.setItem('field_template', value);
+                    }}
                     options={[
-                      {value: 'ilo', label: 'Ilo'},
-                      {value: 'moquegua', label: 'Moquegua'},
+                      {value: 'ilo', label: 'Carnet Ilo'},
+                      {value: 'moquegua', label: 'Carnet Moquegua'},
                     ]}
                     size={'small'}
                   />
