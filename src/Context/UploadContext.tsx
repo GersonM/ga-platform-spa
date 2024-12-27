@@ -1,14 +1,14 @@
 import React, {createContext, useEffect, useState} from 'react';
 import axios, {AxiosProgressEvent} from 'axios';
-import {message} from 'antd';
 import {sha256} from 'js-sha256';
 
-import {ApiFile as ApiFile, UploadQueueFile} from '../Types/api';
-import ErrorHandler from '../Utils/ErrorHandler';
+import {UploadQueueFile} from '../Types/api';
 
 interface UploadContextDefaults {
-  fileList?: any[];
-  addFile: (file: File) => void;
+  fileList?: UploadQueueFile[];
+  isUploading: boolean;
+  addFile: (file: File) => string;
+  lastFileCompleted?: UploadQueueFile;
 }
 
 interface UploadContextProp {
@@ -16,57 +16,88 @@ interface UploadContextProp {
 }
 
 const UploadContext = createContext<UploadContextDefaults>({
-  addFile(): void {},
+  addFile(): string {
+    return '';
+  },
+  isUploading: false,
 });
 
 const chunkSize = 2 * 1024 * 1024; // 5MB (adjust based on your requirements)
 
 const UploadContextProvider = ({children}: UploadContextProp) => {
-  const [fileList, setFileList] = useState<any[]>();
+  const [fileList, setFileList] = useState<UploadQueueFile[]>();
   const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState<number>(0);
-  const [uploadedFile, setUploadedFile] = useState<ApiFile>();
   const [isUploading, setIsUploading] = useState(false);
   const [currentFile, setCurrentFile] = useState<UploadQueueFile>();
+  const [lastFileCompleted, setLastFileCompleted] = useState<UploadQueueFile>();
 
   useEffect(() => {
-    uploadNextFile();
-  }, [fileList]);
+    console.warn('## File list updated');
+    if (!isUploading) {
+      uploadNextFile();
+    }
+  }, [fileList, isUploading]);
 
   useEffect(() => {
-    // Function to upload a chunk of the file
     async function uploadChunk(data: any) {
       if (!currentFile) return;
+
+      const totalChunks = Math.ceil(currentFile.file.size / chunkSize);
 
       let formData = new FormData();
       formData.append('file', data, `chunk-${currentChunkIndex}`);
       formData.set('name', currentFile.file.name);
-      formData.set('currentChunkIndex', currentChunkIndex.toString());
-      formData.set('totalChunks', Math.ceil(currentFile.file.size / chunkSize).toString());
+      formData.set('hash', currentFile.hash);
+      formData.set('current_chunk', currentChunkIndex.toString());
+      formData.set('total_chunks', totalChunks.toString());
+      if (currentFile.containerUuid) {
+        formData.set('container_uuid', currentFile.containerUuid);
+      }
 
       const config = {
         onUploadProgress: (r: AxiosProgressEvent) => {
-          //setLoadingInformation(r);
-          console.log(r.progress);
+          console.log('Progress: ' + currentFile.file.name, r.progress);
         },
         baseURL: import.meta.env.VITE_API_UPLOAD,
         body: data,
       };
-      let uploadPromise = await axios.post('file-management/chunked-files', formData, config);
-      // Make the POST request to the server
+      const response = await axios.post('file-management/chunked-files', formData, config);
       const isLastChunk = currentChunkIndex === Math.ceil(currentFile.file.size / chunkSize) - 1;
-      // If it is, set the final filename and reset the current chunk index
+      const fileProgress = totalChunks === 1 ? 100 : Math.round(((currentChunkIndex + 1) / totalChunks) * 100);
+
+      setFileList(copy => {
+        if (copy && currentFile) {
+          const i = copy.findIndex(f => f.id === currentFile.id);
+          copy[i].progress = fileProgress;
+          return copy;
+        }
+      });
+
+      if (currentChunkIndex == 0 && response.data.next_chunk) {
+        console.log('Next chunk to resume: ', response.data.next_chunk);
+        setCurrentChunkIndex(response.data.next_chunk);
+      }
+
       if (isLastChunk) {
-        //currentFile.file.finalFilename = uploadPromise.data;
-        setCurrentChunkIndex(0);
-      } else {
-        // If it's not, increment the current chunk index
+        console.log('Last chunk uploaded');
+        setFileList(copy => {
+          if (copy && currentFile) {
+            const i = copy.findIndex(f => f.id === currentFile.id);
+            copy[i].progress = 100;
+            copy[i].fileData = response.data;
+            console.log('File closed');
+            return copy;
+          }
+        });
+        setLastFileCompleted(currentFile);
+        setIsUploading(false);
+      }
+
+      if (currentChunkIndex != 0 && !isLastChunk) {
         setCurrentChunkIndex(currentChunkIndex + 1);
       }
     }
 
-    // Function to read and upload the current chunk
     function readAndUploadCurrentChunk() {
       if (!currentFile) return;
       const from = currentChunkIndex * chunkSize;
@@ -77,103 +108,44 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       uploadChunk(blob).then();
     }
 
-    // If a chunk index is set, read and upload the current chunk
     if (currentChunkIndex != null) readAndUploadCurrentChunk();
-  }, [chunkSize, currentChunkIndex, currentFile]);
+  }, [currentChunkIndex, currentFile]);
 
-  const handleFileUpload = async (file: File) => {
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('document_name', '');
-    formData.append('document_type_id', '');
-    formData.append('file_type', '');
-
-    try {
-      setLoading(true);
-
-      const response = await axios.post(`file-management/files`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: progressEvent => {
-          const total = progressEvent.total || 0;
-          const percentCompleted = Math.floor((progressEvent.loaded / total) * 100);
-          setProgress(percentCompleted);
-        },
-      });
-
-      setUploadedFile(response.data);
-      setLoading(false);
-      message.success('Archivo cargado!');
-    } catch (error) {
-      setLoading(false);
-      ErrorHandler.showNotification(error, 5);
-    }
-  };
-
-  const handleFileUpdate = async (file: File, fileUuid: string) => {
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      setLoading(true);
-
-      const response = await axios.post(`file-management/files/${fileUuid}`, formData, {
-        onUploadProgress: progressEvent => {
-          const total = progressEvent.total || 0;
-          const percentCompleted = Math.floor((progressEvent.loaded / total) * 100);
-          setProgress(percentCompleted);
-        },
-      });
-
-      //setUploadedFile(response.data);
-      //onFilesUploaded && onFilesUploaded(response.data);
-
-      setLoading(false);
-      message.success('Archivo cargado!');
-    } catch (error) {
-      setLoading(false);
-      ErrorHandler.showNotification(error, 5);
-    }
-  };
-
-  const uploadFile = async (file: File, uuid?: string) => {
-    if (uuid) {
-      handleFileUpdate(file, uuid);
-    } else {
-      handleFileUpload(file);
-    }
-  };
-
-  const addFile = (file: File, data?: any) => {
+  const addFile = (file: File, containerUuid?: string): string => {
     const hash = sha256(file.name + '' + file.size + '' + file.lastModified + '' + file.webkitRelativePath);
+    const id = sha256(Math.random().toString());
     const totalChunks = Math.ceil(file.size / chunkSize);
 
     setFileList(value => {
       const q: any[] = value ? [...value] : [];
-      q.push({hash, chunkSize, totalChunks, file, data, progress: 0});
+      q.push({id, hash, chunkSize, totalChunks, file, containerUuid, progress: 0});
       return q;
     });
+
+    return id;
   };
 
   const uploadNextFile = () => {
-    if (isUploading || !fileList || fileList?.length === 0) {
-      return;
+    const nextFile = fileList?.find(f => !f.fileData);
+    console.log('Checking pending files to upload:');
+    if (nextFile) {
+      console.log('Next file selected');
+      setIsUploading(true);
+      setCurrentChunkIndex(0);
+      setCurrentFile(nextFile);
+    } else {
+      setIsUploading(false);
+      console.info('No more files to upload');
     }
-
-    console.log('Starting upload...');
-    setIsUploading(true);
-    setCurrentFile(fileList[0]);
   };
-
-  console.log({fileList});
 
   return (
     <UploadContext.Provider
       value={{
         fileList,
         addFile,
+        isUploading,
+        lastFileCompleted,
       }}>
       {children}
     </UploadContext.Provider>

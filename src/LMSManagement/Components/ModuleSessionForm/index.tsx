@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import FileUploader from '../../../CommonUI/FileUploader';
+import FileUploader from '../../../FileManagement/Components/FileUploader';
 
 interface CourseModuleFormProps {
   onComplete?: () => void;

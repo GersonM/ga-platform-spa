@@ -214,11 +214,13 @@ export type ApiFile = {
 };
 
 export type UploadQueueFile = {
+  id: string;
   hash: string;
   chunkSize: number;
   totalChunks: number;
   file: File;
-  data: any;
+  fileData?: ApiFile;
+  containerUuid?: string;
   progress: number;
 };
 

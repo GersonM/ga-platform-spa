@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Course, CourseModule} from '../../../Types/api';
 import axios from 'axios';
-import {Collapse, Empty, List, Modal, Space} from 'antd';
+import {Collapse, Empty, List, Modal, Popconfirm, Space} from 'antd';
 import IconButton from '../../../CommonUI/IconButton';
 import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import CourseForm from '../CourseForm';
 import ModuleSessionForm from '../ModuleSessionForm';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface CourseModulesManagerProps {
   courseUUID: string;
@@ -41,6 +42,29 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
 
     return cancelTokenSource.cancel;
   }, [courseUUID, refresh, reload]);
+
+  const deleteModule = (uuid: string) => {
+    axios
+      .delete(`/lms/modules/${uuid}`)
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
+  const deleteSession = (uuid: string) => {
+    axios
+      .delete(`/lms/sessions/${uuid}`)
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
   return (
     <div>
       <Collapse size={'small'}>
@@ -51,7 +75,20 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
             )}
             <List size={'small'}>
               {module.sessions?.map((session, index) => (
-                <List.Item extra={<IconButton icon={<TrashIcon />} small danger />}>{session.title}</List.Item>
+                <List.Item
+                  extra={
+                    <Popconfirm
+                      title={'¿Quieres borrar esta sesión?'}
+                      description={'Se borrara también el video relacionado'}
+                      onConfirm={() => deleteSession(session.uuid)}>
+                      <IconButton icon={<TrashIcon />} small danger />
+                    </Popconfirm>
+                  }>
+                  <div>
+                    {session.title} <br />
+                    <small>{session.file.name}</small>
+                  </div>
+                </List.Item>
               ))}
             </List>
             <Space>
@@ -65,7 +102,12 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
                 ghost
                 size={'small'}
               />
-              <PrimaryButton icon={<TrashIcon />} danger label={'Borrar'} ghost size={'small'} />
+              <Popconfirm
+                title={'¿Quieres borrar este módulo?'}
+                description={'Se borraran también todas las sesiones relacionadas y sus videos'}
+                onConfirm={() => deleteModule(module.uuid)}>
+                <PrimaryButton icon={<TrashIcon />} danger label={'Borrar'} ghost size={'small'} />
+              </Popconfirm>
             </Space>
           </Collapse.Panel>
         ))}
@@ -73,7 +115,7 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
 
       <Modal
         destroyOnClose
-        title={'Crear curso'}
+        title={'Crear sesión'}
         open={openSessionForm}
         onCancel={() => setOpenSessionForm(false)}
         footer={false}>
