@@ -63,6 +63,8 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
       .then(res => {
         setSelectedProfile(undefined);
         setSaving(false);
+        form.resetFields();
+        setProfiles(undefined);
         onComplete && onComplete();
       })
       .catch(e => {

@@ -47,6 +47,7 @@ const CommercialLeads = () => {
     {
       dataIndex: 'profile',
       title: 'Nombres',
+      width: 100,
       render: (profile: Profile) => {
         return `${profile.name} ${profile.last_name}`;
       },
