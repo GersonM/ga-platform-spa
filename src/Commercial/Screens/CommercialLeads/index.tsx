@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Checkbox, Col, Drawer, Empty, Form, Input, InputNumber, Row} from 'antd';
+import {Card, Checkbox, Col, Drawer, Empty, Form, Input, InputNumber, Row, Space, Statistic} from 'antd';
 import axios from 'axios';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
@@ -17,7 +17,7 @@ import AuthContext from '../../../Context/AuthContext';
 
 const CommercialLeads = () => {
   const {user} = useContext(AuthContext);
-  const [leads, setLeads] = useState<Lead[]>();
+  const [leads, setLeads] = useState<any>();
   const [openCampaignManager, setOpenCampaignManager] = useState(false);
   const [reload, setReload] = useState(false);
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const CommercialLeads = () => {
     };
 
     axios
-      .get(`commercial/leads`, config)
+      .get(`commercial/leads/stats`, config)
       .then(response => {
         if (response) {
           setLeads(response.data);
@@ -77,7 +77,7 @@ const CommercialLeads = () => {
       <ContentHeader
         title={'Leads'}
         tools={
-          <>
+          <Space>
             <CampaignSelector
               refresh={reload}
               value={params.campaign}
@@ -97,11 +97,11 @@ const CommercialLeads = () => {
                 onClick={() => setOpenCampaignManager(true)}
               />
             )}
-          </>
+          </Space>
         }
       />
       <Row gutter={[20, 20]}>
-        <Col lg={12}>
+        <Col lg={12} xs={24}>
           {params.campaign ? (
             <CreateLeadForm
               campaignUuid={params.campaign}
@@ -113,8 +113,10 @@ const CommercialLeads = () => {
             <Empty description={'Selecciona una campaña'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </Col>
-        <Col lg={12}>
-          <TableList columns={columns} dataSource={leads} />
+        <Col lg={12} xs={24}>
+          <Card size={'small'} bordered={false}>
+            <Statistic title={'Ingresos registrados'} value={leads?.total_leads} />
+          </Card>
         </Col>
       </Row>
       <Drawer
