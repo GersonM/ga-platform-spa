@@ -79,6 +79,7 @@ const CommercialLeads = () => {
         tools={
           <>
             <CampaignSelector
+              refresh={reload}
               value={params.campaign}
               onChange={value => {
                 if (!value) {

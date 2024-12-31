@@ -9,13 +9,14 @@ interface CampaignSelectorProps {
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
+  refresh?: boolean;
   style?: any;
   value?: any;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const CampaignSelector = ({placeholder, mode, ...props}: CampaignSelectorProps) => {
+const CampaignSelector = ({placeholder, mode, refresh, ...props}: CampaignSelectorProps) => {
   const [campaign, setCampaign] = useState<Campaign | any>([]);
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +49,7 @@ const CampaignSelector = ({placeholder, mode, ...props}: CampaignSelectorProps) 
       });
 
     return cancelTokenSource.cancel;
-  }, []);
+  }, [refresh]);
 
   return (
     <Select

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Checkbox, Form, Input, InputNumber} from 'antd';
+import {Card, Checkbox, Form, Input, InputNumber, notification} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
@@ -66,6 +66,7 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
         form.resetFields();
         setProfiles(undefined);
         onComplete && onComplete();
+        notification.success({message: 'Ingreso registrado'});
       })
       .catch(e => {
         setSaving(false);
@@ -105,25 +106,31 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
       )}
       <Form form={form} layout={'vertical'} initialValues={selectedProfile} onFinish={createLead}>
         <Form.Item name={'doc_number'} label={'DNI'} rules={[{required: true}]}>
-          <Input type="number" autoFocus onChange={e => setSearchProfile(e.target.value)} placeholder={'DNI'} />
+          <Input
+            pattern="[0-9]*"
+            inputMode={'numeric'}
+            size={'large'}
+            type="number"
+            autoFocus
+            onChange={e => setSearchProfile(e.target.value)}
+            placeholder={'DNI'}
+          />
         </Form.Item>
-        <Form.Item name={'name'} label={'Nombres'}>
+        <Form.Item name={'name'} label={'Nombres (opcional)'}>
           <Input />
         </Form.Item>
-        <Form.Item name={'last_name'} label={'Apellidos'}>
+        <Form.Item name={'last_name'} label={'Apellidos (opcional)'}>
           <Input />
         </Form.Item>
-        <Form.Item name={'phone'} label={'Teléfono'}>
+        <Form.Item name={'phone'} label={'Teléfono (opcional)'}>
           <Input />
-        </Form.Item>
-        <Form.Item name={'email'} label={'E-mail (opcional)'}>
-          <Input />
-        </Form.Item>
-        <Form.Item name={'score'} label={'Puntaje'}>
-          <InputNumber />
         </Form.Item>
         <Form.Item name={'observations'} label={'Observaciones'}>
           <Input.TextArea />
+        </Form.Item>
+        {/*
+        <Form.Item name={'email'} label={'E-mail (opcional)'}>
+          <Input />
         </Form.Item>
         <Form.Item name={'addons'} label={'Información adicional'}>
           <Checkbox.Group>
@@ -132,7 +139,15 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
             <Checkbox value={'Tiene familia'}>Tiene familia</Checkbox>
           </Checkbox.Group>
         </Form.Item>
-        <PrimaryButton loading={saving} label={'Registrar'} htmlType={'submit'} block />
+        */}
+        <PrimaryButton
+          icon={<CheckIcon />}
+          loading={saving}
+          size={'large'}
+          label={'Registrar ingreso'}
+          htmlType={'submit'}
+          block
+        />
       </Form>
     </div>
   );

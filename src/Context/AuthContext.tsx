@@ -126,7 +126,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
                 backgroundColor: 'rgba(255,255,255,0.6)',
                 borderRadius: '5px',
               }}>
-              <li>Menú de navegación se puede ocultar</li>
+              <li>Formulario de leads simplificado</li>
             </ul>
           ),
           duration: 0,
