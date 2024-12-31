@@ -103,15 +103,15 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
       )}
       <Form form={form} layout={'vertical'} initialValues={selectedProfile} onFinish={createLead}>
         <Form.Item name={'doc_number'} label={'DNI'} rules={[{required: true}]}>
-          <Input autoFocus onChange={e => setSearchProfile(e.target.value)} placeholder={'DNI'} />
+          <Input type="number" autoFocus onChange={e => setSearchProfile(e.target.value)} placeholder={'DNI'} />
         </Form.Item>
-        <Form.Item name={'name'} label={'Nombres'} rules={[{required: true}]}>
+        <Form.Item name={'name'} label={'Nombres'}>
           <Input />
         </Form.Item>
-        <Form.Item name={'last_name'} label={'Apellidos'} rules={[{required: true}]}>
+        <Form.Item name={'last_name'} label={'Apellidos'}>
           <Input />
         </Form.Item>
-        <Form.Item name={'phone'} label={'Teléfono'} rules={[{required: true}]}>
+        <Form.Item name={'phone'} label={'Teléfono'}>
           <Input />
         </Form.Item>
         <Form.Item name={'email'} label={'E-mail (opcional)'}>

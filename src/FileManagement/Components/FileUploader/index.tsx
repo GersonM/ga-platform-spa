@@ -1,12 +1,11 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {message, Progress} from 'antd';
-import axios from 'axios';
+import {Progress} from 'antd';
 import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';
 
 import UploadContext from '../../../Context/UploadContext';
 import IconButton from '../../../CommonUI/IconButton';
-import ErrorHandler from '../../../Utils/ErrorHandler';
+import FileSize from '../../../CommonUI/FileSize';
 
 interface FileUploaderProps {
   onFilesUploaded?: (file: any) => void;
@@ -32,7 +31,7 @@ const FileUploader = ({
   const [progress, setProgress] = useState<number>(0);
   const [uploadedFile, setUploadedFile] = useState<any>();
   const [ownedFiles, setOwnedFiles] = useState<string[]>([]);
-  const {addFile, lastFileCompleted} = useContext(UploadContext);
+  const {addFile, lastFileCompleted, fileList} = useContext(UploadContext);
 
   useEffect(() => {
     if (lastFileCompleted && lastFileCompleted.fileData) {
@@ -68,7 +67,15 @@ const FileUploader = ({
             })}
           </span>
         )}
-        {loading && <Progress percent={progress} size={'small'} />}
+        {fileList
+          ?.filter(f => ownedFiles.includes(f.id))
+          .map((item, index) => (
+            <li key={index}>
+              {item.file.name} - <FileSize size={item.file.size} />
+              <Progress percent={item.progress} size={'small'} />
+            </li>
+          ))}
+
         {(isDragActive || !files) && (
           <div className={'content-label'}>
             <ArrowUpTrayIcon width={25} />
