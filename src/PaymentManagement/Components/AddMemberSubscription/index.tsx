@@ -54,6 +54,7 @@ const AddMemberSubscription = ({subscription, onComplete}: AddMemberSubscription
               {label: 'Nieto', value: 'NIETO'},
               {label: 'Nieta', value: 'NIETA'},
               {label: 'Yerno', value: 'YERNO'},
+              {label: 'Nuera', value: 'NUERA'},
               {label: 'Cuñado', value: 'CUÑADO'},
               {label: 'Suegro', value: 'SUEGRO'},
               {label: 'Suegra', value: 'SUEGRA'},

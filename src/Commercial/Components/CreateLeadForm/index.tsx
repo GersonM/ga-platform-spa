@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Checkbox, Form, Input, InputNumber, notification} from 'antd';
+import {Card, Form, Input, notification} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';

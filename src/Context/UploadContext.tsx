@@ -32,7 +32,6 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
   const [lastFileCompleted, setLastFileCompleted] = useState<UploadQueueFile>();
 
   useEffect(() => {
-    console.warn('## File list updated');
     if (!isUploading) {
       uploadNextFile();
     }

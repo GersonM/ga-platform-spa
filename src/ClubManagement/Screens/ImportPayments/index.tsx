@@ -12,11 +12,15 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 const ImportPayments = () => {
   const [responseMessages, setResponseMessages] = useState<any>();
   const [loading, setLoading] = useState(false);
+  const [fileLoaded, setFileLoaded] = useState<ApiFile>();
 
-  const importDocument = (file: ApiFile) => {
+  const importDocument = (file?: ApiFile) => {
     setLoading(true);
+    if (file) {
+      setFileLoaded(file);
+    }
     axios
-      .post('subscriptions/import-payments', {file_uuid: file.uuid})
+      .post('subscriptions/import-payments', {file_uuid: file ? file.uuid : fileLoaded?.uuid})
       .then(response => {
         setLoading(false);
         setResponseMessages(response.data);
@@ -57,7 +61,13 @@ const ImportPayments = () => {
             </p>
             <FileUploader onFilesUploaded={importDocument} />
             <br />
-            <PrimaryButton loading={loading} label={'Importar documento'} block onClick={importDocument} />
+            <PrimaryButton
+              disabled={!fileLoaded}
+              loading={loading}
+              label={'Importar documento'}
+              block
+              onClick={() => importDocument()}
+            />
           </Col>
         </Row>
       )}

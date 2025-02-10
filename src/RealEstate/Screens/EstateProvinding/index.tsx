@@ -211,6 +211,10 @@ const EstateProviding = () => {
   return (
     <ModuleContent>
       <ContentHeader
+        onAdd={() => {
+          console.log('onAdd');
+        }}
+        title={'Ventas'}
         tools={
           <>
             Total: {pagination?.total}
@@ -225,7 +229,6 @@ const EstateProviding = () => {
             </Tooltip>
           </>
         }
-        title={'Ventas'}
         onRefresh={() => setReload(!reload)}>
         <FilterForm
           onInitialValues={values => {

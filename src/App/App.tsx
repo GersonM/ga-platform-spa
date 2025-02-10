@@ -46,7 +46,6 @@ import RealEstateDashboard from '../RealEstate/Screens/RealEstateDashboard';
 import EstateDetailView from '../RealEstate/Screens/EstateDetailView';
 import CommercialDashboard from '../Commercial/Screens/CommercialDashboard';
 import EstateProvinding from '../RealEstate/Screens/EstateProvinding';
-import ProfileEditor from '../AccountManagement/Components/ProfileEditor';
 import AuthContext from '../Context/AuthContext';
 import MyAccount from '../AccountTools/Screens/MyAccount';
 import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl';
