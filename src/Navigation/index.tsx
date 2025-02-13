@@ -1,6 +1,5 @@
 import React, {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {ItemType} from 'antd/lib/menu/hooks/useItems';
 import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import {CustomScroll} from 'react-custom-scroll';
@@ -41,6 +40,7 @@ import {
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
 import {TbBuildingEstate} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
+import {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
 
 import ScreenModeSelector from './ScreenModeSelector';

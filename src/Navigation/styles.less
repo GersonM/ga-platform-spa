@@ -1,7 +1,7 @@
 @iconSize: 20px;
 
 .navigation-wrapper {
-  background: linear-gradient(var(--primary-color), var(--primary-color-darker));
+  background: linear-gradient(var(--primary-color-darker), var(--primary-color));
   min-width: calc(var(--main-nav-width) - 10px);
   max-width: calc(var(--main-nav-width) - 10px);
   transition: all 0.3s;
@@ -12,8 +12,8 @@
   height: calc(100dvh - 20px);
   z-index: 2;
   color: #ffffff;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-  border-radius: 9px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
   margin: 10px 0 10px 10px;
 
   animation-duration: .7s;
@@ -24,7 +24,6 @@
   .head {
     margin: 12px 0 0 0;
     padding: 0 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .logo-square {
       transition: all 0.3s;
@@ -49,7 +48,7 @@
   }
 
   .bottom-nav {
-    margin-bottom: 10px;
+    margin: 10px 0;
     text-align: center;
 
     .user-tool {
@@ -135,16 +134,14 @@
       a {
         display: flex;
         align-items: center;
-        padding: 8px 10px;
-        margin: 3px 0 3px 5px;
+        padding: 10px 20px;
         flex: 1;
         color: #ffffff;
-        transition: all 0.2s;
-        border-radius: 9px 0 0 9px;
+        transition: all 0.3s;
         position: relative;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.07);
+          background: rgba(0, 0, 0, 0.4);
         }
 
         &:active {
@@ -155,12 +152,8 @@
         &.active {
           opacity: 1;
           font-weight: 600;
-          //background: var(--background-color-body);
-          //color: var(--primary-color);
-          //background: var(--primary-color);
           background: rgba(0, 0, 0, 0.3);
           color: #ffffff;
-          box-shadow: 3px 5px 16px rgba(0, 0, 0, 0.2);
 
           .icon, svg {
           }
@@ -197,10 +190,10 @@
     }
 
     ul {
-      background: rgba(0, 0, 0, 0.07);
       list-style: none;
+      padding: 0 15px;
+      background: rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease-out;
-      padding: 0 0;
       max-height: 0;
       overflow: hidden;
       position: relative;
@@ -213,22 +206,24 @@
         border-width: 0 0 1px 1px;
         border-radius: 0 0 0 6px;
         bottom: 20px;
-        left: 22px;
+        left: 18px;
         width: 10px;
         top: 0;
       }
 
       &.open {
         margin: 0;
-        padding: 5px 0;
+        padding: 10px 15px;
         max-height: 300px;
       }
 
       li {
+        border-bottom: none;
         .item {
           a {
-            margin: 0 0 0 30px;
+            margin: 0 0 0 10px;
             padding: 5px 0 5px 10px;
+            border-radius: 5px;
 
             .label {
               font-size: 12px;
