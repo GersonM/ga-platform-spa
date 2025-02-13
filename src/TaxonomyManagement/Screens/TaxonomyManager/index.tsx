@@ -70,10 +70,9 @@ const TaxonomyManager = () => {
               <>
                 <Space>
                   <PrimaryButton
-                    ghost
                     size={'small'}
                     icon={<PlusIcon />}
-                    label={'Agregar'}
+                    label={'Agregar item'}
                     onClick={() => {
                       setSelectedParent(t);
                       setOpenTaxonomyForm(true);
@@ -82,7 +81,6 @@ const TaxonomyManager = () => {
                   <PrimaryButton
                     size={'small'}
                     icon={<TbPencil size={18} />}
-                    ghost
                     label={'Editar taxonomía'}
                     onClick={() => {
                       setSelectedTaxonomy(t);
@@ -97,15 +95,18 @@ const TaxonomyManager = () => {
                   </Popconfirm>
                 </Space>
                 <p>{t.description}</p>
-                {t.children?.map((t, i) => (
+                {t.children?.map((t1, i) => (
                   <TaxonomyItem
                     key={i}
-                    taxonomy={t}
+                    taxonomy={t1}
                     onEdit={et => {
                       setSelectedTaxonomy(et);
                       setOpenTaxonomyForm(true);
                     }}
-                    onDelete={et => deleteTaxonomy(et.uuid)}
+                    onDelete={() => {
+                      //deleteTaxonomy(t1.uuid);
+                      setReload(!reload);
+                    }}
                     onAdd={et => {
                       setSelectedParent(et);
                       setOpenTaxonomyForm(true);

@@ -16,7 +16,7 @@ import './styles.less';
 interface TaxonomyItemProps {
   taxonomy: TaxonomyDefinition;
   onEdit?: (t: TaxonomyDefinition) => void;
-  onDelete?: (t: TaxonomyDefinition) => void;
+  onDelete?: (t?: TaxonomyDefinition) => void;
   onAdd?: (t: TaxonomyDefinition) => void;
 }
 
@@ -56,7 +56,8 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
     axios
       .delete(`taxonomy/definitions/${uuid}`)
       .then(() => {
-        setReload(!reload);
+        onDelete && onDelete();
+        //setReload(!reload);
       })
       .catch(error => ErrorHandler.showNotification(error));
   };
@@ -108,7 +109,6 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
         <div className={'children-block'}>
           <LoadingIndicator visible={loading} />
           <PrimaryButton
-            ghost
             size={'small'}
             label={'Agregar item'}
             icon={<PlusIcon />}
@@ -121,7 +121,11 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
             <TaxonomyItem
               key={i}
               taxonomy={t}
-              onDelete={onDelete}
+              onDelete={() => {
+                //onDelete && onDelete(t);
+                setReload(!reload);
+                console.log('delete');
+              }}
               onAdd={() => {
                 onAdd && onAdd(taxonomy);
               }}
