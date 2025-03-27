@@ -4,7 +4,6 @@ import {Empty, Input, Pagination, Popover, Select, Space, Tabs, Tag, Tooltip} fr
 import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
 import {IdentificationIcon, NoSymbolIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
-import dayjs from 'dayjs';
 
 import {Profile, ResponsePagination} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -16,6 +15,11 @@ import IconButton from '../../../CommonUI/IconButton';
 import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import UserSessionsManager from '../../Components/UserSessionsManager';
+import './styles.less';
+import ProfilePayments from '../../../PaymentManagement/Components/ProfilePayments';
+import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
+import ProfileActivity from '../../../EntityActivity/Components/ProfileActivity';
+import FileActivityProfile from '../../../FileManagement/Components/FileActivityProfile';
 
 const Users = () => {
   const params = useParams();
@@ -77,10 +81,11 @@ const Users = () => {
             </Tooltip>
           </Popover>
         }
-        title={'Usuarios registrados'}
+        title={'Personas registradas'}
         header={
-          <Space direction={'vertical'}>
+          <Space direction={'vertical'} style={{width: '100%'}}>
             <Input.Search
+              style={{width: '100%'}}
               allowClear
               placeholder={'Buscar por nombre'}
               size={'small'}
@@ -90,6 +95,7 @@ const Users = () => {
               }}
             />
             <Select
+              style={{width: '100%'}}
               allowClear
               placeholder={'Suscripción'}
               size={'small'}
@@ -140,9 +146,9 @@ const Users = () => {
                     {p.login_method === 'none' && <NoSymbolIcon width={15} />}
                   </Space>
                 }
-                caption={dayjs(p.created_at).fromNow() + ' | ' + (p.email || 'Sin correo')}
+                caption={p.email || 'Sin correo'}
                 image={p.avatar?.thumbnail}
-                icon={p.user ? <IdentificationIcon /> : <UserIcon />}
+                icon={p.user ? <IdentificationIcon color={p.user.disabled_at ? 'red' : ''} /> : <UserIcon />}
                 path={`/accounts/${p.uuid}`}
               />
             );
@@ -155,26 +161,69 @@ const Users = () => {
       <ModuleContent withSidebar>
         {params.uuid && (
           <Tabs
-            animated={{inkBar: true, tabPane: true}}
             onChange={tab => {
               navigate(`/accounts/${params.uuid}/${tab}`);
             }}
+            className={'users-tab-bar'}
+            type={'card'}
+            centered
+            destroyInactiveTabPane
             activeKey={params.tab}
             items={[
               {
                 label: 'Información personal',
+                style: {border: 3},
                 key: 'info',
-                children: <ProfileEditor profileUuid={params.uuid} onCompleted={() => setReload(!reload)} />,
+                children: (
+                  <div className={'users-tab-content'}>
+                    <ProfileEditor profileUuid={params.uuid} onCompleted={() => setReload(!reload)} />
+                  </div>
+                ),
               },
               {
                 label: 'Sesiones',
                 key: 'sessions',
-                children: <UserSessionsManager profileUuid={params.uuid} />,
+                children: (
+                  <div className={'users-tab-content'}>
+                    <UserSessionsManager profileUuid={params.uuid} />
+                  </div>
+                ),
               },
               {
                 label: 'Suscripciones',
                 key: 'subscriptions',
-                children: <PersonSubscription profileUuid={params.uuid} />,
+                children: (
+                  <div className={'users-tab-content'}>
+                    <PersonSubscription profileUuid={params.uuid} />
+                  </div>
+                ),
+              },
+              {
+                label: 'Finanzas',
+                key: 'payments',
+                children: (
+                  <div className={'users-tab-content'}>
+                    <ProfilePayments profileUuid={params.uuid} />
+                  </div>
+                ),
+              },
+              {
+                label: 'Actividad',
+                key: 'activity',
+                children: (
+                  <div className={'users-tab-content'}>
+                    <ProfileActivity profileUuid={params.uuid} />
+                  </div>
+                ),
+              },
+              {
+                label: 'Actividad de archivos',
+                key: 'file-activity',
+                children: (
+                  <div className={'users-tab-content'}>
+                    <FileActivityProfile profileUuid={params.uuid} />
+                  </div>
+                ),
               },
             ]}
           />

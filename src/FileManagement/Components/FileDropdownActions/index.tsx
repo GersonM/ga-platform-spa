@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Dropdown, Modal} from 'antd';
+import {Dropdown, MenuProps, Modal} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import axios from 'axios';
 
@@ -7,11 +7,12 @@ import RenameFile from './RenameFile';
 import {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {PiArrowsOutCardinal, PiPencilSimple} from 'react-icons/pi';
+import {MenuItemType} from 'antd/es/menu/interface';
 
-const items = [
+const items: MenuProps['items'] = [
   {label: 'Editar', key: 'rename', icon: <PiPencilSimple size={15} />},
   {label: 'Mover a otra ubicación', key: 'move', icon: <PiArrowsOutCardinal size={15} />, disabled: true},
-  {type: 'divider', label: '', key: 'divider'},
+  {type: 'divider'},
   {label: 'Borrar', key: 'delete', danger: true, icon: <TrashIcon width={16} />},
 ];
 

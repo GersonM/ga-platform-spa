@@ -18,7 +18,7 @@ dayjs.locale('es');
 
 const token = Cookies.get('session_token');
 const isDevMode = window.location.hostname.includes('localhost') || window.location.hostname.includes('192.168');
-let tenantID = isDevMode ? 'country' : window.location.hostname.split('.')[0];
+let tenantID = isDevMode ? 'villa' : window.location.hostname.split('.')[0];
 
 if (window.location.hostname.includes('countryclublavilla.pe')) {
   tenantID = 'country-moquegua';

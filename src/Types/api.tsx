@@ -162,10 +162,18 @@ export type Token = {
 
 export type User = {
   uuid: number;
-  //email: string;
+  /**
+   * email is not been used anymore, use profile email instead
+   * @deprecated
+   */
+  email: string;
   profile: Profile;
   roles?: Role[];
-  //name: string;
+  /**
+   * name will be removed, use profile name instead
+   * @deprecated
+   */
+  name: string;
   disabled_at?: string;
   email_verified_at?: string;
   token: string;
@@ -184,7 +192,7 @@ export type SessionUser = {
 
 export type FileActivity = {
   uuid: number;
-  user: User;
+  user?: User;
   comment: string;
   attachments: ApiFile[];
   requested_at?: string;
@@ -360,6 +368,23 @@ export type InvoicePayment = {
   updated_at: string;
   uuid: string;
   voucher_code: string;
+  method?: PaymentMethod;
+  invoice?: Invoice;
+};
+
+export type PaymentMethod = {
+  uuid: string;
+  created_at: string;
+  cvv: string;
+  expire_date: string;
+  profile?: Profile;
+  is_active: boolean;
+  is_default: boolean;
+  issuer: string;
+  name: string;
+  number: number;
+  type: string;
+  updated_at: string;
 };
 
 export type Invoice = {
@@ -479,16 +504,24 @@ export type TaxonomyDefinition = {
   code: string;
   cover?: ApiFile;
   description?: string;
-  items: any[];
+  items: TaxonomyDefinitionItem[];
   order: number;
   parent?: TaxonomyDefinition;
   children?: TaxonomyDefinition[];
+};
+
+export type TaxonomyDefinitionItem = {
+  uuid: string;
+  entity: any;
+  order: number;
+  type: string;
 };
 
 export type Course = {
   uuid: string;
   benefits?: string;
   category: string;
+  taxonomy?: TaxonomyDefinition;
   created_at: string;
   description: string;
   duration?: number;
@@ -506,6 +539,7 @@ export type Course = {
 export type CourseModule = {
   uuid: string;
   name: string;
+  order: number;
   description?: string;
   sessions?: ModuleSession[];
 };
@@ -514,6 +548,29 @@ export type ModuleSession = {
   uuid: string;
   title: string;
   file: ApiFile;
+};
+
+export type LMSEvaluation = {
+  uuid: string;
+  name: string;
+  description: string;
+  questions: LMSQuestion[];
+};
+
+export type LMSQuestion = {
+  uuid: string;
+  statement: string;
+  grade: number;
+  order: number;
+  answers?: LMSQuestionAnswer[];
+};
+
+export type LMSQuestionAnswer = {
+  uuid: string;
+  statement: string;
+  caption?: string;
+  is_correct: boolean;
+  order: number;
 };
 
 export type ChatRoom = {

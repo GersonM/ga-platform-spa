@@ -43,28 +43,31 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
 
   const columns = [
     {
-      title: 'ID',
+      title: 'Voucher',
       dataIndex: 'voucher_code',
-      render: (code: string) => <div>{code}</div>,
     },
     {
       title: 'Monto',
       dataIndex: 'amount_string',
     },
     {
-      title: 'Información',
+      title: 'Transacción',
       dataIndex: 'transaction_info',
       render: (info: string) => {
         if (info) {
-          const data = JSON.parse(info);
-          const startTimeMillis = dayjs(parseInt(data.startTimeMillis));
-          const expiryTimeMillis = dayjs(parseInt(data.expiryTimeMillis));
-          return (
-            <div>
-                Inicio: {startTimeMillis.format('DD-MM-YYYY HH:mm a')} <br/>
-                Fin: {expiryTimeMillis.format('DD-MM-YYYY HH:mm a')} <br/>
-            </div>
-          );
+          try {
+            const data = JSON.parse(info);
+            const startTimeMillis = dayjs(parseInt(data.startTimeMillis));
+            const expiryTimeMillis = dayjs(parseInt(data.expiryTimeMillis));
+            return (
+              <div>
+                Inicio: {startTimeMillis.format('DD-MM-YYYY HH:mm a')} <br />
+                Fin: {expiryTimeMillis.format('DD-MM-YYYY HH:mm a')} <br />
+              </div>
+            );
+          } catch (err) {
+            return info;
+          }
         } else {
           return <small>No additional data</small>;
         }
@@ -75,15 +78,19 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
       dataIndex: 'transaction_info',
       render: (info: string) => {
         if (info) {
-          const data = JSON.parse(info);
-          const startTimeMillis = dayjs(parseInt(data.startTimeMillis));
-          const expiryTimeMillis = dayjs(parseInt(data.expiryTimeMillis));
-          return (
-                  <div>
-                    Precio: {data.priceAmountMicros/1000000} {data.priceCurrencyCode} <br />
-                    Vence: {expiryTimeMillis.from(startTimeMillis)}
-                  </div>
-          );
+          try {
+            const data = JSON.parse(info);
+            const startTimeMillis = dayjs(parseInt(data.startTimeMillis));
+            const expiryTimeMillis = dayjs(parseInt(data.expiryTimeMillis));
+            return (
+              <div>
+                Precio: {data.priceAmountMicros / 1000000} {data.priceCurrencyCode} <br />
+                Vence: {expiryTimeMillis.from(startTimeMillis)}
+              </div>
+            );
+          } catch (e) {
+            return info;
+          }
         } else {
           return <small>No additional data</small>;
         }
@@ -103,7 +110,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
     {
       title: 'Creado',
       dataIndex: 'created_at',
-      render: (date: string) => dayjs(date).format('DD-MM-YYYY HH:mm:ss'),
+      render: (date: string) => dayjs(date).format('DD/MM/YYYY HH:mm:ss'),
     },
   ];
 

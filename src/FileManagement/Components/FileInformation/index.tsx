@@ -183,7 +183,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                     <div key={a.uuid} className={`activity ${a.action}`}>
                       <span className={'message'}>{a.comment}</span>
                       <small>
-                        {a.action} por {a.user.profile?.name}
+                        {a.action} por {a.user?.profile?.name}
                       </small>
                       <span className={'date'}>{dayjs(a.created_at).format(' D/MM/YYYY [a las] H:mm')}</span>
                     </div>

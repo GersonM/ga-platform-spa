@@ -65,7 +65,7 @@ const SearchProfile = ({style, value, filter_type, exclude_type, mode, ...props}
           {option.label}
           <br />
           <small>
-            {option.data.entity.doc_type}: {option.data.entity.doc_number} - {option.data.entity.email}
+            {option.data.doc_number}: {option.data?.doc_number} - {option.data.email}
           </small>
         </div>
       )}
