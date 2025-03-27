@@ -70,7 +70,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
     {
       title: 'Creado',
       dataIndex: 'issued_on',
-      render: (date: string) => <>{dayjs(date).format('DD/MM/YYYY')}</>,
+      render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
     },
     {
       title: 'Estado',

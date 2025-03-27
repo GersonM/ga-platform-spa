@@ -23,7 +23,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       title: 'Descripción',
       dataIndex: 'method',
       width: 110,
-      render: (method: any) => method.number,
+      render: (method?: any) => method?.number,
     },
     {
       title: 'Monto',
