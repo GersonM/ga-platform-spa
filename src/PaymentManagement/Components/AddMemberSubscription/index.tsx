@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Form, Select} from 'antd';
+import {Form} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {Subscription} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import FamilyRelationSelector from '../../../CommonUI/FamilyRelationSelector';
 
 interface AddMemberSubscriptionProps {
   subscription: Subscription;
@@ -40,29 +41,7 @@ const AddMemberSubscription = ({subscription, onComplete}: AddMemberSubscription
           <ProfileSelector onChange={checkSubscriptions} />
         </Form.Item>
         <Form.Item label={'Parentesco'} name={'relation'}>
-          <Select
-            showSearch
-            options={[
-              {label: 'Hijo', value: 'HIJO'},
-              {label: 'Hija', value: 'HIJA'},
-              {label: 'Tía', value: 'TIA'},
-              {label: 'Sobrino', value: 'SOBRINO'},
-              {label: 'Cónyuge', value: 'CÓNYUGE'},
-              {label: 'Hermano', value: 'HERMANO'},
-              {label: 'Papá', value: 'PAPÁ'},
-              {label: 'Mamá', value: 'MAMÁ'},
-              {label: 'Nieto', value: 'NIETO'},
-              {label: 'Nieta', value: 'NIETA'},
-              {label: 'Yerno', value: 'YERNO'},
-              {label: 'Nuera', value: 'NUERA'},
-              {label: 'Cuñado', value: 'CUÑADO'},
-              {label: 'Suegro', value: 'SUEGRO'},
-              {label: 'Suegra', value: 'SUEGRA'},
-              {label: 'Primo', value: 'PRIMO'},
-              {label: 'Prima', value: 'PRIMA'},
-              {label: 'Otro', value: 'OTRO'},
-            ]}
-          />
+          <FamilyRelationSelector />
         </Form.Item>
         <PrimaryButton loading={loading} htmlType={'submit'} label={'Enviar'} block />
       </Form>

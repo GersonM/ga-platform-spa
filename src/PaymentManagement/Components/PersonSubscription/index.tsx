@@ -8,6 +8,7 @@ import {
   PiIdentificationCard,
   PiPencilSimple,
   PiPlus,
+  PiPlusBold,
   PiProhibitBold,
   PiThumbsUp,
   PiTicket,
@@ -32,6 +33,7 @@ import AddMemberSubscription from '../AddMemberSubscription';
 
 import './styles.less';
 import SubscriptionForm from '../../../ClubManagement/Components/SubscriptionForm';
+import FamilyRelationSelector from '../../../CommonUI/FamilyRelationSelector';
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -129,7 +131,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
     {
       title: 'Documento',
       dataIndex: 'profile',
-      width: 200,
+      width: 110,
       render: (profile: Profile) => <ProfileDocument profile={profile} />,
     },
     {
@@ -141,6 +143,33 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       title: 'Relación',
       align: 'center',
       dataIndex: 'relation_type',
+      render: (relation: string, member: SubscriptionMember) => {
+        return relation === 'SOCIO' ? (
+          'Socio titular'
+        ) : (
+          <FamilyRelationSelector
+            value={relation}
+            style={{width: 100}}
+            size="small"
+            onChange={(value: string) => {
+              console.log(value);
+              setLoading(true);
+              axios
+                .put(`subscriptions/members/${member.uuid}`, {
+                  relation_type: value,
+                })
+                .then(response => {
+                  setLoading(false);
+                  console.log(response);
+                  setReload(!reload);
+                })
+                .catch(erro => {
+                  setLoading(false);
+                });
+            }}
+          />
+        );
+      },
     },
     {
       title: 'Acciones',
@@ -287,7 +316,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 size={'small'}
                 extra={
                   <PrimaryButton
-                    icon={<PiPlus size={18} />}
+                    icon={<PiPlusBold size={13} />}
                     label={'Agregar miembro'}
                     onClick={() => {
                       setOpenAddMember(true);
@@ -332,7 +361,6 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       </Modal>
       <Modal
         destroyOnClose
-        title={'Agregar miembro'}
         footer={false}
         open={openEditSubscription}
         onCancel={() => {

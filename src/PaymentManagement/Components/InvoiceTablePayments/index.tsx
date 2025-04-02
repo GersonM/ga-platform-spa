@@ -70,7 +70,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       <PrimaryButton
         icon={<PiPlus size={18} />}
         style={{marginTop: '10px'}}
-        label={'Registrar nuevo pago'}
+        label={'Registrar pago'}
         block
         ghost
         onClick={() => setOpenInvoiceForm(true)}
