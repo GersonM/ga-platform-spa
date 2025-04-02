@@ -5,6 +5,7 @@ import {useDebounce} from '@uidotdev/usehooks';
 
 import {Profile} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
+import ProfileDocument from '../ProfileTools/ProfileDocument';
 
 interface SearchProfileProps {
   style?: React.CSSProperties;
@@ -21,7 +22,7 @@ const SearchProfile = ({style, value, filter_type, exclude_type, mode, ...props}
   const [loading, setLoading] = useState(false);
   const [searchProfile, setSearchProfile] = useState<string>();
   const lastSearchText = useDebounce(searchProfile, 400);
-  const [profiles, setProfiles] = useState<Profile[]>();
+  const [profiles, setProfiles] = useState<any[]>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -60,15 +61,17 @@ const SearchProfile = ({style, value, filter_type, exclude_type, mode, ...props}
       showSearch
       options={profiles}
       placeholder="Buscar una persona"
-      optionRender={option => (
-        <div>
-          {option.label}
-          <br />
-          <small>
-            {option.data.doc_number}: {option.data?.doc_number} - {option.data.email}
-          </small>
-        </div>
-      )}
+      optionRender={(option: any) => {
+        return (
+          <div>
+            {option?.label}
+            <br />
+            <small>
+              <ProfileDocument profile={option.data.entity} />| {option.data.entity.email}
+            </small>
+          </div>
+        );
+      }}
       onSearch={value => {
         setSearchProfile(value);
       }}

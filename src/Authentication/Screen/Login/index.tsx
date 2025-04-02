@@ -3,10 +3,10 @@ import {Button, Divider, Form, Input, Modal} from 'antd';
 import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
-import {LockClosedIcon} from '@heroicons/react/24/solid';
+import {AtSymbolIcon} from '@heroicons/react/24/solid';
 
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import './styles.less';
+import {KeyIcon} from '@heroicons/react/24/outline';
+import {ChevronRightIcon} from '@heroicons/react/16/solid';
 
 //const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY_PUBLIC);
 
@@ -59,13 +59,27 @@ const Login = () => {
       <h2>Iniciar sesión</h2>
       <br />
       <Form onFinish={login}>
-        <Form.Item name={'email'}>
-          <Input variant={'filled'} placeholder={'E-mail'} inputMode={'email'} />
-        </Form.Item>
-        <Form.Item name={'password'}>
-          <Input.Password variant={'filled'} placeholder={'Contraseña'} />
-        </Form.Item>
-        <PrimaryButton block icon={<LockClosedIcon />} label={'Ingresar'} loading={loading} htmlType={'submit'} />
+        <div className={'input-large'}>
+          <div className="icon">
+            <AtSymbolIcon width={20} />
+          </div>
+          <Form.Item name={'email'} noStyle>
+            <Input size={'large'} variant={'borderless'} placeholder={'E-mail'} inputMode={'email'} />
+          </Form.Item>
+        </div>
+        <div className={'input-large'}>
+          <div className="icon">
+            <KeyIcon width={20} />
+          </div>
+          <Form.Item name={'password'} noStyle>
+            <Input.Password size={'large'} variant={'borderless'} placeholder={'Contraseña'} />
+          </Form.Item>
+        </div>
+        <p style={{textAlign: 'right'}}>
+          <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
+            Ingresar <ChevronRightIcon style={{marginTop: 1}} />
+          </Button>
+        </p>
       </Form>
       <Divider />
       <NavLink to={'/auth/recover'}>

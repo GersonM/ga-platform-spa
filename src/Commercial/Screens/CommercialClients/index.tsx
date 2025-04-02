@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
+import {Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {useNavigate} from 'react-router-dom';
@@ -17,6 +17,7 @@ import FilterForm from '../../../CommonUI/FilterForm';
 import {Client, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import './styles.less';
+import CreateContractForm from '../../Components/CreateContractForm';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -34,6 +35,7 @@ const CommercialClients = () => {
   const lastSearchText = useDebounce(searchText, 300);
   const lastSearchBlock = useDebounce(blockFilter, 300);
   const [downloading, setDownloading] = useState(false);
+  const [openContractForm, setOpenContractForm] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -202,6 +204,7 @@ const CommercialClients = () => {
           </>
         }
         title={'Clientes'}
+        onAdd={() => setOpenContractForm(true)}
         onRefresh={() => setReload(!reload)}>
         <FilterForm
           onInitialValues={values => {
@@ -276,6 +279,14 @@ const CommercialClients = () => {
           pageSize={pagination.per_page}
         />
       )}
+      <Modal
+        destroyOnClose
+        width={800}
+        open={openContractForm}
+        onCancel={() => setOpenContractForm(false)}
+        footer={false}>
+        <CreateContractForm />
+      </Modal>
     </ModuleContent>
   );
 };

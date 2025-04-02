@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Col, DatePicker, Divider, Form, Input, InputNumber, Row, Select} from 'antd';
 import axios from 'axios';
 
@@ -8,6 +8,9 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AlertMessage from '../../../CommonUI/AlertMessage';
 import {Plan, Subscription} from '../../../Types/api';
 import SubscriptionPlanSelector from '../SubscriptionPlanSelector';
+import dayjs from 'dayjs';
+import {useForm} from 'antd/lib/form/Form';
+import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 
 interface SubscriptionFormProps {
   onComplete?: () => void;
@@ -16,10 +19,34 @@ interface SubscriptionFormProps {
 
 const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => {
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
+  const [selectedSubscription, setSelectedSubscription] = useState<any>();
+  const [form] = useForm();
+
+  useEffect(() => {
+    form.resetFields();
+  }, [selectedSubscription]);
+
+  useEffect(() => {
+    console.log(subscription);
+    if (subscription) {
+      setSelectedSubscription({
+        ...subscription,
+        fk_profile_uuid: subscription.members.find(m => m.relation_type == 'SOCIO')?.profile.uuid,
+        fk_plan_uuid: subscription.plan.uuid,
+        amount: subscription.amount / 100,
+        started_at: dayjs(subscription.started_at),
+      });
+      setSelectedPlan(subscription.plan);
+    }
+  }, [subscription]);
 
   const submitForm = (values: any) => {
     axios
-      .post('subscriptions', values)
+      .request({
+        url: subscription ? `subscriptions/${subscription.uuid}` : 'subscriptions',
+        method: subscription ? 'PUT' : 'POST',
+        data: values,
+      })
       .then(res => {
         onComplete && onComplete();
       })
@@ -33,7 +60,7 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
   return (
     <div>
       <h2>Crear subscripción</h2>
-      <Form onFinish={submitForm} layout="vertical" initialValues={subscription}>
+      <Form form={form} onFinish={submitForm} layout="vertical" initialValues={selectedSubscription}>
         <Row gutter={[20, 20]}>
           <Col xs={8}>
             <Form.Item label={'Código de socio'} name={'code'} rules={[{required: true}]}>
@@ -49,6 +76,11 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         <Form.Item name={'fk_profile_uuid'} label={'Socio titular'} rules={[{required: true}]}>
           <ProfileSelector />
         </Form.Item>
+        {subscription && (
+          <div>
+            <ProfileChip profile={subscription.members.find(m => m.relation_type == 'SOCIO')?.profile} />
+          </div>
+        )}
         <Divider>Subscripción</Divider>
         <Form.Item label={'Plan'} name={'fk_plan_uuid'}>
           <SubscriptionPlanSelector
@@ -63,8 +95,8 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
           <Input.TextArea />
         </Form.Item>
-        <AlertMessage message={'El núcleo familiar se podrá agregar posteriormente'} type={'info'} />
-        <PrimaryButton label={'Crear'} htmlType={'submit'} block />
+        {!subscription && <AlertMessage message={'El núcleo familiar se podrá agregar posteriormente'} type={'info'} />}
+        <PrimaryButton label={'Guardar'} htmlType={'submit'} block />
       </Form>
     </div>
   );

@@ -31,6 +31,7 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AddMemberSubscription from '../AddMemberSubscription';
 
 import './styles.less';
+import SubscriptionForm from '../../../ClubManagement/Components/SubscriptionForm';
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -47,6 +48,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription>();
   const [openAddMember, setOpenAddMember] = useState(false);
+  const [openEditSubscription, setOpenEditSubscription] = useState(false);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -207,7 +209,8 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         <div key={subscription.uuid}>
           <ContentHeader
             onEdit={() => {
-              console.log('asdadf');
+              setOpenEditSubscription(true);
+              setSelectedSubscription(subscription);
             }}
             onRefresh={() => setReload(!reload)}
             title={subscription.plan.name}
@@ -320,6 +323,25 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
           <AddMemberSubscription
             onComplete={() => {
               setOpenAddMember(false);
+              setSelectedSubscription(undefined);
+              setReload(!reload);
+            }}
+            subscription={selectedSubscription}
+          />
+        )}
+      </Modal>
+      <Modal
+        destroyOnClose
+        title={'Agregar miembro'}
+        footer={false}
+        open={openEditSubscription}
+        onCancel={() => {
+          setOpenEditSubscription(false);
+        }}>
+        {selectedSubscription && (
+          <SubscriptionForm
+            onComplete={() => {
+              setOpenEditSubscription(false);
               setSelectedSubscription(undefined);
               setReload(!reload);
             }}

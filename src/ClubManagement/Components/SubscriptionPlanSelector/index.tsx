@@ -19,7 +19,7 @@ const SubscriptionPlanSelector = ({...props}) => {
       .then(response => {
         if (response) {
           setPlans(
-            response.data.map((item: Plan) => {
+            response?.data.map((item: Plan) => {
               return {
                 value: item.uuid,
                 entity: item,
@@ -45,7 +45,10 @@ const SubscriptionPlanSelector = ({...props}) => {
   return (
     <Select
       labelRender={label => {
-        const p = plans.find((p: any) => p.value === label.value);
+        const p = plans?.find((p: any) => p.value === label.value);
+        if (!p) {
+          return '';
+        }
         return (
           <div>
             <div

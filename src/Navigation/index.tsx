@@ -201,7 +201,7 @@ const Navigation = () => {
 
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
             {user?.roles?.includes('admin') && (
-              <NavItem label={'Seguridad'} icon={<PiFingerprint />} path={'/accounts'} />
+              <NavItem label={'Personas'} icon={<PiFingerprint />} path={'/accounts'} />
             )}
             {config?.modules.includes('lms') && (
               <NavItem label={'LMS'} icon={<PiGraduationCap />}>
