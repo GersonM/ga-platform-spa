@@ -1,9 +1,10 @@
 <?php
 $tenantNames = array(
-    'platform.fbgroup.pe' => 'FB Group',
-    'fireworks.geekadvice.pe' => 'Fireworks',
-    'villa-primavera.geekadvice.pe' => 'Villa Primavera',
-    'localhost:5173' => 'Villa Primavera',
+        'platform.fbgroup.pe' => 'FB Group',
+        'fireworks.geekadvice.pe' => 'Fireworks',
+        'villa-primavera.geekadvice.pe' => 'Villa Primavera',
+        'localhost:5173' => 'Villa Primavera',
+        'country-club.geekadvice.pe' => 'Country Club La Villa',
 );
 $host = $_SERVER['HTTP_HOST'];
 $dir = scandir('./assets');
@@ -12,37 +13,7 @@ $title = 'Geek Advice';
 $jsFile = '';
 $cssFile = '';
 
-if(isset($tenantNames[$host])) {
-  $title = $tenantNames[$host];
-}
+$indexHtml = file_get_contents('index.html');
+str_replace('<title>Geek Advice</title>', '<title>' . $title . '</title>', $indexHtml);
+echo $indexHtml;
 
-foreach ($dir as $filename) {
-  if (str_contains($filename, 'index')) {
-    if (str_contains($filename, 'css')) {
-      $cssFile = $filename;
-    }
-    if (str_contains($filename, 'js')) {
-      $jsFile = $filename;
-    }
-  }
-}
-
-?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8"/>
-  <link rel="icon" type="image/png" href="/assets/logo_square-0cukfj_4.png"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?php echo $title ?></title>
-  <script type="module" crossorigin src="/assets/<?php echo $jsFile; ?>"></script>
-  <link rel="stylesheet" crossorigin href="/assets/<?php echo $cssFile ?>">
-</head>
-<body>
-<div id="root"></div>
-</body>
-</html>
