@@ -16,4 +16,3 @@ $cssFile = '';
 $indexHtml = file_get_contents('index.html');
 str_replace('<title>Geek Advice</title>', '<title>' . $title . '</title>', $indexHtml);
 echo $indexHtml;
-

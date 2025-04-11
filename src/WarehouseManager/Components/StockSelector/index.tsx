@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
+import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
 import {Select} from 'antd';
 
-import {Campaign} from '../../../Types/api';
+import {StorageStock} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {useDebounce} from '@uidotdev/usehooks';
 import MoneyString from '../../../CommonUI/MoneyString';
 
 interface ProductSelectorProps {
@@ -19,8 +19,8 @@ interface ProductSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProductSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorProps) => {
-  const [campaign, setCampaign] = useState<any[]>([]);
+const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorProps) => {
+  const [stock, setStock] = useState<StorageStock[]>([]);
   const [loading, setLoading] = useState(false);
   const [stockSearch, setStockSearch] = useState<string>();
   const lastSearchText = useDebounce(stockSearch, 400);
@@ -38,7 +38,7 @@ const ProductSelector = ({placeholder, mode, refresh, ...props}: ProductSelector
       .then(response => {
         setLoading(false);
         if (response) {
-          setCampaign(
+          setStock(
             response.data.data.map((item: any) => {
               return {
                 value: item.uuid,
@@ -69,11 +69,11 @@ const ProductSelector = ({placeholder, mode, refresh, ...props}: ProductSelector
       showSearch={true}
       filterOption={false}
       loading={loading}
-      options={campaign}
+      options={stock}
       mode={mode || undefined}
       onSearch={value => setStockSearch(value)}
     />
   );
 };
 
-export default ProductSelector;
+export default StockSelector;

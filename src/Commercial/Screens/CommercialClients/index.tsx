@@ -285,7 +285,7 @@ const CommercialClients = () => {
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
         footer={false}>
-        <CreateContractForm />
+        <CreateContractForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)} />
       </Modal>
     </ModuleContent>
   );

@@ -17,6 +17,7 @@ import ContractDetails from '../../Components/ContractDetails';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContractProvideForm from '../../Components/ContractProvideForm';
+import StockViewerState from '../../Components/StockViewerState';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -118,6 +119,11 @@ const CommercialContractDetail = () => {
         </Col>
         <Col xs={24} lg={6}>
           <h3>Detalle del contrato</h3>
+          {contract?.contractable && <StockViewerState stock={contract.contractable} />}
+          <p>
+            <strong>Observaciones: </strong> <br />
+            {contract?.observations}
+          </p>
           {contract && <ContractDetails contract={contract} />}
         </Col>
         <Col xs={24} lg={10}>

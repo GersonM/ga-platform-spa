@@ -97,6 +97,7 @@ export type Contract = {
   signed_at?: string;
   terminated_at?: string;
   updated_at?: string;
+  contractable?: any;
   invoices?: Invoice[];
   items?: ContractItem[];
 };
@@ -598,4 +599,31 @@ export type EntityActivity = {
   profile?: Profile;
   type: string;
   uuid: string;
+};
+
+export type StorageProduct = {
+  uuid: string;
+  brand: string;
+  code: string;
+  created_at: string;
+  description: string;
+  manufacturer: string;
+  metadata?: any;
+  model?: string;
+  name: string;
+  updated_at: string;
+};
+export type StorageStock = {
+  uuid: string;
+  cost_price?: number;
+  created_at: string;
+  fk_product_uuid: string;
+  fk_warehouse_uuid: string;
+  metadata?: any;
+  observations?: string;
+  sale_price: number;
+  sku: string;
+  status: string;
+  updated_at: string;
+  product?: StorageProduct;
 };

@@ -1,76 +1,128 @@
-import React, {useContext} from 'react';
-import {Col, Form, Input, Row} from 'antd';
+import React, {useContext, useEffect, useState} from 'react';
+import {Col, Descriptions, DescriptionsProps, Divider, Empty, Form, Input, InputNumber, Row, Select} from 'antd';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
-import ProductSelector from '../../../WarehouseManager/Components/ProductSelector';
+import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {Contract, StorageStock} from '../../../Types/api';
+import MoneyString from '../../../CommonUI/MoneyString';
+import {useNavigate} from 'react-router-dom';
+import StockViewerState from '../StockViewerState';
+import EmptyMessage from '../../../CommonUI/EmptyMessage';
 
-const CreateContractForm = () => {
+interface CreateContractFormProps {
+  onComplete?: (data: Contract) => void;
+}
+
+const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
   const {user} = useContext(AuthContext);
+  const [selectedStock, setSelectedStock] = useState<StorageStock>();
+  const [loading, setLoading] = useState(false);
+  const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
+
+  useEffect(() => {
+    if (!selectedStockUUID) {
+      return;
+    }
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+    };
+
+    setLoading(true);
+
+    axios
+      .get(`warehouses/stock/${selectedStockUUID}`, config)
+      .then(response => {
+        if (response) {
+          setSelectedStock(response.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [selectedStockUUID]);
 
   const submitForm = (data: any) => {
+    setLoading(true);
     axios
       .post('commercial/contracts', data)
       .then(response => {
-        console.log(response);
+        setLoading(false);
+        onComplete && onComplete(response.data);
       })
       .catch(error => {
+        setLoading(false);
         ErrorHandler.showNotification(error);
       });
   };
+
   return (
     <div>
-      <h2>Registrar nuevo contrato</h2>
+      <h2>Registrar nueva venta</h2>
       <Form layout="vertical" onFinish={submitForm}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
-            <Form.Item label={'Lote'} name={'fk_product_uuid'}>
-              <ProductSelector />
+            <Form.Item label={'Lote'} name={'fk_stock_uuid'}>
+              <StockSelector onChange={uuid => setSelectedStockUUID(uuid)} />
             </Form.Item>
             <Form.Item label={'Cliente'} name={'fk_profile_uuid'}>
               <ProfileSelector />
             </Form.Item>
-            <Form.Item label={'Observaciones'}>
+            <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
+              <Select
+                showSearch
+                placeholder={'Seleccione modalidad'}
+                options={[
+                  {value: '0', label: 'Ninguno'},
+                  {value: 'Techo Propio', label: 'Techo Propio'},
+                  {value: 'Terreno', label: 'Terreno'},
+                  {value: 'Mi Vivienda', label: 'Mi Vivienda'},
+                  {value: 'Contado', label: 'Contado'},
+                  {value: 'PROREVI', label: 'PROREVI'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
+              <Select
+                showSearch
+                placeholder={'Seleccione modalidad'}
+                options={[
+                  {value: 'first_30', label: 'Inicial de 30%'},
+                  {value: '1_pago', label: '1 Solo pago'},
+                  {value: '0', label: 'Ninguno'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label={'Precio'}>
+              <MoneyString value={selectedStock?.sale_price} />
+            </Form.Item>
+            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea />
             </Form.Item>
-            <PrimaryButton block htmlType={'submit'} label={'Registrar contrato'} />
+            <PrimaryButton loading={loading} block htmlType={'submit'} label={'Registrar contrato'} />
           </Col>
           <Col span={12}>
             <h3 style={{fontWeight: 'bold'}}>Información adicional</h3>
-            <p>
-              <strong>Etapa: </strong>
-              <span>IV-A</span>
-            </p>
-            <p>
-              <strong>Modalidad:</strong>
-              <span>Terreno</span>
-            </p>
-            <p>
-              <strong>Manzana: </strong>
-              <span>P2</span>
-            </p>
-            <p>
-              <strong>Área del terreno:</strong>
-              <span>90</span>
-            </p>
-            <p>
-              <strong>Área módulo:</strong>
-              <span>TERRENO</span>
-            </p>
-            <p>
-              <strong>Lote: </strong>
-              <span>39</span>
-            </p>
-            <p>
-              <strong>Número de habitaciones:</strong>
-              <span>2</span>
-            </p>
-            <p>
-              <strong>Dimensiones del terreno:</strong>
-              <span>front:6, left:15, right:15, back:6</span>
-            </p>
+            {selectedStock ? (
+              <>
+                <StockViewerState stock={selectedStock} />
+                <Divider />
+                <p>
+                  <strong>Precio de venta: </strong>
+                  <span>
+                    <MoneyString value={selectedStock?.sale_price} />
+                  </span>
+                </p>
+              </>
+            ) : (
+              <EmptyMessage message={'Elige un lote para ver los detalles'} />
+            )}
             <p>
               <strong>Vendedor: </strong>
               <span>

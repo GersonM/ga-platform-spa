@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Card, Col, Divider, Progress, Row, Select, Space} from 'antd';
+import {Card, Col, Divider, Empty, Progress, Row, Select, Space} from 'antd';
 import {AxisOptions, Chart} from 'react-charts';
 import axios from 'axios';
 
@@ -199,37 +199,43 @@ const CommercialDashboard = () => {
 
       <Divider />
       <h1>Entregas</h1>
-      <Row gutter={[20, 20]}>
-        <Col md={24}>
-          <h3>Entregas por día</h3>
-          <div style={{height: 250}}>
-            <Chart
-              options={{
-                data,
-                primaryAxis: primaryAxisDate,
-                secondaryAxes: secondaryAxesDate,
-              }}
-            />
-          </div>
-        </Col>
-      </Row>
-      <Row gutter={[20, 20]}>
-        <Col md={12}>
-          <br />
-          <br />
-          <h3>Entregas por modalidad y etapa</h3>
-          <div style={{height: 250}}>
-            <Chart
-              options={{
-                data: commercialStats.provisioning.groups,
-                primaryAxis,
-                secondaryAxes,
-              }}
-            />
-          </div>
-        </Col>
-        <Col md={12}></Col>
-      </Row>
+      {commercialStats.provisioning.dates.length > 0 ? (
+        <>
+          <Row gutter={[20, 20]}>
+            <Col md={24}>
+              <h3>Entregas por día</h3>
+              <div style={{height: 250}}>
+                <Chart
+                  options={{
+                    data,
+                    primaryAxis: primaryAxisDate,
+                    secondaryAxes: secondaryAxesDate,
+                  }}
+                />
+              </div>
+            </Col>
+          </Row>
+          <Row gutter={[20, 20]}>
+            <Col md={12}>
+              <br />
+              <br />
+              <h3>Entregas por modalidad y etapa</h3>
+              <div style={{height: 250}}>
+                <Chart
+                  options={{
+                    data: commercialStats.provisioning.groups,
+                    primaryAxis,
+                    secondaryAxes,
+                  }}
+                />
+              </div>
+            </Col>
+            <Col md={12}></Col>
+          </Row>
+        </>
+      ) : (
+        <Empty />
+      )}
     </ModuleContent>
   );
 };
