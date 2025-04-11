@@ -1,9 +1,10 @@
-import React, {useContext} from 'react';
+import React, {Suspense, useContext} from 'react';
 import {Outlet} from 'react-router-dom';
 
 import logo from './../Assets/logo_full.png';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
+import LoadingIndicator from '../CommonUI/LoadingIndicator';
 import './GuestLayout.less';
 
 //const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY_PUBLIC);
@@ -18,7 +19,9 @@ const GuestLayout = () => {
       <div className="login-block zoom-in">
         <div className="form-block">
           <img src={tenantLogo ? tenantLogo : logo} alt="Logo" className={'logo'} />
-          <Outlet />
+          <Suspense fallback={<LoadingIndicator />}>
+            <Outlet />
+          </Suspense>
           <span className={'version-info'}>Geek Advice v{Package.version}</span>
         </div>
       </div>

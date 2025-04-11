@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Divider, Form, Input} from 'antd';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {LockClosedIcon} from '@heroicons/react/24/solid';
+import {AtSymbolIcon} from '@heroicons/react/24/solid';
 import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {AxiosRequestConfig} from 'axios';
+import {ChevronRightIcon} from '@heroicons/react/16/solid';
 import Cookies from 'js-cookie';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 const PasswordRecovery = () => {
@@ -38,10 +39,17 @@ const PasswordRecovery = () => {
       <p>Ingresa el correo con el que inicias sesión</p>
       <br />
       <Form onFinish={recover}>
-        <Form.Item name={'email'}>
-          <Input variant={'filled'} placeholder={'E-mail'} inputMode={'email'} />
-        </Form.Item>
-        <PrimaryButton block icon={<LockClosedIcon />} label={'Ingresar'} loading={loading} htmlType={'submit'} />
+        <div className={'input-large'}>
+          <div className="icon">
+            <AtSymbolIcon width={17} />
+          </div>
+          <Form.Item name={'email'} noStyle rules={[{required: true}]}>
+            <Input size={'large'} variant={'borderless'} placeholder={'E-mail'} inputMode={'email'} />
+          </Form.Item>
+        </div>
+        <Button shape={'round'} block loading={loading} htmlType={'submit'} type="primary">
+          Enviar <ChevronRightIcon style={{marginTop: 1}} />
+        </Button>
       </Form>
       <Divider />
       <NavLink to={'/auth/login'}>

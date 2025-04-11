@@ -1,7 +1,8 @@
-import React, {useContext} from 'react';
+import React, {Suspense, useContext} from 'react';
 import {Outlet} from 'react-router-dom';
 import Navigation from '../Navigation';
 import AuthContext from '../Context/AuthContext';
+import LoadingIndicator from '../CommonUI/LoadingIndicator';
 
 const AuthenticatedLayout = () => {
   const {user, sessionToken} = useContext(AuthContext);
@@ -17,7 +18,9 @@ const AuthenticatedLayout = () => {
     <>
       <Navigation />
       <div className="app-content">
-        <Outlet />
+        <Suspense fallback={<LoadingIndicator />}>
+          <Outlet />
+        </Suspense>
       </div>
     </>
   );

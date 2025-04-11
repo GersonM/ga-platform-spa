@@ -56,12 +56,12 @@ const Login = () => {
 
   return (
     <>
-      <h2>Iniciar sesión</h2>
+      <br />
       <br />
       <Form onFinish={login}>
         <div className={'input-large'}>
           <div className="icon">
-            <AtSymbolIcon width={20} />
+            <AtSymbolIcon width={17} />
           </div>
           <Form.Item name={'email'} noStyle>
             <Input size={'large'} variant={'borderless'} placeholder={'E-mail'} inputMode={'email'} />
@@ -69,17 +69,15 @@ const Login = () => {
         </div>
         <div className={'input-large'}>
           <div className="icon">
-            <KeyIcon width={20} />
+            <KeyIcon width={17} />
           </div>
           <Form.Item name={'password'} noStyle>
             <Input.Password size={'large'} variant={'borderless'} placeholder={'Contraseña'} />
           </Form.Item>
         </div>
-        <p style={{textAlign: 'right'}}>
-          <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
-            Ingresar <ChevronRightIcon style={{marginTop: 1}} />
-          </Button>
-        </p>
+        <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
+          Ingresar <ChevronRightIcon style={{marginTop: 1}} />
+        </Button>
       </Form>
       <Divider />
       <NavLink to={'/auth/recover'}>

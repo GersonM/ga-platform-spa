@@ -30,7 +30,7 @@ const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => 
             {content}
           </NavLink>
         ) : (
-          <a href={'#'} onClick={() => setIsOpen(!isOpen)}>
+          <a href={'#'} className={`${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(!isOpen)}>
             {icon}
             {content}
             {children && (

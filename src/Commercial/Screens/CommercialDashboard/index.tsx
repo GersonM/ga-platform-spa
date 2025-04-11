@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Card, Col, Divider, Progress, Row, Select, Space, Tooltip} from 'antd';
+import {Card, Col, Divider, Progress, Row, Select, Space} from 'antd';
 import {AxisOptions, Chart} from 'react-charts';
 import axios from 'axios';
 
@@ -22,14 +22,17 @@ const CommercialDashboard = () => {
       cancelToken: cancelTokenSource.token,
     };
 
+    setLoading(true);
     axios
       .get(`commercial/stats`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           setCommercialStats(response.data);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 

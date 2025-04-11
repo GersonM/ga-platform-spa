@@ -1,11 +1,13 @@
-import React, {useContext, useEffect} from 'react';
+import React, {lazy, useContext, useEffect} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import {Modal} from 'antd';
 import axios from 'axios';
 
 import './App.less';
+import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
+import GuestLayout from './GuestLayout';
 import CompanyContainers from '../FileManagement/Screens/CompanyContainers';
 import DashboardHome from '../Dashboard/Screens/DashboardHome';
 import CommercialClients from '../Commercial/Screens/CommercialClients';
@@ -18,41 +20,41 @@ import Users from '../AccountManagement/Screens/Users';
 import FileDetailViewer from '../FileManagement/Screens/FileDetailViewer';
 import Invoices from '../PaymentManagement/Screens/Invoices';
 import PreferencesManager from '../Preferences/Screens/PreferencesManager';
-import GuestLayout from './GuestLayout';
-import PasswordRecovery from '../Authentication/Screen/PasswordRecovery';
-import VerifyRecovery from '../Authentication/Screen/VerifyRecovery';
-import PermissionsManager from '../Authentication/Screen/PermissionsManager';
-import MoveLayout from '../MoveManagement/Screens/MoveLayout';
-import MoveRoutesManager from '../MoveManagement/Screens/MoveRoutesManager';
-import MoveVehiclesManager from '../MoveManagement/Screens/MoveVehiclesManager';
-import TicketsManager from '../MoveManagement/Screens/TicketsManager';
-import TripReservation from '../MoveManagement/Screens/TripReservation';
-import TaxonomyManager from '../TaxonomyManagement/Screens/TaxonomyManager';
-import HRManagementLayout from '../HRManagement/Screens/HRManagementLayout';
-import TripsSchedule from '../MoveManagement/Screens/TripsSchedule';
-import DocumentGeneratorScreen from '../HRManagement/Screens/DocumentGeneratorScreen';
-import CommercialContractDetail from '../Commercial/Screens/CommercialContractDetail';
-import ReservationsLayout from '../ReservationsManagement/Screens/ReservationsLayout';
-import NewReservation from '../ReservationsManagement/Screens/NewReservation';
-import ReservationsManager from '../ReservationsManagement/Screens/ReservationsManager';
-import CoursesManagement from '../LMSManagement/Screens/CoursesManagement';
-import CommercialIncidents from '../Commercial/Screens/CommercialIncidents';
-import EnrollmentsManagement from '../LMSManagement/Screens/EnrollmentsManagement';
-import CommercialLeads from '../Commercial/Screens/CommercialLeads';
-import CourseDetail from '../LMSManagement/Screens/CourseDetail';
-import MyTasks from '../EntityActivity/Screens/MyTasks';
-import EstatesManager from '../RealEstate/Screens/EstatesManager';
-import RealEstateDashboard from '../RealEstate/Screens/RealEstateDashboard';
-import EstateDetailView from '../RealEstate/Screens/EstateDetailView';
-import CommercialDashboard from '../Commercial/Screens/CommercialDashboard';
-import EstateProvinding from '../RealEstate/Screens/EstateProvinding';
-import AuthContext from '../Context/AuthContext';
-import MyAccount from '../AccountTools/Screens/MyAccount';
-import MembersAccessControl from '../ClubManagement/Screens/MembersAccessControl';
-import ClubMembersManagement from '../ClubManagement/Screens/ClubMembersManagement';
-import ClubSubscriptionViewer from '../ClubManagement/Screens/ClubSubscriptionViewer';
-import FileManagerPreferences from '../FileManagement/Screens/FileManagerPreferences';
-import ImportPayments from '../ClubManagement/Screens/ImportPayments';
+
+const PasswordRecovery = lazy(() => import('../Authentication/Screen/PasswordRecovery'));
+const VerifyRecovery = lazy(() => import('../Authentication/Screen/VerifyRecovery'));
+const PermissionsManager = lazy(() => import('../Authentication/Screen/PermissionsManager'));
+const MoveLayout = lazy(() => import('../MoveManagement/Screens/MoveLayout'));
+const MoveRoutesManager = lazy(() => import('../MoveManagement/Screens/MoveRoutesManager'));
+const MoveVehiclesManager = lazy(() => import('../MoveManagement/Screens/MoveVehiclesManager'));
+const TicketsManager = lazy(() => import('../MoveManagement/Screens/TicketsManager'));
+const TripReservation = lazy(() => import('../MoveManagement/Screens/TripReservation'));
+const TaxonomyManager = lazy(() => import('../TaxonomyManagement/Screens/TaxonomyManager'));
+const HRManagementLayout = lazy(() => import('../HRManagement/Screens/HRManagementLayout'));
+const TripsSchedule = lazy(() => import('../MoveManagement/Screens/TripsSchedule'));
+const DocumentGeneratorScreen = lazy(() => import('../HRManagement/Screens/DocumentGeneratorScreen'));
+const CommercialContractDetail = lazy(() => import('../Commercial/Screens/CommercialContractDetail'));
+const ReservationsLayout = lazy(() => import('../ReservationsManagement/Screens/ReservationsLayout'));
+const NewReservation = lazy(() => import('../ReservationsManagement/Screens/NewReservation'));
+const ReservationsManager = lazy(() => import('../ReservationsManagement/Screens/ReservationsManager'));
+const CoursesManagement = lazy(() => import('../LMSManagement/Screens/CoursesManagement'));
+const CommercialIncidents = lazy(() => import('../Commercial/Screens/CommercialIncidents'));
+const EnrollmentsManagement = lazy(() => import('../LMSManagement/Screens/EnrollmentsManagement'));
+const CommercialLeads = lazy(() => import('../Commercial/Screens/CommercialLeads'));
+const CourseDetail = lazy(() => import('../LMSManagement/Screens/CourseDetail'));
+const MyTasks = lazy(() => import('../EntityActivity/Screens/MyTasks'));
+const EstatesManager = lazy(() => import('../RealEstate/Screens/EstatesManager'));
+const RealEstateDashboard = lazy(() => import('../RealEstate/Screens/RealEstateDashboard'));
+const EstateDetailView = lazy(() => import('../RealEstate/Screens/EstateDetailView'));
+const CommercialDashboard = lazy(() => import('../Commercial/Screens/CommercialDashboard'));
+const EstateProviding = lazy(() => import('../RealEstate/Screens/EstateProviding'));
+const MyAccount = lazy(() => import('../AccountTools/Screens/MyAccount'));
+const MembersAccessControl = lazy(() => import('../ClubManagement/Screens/MembersAccessControl'));
+const ClubMembersManagement = lazy(() => import('../ClubManagement/Screens/ClubMembersManagement'));
+const ClubSubscriptionViewer = lazy(() => import('../ClubManagement/Screens/ClubSubscriptionViewer'));
+const FileManagerPreferences = lazy(() => import('../FileManagement/Screens/FileManagerPreferences'));
+const ImportPayments = lazy(() => import('../ClubManagement/Screens/ImportPayments'));
+const WarehouseProductsManager = lazy(() => import('../WarehouseManager/Screens/WarehouseProductsManager'));
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -161,13 +163,14 @@ const App = () => {
           <Route path={'clients'} element={<CommercialClients />} />
           <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
           <Route path={'payments'} element={<CommercialClients />} />
-          <Route path={'sales'} element={<EstateProvinding />} />
+          <Route path={'sales'} element={<EstateProviding />} />
+          <Route path={'products'} element={<WarehouseProductsManager />} />
         </Route>
         <Route path={'real-estate'}>
           <Route path={'dashboard'} element={<RealEstateDashboard />} />
           <Route path={'estates'} element={<EstatesManager />} />
           <Route path={'estates/:state?'} element={<EstateDetailView />} />
-          <Route path={'providing'} element={<EstateProvinding />} />
+          <Route path={'providing'} element={<EstateProviding />} />
         </Route>
         {user && <Route path={'my-account'} element={<MyAccount />} />}
         <Route
