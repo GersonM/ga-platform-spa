@@ -4,6 +4,8 @@ import {Select} from 'antd';
 
 import {Campaign} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {useDebounce} from '@uidotdev/usehooks';
+import MoneyString from '../../../CommonUI/MoneyString';
 
 interface ProductSelectorProps {
   placeholder?: string;
@@ -18,27 +20,34 @@ interface ProductSelectorProps {
 }
 
 const ProductSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorProps) => {
-  const [campaign, setCampaign] = useState<Campaign | any>([]);
+  const [campaign, setCampaign] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [stockSearch, setStockSearch] = useState<string>();
+  const lastSearchText = useDebounce(stockSearch, 400);
 
   useEffect(() => {
     setLoading(true);
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
+      params: {search: lastSearchText},
     };
 
     axios
-      .get(`warehouse/products`, config)
+      .get(`warehouses/stock`, config)
       .then(response => {
         setLoading(false);
         if (response) {
           setCampaign(
-            response.data.map((item: Campaign) => {
+            response.data.data.map((item: any) => {
               return {
                 value: item.uuid,
                 entity: item,
-                label: `${item.name}`,
+                label: (
+                  <>
+                    {item.sku} - <MoneyString value={item.sale_price} />
+                  </>
+                ),
               };
             }),
           );
@@ -50,7 +59,7 @@ const ProductSelector = ({placeholder, mode, refresh, ...props}: ProductSelector
       });
 
     return cancelTokenSource.cancel;
-  }, [refresh]);
+  }, [refresh, lastSearchText]);
 
   return (
     <Select
@@ -58,10 +67,11 @@ const ProductSelector = ({placeholder, mode, refresh, ...props}: ProductSelector
       allowClear
       placeholder={placeholder || 'Elige una producto'}
       showSearch={true}
-      optionFilterProp={'label'}
+      filterOption={false}
       loading={loading}
       options={campaign}
       mode={mode || undefined}
+      onSearch={value => setStockSearch(value)}
     />
   );
 };
