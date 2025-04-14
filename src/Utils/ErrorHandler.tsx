@@ -84,6 +84,7 @@ class ErrorHandler {
               <div key={'p_' + indexA}>
                 <strong>{key}</strong>
                 <ul style={{paddingLeft: 16}}>
+                  {/*@ts-ignore */}
                   {this.errors[key].map((msg, indexB) => (
                     <li key={`${indexA}_${indexB}`}>{msg}</li>
                   ))}
