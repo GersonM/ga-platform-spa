@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Empty} from 'antd';
 import axios, {AxiosProgressEvent} from 'axios';
+import {PiUploadBold} from 'react-icons/pi';
 
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
@@ -12,15 +13,15 @@ import {Container, ContainerContent, ApiFile} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
-import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
 import './styles.less';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
+  allowUpload: boolean;
   onChange?: (containerUuid: string, container: Container) => void;
 }
 
-const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewerProps) => {
+const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: ContainerContentViewerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
   const [selectedFile, setSelectedFile] = useState<ApiFile>();
   const [loading, setLoading] = useState(false);
@@ -75,13 +76,13 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
           .post('file-management/chunked-files', formData, config)
 
           /*fetch(import.meta.env.VITE_API_UPLOAD + 'file-management/chunked-files', {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                              'X-Tenant': 'app',
-                              Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
-                            },
-                          })*/
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
+                                          'X-Tenant': 'app',
+                                          Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
+                                        },
+                                      })*/
           //.then(response => response.json())
           .then(data => {
             const temp = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
@@ -182,6 +183,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
   };
 
   const navigateToParent = () => {
+    console.log(containerContent);
     if (containerContent) {
       if (containerContent.container.parent_container) {
         navigateToFolder(containerContent.container.parent_container);
@@ -203,6 +205,7 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
         <>
           <ContainerHeader
             container={containerContent.container}
+            allowUpload={allowUpload}
             upLevel={navigateToParent}
             onChange={() => setReload(!reload)}
             onReload={() => setReload(!reload)}
@@ -230,12 +233,17 @@ const ContainerContentViewer = ({onChange, containerUuid}: ContainerContentViewe
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description={
                     <>
-                      <small>No hay archivos en esta ubicación</small> <br />
-                      <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br />
+                      <span>No hay archivos en esta ubicación</span> <br />
                       <br />
-                      <Button ghost icon={<CloudArrowUpIcon />} onClick={open} shape={'round'} type={'primary'}>
-                        Cargar archivos
-                      </Button>
+                      {allowUpload && (
+                        <>
+                          <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br />
+                          <br />
+                          <Button ghost icon={<PiUploadBold />} onClick={open} shape={'round'} type={'primary'}>
+                            Cargar archivos
+                          </Button>
+                        </>
+                      )}
                     </>
                   }
                 />

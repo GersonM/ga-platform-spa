@@ -5,10 +5,9 @@
   flex-direction: column;
   transition: all 0.3s;
   position: sticky;
+  height: calc(100dvh - 20px);
   top: 10px;
   margin-left: 10px;
-  border-radius: 10px;
-  height: calc(100dvh - 20px);
 
   animation-duration: 0.7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
@@ -17,11 +16,12 @@
 
   max-width: 20px;
   min-width: 20px;
-
+  border-radius: 5px;
 
   &.open {
     max-width: 280px;
     min-width: 280px;
+    border-radius: 12px;
   }
 
   .open-menu {
@@ -31,7 +31,7 @@
     cursor: pointer;
 
     &:hover {
-      background: #dfdfdf;
+      background: var(--background);
     }
   }
 
@@ -106,14 +106,14 @@
     position: fixed;
     left: 0;
     z-index: 1;
-    height: calc(100dvh - 80px);
-    top: 50px;
+    height: calc(100dvh - 70px);
+    top: 60px;
     transform: translateX(-120%);
     border-radius: 0 9px 9px 0;
 
     &.open {
       transform: translateX(0%);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 25px rgba(0, 0, 0, .4);
     }
   }
 }

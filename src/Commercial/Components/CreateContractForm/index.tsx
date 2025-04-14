@@ -1,14 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Descriptions, DescriptionsProps, Divider, Empty, Form, Input, InputNumber, Row, Select} from 'antd';
+import {Col, Divider, Form, Input, Row, Select} from 'antd';
+import axios from 'axios';
+
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Contract, StorageStock} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
-import {useNavigate} from 'react-router-dom';
 import StockViewerState from '../StockViewerState';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 
@@ -76,6 +76,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
             </Form.Item>
             <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
               <Select
+                variant={'filled'}
                 showSearch
                 placeholder={'Seleccione modalidad'}
                 options={[

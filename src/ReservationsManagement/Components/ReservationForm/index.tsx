@@ -80,16 +80,7 @@ const ReservationForm = ({onCompleted, route, vehicle, loading, showVehicle = tr
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name={'duration'}
-              label={
-                <>
-                  Duración
-                  <Tooltip title={'Eje: 2h 45m'}>
-                    <IoInformationCircle style={{fontSize: 18, marginLeft: 5}} />
-                  </Tooltip>
-                </>
-              }>
+            <Form.Item name={'duration'} tooltip={'Eje: 2h 45m'} label={'Duración'}>
               <TimeInput
                 onChange={value => {
                   setArrivalDate(departureDate?.add(value, 's'));

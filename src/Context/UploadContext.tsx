@@ -78,13 +78,11 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       }
 
       if (isLastChunk) {
-        console.log('Last chunk uploaded');
         setFileList(copy => {
           if (copy && currentFile) {
             const i = copy.findIndex(f => f.id === currentFile.id);
             copy[i].progress = 100;
             copy[i].fileData = response.data;
-            console.log('File closed');
             return copy;
           }
         });
@@ -126,15 +124,12 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
 
   const uploadNextFile = () => {
     const nextFile = fileList?.find(f => !f.fileData);
-    console.log('Checking pending files to upload:');
     if (nextFile) {
-      console.log('Next file selected');
       setIsUploading(true);
       setCurrentChunkIndex(0);
       setCurrentFile(nextFile);
     } else {
       setIsUploading(false);
-      console.info('No more files to upload');
     }
   };
 

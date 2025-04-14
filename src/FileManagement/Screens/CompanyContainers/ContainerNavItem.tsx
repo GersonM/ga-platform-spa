@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
+import {PiArchiveDuotone, PiTerminalWindowDuotone} from 'react-icons/pi';
 
 import {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
@@ -16,7 +17,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
   return (
     <>
       <NavLink to={`/file-management/${container.uuid}`}>
-        {container.is_locked ? <span className="icon icon-code" /> : <span className="icon icon-box" />}
+        {container.is_locked ? <PiTerminalWindowDuotone className={'icon'} /> : <PiArchiveDuotone className={'icon'} />}
         <span className="label">
           {container.name}
           {!container.is_locked && (

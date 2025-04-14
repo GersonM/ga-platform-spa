@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {TrashIcon} from '@heroicons/react/24/solid';
-import {Popconfirm} from 'antd';
+import {Divider, Popconfirm} from 'antd';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TableList from '../../../CommonUI/TableList';
@@ -64,6 +64,7 @@ const LocationsManager = () => {
     <div>
       <h2>Lugares</h2>
       <TableList columns={columns} dataSource={locations} />
+      <Divider />
       <LocationForm onCompleted={() => setReload(!reload)} />
     </div>
   );

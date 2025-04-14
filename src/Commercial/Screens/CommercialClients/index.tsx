@@ -16,8 +16,8 @@ import EstateContractAddress from '../../Components/RealState/EstateContractAddr
 import FilterForm from '../../../CommonUI/FilterForm';
 import {Client, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import './styles.less';
 import CreateContractForm from '../../Components/CreateContractForm';
+import './styles.less';
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Profile[]>();

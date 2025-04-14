@@ -94,7 +94,7 @@ const MoveRoutesManager = () => {
 
   return (
     <>
-      <ContentHeader title={'Rutas'} onAdd={() => setOpenRouteManager(true)} onRefresh={() => setReload(!reload)} />
+      <ContentHeader title={'Servicios'} onAdd={() => setOpenRouteManager(true)} onRefresh={() => setReload(!reload)} />
       <Space>
         <PrimaryButton icon={<MapPinIcon />} label={'Lugares'} onClick={() => setOpenLocationModal(true)} />
       </Space>

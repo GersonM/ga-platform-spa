@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FaHelmetSafety} from 'react-icons/fa6';
-import {PiCarProfile} from 'react-icons/pi';
+import {PiBuildings, PiCallBellDuotone, PiCarProfile, PiHardHatDuotone, PiOvenDuotone} from 'react-icons/pi';
 import {Dayjs} from 'dayjs';
 import {Empty, Tag} from 'antd';
 import axios from 'axios';
@@ -8,8 +7,8 @@ import axios from 'axios';
 import {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import './styles.less';
 import Config from '../../../Config';
+import './styles.less';
 
 interface VehicleListSelectorProps {
   value?: string;
@@ -53,15 +52,21 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
   const getIcon = (path?: string) => {
     path = path?.toLowerCase();
     switch (path) {
-      case 'equipo':
-        return <FaHelmetSafety className={'icon'} />;
-      default:
+      case 'team':
+        return <PiHardHatDuotone className={'icon'} />;
+      case 'space':
+        return <PiBuildings className={'icon'} />;
+      case 'kitchen':
+        return <PiOvenDuotone className={'icon'} />;
+      case 'vehicle':
         return <PiCarProfile className={'icon'} />;
+      default:
+        return <PiCallBellDuotone className={'icon'} />;
     }
   };
 
   return (
-    <div>
+    <>
       <LoadingIndicator visible={loading} />
       {vehicles && vehicles.length == 0 && (
         <Empty description={'No hay vehículos disponibles'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -78,10 +83,10 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
               }}>
               {getIcon(vehicle.type)}
               <div className={'vehicle-info'}>
-                {vehicle.brand} {vehicle.model} {vehicle.color}
+                {vehicle.registration_plate} - {vehicle.model} {vehicle.color}
                 <br />
                 <small>
-                  {vehicle.type}: Max. {vehicle.max_capacity} personas
+                  {vehicle.brand} : {vehicle.type}: Max. {vehicle.max_capacity} personas
                 </small>
               </div>
               <div>
@@ -92,7 +97,7 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
           );
         })}
       </ul>
-    </div>
+    </>
   );
 };
 

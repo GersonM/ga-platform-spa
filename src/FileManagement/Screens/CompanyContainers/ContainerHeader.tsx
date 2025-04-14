@@ -18,6 +18,7 @@ interface ContainerHeaderProps {
   onChangeViewMode?: (viewMode: string | number) => void;
   onChangeOrder?: (order: string) => void;
   onOpenUpload?: () => void;
+  allowUpload?: boolean;
   onReload?: () => void;
 }
 
@@ -28,6 +29,7 @@ const ContainerHeader = ({
   upLevel,
   onChangeViewMode,
   onOpenUpload,
+  allowUpload,
   onChangeOrder,
   onReload,
 }: ContainerHeaderProps) => {
@@ -62,14 +64,16 @@ const ContainerHeader = ({
       description={container.parent_container?.name}
       tools={
         <>
-          <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon />}>
-            Cargar archivos
-          </PrimaryButton>
+          {allowUpload && (
+            <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon />}>
+              Cargar archivos
+            </PrimaryButton>
+          )}
           <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
             <Button
               type={informationEnabled ? 'primary' : 'default'}
               onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<InformationCircleIcon height={20} />}
+              icon={<InformationCircleIcon />}
             />
           </Tooltip>
           <Tooltip title={'Subir un nivel'}>

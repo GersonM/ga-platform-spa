@@ -77,9 +77,9 @@ class ErrorHandler {
       type: this.type,
       duration: this.errors ? 15 : time,
       message: this.description,
-      /*description: this.errors ? (
+      description: this.errors ? (
         <>
-          {Object.keys(this.errors).map((key:string, indexA) => {
+          {Object.keys(this.errors).map((key: string, indexA) => {
             return (
               <div key={'p_' + indexA}>
                 <strong>{key}</strong>
@@ -92,7 +92,7 @@ class ErrorHandler {
             );
           })}
         </>
-      ) : null,*/
+      ) : null,
     });
   }
 }

@@ -2,13 +2,10 @@ import React, {useContext, useEffect} from 'react';
 import {ConfigProvider, theme} from 'antd';
 import tinyColor from 'tinycolor2';
 import locale from 'antd/locale/es_ES';
-import dayjs from 'dayjs';
 import 'dayjs/locale/es-mx.js';
 
 import {TenantConfig} from '../Types/api';
 import AuthContext from './AuthContext';
-
-dayjs.locale('es-mx');
 
 interface AntConfigProps {
   children: React.ReactNode;
@@ -36,7 +33,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
 
     const primaryColor = tenant.primary_color || defaultColor;
     const tColor = tinyColor(primaryColor);
-    tColor.darken(14);
+    tColor.darken(16);
     const r = document.querySelector(':root');
     //@ts-ignore
     r.style.setProperty('--primary-color', primaryColor);
@@ -63,23 +60,20 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
   return (
     <ConfigProvider
       locale={locale}
+      variant={'filled'}
       theme={{
         token: {
           colorPrimary: tenant.primary_color ? tenant.primary_color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.primary_color ? tenant.primary_color : defaultColor,
           fontFamily: '"Open Sans", sans-serif',
           fontSize: 13,
-          borderRadius: 8,
         },
         components: {
           Modal: {
-            titleFontSize: 24,
+            titleFontSize: 20,
           },
           Button: {
             fontWeight: 600,
-          },
-          Input: {
-            padding: 20,
           },
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,

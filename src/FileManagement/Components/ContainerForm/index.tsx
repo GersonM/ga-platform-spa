@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import {Button, Form, Input, Radio} from 'antd';
+import {Form, Input, Radio} from 'antd';
+import {BiCheck} from 'react-icons/bi';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Container} from '../../../Types/api';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface ContainerFormProps {
   containerUuid?: string;
@@ -41,7 +43,7 @@ const ContainerForm = ({container, containerUuid, onCompleted}: ContainerFormPro
   };
 
   return (
-    <div style={{width: 240, padding: 5}}>
+    <div style={{width: 200, padding: 5}}>
       <Form form={form} onFinish={submitForm} layout={'vertical'} initialValues={{visibility: 'public'}}>
         <Form.Item
           name={'name'}
@@ -52,25 +54,13 @@ const ContainerForm = ({container, containerUuid, onCompleted}: ContainerFormPro
         <Form.Item
           name={'visibility'}
           label={'Visibilidad'}
-          help={
-            <div style={{lineHeight: '16px', fontSize: 13, marginBottom: 10}}>
-              Se aplicará a todos los archivos dentro de este contenedor
-            </div>
-          }>
+          extra={'Se aplicará a todos los archivos dentro de este contenedor'}>
           <Radio.Group>
             <Radio value={'private'}>Privado</Radio>
             <Radio value={'public'}>Público</Radio>
           </Radio.Group>
         </Form.Item>
-        <Button
-          block
-          shape={'round'}
-          icon={<span className="button-icon icon-check"></span>}
-          loading={loading}
-          type={'primary'}
-          htmlType={'submit'}>
-          Enviar
-        </Button>
+        <PrimaryButton block icon={<BiCheck />} loading={loading} label={'Guardar'} htmlType={'submit'} />
       </Form>
     </div>
   );

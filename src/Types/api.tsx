@@ -148,6 +148,7 @@ export type Role = {
 export type Permission = {
   id: number;
   hint: string;
+  group: string;
   name: string;
   guard_name: string;
 };

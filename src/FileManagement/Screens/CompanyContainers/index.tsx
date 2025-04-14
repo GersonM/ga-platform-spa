@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
 import {Empty, Popover, Space, Tooltip} from 'antd';
 import {PlusCircleIcon} from '@heroicons/react/24/outline';
+import {PiTrashDuotone} from 'react-icons/pi';
 import {TbReload} from 'react-icons/tb';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -105,7 +106,7 @@ const CompanyContainers = () => {
                 ))}
               <li className={params.uuid === 'trash' ? 'active' : ''}>
                 <NavLink to={`/file-management/trash`}>
-                  <span className="icon icon-trash3"></span>
+                  <PiTrashDuotone className="icon" />
                   <span className="label">Elementos borrados</span>
                 </NavLink>
               </li>
@@ -115,7 +116,11 @@ const CompanyContainers = () => {
       </ModuleSidebar>
       <ModuleContent withSidebar>
         {currentContainer ? (
-          <ContainerContentViewer containerUuid={currentContainer} onChange={navigateToFolder} />
+          <ContainerContentViewer
+            allowUpload={params.uuid !== 'trash'}
+            containerUuid={currentContainer}
+            onChange={navigateToFolder}
+          />
         ) : (
           <Empty description={'Seleccionar un contenedor para ver su contenido'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}

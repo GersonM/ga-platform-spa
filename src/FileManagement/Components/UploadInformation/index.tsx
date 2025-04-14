@@ -17,7 +17,6 @@ const UploadInformation = ({files, progress}: UploadInformationProps) => {
     setOpen(true);
   }, [files]);
 
-  console.log('Files', {files});
   if (!progress || !open) return null;
 
   const total = progress.total || 100;

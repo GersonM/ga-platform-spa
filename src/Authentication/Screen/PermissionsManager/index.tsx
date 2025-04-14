@@ -93,7 +93,7 @@ const PermissionsManager = () => {
       <p>Los roles permiten agrupar múltiples permisos para asignarlos fácilmente a un usuario</p>
       <Tabs
         animated={true}
-        items={roles?.map((role, index) => ({
+        items={roles?.map(role => ({
           key: role.name,
           label: (
             <div className={'tab-name'}>

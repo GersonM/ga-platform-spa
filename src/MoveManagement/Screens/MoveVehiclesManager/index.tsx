@@ -51,14 +51,14 @@ const MoveVehiclesManager = () => {
   };
 
   const routesColumns = [
-    {title: 'Placa', dataIndex: 'registration_plate', width: 90, fixed: 'left'},
+    {title: 'ID', dataIndex: 'registration_plate', width: 90, fixed: 'left'},
     {title: 'Fabricante', dataIndex: 'brand'},
     {title: 'Modelo', dataIndex: 'model'},
     {title: 'Color', dataIndex: 'color'},
     {title: 'Tipo', dataIndex: 'type'},
     {title: 'Capacidad', dataIndex: 'max_capacity'},
     {
-      title: 'Conductor',
+      title: 'Encargado',
       dataIndex: 'driver',
       render: (driver?: MoveDriver) => {
         return driver ? `${driver?.profile?.name} ${driver?.profile?.last_name}` : 'Sin conductor';
@@ -88,8 +88,8 @@ const MoveVehiclesManager = () => {
 
   return (
     <>
-      <ContentHeader title={'Vehículos'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)}>
-        <PrimaryButton icon={<UserIcon />} label={'Conductores'} onClick={() => setOpenDriverModal(true)} />
+      <ContentHeader title={'Espacios'} onAdd={() => setOpenVehicleForm(true)} onRefresh={() => setReload(!reload)}>
+        <PrimaryButton icon={<UserIcon />} label={'Encargados'} onClick={() => setOpenDriverModal(true)} />
       </ContentHeader>
       <TableList columns={routesColumns} dataSource={vehicles} scroll={{x: 1300}} />
       <Modal
@@ -102,7 +102,7 @@ const MoveVehiclesManager = () => {
         <DriversManager />
       </Modal>
       <Modal
-        title={selectedVehicle ? 'Actualizar vehículo' : 'Nuevo vehículo'}
+        title={selectedVehicle ? 'Actualizar espacio' : 'Nuevo espacio'}
         footer={false}
         open={openVehicleForm}
         destroyOnClose

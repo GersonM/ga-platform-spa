@@ -24,7 +24,15 @@ interface PrimaryButtonProps {
 
 const PrimaryButton = ({label, size, disabled, children, icon, href, onClick, ...props}: PrimaryButtonProps) => {
   return (
-    <Button disabled={disabled} type="primary" icon={icon} href={href} size={size} onClick={onClick} {...props}>
+    <Button
+      className={'primary-button'}
+      disabled={disabled}
+      type="primary"
+      icon={icon}
+      href={href}
+      size={size}
+      onClick={onClick}
+      {...props}>
       {label || children}
     </Button>
   );

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {Col, Collapse, Divider, Form, Input, Modal, Row, Space, Tag} from 'antd';
-import {PiHandshake, PiProhibitInset} from 'react-icons/pi';
+import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -18,6 +18,7 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContractProvideForm from '../../Components/ContractProvideForm';
 import StockViewerState from '../../Components/StockViewerState';
+import CancelContract from '../../Components/CancelContract';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -26,6 +27,7 @@ const CommercialContractDetail = () => {
   const [loading, setLoading] = useState(false);
   const [openContractProvideForm, setOpenContractProvideForm] = useState(false);
   const [openProvisionRevert, setOpenProvisionRevert] = useState(false);
+  const [openCancelContract, setOpenCancelContract] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -110,6 +112,12 @@ const CommercialContractDetail = () => {
               onClick={() => setOpenProvisionRevert(true)}
             />
           )}
+          <PrimaryButton
+            danger
+            icon={<PiReceiptXBold />}
+            label={'Anular contrato'}
+            onClick={() => setOpenCancelContract(true)}
+          />
         </Space>
       </ContentHeader>
       <Row gutter={[30, 30]}>
@@ -184,6 +192,17 @@ const CommercialContractDetail = () => {
             setOpenContractProvideForm(false);
           }}
         />
+      </Modal>
+      <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnClose footer={null}>
+        {contract && (
+          <CancelContract
+            contract={contract}
+            onComplete={() => {
+              setReload(!reload);
+              setOpenCancelContract(false);
+            }}
+          />
+        )}
       </Modal>
     </ModuleContent>
   );

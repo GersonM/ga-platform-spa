@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Form, Input} from 'antd';
+import {Col, Form, Input, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -48,9 +48,18 @@ const LocationForm = ({onCompleted, route}: CountryFormProps) => {
           rules={[{required: true, message: 'La dirección es requerida'}]}>
           <Input />
         </Form.Item>
-        <Form.Item name={'latitude'} label={'Latitude'}>
-          <Input />
-        </Form.Item>
+        <Row gutter={[20, 20]}>
+          <Col span={12}>
+            <Form.Item name={'latitude'} label={'Latitud'}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name={'longitude'} label={'Longitud'}>
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
         <PrimaryButton loading={loading} label={'Guardar'} htmlType={'submit'} />
       </Form>
     </>

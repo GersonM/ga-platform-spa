@@ -1,14 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {useLocation} from 'react-router-dom';
+import React, {useState} from 'react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-
-import LoadingIndicator from '../LoadingIndicator';
-import AuthContext from '../../Context/AuthContext';
-import './styles.less';
-import IconButton from '../IconButton';
-import {BiLeftArrow} from 'react-icons/bi';
 import {ChevronDoubleRightIcon, ChevronLeftIcon} from '@heroicons/react/16/solid';
 import {Tooltip} from 'antd';
+
+import LoadingIndicator from '../LoadingIndicator';
+import IconButton from '../IconButton';
+import './styles.less';
 
 interface ModuleSidebarProps {
   children?: React.ReactNode;
@@ -34,7 +31,6 @@ const ModuleSidebar = ({
   statusInfo,
 }: ModuleSidebarProps) => {
   const [openMenu, setOpenMenu] = useState(true);
-  const {pathname} = useLocation();
 
   return (
     <>
