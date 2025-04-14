@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import 'dayjs/locale/es.js';
 import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import {AuthContextProvider} from './Context/AuthContext';
 import {UploadContextProvider} from './Context/UploadContext';
@@ -15,6 +16,7 @@ import App from './App/App';
 import './index.less';
 
 dayjs.locale('es');
+dayjs.extend(relativeTime);
 
 const token = Cookies.get('session_token');
 const isDevMode = window.location.hostname.includes('localhost') || window.location.hostname.includes('192.168');

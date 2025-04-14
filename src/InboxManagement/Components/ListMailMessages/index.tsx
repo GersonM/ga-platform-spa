@@ -1,13 +1,10 @@
 import React from 'react';
 import {Tag} from 'antd';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 
 import './styles.less';
 import {MailFolderPageContent, MailMessage} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
-
-dayjs.extend(relativeTime);
 
 interface ListMailMessagesProps {
   messages: MailFolderPageContent;
