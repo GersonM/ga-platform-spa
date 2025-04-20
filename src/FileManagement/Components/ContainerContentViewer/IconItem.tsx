@@ -22,15 +22,13 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
 
   return (
     <div className={`file-item ${selected ? 'selected' : ''}`} onDoubleClick={onDoubleClick} onClick={onItemClick}>
-      {image ? (
-        <div className={'file-image'} style={{backgroundImage: `url(${image})`}}></div>
-      ) : icon ? (
-        icon
-      ) : (
-        <span className="icon icon-file-empty"></span>
-      )}
-      <span className={'file-name'}>{name.length > MAX_CHARS ? name.substring(0, MAX_CHARS) + '...' : name}</span>
-      {caption && <span className={'file-caption'}>{caption}</span>}
+      <div className={'file-image'} style={image ? {backgroundImage: `url(${image})`} : {}}>
+        {!image ? icon ? icon : <span className="icon icon-file-empty"></span> : null}
+      </div>
+      <div className={'file-item-info'}>
+        <span className={'file-name'}>{name.length > MAX_CHARS ? name.substring(0, MAX_CHARS) + '...' : name}</span>
+        {caption && <span className={'file-caption'}>{caption}</span>}
+      </div>
     </div>
   );
 };

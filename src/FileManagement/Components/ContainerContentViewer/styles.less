@@ -88,46 +88,61 @@
   }
 
   .file-item {
+    background: var(--backgroung-color);
+    outline: 2px solid var(--backgroung-color);
+    outline-offset: -2px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     border-radius: 11px;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
-    transition: background 0.3s;
-    max-height: 120px;
+    transition: all 0.3s;
 
     &:hover {
-      background: #dfdfdf;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      outline-color: var(--primary-color);
+      .file-image {
+        background-position: bottom center;
+      }
     }
 
     &.selected {
-      background: #d4e1e8;
+      background: var(--primary-color-lighter);
+      outline-color: var(--primary-color);
     }
 
     .icon {
-      font-size: 35px;
     }
 
     .file-image {
       width: 100%;
-      display: block;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
       flex: 1;
-      background: no-repeat center center;
-      background-size: contain;
-      min-height: 50px;
+      background: no-repeat top center;
+      background-size: cover;
+      min-height: 100px;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: background-position 6s;
+    }
+
+    .file-item-info {
+      background: var(--backgroung-color);
+      padding: 5px;
     }
 
     .file-name {
-      margin-top: 5px;
-      line-height: 16px;
-      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      display: block;
+      text-overflow: ellipsis;
     }
 
     .file-caption {
       font-size: 11px;
       color: #999999;
-      text-align: center;
       display: block;
     }
   }
