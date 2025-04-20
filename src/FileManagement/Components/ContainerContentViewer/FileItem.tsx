@@ -25,7 +25,7 @@ const FileItem = ({file, onDoubleClick, onClick, selected, onChange, size}: File
           selected={selected}
           caption={dayjs(file.created_at).format(' D/MM/YYYY H:mm')}
           name={file.name}
-          image={isImage ? file.thumbnail : undefined}
+          image={file.thumbnail || undefined}
           icon={<FileIcon file={file} size={size} />}
           onClick={onClick}
           onDoubleClick={onDoubleClick}
