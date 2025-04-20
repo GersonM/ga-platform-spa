@@ -4,15 +4,17 @@ import {Container} from '../../../Types/api';
 import IconItem from './IconItem';
 import ContainerDropdownActions from '../ContainerDropdownActions';
 import dayjs from 'dayjs';
+import {PiFolder, PiFolderBold, PiFolderOpen, PiFolderOpenDuotone, PiFolderOpenLight} from 'react-icons/pi';
 
 interface FolderItemProps {
   container: Container;
+  size?: number;
   onDoubleClick?: () => void;
   onClick?: (selected: boolean) => void;
   onChange?: () => void;
 }
 
-const FolderItem = ({container, onDoubleClick, onClick, onChange}: FolderItemProps) => {
+const FolderItem = ({container, onDoubleClick, onClick, size = 35, onChange}: FolderItemProps) => {
   return (
     <ContainerDropdownActions container={container} trigger={['contextMenu']} onChange={onChange}>
       <div>
@@ -20,7 +22,7 @@ const FolderItem = ({container, onDoubleClick, onClick, onChange}: FolderItemPro
           onDoubleClick={onDoubleClick}
           caption={container.is_public ? 'Público' : 'Privado'}
           onClick={onClick}
-          icon={<span className="icon icon-folder"></span>}
+          icon={<PiFolderOpenLight size={size} />}
           name={container.name}
         />
       </div>

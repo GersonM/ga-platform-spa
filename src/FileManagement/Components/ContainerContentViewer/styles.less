@@ -58,7 +58,7 @@
 
     .file-item {
       flex-direction: row;
-      padding: 5px 5px;
+      padding: 0 7px;
       align-items: center;
       border-radius: 7px;
 
@@ -67,22 +67,21 @@
       }
 
       .file-image {
-        min-height: 20px;
+        min-height: 30px;
         height: 100%;
-        max-width: 24px;
+        margin-right: 5px;
+        border-radius: 3px;
+        max-width: 30px;
       }
 
       .file-name {
-        margin: 0 0 0 10px;
         padding: 2px;
-        text-align: left;
         text-overflow: ellipsis;
       }
 
       .file-caption {
         line-height: 12px;
         display: inline-block;
-        margin-left: 10px;
       }
     }
   }
@@ -107,11 +106,13 @@
     }
 
     &.selected {
-      background: var(--primary-color-lighter);
       outline-color: var(--primary-color);
     }
 
     .icon {
+      font-size: 35px;
+      flex: 1;
+      margin: 0 auto;
     }
 
     .file-image {
@@ -120,7 +121,7 @@
       flex-direction: column;
       justify-content: end;
       flex: 1;
-      background: no-repeat top center;
+      background: #ffffff no-repeat top center;
       background-size: cover;
       min-height: 100px;
       border-radius: 6px;

@@ -62,15 +62,17 @@ const FileDetailViewer = () => {
       default:
         return (
           <div className={'file-preview-item'}>
-            <FileIcon file={f} />
+            <p>Vista previa no disponible para este tipo de archivos</p>
+            <br />
+            <br />
+            <br />
+            <FileIcon size={80} file={f} />
             <p>
-              {f.name}
-              <small> {f.type}</small>
-            </p>
-            <p>
+              {f.name} <br />
+              <small> {f.type}</small> <br />
               <FileSize size={f.size} />
             </p>
-            <small>Vista previa no disponible para este tipo de archivos</small>
+            <p></p>
           </div>
         );
     }

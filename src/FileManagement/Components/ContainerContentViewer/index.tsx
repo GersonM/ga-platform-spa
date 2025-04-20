@@ -253,6 +253,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                 <LoadingIndicator visible={loading} />
                 {containerContent.containers.map(c => (
                   <FolderItem
+                    size={viewMode == 'grid' ? 45 : 28}
                     key={c.uuid}
                     container={c}
                     onDoubleClick={() => navigateToFolder(c)}
@@ -261,7 +262,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                 ))}
                 {containerContent.files.map(file => (
                   <FileItem
-                    size={viewMode == 'grid' ? 45 : 24}
+                    size={viewMode == 'grid' ? 45 : 28}
                     key={file.uuid}
                     selected={selectedFile && file.uuid === selectedFile.uuid}
                     file={file}
