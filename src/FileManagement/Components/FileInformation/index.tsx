@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select} from 'antd';
+import {Button, Col, Divider, Form, Image, Input, InputNumber, message, Row, Select, Tag} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {CloudArrowDownIcon, EyeIcon} from '@heroicons/react/24/outline';
+import {PiDownload, PiEye, PiImage} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import FileIcon from '../FileIcon';
 import {Container, ApiFile, FileActivity} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
@@ -16,7 +16,9 @@ import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
 import './styles.less';
-import {PiImage} from 'react-icons/pi';
+import FilePreview from '../../../CommonUI/FilePreview';
+import MediaPlayer from '../../../CommonUI/MediaPlayer';
+import FileIcon from '../FileIcon';
 
 interface FileInformationProps {
   file?: ApiFile;
@@ -86,6 +88,32 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
     }
   };
 
+  const getViewer = (f: ApiFile) => {
+    switch (true) {
+      case f.type.includes('pdf'):
+        return <iframe className={'iframe-viewer'} src={f.source} height={200} />;
+      case f.type.includes('image'):
+        return <Image placeholder={'Imagen'} title={f.name} src={f.thumbnail} wrapperStyle={{marginBottom: 10}} />;
+      case f.type.includes('vid') || f.type.includes('aud'):
+        return (
+          <MediaPlayer
+            startTime={f.start_from}
+            onActivityChange={() => setReload(!reload)}
+            media={f}
+            showControls={false}
+          />
+        );
+      default:
+        return (
+          <div className={'file-preview-item'}>
+            <p>Vista previa no disponible para este tipo de archivos</p>
+            <FileIcon width={50} size={50} file={f} />
+            <pre style={{textWrap: 'wrap'}}>{f.type}</pre>
+          </div>
+        );
+    }
+  };
+
   const detailImageLink = location.origin + '/storage/files/' + file?.uuid;
 
   return (
@@ -99,7 +127,10 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
               <span className={'label'}>
                 {file.name}
                 <small>
-                  <FileSize size={file.size} /> - {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
+                  <Tag color={'magenta'} style={{marginRight: 5}}>
+                    <FileSize size={file.size} />
+                  </Tag>
+                  {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
                 </small>
               </span>
             </div>
@@ -114,29 +145,41 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
           </div>
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
             <div className="information-content">
+              {getViewer(file)}
               <Row gutter={[10, 10]}>
                 <Col md={12}>
                   <Button
                     size={'small'}
+                    ghost
                     block
                     href={detailImageLink}
+                    type={'primary'}
                     target="_blank"
-                    icon={<EyeIcon width={17} className={'button-icon'} />}>
+                    icon={<PiEye size={18} style={{marginTop: 1}} />}>
                     Ver
                   </Button>
                 </Col>
                 <Col md={12}>
                   <Button
+                    ghost
                     size={'small'}
                     block
+                    type={'primary'}
                     href={file.download}
                     target="_blank"
-                    icon={<CloudArrowDownIcon className={'button-icon'} width={17} />}>
+                    icon={<PiDownload size={18} style={{marginTop: 1}} />}>
                     Descargar
                   </Button>
                 </Col>
                 <Col md={24}>
-                  <Button size={'small'} onClick={generateThumbnail} block target="_blank" icon={<PiImage size={17} />}>
+                  <Button
+                    ghost
+                    size={'small'}
+                    onClick={generateThumbnail}
+                    block
+                    type={'primary'}
+                    variant={'text'}
+                    icon={<PiImage size={18} style={{marginTop: 1}} />}>
                     Regenerar thumbnail
                   </Button>
                 </Col>

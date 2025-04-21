@@ -4,18 +4,18 @@ import {Button, Popover} from 'antd';
 
 import {ApiFile} from '../../Types/api';
 import AuthContext from '../../Context/AuthContext';
-
-import './styles.less';
 import FileActivityForm from '../FileActivityForm';
 import Hotkey from '../Hotkey';
+import './styles.less';
 
 interface VideoPlayerProps {
   media: ApiFile;
   startTime?: number;
+  showControls?: boolean;
   onActivityChange?: () => void;
 }
 
-const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => {
+const MediaPlayer = ({media, startTime, onActivityChange, showControls = true}: VideoPlayerProps) => {
   const [playing, setPlaying] = useState(true);
   const [time, setTime] = useState(0);
   const [muted, setMuted] = useState(false);
@@ -97,7 +97,7 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
           onReady={() => setPlayerReady(true)}
           autoPlay
           width={'100%'}
-          height={media.type.includes('aud') ? '90px' : 'auto'}
+          height={media.type.includes('aud') ? '50px' : 'auto'}
           controls={true}
           muted={muted}
           playing={playing}
@@ -110,41 +110,43 @@ const MediaPlayer = ({media, startTime, onActivityChange}: VideoPlayerProps) => 
           }}
         />
       </div>
-      <div>
-        <div className={'shortcuts-container'}>
-          <Hotkey shortKey={'P'} title={'Reproducir / Pausar'} />
-          <Hotkey shortKey={'M'} title={'Silenciar'} />
-          <Hotkey shortKey={'N'} title={'Agregar nota'} />
-          <Hotkey shortKey={'←'} showCtrl={false} title={'Reducir velocidad'} />
-          <Hotkey shortKey={'→'} showCtrl={false} title={'Incrementar velocidad'} />
-          {user && (
-            <>
-              <Popover
-                title={'Agregar comentario'}
-                trigger={['click']}
-                open={openAddActivity}
-                content={
-                  <FileActivityForm
-                    onCompleted={() => {
-                      toggleActivity();
-                      if (onActivityChange) {
-                        onActivityChange();
-                      }
-                    }}
-                    file={media}
-                    type={'comment'}
-                    time={time}
-                  />
-                }>
-                <Button ghost type={'primary'} shape={'round'} onClick={toggleActivity}>
-                  Agregar nota en el segundo {time}
-                </Button>
-              </Popover>
-            </>
-          )}
+      {showControls && (
+        <div>
+          <div className={'shortcuts-container'}>
+            <Hotkey shortKey={'P'} title={'Reproducir / Pausar'} />
+            <Hotkey shortKey={'M'} title={'Silenciar'} />
+            <Hotkey shortKey={'N'} title={'Agregar nota'} />
+            <Hotkey shortKey={'←'} showCtrl={false} title={'Reducir velocidad'} />
+            <Hotkey shortKey={'→'} showCtrl={false} title={'Incrementar velocidad'} />
+            {user && (
+              <>
+                <Popover
+                  title={'Agregar comentario'}
+                  trigger={['click']}
+                  open={openAddActivity}
+                  content={
+                    <FileActivityForm
+                      onCompleted={() => {
+                        toggleActivity();
+                        if (onActivityChange) {
+                          onActivityChange();
+                        }
+                      }}
+                      file={media}
+                      type={'comment'}
+                      time={time}
+                    />
+                  }>
+                  <Button ghost type={'primary'} shape={'round'} onClick={toggleActivity}>
+                    Agregar nota en el segundo {time}
+                  </Button>
+                </Popover>
+              </>
+            )}
+          </div>
+          <span>Velocidad {videoRate.toFixed(1)}x</span>
         </div>
-        <span>Velocidad {videoRate.toFixed(1)}x</span>
-      </div>
+      )}
     </>
   );
 };

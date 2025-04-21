@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import {Dropdown, MenuProps, Modal} from 'antd';
-import {TrashIcon} from '@heroicons/react/16/solid';
+import {PiArrowsOutCardinal, PiPencilSimpleLine, PiTrash} from 'react-icons/pi';
 import axios from 'axios';
 
 import RenameFile from './RenameFile';
 import {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {PiArrowsOutCardinal, PiPencilSimple} from 'react-icons/pi';
-import {MenuItemType} from 'antd/es/menu/interface';
 
 const items: MenuProps['items'] = [
-  {label: 'Editar', key: 'rename', icon: <PiPencilSimple size={15} />},
-  {label: 'Mover a otra ubicación', key: 'move', icon: <PiArrowsOutCardinal size={15} />, disabled: true},
+  {label: 'Editar', key: 'rename', icon: <PiPencilSimpleLine size={18} />},
+  {label: 'Mover a otra ubicación', key: 'move', icon: <PiArrowsOutCardinal size={18} />, disabled: true},
   {type: 'divider'},
-  {label: 'Borrar', key: 'delete', danger: true, icon: <TrashIcon width={16} />},
+  {label: 'Borrar', key: 'delete', danger: true, icon: <PiTrash size={16} />},
 ];
 
 interface FileDropdownActionsProps {
