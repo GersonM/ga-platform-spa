@@ -1,6 +1,6 @@
 import React from 'react';
 import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
-import {PiFilePdfLight, PiFileSqlLight, PiFileXlsLight, PiThreeD, PiVectorThree} from 'react-icons/pi';
+import {PiFile, PiFileDoc, PiFilePdf, PiFileSqlLight, PiFileXls, PiVectorThree} from 'react-icons/pi';
 import {DiPhotoshop} from 'react-icons/di';
 
 import {ApiFile} from '../../../Types/api';
@@ -16,16 +16,18 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
     case file.type.includes('dwg'):
       return <PiVectorThree className={'icon'} size={size} />;
     case file.type.includes('pdf'):
-      return <PiFilePdfLight className={'icon'} size={size} />;
+      return <PiFilePdf className={'icon'} size={size} />;
     case file.type.includes('adobe'):
       return <DiPhotoshop size={size} />;
     case file.name.includes('sql'):
       return <PiFileSqlLight className={'icon'} size={size} />;
     case file.name.includes('csv') || file.name.includes('xlsx'):
-      return <PiFileXlsLight className={'icon'} size={size} />;
+      return <PiFileXls className={'icon'} size={size} />;
+    case file.name.includes('doc'):
+      return <PiFileDoc className={'icon'} size={size} />;
     case file.type.includes('image'):
       return <span className="icon icon-file-image"></span>;
-    case file.type.includes('zip'):
+    case file.type.includes('zip') || file.name.includes('zip'):
       return <span className="icon icon-file-zip"></span>;
     case file.type.includes('text'):
       return <span className="icon icon-document"></span>;
@@ -36,7 +38,7 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
     case file.type.includes('aud'):
       return <SpeakerWaveIcon className={'icon'} height={size} width={width} />;
     default:
-      return <span className="icon icon-file-empty"></span>;
+      return <PiFile className={'icon'} size={size} />;
   }
 };
 

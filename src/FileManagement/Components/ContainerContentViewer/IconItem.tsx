@@ -1,4 +1,5 @@
 import React from 'react';
+import {PiFile} from 'react-icons/pi';
 
 interface IconItemProps {
   size?: number;
@@ -22,8 +23,8 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
 
   return (
     <div className={`file-item ${selected ? 'selected' : ''}`} onDoubleClick={onDoubleClick} onClick={onItemClick}>
-      <div className={'file-image'} style={image ? {backgroundImage: `url(${image})`} : {}}>
-        {!image ? icon ? icon : <span className="icon icon-file-empty"></span> : null}
+      <div className={'file-image'} style={image ? {backgroundColor: '#ffffff', backgroundImage: `url(${image})`} : {}}>
+        {!image ? icon ? icon : <PiFile color={'#444444'} size={20} /> : null}
       </div>
       <div className={'file-item-info'}>
         <span className={'file-name'}>{name.length > MAX_CHARS ? name.substring(0, MAX_CHARS) + '...' : name}</span>

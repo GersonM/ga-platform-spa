@@ -1,7 +1,8 @@
 import React from 'react';
 import {Button, Form, Input} from 'antd';
-import {Container} from '../../../Types/api';
 import axios from 'axios';
+
+import {Container} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface RenameFileProps {

@@ -10,35 +10,33 @@
   }
 }
 
-
 .drop-active-zone {
   position: absolute;
   display: flex;
   flex-direction: column;
-  bottom: 2px;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  font-family: "Maven Pro", sans-serif;
+  border-radius: 18px;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   align-items: center;
   justify-content: center;
-  color: #146a9f;
   font-size: 22px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.9);
   outline: 1px dashed #cbcbcb;
+  outline-offset: -10px;
   transition: all 0.4s;
   z-index: 1;
 
   .upload-icon {
-    font-size: 60px;
-    color: #999999;
-    margin-bottom: 10px;
+    height: 55px;
+    margin-bottom: 15px;
   }
 
   small {
-    font-size: 13px;
-    color: #555;
+    margin-top: 10px;
+    opacity: 1;
+    font-size: 14px;
   }
 }
 
@@ -62,8 +60,14 @@
       align-items: center;
       border-radius: 7px;
 
+      &.selected {
+        transform: scale(1.02);
+      }
+
       .icon {
-        font-size: 20px;
+        font-size: 24px;
+        height: 24px;
+        width: 24px;
       }
 
       .file-image {
@@ -74,13 +78,7 @@
         max-width: 30px;
       }
 
-      .file-name {
-        padding: 2px;
-        text-overflow: ellipsis;
-      }
-
       .file-caption {
-        line-height: 12px;
         display: inline-block;
       }
     }
@@ -98,30 +96,33 @@
     transition: all 0.3s;
 
     &:hover {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       outline-color: var(--primary-color);
+
       .file-image {
         background-position: bottom center;
       }
     }
 
     &.selected {
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
       outline-color: var(--primary-color);
     }
 
     .icon {
-      font-size: 35px;
-      flex: 1;
-      margin: 0 auto;
+      font-size: 40px;
+      height: 40px;
+      width: 40px;
     }
 
     .file-image {
       width: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: end;
+      justify-content: center;
+      align-items: center;
       flex: 1;
-      background: #ffffff no-repeat top center;
+      background: no-repeat top center;
       background-size: cover;
       min-height: 100px;
       border-radius: 6px;
@@ -130,13 +131,13 @@
     }
 
     .file-item-info {
-      background: var(--backgroung-color);
       padding: 5px;
     }
 
     .file-name {
       overflow: hidden;
       white-space: nowrap;
+      line-height: 22px;
       display: block;
       text-overflow: ellipsis;
     }
@@ -165,8 +166,8 @@
   }
 
   .drop-active-zone {
-    color: #5aaad9;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.9);
+    color: #ffffff;
     outline-color: #444444;
   }
 

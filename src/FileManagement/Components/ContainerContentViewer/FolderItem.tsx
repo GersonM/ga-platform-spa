@@ -1,28 +1,30 @@
 import React from 'react';
+import dayjs from 'dayjs';
+import {PiFolderLockLight, PiFolderOpenLight} from 'react-icons/pi';
 
 import {Container} from '../../../Types/api';
 import IconItem from './IconItem';
 import ContainerDropdownActions from '../ContainerDropdownActions';
-import dayjs from 'dayjs';
-import {PiFolder, PiFolderBold, PiFolderOpen, PiFolderOpenDuotone, PiFolderOpenLight} from 'react-icons/pi';
 
 interface FolderItemProps {
   container: Container;
   size?: number;
+  selected?: boolean;
   onDoubleClick?: () => void;
   onClick?: (selected: boolean) => void;
   onChange?: () => void;
 }
 
-const FolderItem = ({container, onDoubleClick, onClick, size = 35, onChange}: FolderItemProps) => {
+const FolderItem = ({container, onDoubleClick, onClick, size = 35, onChange, selected}: FolderItemProps) => {
   return (
     <ContainerDropdownActions container={container} trigger={['contextMenu']} onChange={onChange}>
       <div>
         <IconItem
+          selected={selected}
           onDoubleClick={onDoubleClick}
-          caption={container.is_public ? 'Público' : 'Privado'}
+          caption={dayjs(container.created_at).format(' D/MM/YYYY H:mm')}
           onClick={onClick}
-          icon={<PiFolderOpenLight size={size} />}
+          icon={container.is_public ? <PiFolderOpenLight size={size} /> : <PiFolderLockLight size={size} />}
           name={container.name}
         />
       </div>

@@ -1,13 +1,15 @@
 import React, {useContext, useState} from 'react';
 import {Dropdown, MenuProps, Modal} from 'antd';
 import axios from 'axios';
-import {ShareIcon, StarIcon, LockClosedIcon, TrashIcon, LockOpenIcon} from '@heroicons/react/16/solid';
+import {LockClosedIcon, LockOpenIcon} from '@heroicons/react/24/outline';
+import {PiArrowsOutCardinal, PiPencilSimpleLine, PiStar, PiTrash, PiUserPlus} from 'react-icons/pi';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Container} from '../../../Types/api';
 import RenameContainer from './RenameContainer';
 import ShareContainer from './ShareContainer';
 import AuthContext from '../../../Context/AuthContext';
+import MoveContainer from './MoveContainer';
 
 interface ContainerDropdownActionsProps {
   children: React.ReactNode;
@@ -83,19 +85,20 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
     {
       label: container.is_public ? 'Hacer privado' : 'Convertir en público',
       key: 'change_visibility',
-      icon: container.is_public ? <LockOpenIcon width={16} /> : <LockClosedIcon width={16} />,
+      icon: container.is_public ? <LockClosedIcon width={18} /> : <LockOpenIcon width={18} />,
     },
-    {label: 'Mover a otra ubicación', key: 'move', icon: <span className={'icon icon-move'} />, disabled: true},
-    {label: 'Cambiar nombre', key: 'rename', icon: <span className={'icon icon-pencil-line'} />},
-    {label: 'Compartir', key: 'share', icon: <ShareIcon width={16} />},
-    {label: 'Agregar como favorito', key: 'favorite', icon: <StarIcon width={16} />},
+    {label: 'Mover a otra carpeta', key: 'move', icon: <PiArrowsOutCardinal size={18} />},
+    {label: 'Cambiar nombre', key: 'rename', icon: <PiPencilSimpleLine size={18} />},
+    {label: 'Compartir', key: 'share', icon: <PiUserPlus size={18} />},
+    {label: 'Agregar como favorito', key: 'favorite', icon: <PiStar size={18} />},
     {type: 'divider'},
-    {label: 'Borrar', key: 'delete', danger: true, icon: <TrashIcon width={16} />},
+    {label: 'Borrar', key: 'delete', danger: true, icon: <PiTrash size={18} />},
   ];
 
   const getContent = () => {
     switch (activeAction) {
       case 'move':
+        return <MoveContainer container={container} onCompleted={onComplete} />;
       case 'rename':
         return <RenameContainer container={container} onCompleted={onComplete} />;
       case 'share':
