@@ -22,17 +22,17 @@ $tenantNames = match ($host) {
 
 $indexHtml = file_get_contents('index.html');
 
-str_replace('<title>Geek Advice</title>', '<title>' . $tenantNames . '</title>', $indexHtml);
+$indexHtml = str_replace('<title>Geek Advice</title>', '<title>' . $tenantNames . '</title>', $indexHtml);
 
 if (str_contains($uri, 'storage/files/')) {
   $uuid = explode('storage/files/', $uri)[1];
-  str_replace(
+  $indexHtml = str_replace(
           '{{og:image}}',
           'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/thumbnail',
           $indexHtml
   );
 
-  str_replace('{{og:title}}', $tenantNames, $indexHtml);
-  str_replace('{{og:url}}', 'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
+  $indexHtml = str_replace('{{og:title}}', $tenantNames, $indexHtml);
+  $indexHtml = str_replace('{{og:url}}', 'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
 }
 echo $indexHtml;
