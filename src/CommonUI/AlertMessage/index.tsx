@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {CheckIcon, XMarkIcon} from '@heroicons/react/24/solid';
-import {ExclamationTriangleIcon, InformationCircleIcon} from '@heroicons/react/24/solid';
+import {XMarkIcon} from '@heroicons/react/24/solid';
+import {InformationCircleIcon} from '@heroicons/react/24/solid';
+import {PiCheck, PiExclamationMark, PiWarningDiamond} from 'react-icons/pi';
 
 import IconButton from '../IconButton';
 import './styles.less';
@@ -21,11 +22,12 @@ const AlertMessage = ({message, caption, type = 'warning', float, dismissible}: 
   return (
     <div className={`alert-message-wrapper ${type} ${float ? 'float' : ''}`}>
       <div className={'icon'}>
-        {type === 'success' && <CheckIcon width={25} />}
-        {type === 'warning' && <ExclamationTriangleIcon width={25} />}
+        {type === 'success' && <PiCheck size={20} />}
+        {type === 'warning' && <PiExclamationMark size={20} />}
         {type === 'info' && <InformationCircleIcon width={25} />}
+        {type === 'error' && <PiWarningDiamond size={25} />}
       </div>
-      <div>
+      <div className={'content'}>
         {message}
         {caption && <div className={'caption'}>{caption}</div>}
       </div>

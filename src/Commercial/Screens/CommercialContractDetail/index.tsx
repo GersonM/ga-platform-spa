@@ -19,6 +19,7 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContractProvideForm from '../../Components/ContractProvideForm';
 import StockViewerState from '../../Components/StockViewerState';
 import CancelContract from '../../Components/CancelContract';
+import AlertMessage from '../../../CommonUI/AlertMessage';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -101,12 +102,14 @@ const CommercialContractDetail = () => {
         <Space>
           {!contract?.provided_at ? (
             <PrimaryButton
+              disabled={!!contract?.cancelled_at}
               icon={<PiHandshake size={17} />}
               label={'Registrar entrega'}
               onClick={() => setOpenContractProvideForm(true)}
             />
           ) : (
             <PrimaryButton
+              disabled={!!contract?.cancelled_at && !contract?.provided_at}
               icon={<PiProhibitInset size={17} />}
               label={'Revertir entrega'}
               onClick={() => setOpenProvisionRevert(true)}
@@ -115,11 +118,15 @@ const CommercialContractDetail = () => {
           <PrimaryButton
             danger
             icon={<PiReceiptXBold />}
+            disabled={!!contract?.cancelled_at}
             label={'Anular contrato'}
             onClick={() => setOpenCancelContract(true)}
           />
         </Space>
       </ContentHeader>
+      {contract?.cancelled_at && (
+        <AlertMessage message={'Este contrato fué anulado'} caption={contract?.cancellation_reason} type={'error'} />
+      )}
       <Row gutter={[30, 30]}>
         <Col xs={24} lg={8}>
           <h3>Incidencias</h3>

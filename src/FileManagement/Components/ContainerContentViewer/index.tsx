@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Empty} from 'antd';
 import axios, {AxiosProgressEvent} from 'axios';
-import {PiUploadBold} from 'react-icons/pi';
+import {PiRecycle, PiUploadBold} from 'react-icons/pi';
 
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
@@ -14,6 +14,7 @@ import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
 import './styles.less';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -197,6 +198,17 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
     noClick: true,
   });
 
+  const emptyTrash = () => {
+    axios
+      .post(`file-management/trash/empty`)
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
   return (
     <div {...getRootProps()} className={'content-viewer-wrapper'}>
       <iframe id="my_iframe" style={{display: 'none'}}></iframe>
@@ -226,6 +238,11 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                   setReload(!reload);
                 }}
               />
+            )}
+            {containerUuid === 'trash' && (
+              <div style={{marginBottom: 15}}>
+                <PrimaryButton label={'Vaciar papelera'} icon={<PiRecycle />} onClick={emptyTrash} />
+              </div>
             )}
             {containerContent.containers.length === 0 && containerContent.files.length === 0 ? (
               <div style={{flex: 1}}>

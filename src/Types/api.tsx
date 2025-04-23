@@ -97,6 +97,8 @@ export type Contract = {
   signed_at?: string;
   terminated_at?: string;
   updated_at?: string;
+  cancelled_at?: string;
+  cancellation_reason?: string;
   contractable?: any;
   invoices?: Invoice[];
   items?: ContractItem[];

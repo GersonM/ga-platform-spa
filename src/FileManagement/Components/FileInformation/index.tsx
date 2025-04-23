@@ -3,7 +3,6 @@ import {Button, Col, Divider, Form, Image, Input, InputNumber, message, Row, Sel
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {CloudArrowDownIcon, EyeIcon} from '@heroicons/react/24/outline';
 import {PiDownload, PiEye, PiImage} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -15,10 +14,9 @@ import FileSize from '../../../CommonUI/FileSize';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import FileDropdownActions from '../FileDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
-import './styles.less';
-import FilePreview from '../../../CommonUI/FilePreview';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
 import FileIcon from '../FileIcon';
+import './styles.less';
 
 interface FileInformationProps {
   file?: ApiFile;
@@ -93,7 +91,15 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
       case f.type.includes('pdf'):
         return <iframe className={'iframe-viewer'} src={f.source} height={200} />;
       case f.type.includes('image'):
-        return <Image placeholder={'Imagen'} title={f.name} src={f.thumbnail} wrapperStyle={{marginBottom: 10}} />;
+        return (
+          <Image
+            placeholder={'Imagen'}
+            title={f.name}
+            src={f.thumbnail}
+            style={{margin: '0 auto'}}
+            wrapperStyle={{marginBottom: 10}}
+          />
+        );
       case f.type.includes('vid') || f.type.includes('aud'):
         return (
           <MediaPlayer
