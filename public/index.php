@@ -16,7 +16,9 @@ $tenantNames = match ($host) {
   'fireworks.geekadvice.pe' => 'Fireworks',
   'villa-primavera.geekadvice.pe' => 'Villa Primavera',
   'localhost:5173' => 'Villa Primavera',
-  'country-club.geekadvice.pe' => 'Country Club La Villa',
+  'publiefectiva.geekadvice.pe' => 'Publi Efectiva',
+  'country-club.geekadvice.pe' => 'Country Club La Villa - Ilo',
+  'country-moquegua.geekadvice.pe' => 'Country Club La Villa - Moquegua',
   default => 'Geek Advice',
 };
 
@@ -34,5 +36,6 @@ if (str_contains($uri, 'storage/files/')) {
 
   $indexHtml = str_replace('{{og:title}}', $tenantNames, $indexHtml);
   $indexHtml = str_replace('{{og:url}}', 'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
+  //$indexHtml = str_replace('{{og:description}}', 'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
 }
 echo $indexHtml;
