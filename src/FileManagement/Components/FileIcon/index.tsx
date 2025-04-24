@@ -1,6 +1,6 @@
 import React from 'react';
 import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
-import {PiFile, PiFileDoc, PiFilePdf, PiFileSqlLight, PiFileXls, PiVectorThree} from 'react-icons/pi';
+import {PiFile, PiFileDoc, PiFilePdf, PiFilePpt, PiFileSqlLight, PiFileXls, PiVectorThree} from 'react-icons/pi';
 import {DiPhotoshop} from 'react-icons/di';
 
 import {ApiFile} from '../../../Types/api';
@@ -23,6 +23,10 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
       return <PiFileSqlLight className={'icon'} size={size} />;
     case file.name.includes('csv') || file.name.includes('xlsx'):
       return <PiFileXls className={'icon'} size={size} />;
+    case file.type.includes('presentation') || file.name.includes('pptx'):
+      return <PiFilePpt className={'icon'} size={size} />;
+    case file.type.includes('document') || file.name.includes('docx'):
+      return <PiFileDoc className={'icon'} size={size} />;
     case file.name.includes('doc'):
       return <PiFileDoc className={'icon'} size={size} />;
     case file.type.includes('image'):
