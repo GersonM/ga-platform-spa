@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Progress} from 'antd';
+import {Button, Progress, Spin} from 'antd';
 import {AxiosProgressEvent} from 'axios';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
 import UploadContext from '../../../Context/UploadContext';
-import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
+import {PiCheckCircle, PiCheckCircleFill, PiXCircle} from 'react-icons/pi';
+import IconButton from '../../../CommonUI/IconButton';
 
 interface UploadInformationProps {
   files?: Array<File>;
@@ -35,29 +36,30 @@ const UploadInformation = ({progress}: UploadInformationProps) => {
             <h4>
               {percent < 100 ? 'Cargando...' : 'Terminado - '} {fileList.length} archivo{fileList.length > 1 ? 's' : ''}
             </h4>
-            <Button
-              onClick={() => setOpen(!open)}
-              type={'link'}
-              icon={<span className="button-icon-alone icon-cross"></span>}
-            />
+            <IconButton onClick={() => setOpen(!open)} type={'link'} icon={<PiXCircle size={20} />} />
           </div>
           <ul className={'files-list'}>
             {[...fileList].reverse().map((f, index) => {
               return (
                 <li key={index}>
-                  {f.file.name}
-                  <small>
-                    {' - '}
-                    {f.fileData ? <FileSize size={f.fileData.size} /> : 'Cargando...'}
-                  </small>
+                  <span style={{flex: 1, marginRight: 10, display: 'block', wordBreak: 'break-all'}}>
+                    {f.file.name}
+                    <small>
+                      {' - '}
+                      {f.fileData ? <FileSize size={f.fileData.size} /> : 'Cargando...'}
+                    </small>
+                  </span>
+                  {f.fileData ? <PiCheckCircleFill color={'#00d800'} size={20} /> : <Spin size={'small'} />}
                 </li>
               );
             })}
           </ul>
         </>
       )}
-      <Progress showInfo={false} gapPosition={'bottom'} percent={percent} />
-      {percent.toFixed(0)}% de {total} archivos
+      <div className={'footer'}>
+        <Progress size={'small'} showInfo={false} percent={percent} />
+        {percent.toFixed(0)}% de {total} archivos
+      </div>
     </div>
   );
 };

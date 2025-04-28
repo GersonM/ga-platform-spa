@@ -1,39 +1,58 @@
 .upload-information-wrapper {
   position: fixed;
   bottom: 0;
-  right: 30px;
-  width: 300px;
+  right: 40px;
+  width: 330px;
   background: var(--backgroung-color);
-  padding: 15px;
   border-radius: 8px 8px 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
   z-index: 2;
 
   .header {
+    padding: 5px 5px 5px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    h4{
-      font-weight: 600;
+
+    h4 {
       margin: 0;
-      font-size: 13px;
+      font-size: 14px;
     }
   }
 
   .files-list {
     list-style: none;
     margin: 0;
-    padding: 0 10px;
-    border-radius: 6px;
-    background: var(--backgroung-color-body);
+    background: var(--backgroung-color-input);
     max-height: 130px;
     overflow: auto;
-    border-bottom: 1px solid var(--border-color);
+    padding: 0;
+    border-bottom: 1px solid #dcdcdc;
 
     li {
-      padding: 5px 0;
-      border-top: 1px solid var(--border-color);
+      padding: 8px 15px;
+      border-top: 1px solid #dcdcdc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
     }
   }
 
+  .footer {
+    padding: 10px 15px;
+  }
+}
+
+.dark-mode {
+  .upload-information-wrapper {
+    .files-list {
+        border-bottom-color: #000;
+      li {
+        border-top-color: #000;
+      }
+    }
+  }
 }

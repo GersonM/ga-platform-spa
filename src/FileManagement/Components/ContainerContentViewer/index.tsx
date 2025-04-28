@@ -65,11 +65,14 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
     [containerUuid, reload],
   );*/
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    for (const acceptedFilesKey in acceptedFiles) {
-      addFile(acceptedFiles[acceptedFilesKey], containerUuid);
-    }
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      for (const acceptedFilesKey in acceptedFiles) {
+        addFile(acceptedFiles[acceptedFilesKey], containerUuid);
+      }
+    },
+    [containerUuid],
+  );
 
   useEffect(() => {
     setSelectedFile(undefined);
