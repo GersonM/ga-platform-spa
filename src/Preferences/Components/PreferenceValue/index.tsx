@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Col, ColorPicker, Input, InputNumber, Row, Space, Switch} from 'antd';
+import {CheckIcon, TrashIcon} from '@heroicons/react/24/outline';
+import axios from 'axios';
 
 import {SettingValue} from '../../../Types/api';
-import './styles.less';
 import IconButton from '../../../CommonUI/IconButton';
-import {CheckIcon} from '@heroicons/react/24/solid';
-import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {TrashIcon} from '@heroicons/react/24/outline';
-import FileUploader from '../../../CommonUI/FileUploader';
+import './styles.less';
+import FileUploader from '../../../FileManagement/Components/FileUploader';
 
 interface PreferenceValueProps {
   preference: SettingValue;
@@ -34,6 +33,7 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
             fileUuid={preference.value}
             showPreview
             imagePath={value}
+            onChange={fileUuid => onChangeValue(fileUuid)}
             onFilesUploaded={file => onChangeValue(file.uuid)}
           />
         );

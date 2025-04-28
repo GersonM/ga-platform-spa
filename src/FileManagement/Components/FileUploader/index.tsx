@@ -6,6 +6,7 @@ import {useDropzone} from 'react-dropzone';
 import UploadContext from '../../../Context/UploadContext';
 import IconButton from '../../../CommonUI/IconButton';
 import FileSize from '../../../CommonUI/FileSize';
+import './styles.less';
 
 interface FileUploaderProps {
   onFilesUploaded?: (file: any) => void;

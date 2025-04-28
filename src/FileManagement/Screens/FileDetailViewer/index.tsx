@@ -17,6 +17,7 @@ import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileIcon from '../../Components/FileIcon';
 import FileSize from '../../../CommonUI/FileSize';
+import MetaTitle from '../../../CommonUI/MetaTitle';
 
 const FileDetailViewer = () => {
   const params = useParams();
@@ -80,6 +81,7 @@ const FileDetailViewer = () => {
 
   return (
     <div className={'file-detail-wrapper'}>
+      <MetaTitle title={file?.name} />
       <div className={'file-detail-container'}>
         <Space align={'center'}>
           <img src={tenantLogo ? tenantLogo : logo} alt="Logo" className={'logo'} />
