@@ -19,6 +19,7 @@ import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
 import AuthContext from '../../../Context/AuthContext';
 import './styles.less';
+import UploadInformation from '../../Components/UploadInformation';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -114,6 +115,7 @@ const CompanyContainers = () => {
           )}
         </ul>
       </ModuleSidebar>
+      <UploadInformation />
       <ModuleContent withSidebar>
         {currentContainer ? (
           <ContainerContentViewer

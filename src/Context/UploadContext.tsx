@@ -7,7 +7,7 @@ import {UploadQueueFile} from '../Types/api';
 interface UploadContextDefaults {
   fileList?: UploadQueueFile[];
   isUploading: boolean;
-  addFile: (file: File) => string;
+  addFile: (file: File, containerUuid?: string) => string;
   lastFileCompleted?: UploadQueueFile;
 }
 
@@ -53,17 +53,29 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
         formData.set('container_uuid', currentFile.containerUuid);
       }
 
+      let chunkProgress = 0;
       const config = {
         onUploadProgress: (r: AxiosProgressEvent) => {
-          console.log('Progress: ' + currentFile.file.name, r.progress);
+          if (r.progress) {
+            chunkProgress = r.progress * 100;
+            setFileList(copy => {
+              if (copy) {
+                const i = copy.findIndex(f => f.id === currentFile.id);
+                copy[i].progress = chunkProgress;
+                return copy;
+              }
+            });
+          }
         },
         baseURL: import.meta.env.VITE_API_UPLOAD,
         body: data,
       };
       const response = await axios.post('file-management/chunked-files', formData, config);
       const isLastChunk = currentChunkIndex === Math.ceil(currentFile.file.size / chunkSize) - 1;
-      const fileProgress = totalChunks === 1 ? 100 : Math.round(((currentChunkIndex + 1) / totalChunks) * 100);
+      const fileProgress =
+        totalChunks === 1 ? chunkProgress : Math.round(((currentChunkIndex + 1) / totalChunks) * 100);
 
+      console.log('progress: ', fileProgress);
       setFileList(copy => {
         if (copy && currentFile) {
           const i = copy.findIndex(f => f.id === currentFile.id);

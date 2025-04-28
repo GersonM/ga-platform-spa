@@ -1,34 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Progress} from 'antd';
 import {AxiosProgressEvent} from 'axios';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
+import UploadContext from '../../../Context/UploadContext';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 
 interface UploadInformationProps {
   files?: Array<File>;
   progress?: AxiosProgressEvent;
 }
 
-const UploadInformation = ({files, progress}: UploadInformationProps) => {
+const UploadInformation = ({progress}: UploadInformationProps) => {
   const [open, setOpen] = useState(true);
+  const {lastFileCompleted, fileList, isUploading} = useContext(UploadContext);
 
   useEffect(() => {
+    console.log(fileList?.length);
     setOpen(true);
-  }, [files]);
+  }, [fileList]);
 
-  if (!progress || !open) return null;
+  if (!fileList || !open) return null;
 
-  const total = progress.total || 100;
-  const percent = (progress.loaded / total) * 100;
+  const total = fileList.length;
+  const completed = fileList.filter(f => f.progress == 100).length;
+  const percent = (completed / total) * 100;
 
   return (
     <div className={'upload-information-wrapper'}>
-      {files && (
+      {fileList && (
         <>
           <div className={'header'}>
             <h4>
-              {percent < 100 ? 'Cargando...' : 'Terminado - '} {files.length} archivo{files.length > 1 ? 's' : ''}
+              {percent < 100 ? 'Cargando...' : 'Terminado - '} {fileList.length} archivo{fileList.length > 1 ? 's' : ''}
             </h4>
             <Button
               onClick={() => setOpen(!open)}
@@ -37,13 +42,13 @@ const UploadInformation = ({files, progress}: UploadInformationProps) => {
             />
           </div>
           <ul className={'files-list'}>
-            {files.map((f, index) => {
+            {[...fileList].reverse().map((f, index) => {
               return (
                 <li key={index}>
-                  {f.name}
+                  {f.file.name}
                   <small>
                     {' - '}
-                    <FileSize size={f.size} />
+                    {f.fileData ? <FileSize size={f.fileData.size} /> : 'Cargando...'}
                   </small>
                 </li>
               );
@@ -52,7 +57,7 @@ const UploadInformation = ({files, progress}: UploadInformationProps) => {
         </>
       )}
       <Progress showInfo={false} gapPosition={'bottom'} percent={percent} />
-      {percent.toFixed(0)}% de <FileSize size={total} />
+      {percent.toFixed(0)}% de {total} archivos
     </div>
   );
 };

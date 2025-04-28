@@ -35,6 +35,10 @@ const FileUploader = ({
   const {addFile, lastFileCompleted, fileList} = useContext(UploadContext);
 
   useEffect(() => {
+    console.log('updated file list: ');
+  }, [fileList]);
+
+  useEffect(() => {
     if (lastFileCompleted && lastFileCompleted.fileData) {
       if (ownedFiles.includes(lastFileCompleted.id)) {
         setUploadedFile(lastFileCompleted.fileData);

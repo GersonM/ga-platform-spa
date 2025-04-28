@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Empty} from 'antd';
-import axios, {AxiosProgressEvent} from 'axios';
+import axios from 'axios';
 import {PiRecycle, PiUploadBold} from 'react-icons/pi';
 
 import FileItem from './FileItem';
@@ -11,10 +11,10 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import {Container, ContainerContent, ApiFile} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
-import UploadInformation from '../UploadInformation';
 import DropMessage from './DropMessage';
-import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import UploadContext from '../../../Context/UploadContext';
+import './styles.less';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -30,84 +30,13 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
   const [viewMode, setViewMode] = useState<string | number>();
   const [orderBy, setOrderBy] = useState('name');
-  const [loadingInformation, setLoadingInformation] = useState<AxiosProgressEvent>();
-  const [selectedFiles, setSelectedFiles] = useState<Array<any>>();
-  const [progress, setProgress] = useState(0);
+  const {addFile, lastFileCompleted} = useContext(UploadContext);
 
   useEffect(() => {
-    if (selectedFiles) {
-      const current = selectedFiles[0];
-    }
-  }, [selectedFiles]);
+    setReload(!reload);
+  }, [lastFileCompleted]);
 
-  const uploadFile = (file: any) => {
-    handleFileUpload(file);
-  };
-
-  const handleFileUpload = (selectedFile: any) => {
-    if (!selectedFile) {
-      alert('Please select a file to upload.');
-      return;
-    }
-
-    const chunkSize = 10 * 1024 * 1024; // 5MB (adjust based on your requirements)
-    const totalChunks = Math.ceil(selectedFile.size / chunkSize);
-    const chunkProgress = 100 / totalChunks;
-    let chunkNumber = 0;
-    let start = 0;
-    let end = 0;
-
-    const uploadNextChunk = async () => {
-      if (end <= selectedFile.size) {
-        const chunk = selectedFile.slice(start, end);
-        const formData = new FormData();
-        formData.append('file', chunk);
-        formData.append('chunkNumber', chunkNumber.toString());
-        formData.append('totalChunks', totalChunks.toString());
-        formData.append('originalname', selectedFile.name);
-        formData.append('container_uuid', containerUuid);
-
-        const config = {
-          onUploadProgress: (r: AxiosProgressEvent) => {
-            setLoadingInformation(r);
-          },
-          baseURL: import.meta.env.VITE_API_UPLOAD,
-        };
-        axios
-          .post('file-management/chunked-files', formData, config)
-
-          /*fetch(import.meta.env.VITE_API_UPLOAD + 'file-management/chunked-files', {
-                                        method: 'POST',
-                                        body: formData,
-                                        headers: {
-                                          'X-Tenant': 'app',
-                                          Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization,
-                                        },
-                                      })*/
-          //.then(response => response.json())
-          .then(data => {
-            const temp = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
-            //setStatus(temp);
-            setProgress(Number((chunkNumber + 1) * chunkProgress));
-            chunkNumber++;
-            start = end;
-            end = start + chunkSize;
-            uploadNextChunk();
-          })
-          .catch(error => {
-            console.error('Error uploading chunk:', error);
-          });
-      } else {
-        setProgress(100);
-        setSelectedFile(undefined);
-        //setStatus('File upload completed');
-      }
-    };
-
-    uploadNextChunk().then();
-  };
-
-  const onDrop = useCallback(
+  /*const onDrop = useCallback(
     (acceptedFiles: Array<Blob>) => {
       setSelectedFiles(acceptedFiles);
       //uploadFile(acceptedFiles[0]);
@@ -134,7 +63,13 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
         });
     },
     [containerUuid, reload],
-  );
+  );*/
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    for (const acceptedFilesKey in acceptedFiles) {
+      addFile(acceptedFiles[acceptedFilesKey], containerUuid);
+    }
+  }, []);
 
   useEffect(() => {
     setSelectedFile(undefined);
@@ -291,7 +226,6 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
               </div>
             )}
           </div>
-          <UploadInformation files={selectedFiles} progress={loadingInformation} />
         </>
       )}
     </div>
