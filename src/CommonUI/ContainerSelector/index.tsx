@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Container} from '../../Types/api';
 import axios from 'axios';
+import {PiCaretRight} from 'react-icons/pi';
+
+import {Container} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
-import {Col, Row} from 'antd';
+import './styles.less';
+import {Empty} from 'antd';
 
 interface ContainerSelectorProps {
   onChange?: (value: string) => void;
@@ -39,59 +42,76 @@ const ContainerSelector = ({value, onChange}: ContainerSelectorProps) => {
     return cancelTokenSource.cancel;
   }, []);
 
-  useEffect(() => {
-    if (!selectedContainer) {
-      return;
-    }
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
+  const getContainerLevel = (container: Container, level: number, item: number) => {
     setLoading(true);
     axios
-      .get(`file-management/containers/${selectedContainer?.uuid}/view`, config)
+      .get(`file-management/containers/${container.uuid}/view`)
       .then(response => {
         setLoading(false);
         if (response) {
           let nLevel = [...containerLevels];
-          nLevel.push(response.data.containers);
-          setContainerLevels(nLevel);
+          nLevel[level].forEach(i => (i.open = false));
+          nLevel[level][item].open = true;
+          nLevel[level + 1] = response.data.containers;
+          setContainerLevels(nLevel.slice(0, level + 2));
+
+          let out = document.getElementById('out');
+          if (out) {
+            // allow 1px inaccuracy by adding 1
+            let isScrolledToBottom = out?.scrollWidth - out?.clientWidth <= out?.scrollLeft + 1;
+            console.log(out?.scrollWidth, out?.clientWidth, out?.scrollLeft, isScrolledToBottom);
+            console.log(
+              'out.scrollWidth - out.clientWidth',
+              out?.scrollWidth - out?.clientWidth,
+              'out.scrollLeft',
+              out?.scrollLeft,
+              'isScrolledToBottom',
+              isScrolledToBottom,
+            );
+            out.scrollIntoView();
+            if (isScrolledToBottom) out.scrollLeft = out.scrollWidth - out.clientWidth;
+          }
         }
       })
       .catch(e => {
         setLoading(false);
         ErrorHandler.showNotification(e);
       });
-
-    return cancelTokenSource.cancel;
-  }, [selectedContainer]);
-
-  console.log({containerLevels});
+  };
 
   return (
-    <Row gutter={[10, 10]}>
-      {containerLevels &&
-        containerLevels.map((level, index) => {
-          return (
-            <Col key={index}>
-              {level.map(container => {
-                return (
-                  <div
-                    key={container.uuid}
-                    onClick={() => {
-                      setSelectedContainer(container);
-                      if (onChange) {
-                        onChange(container.uuid);
-                      }
-                    }}>
-                    {container.name}
-                  </div>
-                );
-              })}
-            </Col>
-          );
-        })}
-    </Row>
+    <div className={'container-selector-wrapper'}>
+      <div className={'container-selector-scroll'} id={'out'}>
+        {containerLevels &&
+          containerLevels.map((level, lIndex) => {
+            return (
+              <div key={lIndex}>
+                <div className={'container-level'}>
+                  {level.length == 0 && (
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay contenedores'} />
+                  )}
+                  {level.map((container, cIndex) => {
+                    return (
+                      <div
+                        className={'container-name' + (container.open ? ' selected' : '')}
+                        key={container.uuid}
+                        onClick={() => {
+                          getContainerLevel(container, lIndex, cIndex);
+                          if (onChange) {
+                            onChange(container.uuid);
+                          }
+                        }}>
+                        {container.name}
+                        {container.open ? <PiCaretRight /> : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+      </div>
+    </div>
   );
 };
 

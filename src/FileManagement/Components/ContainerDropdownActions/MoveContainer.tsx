@@ -92,6 +92,9 @@ const MoveContainer = ({container, onCompleted}: RenameFileProps) => {
       <Form.Item name={'name'} label={'Carpeta de destino'}>
         <ContainerSelector />
       </Form.Item>
+      <Form.Item name={'name'} label={'Carpeta de destino'}>
+        <Input />
+      </Form.Item>
       <PrimaryButton block htmlType={'submit'}>
         Mover
       </PrimaryButton>

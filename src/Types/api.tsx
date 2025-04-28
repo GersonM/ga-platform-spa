@@ -239,6 +239,7 @@ export type UploadQueueFile = {
 export type Container = {
   uuid: string;
   name: string;
+  open: boolean; //local
   is_public: boolean;
   is_locked: boolean;
   lock_type: string;

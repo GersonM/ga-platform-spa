@@ -1,0 +1,44 @@
+.container-selector-wrapper {
+  background: var(--backgroung-color-input);
+  border-radius: 8px;
+  overflow: auto;
+
+  .container-selector-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .container-level {
+    width: 150px;
+    max-height: 230px;
+    overflow: auto;
+    border: 1px solid var(--backgroung-color);
+
+
+    .container-name {
+      padding: 5px 8px;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 500;
+      font-size: 13px;
+
+      &:hover {
+        background: var(--backgroung-color);
+      }
+
+      &.selected {
+        background: var(--primary-color);
+        color: #ffffff;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--border-color);
+      }
+    }
+  }
+}

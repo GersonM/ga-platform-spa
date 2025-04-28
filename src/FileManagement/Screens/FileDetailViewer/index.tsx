@@ -81,7 +81,7 @@ const FileDetailViewer = () => {
   return (
     <div className={'file-detail-wrapper'}>
       <div className={'file-detail-container'}>
-        <Space size={'large'} align={'start'}>
+        <Space align={'center'}>
           <img src={tenantLogo ? tenantLogo : logo} alt="Logo" className={'logo'} />
           <div>
             <h2 className={'title'}>{file?.name}</h2>
@@ -93,7 +93,7 @@ const FileDetailViewer = () => {
         <Divider />
         <Row gutter={10}>
           {showAnnotations && (
-            <Col md={5}>
+            <Col xs={24} sm={5} md={5}>
               <div className={'time-line-container'}>
                 <h3>Anotaciones</h3>
                 <br />
@@ -119,19 +119,18 @@ const FileDetailViewer = () => {
               </div>
             </Col>
           )}
-
-          <Col md={showAnnotations ? 19 : 24}>
+          <Col xs={24} sm={showAnnotations ? 19 : 24}>
             {file && (
               <div className={'file-container'}>
-                <div className={'file-description'}>
-                  <p>{file.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
+                <p>{file.description || <span style={{opacity: 0.3}}>No se agrego una descripción</span>}</p>
+                {getViewer(file)}
+                <div style={{marginTop: 15, textAlign: 'center'}}>
                   <PrimaryButton
                     icon={<PiDownloadDuotone className={'button-icon'} />}
                     label={'Descargar'}
                     href={file?.download}
                   />
                 </div>
-                {getViewer(file)}
               </div>
             )}
           </Col>
