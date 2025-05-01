@@ -121,7 +121,7 @@ const Navigation = () => {
   };
 
   const navLogo = darkMode ? config?.dark_logo : config?.dark_logo;
-  const tenantItems: ItemType[] = user?.tenants?.map(t => ({
+  const tenantItems = user?.tenants?.map(t => ({
     label: t.config.name,
     icon: <img alt={t.config.name} style={{width: 120}} src={t.white_logo} />,
     key: t.config.id,
