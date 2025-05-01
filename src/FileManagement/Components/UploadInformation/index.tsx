@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Progress, Spin} from 'antd';
+import {Progress, Spin} from 'antd';
+import {PiCheckCircleFill, PiXCircle} from 'react-icons/pi';
 import {AxiosProgressEvent} from 'axios';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
 import UploadContext from '../../../Context/UploadContext';
-import {PiCheckCircle, PiCheckCircleFill, PiXCircle} from 'react-icons/pi';
 import IconButton from '../../../CommonUI/IconButton';
 
 interface UploadInformationProps {

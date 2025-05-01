@@ -6,8 +6,8 @@ import axios from 'axios';
 import {SettingValue} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import './styles.less';
 import FileUploader from '../../../FileManagement/Components/FileUploader';
+import './styles.less';
 
 interface PreferenceValueProps {
   preference: SettingValue;

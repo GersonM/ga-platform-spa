@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
+import {Avatar, Badge, Dropdown, Image, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import {CustomScroll} from 'react-custom-scroll';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import {
   PiBuildingsLight,
   PiBulldozerLight,
   PiCalendarCheckLight,
+  PiCaretUpDown,
   PiCarLight,
   PiCarProfile,
   PiCashRegister,
@@ -51,6 +52,7 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
+import Cookies from 'js-cookie';
 
 const menuItems: ItemType[] = [
   {
@@ -92,6 +94,19 @@ const Navigation = () => {
       });
   };
 
+  const setWorkspace = (event: any) => {
+    axios
+      .post('authentication/switch-workspace', {workspace: event.key})
+      .then(response => {
+        Cookies.set('workspace', event.key);
+        Cookies.set('session_token', response.data.token);
+        location.reload();
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
   const handleUserMenuClick = (item: any) => {
     console.log(item.key);
     navigate('/' + item.key);
@@ -106,17 +121,25 @@ const Navigation = () => {
   };
 
   const navLogo = darkMode ? config?.dark_logo : config?.dark_logo;
+  const tenantItems: ItemType[] = user?.tenants?.map(t => ({
+    label: t.config.name,
+    icon: <img alt={t.config.name} style={{width: 120}} src={t.white_logo} />,
+    key: t.config.id,
+  }));
 
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
       <div className={'head'}>
-        <div
-          className="logo-square"
-          onClick={() => {
-            setOpenMenu(!open);
-          }}>
-          <img src={navLogo || logo} alt="Logo" />
-        </div>
+        <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
+          <div
+            className="logo-square"
+            onClick={() => {
+              setOpenMenu(!open);
+            }}>
+            <img src={navLogo || logo} alt="Logo" />
+            <PiCaretUpDown />
+          </div>
+        </Dropdown>
       </div>
 
       <CustomScroll heightRelativeToParent="calc(100% - 20px)">
@@ -221,6 +244,10 @@ const Navigation = () => {
               <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
             )}
             {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
+            <li onClick={() => setWorkspace('app')}>App</li>
+            <li onClick={() => setWorkspace('mecatronic')}>Mtronic</li>
+            <li onClick={() => setWorkspace('villa')}>Villa</li>
+            <li onClick={() => setWorkspace('country')}>Country</li>
           </ul>
         </nav>
       </CustomScroll>

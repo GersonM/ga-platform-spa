@@ -189,6 +189,7 @@ export type SessionUser = {
   profile: Profile;
   roles?: string[];
   name: string;
+  tenants?: TenantConfig[];
   disabled_at?: string;
   email_verified_at?: string;
   token: string;

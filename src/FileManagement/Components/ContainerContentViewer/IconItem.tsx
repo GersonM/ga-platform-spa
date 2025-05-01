@@ -12,8 +12,6 @@ interface IconItemProps {
   onDoubleClick?: () => void;
 }
 
-const MAX_CHARS = 33;
-
 const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoubleClick}: IconItemProps) => {
   const onItemClick = () => {
     if (onClick) {
@@ -22,12 +20,16 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
   };
 
   return (
-    <div className={`file-item ${selected ? 'selected' : ''}`} onDoubleClick={onDoubleClick} onClick={onItemClick}>
+    <div
+      title={name}
+      className={`file-item ${selected ? 'selected' : ''}`}
+      onDoubleClick={onDoubleClick}
+      onClick={onItemClick}>
       <div className={'file-image'} style={image ? {backgroundColor: '#ffffff', backgroundImage: `url(${image})`} : {}}>
         {!image ? icon ? icon : <PiFile color={'#444444'} size={20} /> : null}
       </div>
       <div className={'file-item-info'}>
-        <span className={'file-name'}>{name.length > MAX_CHARS ? name.substring(0, MAX_CHARS) + '...' : name}</span>
+        <span className={'file-name'}>{name}</span>
         {caption && <span className={'file-caption'}>{caption}</span>}
       </div>
     </div>
