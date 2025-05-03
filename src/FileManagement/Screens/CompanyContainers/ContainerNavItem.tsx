@@ -6,6 +6,7 @@ import {PiArchiveDuotone, PiTerminalWindowDuotone} from 'react-icons/pi';
 import {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
+import {FiHardDrive, FiTerminal} from 'react-icons/fi';
 
 interface ContainerNavItemProps {
   container: Container;
@@ -17,7 +18,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
   return (
     <>
       <NavLink to={`/file-management/${container.uuid}`}>
-        {container.is_locked ? <PiTerminalWindowDuotone className={'icon'} /> : <PiArchiveDuotone className={'icon'} />}
+        {container.is_locked ? <FiTerminal className={'icon'} /> : <FiHardDrive className={'icon'} />}
         <span className="label">
           {container.name}
           {!container.is_locked && (

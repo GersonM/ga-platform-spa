@@ -25,6 +25,7 @@ interface ContainerContentViewerProps {
 const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: ContainerContentViewerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
   const [selectedFile, setSelectedFile] = useState<ApiFile>();
+  const [selectedFiles, setSelectedFiles] = useState<ApiFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
@@ -35,35 +36,6 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
   useEffect(() => {
     setReload(!reload);
   }, [lastFileCompleted]);
-
-  /*const onDrop = useCallback(
-    (acceptedFiles: Array<Blob>) => {
-      setSelectedFiles(acceptedFiles);
-      //uploadFile(acceptedFiles[0]);
-      //return;
-      const formData = new FormData();
-      acceptedFiles.forEach(item => {
-        formData.append('file[]', item);
-      });
-      formData.append('container_uuid', containerUuid);
-      const config = {
-        onUploadProgress: (r: AxiosProgressEvent) => {
-          setLoadingInformation(r);
-        },
-        baseURL: import.meta.env.VITE_API_UPLOAD,
-      };
-      axios
-        .post('file-management/files', formData, config)
-        .then(() => {
-          setReload(!reload);
-        })
-        .catch(error => {
-          setReload(!reload);
-          ErrorHandler.showNotification(error);
-        });
-    },
-    [containerUuid, reload],
-  );*/
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -169,7 +141,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
             {showFileInformation && (
               <FileInformation
                 fileContainer={containerContent.container}
-                file={selectedFile}
+                files={selectedFiles}
                 onChange={() => {
                   //  setSelectedFile(undefined);
                   //TODO: Check if the selected file exist
@@ -219,11 +191,21 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                   <FileItem
                     size={viewMode == 'grid' ? 45 : 28}
                     key={file.uuid}
-                    selected={selectedFile && file.uuid === selectedFile.uuid}
+                    selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
                     file={file}
                     onChange={() => setReload(!reload)}
                     onDoubleClick={() => downloadFile(file)}
-                    onClick={() => setSelectedFile(file)}
+                    onClick={(selected, evt) => {
+                      if (evt.shiftKey) {
+                        if (selectedFiles.findIndex(f => f.uuid === file.uuid) == -1) {
+                          setSelectedFiles([...selectedFiles, file]);
+                        } else {
+                          setSelectedFiles(selectedFiles.filter(f => f.uuid !== file.uuid));
+                        }
+                      } else {
+                        setSelectedFiles([file]);
+                      }
+                    }}
                   />
                 ))}
               </div>

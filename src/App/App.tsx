@@ -55,6 +55,7 @@ const ClubSubscriptionViewer = lazy(() => import('../ClubManagement/Screens/Club
 const FileManagerPreferences = lazy(() => import('../FileManagement/Screens/FileManagerPreferences'));
 const ImportPayments = lazy(() => import('../ClubManagement/Screens/ImportPayments'));
 const WarehouseProductsManager = lazy(() => import('../WarehouseManager/Screens/WarehouseProductsManager'));
+const AttendanceManager = lazy(() => import('../ClubManagement/Screens/AttendanceManagement'));
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -151,6 +152,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'club'}>
+          <Route path={'attendance'} element={<AttendanceManager />} />
           <Route path={'access-control'} element={<MembersAccessControl />} />
           <Route path={'subscriptions'} element={<ClubMembersManagement />} />
           <Route path={'subscriptions/:subscription'} element={<ClubSubscriptionViewer />} />

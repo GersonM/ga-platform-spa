@@ -1,8 +1,10 @@
 import React from 'react';
 import {Avatar} from 'antd';
-import './styles.less';
+import {TbUserSquareRounded} from 'react-icons/tb';
+
 import {Profile} from '../../Types/api';
 import LoadingIndicator from '../LoadingIndicator';
+import './styles.less';
 
 interface IProfileCardProps {
   profile?: Profile;
@@ -16,10 +18,10 @@ const ProfileChip = ({profile, caption}: IProfileCardProps) => {
       {profile && (
         <>
           <Avatar src={profile.avatar?.thumbnail} className={'avatar'}>
-            G
+            <TbUserSquareRounded size={22} />
           </Avatar>
           <div>
-            {profile.name} {profile.last_name} <br />
+            {profile.name} {profile.last_name}
             <small>{caption ? caption : profile.email}</small>
           </div>
         </>

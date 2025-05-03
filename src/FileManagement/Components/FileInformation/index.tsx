@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Form, Image, Input, InputNumber, message, Row, Select, Tag} from 'antd';
+import {Button, Col, Divider, Form, Image, Input, InputNumber, List, message, Row, Select, Space, Tag} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
@@ -17,21 +17,25 @@ import IconButton from '../../../CommonUI/IconButton';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
 import FileIcon from '../FileIcon';
 import './styles.less';
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import {NavListItem} from '../../../CommonUI/NavList';
+import ListItem from 'antd/es/upload/UploadList/ListItem';
 
 interface FileInformationProps {
   file?: ApiFile;
+  files?: ApiFile[];
   fileContainer?: Container;
   onChange?: () => void;
 }
 
-const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) => {
+const FileInformation = ({fileContainer, files, onChange}: FileInformationProps) => {
   const [fileActivity, setFileActivity] = useState<Array<FileActivity>>();
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [commentForm] = useForm();
 
   useEffect(() => {
-    if (file) {
+    if (files?.length == 1) {
       const cancelTokenSource = axios.CancelToken.source();
       const config = {
         cancelToken: cancelTokenSource.token,
@@ -39,7 +43,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
       };
       setLoading(true);
       axios
-        .get(`file-management/files/${file.uuid}/activity`, config)
+        .get(`file-management/files/${files[0].uuid}/activity`, config)
         .then(response => {
           setLoading(false);
           if (response) {
@@ -53,11 +57,12 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
 
       return cancelTokenSource.cancel;
     }
-  }, [file, reload]);
+  }, [files, reload]);
 
   const sendComment = (values: any) => {
+    if (!files) return;
     axios
-      .post(`file-management/files/${file?.uuid}/activity`, values)
+      .post(`file-management/files/${files[0]?.uuid}/activity`, values)
       .then(() => {
         setReload(!reload);
         commentForm.resetFields();
@@ -67,8 +72,9 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
       });
   };
   const generateThumbnail = () => {
+    if (!files) return;
     axios
-      .post(`file-management/files/${file?.uuid}/generate-thumbnail`)
+      .post(`file-management/files/${files[0]?.uuid}/generate-thumbnail`)
       .then(() => {
         setReload(!reload);
         onChange && onChange();
@@ -120,23 +126,21 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
     }
   };
 
-  const detailImageLink = location.origin + '/storage/files/' + file?.uuid;
+  const detailImageLink = files?.length == 1 ? location.origin + '/storage/files/' + files[0]?.uuid : '';
 
   return (
     <div className={'file-information-wrapper'}>
-      {!file ? (
-        <EmptyMessage message={'Seleccionar un archivo para ver su información'} />
-      ) : (
+      {files?.length == 1 && (
         <>
           <div className={'information-header'}>
             <div className={'file-name'}>
               <span className={'label'}>
-                {file.name}
+                {files[0].name}
                 <small>
                   <Tag color={'magenta'} style={{marginRight: 5}}>
-                    <FileSize size={file.size} />
+                    <FileSize size={files[0].size} />
                   </Tag>
-                  {dayjs(file.created_at).format(' D/MM/YYYY [a las] H:mm')}
+                  {dayjs(files[0].created_at).format(' D/MM/YYYY [a las] H:mm')}
                 </small>
               </span>
             </div>
@@ -145,13 +149,13 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                 if (onChange) onChange();
               }}
               trigger={['click']}
-              file={file}>
+              file={files[0]}>
               <IconButton icon={<BsThreeDotsVertical />} />
             </FileDropdownActions>
           </div>
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
             <div className="information-content">
-              {getViewer(file)}
+              {getViewer(files[0])}
               <Row gutter={[10, 10]}>
                 <Col md={12}>
                   <Button
@@ -171,7 +175,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                     size={'small'}
                     block
                     type={'primary'}
-                    href={file.download}
+                    href={files[0].download}
                     target="_blank"
                     icon={<PiDownload size={18} style={{marginTop: 1}} />}>
                     Descargar
@@ -200,29 +204,29 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                 <pre>{detailImageLink}</pre>
                 <span className="label">
                   Enlace el archivo:{' '}
-                  <Button type={'link'} size={'small'} onClick={() => copyText(file.public)}>
+                  <Button type={'link'} size={'small'} onClick={() => copyText(files[0].public)}>
                     Copiar
                   </Button>
                 </span>
                 {fileContainer?.is_public && (
                   <>
-                    <pre>{file.public}</pre>
+                    <pre>{files[0].public}</pre>
                     <span className="label">
                       URL pública:{' '}
-                      <Button type={'link'} size={'small'} onClick={() => copyText(file.source)}>
+                      <Button type={'link'} size={'small'} onClick={() => copyText(files[0].source)}>
                         Copiar
                       </Button>
                     </span>
                   </>
                 )}
-                <pre>{file.source}</pre>
+                <pre>{files[0].source}</pre>
                 <span className="label">
                   URL miniatura:{' '}
-                  <Button size={'small'} type={'link'} onClick={() => copyText(file.thumbnail)}>
+                  <Button size={'small'} type={'link'} onClick={() => copyText(files[0].thumbnail)}>
                     Copiar
                   </Button>
                 </span>
-                <pre>{file.thumbnail}</pre>
+                <pre>{files[0].thumbnail}</pre>
               </div>
               <Divider>Anotaciones</Divider>
               <div className={'activities-wrapper'}>
@@ -244,7 +248,7 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
                         <Input.TextArea placeholder="Ingresa un comentario"></Input.TextArea>
                       </Form.Item>
                     </Col>
-                    {(file.type.includes('vid') || file.type.includes('aud')) && (
+                    {(files[0].type.includes('vid') || files[0].type.includes('aud')) && (
                       <>
                         <Col md={24}>
                           <Form.Item name={'time'} noStyle>
@@ -274,6 +278,36 @@ const FileInformation = ({fileContainer, file, onChange}: FileInformationProps) 
           </OverlayScrollbarsComponent>
         </>
       )}
+      {files && files.length > 1 && (
+        <>
+          <div className={'information-header'}>
+            <div className={'file-name'}>
+              <span className={'label'}>Varios archivos seleccionados</span>
+            </div>
+          </div>
+          <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
+            <div className="information-content">
+              {files.map(f => (
+                <div key={f.uuid}>
+                  <FileIcon size={50} file={f} />
+                  <div className={'file-info'}>
+                    <span className={'name'}>{f.name}</span>
+                    <span className={'size'}>
+                      <FileSize size={f.size} />
+                    </span>
+                    <span className={'date'}></span>
+                  </div>
+                </div>
+              ))}
+              <Space direction={'vertical'}>
+                <PrimaryButton label={'Descargar todos'} href={files[0].download} block />
+                <PrimaryButton label={'Eliminar ' + files.length + ' archivos'} danger block />
+              </Space>
+            </div>
+          </OverlayScrollbarsComponent>
+        </>
+      )}
+      {files?.length == 0 && <EmptyMessage message={'Seleccionar un archivo para ver su información'} />}
     </div>
   );
 };

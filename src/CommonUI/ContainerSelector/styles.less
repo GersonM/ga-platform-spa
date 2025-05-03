@@ -1,7 +1,9 @@
 .container-selector-wrapper {
-  background: var(--backgroung-color-input);
+  background: var(--backgroung-color);
   border-radius: 8px;
   overflow: auto;
+  border: 1px solid var(--border-color);
+  height: 200px;
 
   .container-selector-scroll {
     display: flex;
@@ -10,34 +12,45 @@
 
   .container-level {
     width: 150px;
-    max-height: 230px;
+    min-height: 200px;
+    max-height: 200px;
     overflow: auto;
-    border: 1px solid var(--backgroung-color);
-
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.04);
 
     .container-name {
-      padding: 5px 8px;
-      margin: 5px;
-      border-radius: 8px;
+      padding: 8px 8px;
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
+      align-content: center;
       align-items: center;
       justify-content: space-between;
       font-weight: 500;
       font-size: 13px;
+      line-height: 15px;
+
+      span {
+        flex: 1;
+      }
 
       &:hover {
         background: var(--backgroung-color);
       }
 
+      &.open {
+        background: var(--border-color);
+      }
+
       &.selected {
         background: var(--primary-color);
+        font-weight: 600;
         color: #ffffff;
       }
 
+
       &:not(:last-child) {
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px dashed var(--border-color);
       }
     }
   }

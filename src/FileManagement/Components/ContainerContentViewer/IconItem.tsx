@@ -8,14 +8,14 @@ interface IconItemProps {
   selected?: boolean;
   icon?: React.ReactNode;
   image?: string;
-  onClick?: (selected: boolean) => void;
+  onClick?: (selected: boolean, evt: any) => void;
   onDoubleClick?: () => void;
 }
 
 const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoubleClick}: IconItemProps) => {
-  const onItemClick = () => {
+  const onItemClick = (evt: any) => {
     if (onClick) {
-      onClick(!selected);
+      onClick(!selected, evt);
     }
   };
 

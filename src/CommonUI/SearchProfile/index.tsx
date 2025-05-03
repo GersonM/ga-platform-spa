@@ -36,11 +36,13 @@ const SearchProfile = ({style, value, filter_type, exclude_type, mode, ...props}
       .get('hr-management/profiles', config)
       .then(response => {
         setLoading(false);
-        setProfiles(
-          response.data.data.map((item: Profile) => {
-            return {value: item.uuid, label: `${item.name} ${item.last_name}`, entity: item};
-          }),
-        );
+        if (response) {
+          setProfiles(
+            response.data.data.map((item: Profile) => {
+              return {value: item.uuid, label: `${item.name} ${item.last_name}`, entity: item};
+            }),
+          );
+        }
       })
       .catch(error => {
         setLoading(false);

@@ -1,103 +1,48 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Cascader, Form, Input} from 'antd';
+import React, {useState} from 'react';
+import {Form} from 'antd';
 import axios from 'axios';
 
-import {Container} from '../../../Types/api';
+import {ApiFile, Container} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ContainerNavItem from '../../Screens/CompanyContainers/ContainerNavItem';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import Panel from 'antd/es/splitter/Panel';
 import ContainerSelector from '../../../CommonUI/ContainerSelector';
+import {PiArrowRight} from 'react-icons/pi';
 
 interface RenameFileProps {
-  container: Container;
+  container?: Container;
+  file?: ApiFile;
   onCompleted?: () => void;
 }
 
-interface Option {
-  value: string | number;
-  label: string;
-  children?: Option[];
-}
-
-const MoveContainer = ({container, onCompleted}: RenameFileProps) => {
-  const [containers, setContainers] = useState<Container[]>();
+const MoveContainer = ({file, container, onCompleted}: RenameFileProps) => {
   const [loading, setLoading] = useState(false);
-  const [selectedContainer, setSelectedContainer] = useState<Container>();
-
-  useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-    setLoading(true);
-    axios
-      .get(`file-management/containers`, config)
-      .then(response => {
-        setLoading(false);
-        if (response) {
-          if (response.status === 204) {
-            setContainers([]);
-          }
-          setContainers(response.data);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-
-    return cancelTokenSource.cancel;
-  }, []);
-
-  useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-    setLoading(true);
-    axios
-      .get(`file-management/containers/${selectedContainer?.uuid}/view`, config)
-      .then(response => {
-        setLoading(false);
-        if (response) {
-          setSelectedContainer(response.data);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-
-    return cancelTokenSource.cancel;
-  }, []);
 
   const sendForm = (values: any) => {
+    setLoading(true);
     axios
-      .put(`file-management/containers/${container.uuid}`, values)
+      .post(`file-management/move-to-container`, {...values, file_uuid: file?.uuid, container_uuid: container?.uuid})
       .then(() => {
+        setLoading(false);
         if (onCompleted) {
           onCompleted();
         }
       })
       .catch(error => {
+        setLoading(false);
         ErrorHandler.showNotification(error);
       });
   };
 
   return (
-    <Form layout={'vertical'} onFinish={sendForm} initialValues={{name: container.name}}>
-      <h2>Mover carpeta</h2>
-      <p>{container.name}</p>
-      <Form.Item name={'name'} label={'Carpeta de destino'}>
+    <Form layout={'vertical'} onFinish={sendForm}>
+      <h2>
+        Mover carpeta: <strong>{container?.name}</strong>
+        <strong>{file?.name}</strong>
+      </h2>
+      <Form.Item name={'target_container'} label={'Carpeta de destino'} rules={[{required: true}]}>
         <ContainerSelector />
       </Form.Item>
-      <Form.Item name={'name'} label={'Carpeta de destino'}>
-        <Input />
-      </Form.Item>
-      <PrimaryButton block htmlType={'submit'}>
-        Mover
-      </PrimaryButton>
+      <PrimaryButton block htmlType={'submit'} loading={loading} label={'Mover'} icon={<PiArrowRight size={17} />} />
     </Form>
   );
 };

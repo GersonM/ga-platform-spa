@@ -17,11 +17,22 @@ interface ProfileSelectorProps {
   bordered?: boolean;
   value?: string | string[];
   disabled?: boolean;
+  allowCreate?: boolean;
+  style?: any;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProfileSelector = ({placeholder, mode, exclude, filter, value, onChange, ...props}: ProfileSelectorProps) => {
+const ProfileSelector = ({
+  placeholder,
+  mode,
+  exclude,
+  filter,
+  value,
+  onChange,
+  allowCreate = true,
+  ...props
+}: ProfileSelectorProps) => {
   const [openCreateProfile, setOpenCreateProfile] = useState(false);
 
   return (
@@ -34,12 +45,14 @@ const ProfileSelector = ({placeholder, mode, exclude, filter, value, onChange, .
             onChange && onChange(values, item);
           }}
         />
-        <PrimaryButton
-          onClick={() => setOpenCreateProfile(true)}
-          icon={<PiPlusBold size={14} />}
-          style={{marginLeft: 8}}
-          label={'Nuevo'}
-        />
+        {allowCreate && (
+          <PrimaryButton
+            onClick={() => setOpenCreateProfile(true)}
+            icon={<PiPlusBold size={14} />}
+            style={{marginLeft: 8}}
+            label={'Nuevo'}
+          />
+        )}
       </div>
       <Modal
         title={'Registrar nueva persona'}

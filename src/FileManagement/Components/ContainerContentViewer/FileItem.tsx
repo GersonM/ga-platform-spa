@@ -10,7 +10,7 @@ interface FileItemProps {
   file: ApiFile;
   selected?: boolean;
   onDoubleClick?: () => void;
-  onClick?: (selected: boolean) => void;
+  onClick?: (selected: boolean, evt: any) => void;
   onChange?: () => void;
   size?: number;
 }

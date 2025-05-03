@@ -6,10 +6,11 @@ import axios from 'axios';
 import RenameFile from './RenameFile';
 import {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import MoveContainer from '../ContainerDropdownActions/MoveContainer';
 
 const items: MenuProps['items'] = [
   {label: 'Editar', key: 'rename', icon: <PiPencilSimpleLine size={18} />},
-  {label: 'Mover a otra ubicación', key: 'move', icon: <PiArrowsOutCardinal size={18} />, disabled: true},
+  {label: 'Mover a otra ubicación', key: 'move', icon: <PiArrowsOutCardinal size={18} />},
   {type: 'divider'},
   {label: 'Borrar', key: 'delete', danger: true, icon: <PiTrash size={16} />},
 ];
@@ -54,7 +55,7 @@ const FileDropdownActions = ({children, trigger, file, onChange}: FileDropdownAc
   const getContent = () => {
     switch (activeAction) {
       case 'move':
-        return <RenameFile file={file} onCompleted={onComplete} />;
+        return <MoveContainer file={file} onCompleted={onComplete} />;
       case 'rename':
         return <RenameFile file={file} onCompleted={onComplete} />;
     }

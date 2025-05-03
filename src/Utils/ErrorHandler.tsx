@@ -61,17 +61,17 @@ class ErrorHandler {
     if (error.response) {
       if (error.response.config.responseType === 'blob') {
         handler.getBlobError(error).then(() => {
-          handler.showNotification(time);
+          handler.show(time);
         });
       } else {
-        handler.showNotification(time);
+        handler.show(time);
       }
     } else {
-      handler.showNotification(time);
+      handler.show(time);
     }
   }
 
-  showNotification(time: number) {
+  show(time: number) {
     notification.open({
       // @ts-ignore
       type: this.type,

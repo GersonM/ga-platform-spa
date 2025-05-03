@@ -13,14 +13,14 @@ interface UploadInformationProps {
   progress?: AxiosProgressEvent;
 }
 
-const UploadInformation = ({progress}: UploadInformationProps) => {
+const UploadInformation = ({}: UploadInformationProps) => {
   const [open, setOpen] = useState(true);
   const {lastFileCompleted, fileList, isUploading} = useContext(UploadContext);
 
   useEffect(() => {
     console.log(fileList?.length);
     setOpen(true);
-  }, [fileList]);
+  }, [fileList?.length]);
 
   if (!fileList || !open) return null;
 

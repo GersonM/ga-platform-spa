@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import axios from 'axios';
 import {useParams, useNavigate, NavLink} from 'react-router-dom';
 import {Empty, Popover, Space, Tooltip} from 'antd';
 import {PlusCircleIcon} from '@heroicons/react/24/outline';
-import {PiTrashDuotone} from 'react-icons/pi';
+import {FiTrash2} from 'react-icons/fi';
 import {TbReload} from 'react-icons/tb';
+import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ContainerForm from '../../Components/ContainerForm';
@@ -18,8 +18,8 @@ import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
 import AuthContext from '../../../Context/AuthContext';
-import './styles.less';
 import UploadInformation from '../../Components/UploadInformation';
+import './styles.less';
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -107,7 +107,7 @@ const CompanyContainers = () => {
                 ))}
               <li className={params.uuid === 'trash' ? 'active' : ''}>
                 <NavLink to={`/file-management/trash`}>
-                  <PiTrashDuotone className="icon" />
+                  <FiTrash2 className="icon" />
                   <span className="label">Elementos borrados</span>
                 </NavLink>
               </li>

@@ -123,7 +123,7 @@ const Navigation = () => {
   const navLogo = darkMode ? config?.dark_logo : config?.dark_logo;
   const tenantItems = user?.tenants?.map(t => ({
     label: t.config.name,
-    icon: <img alt={t.config.name} style={{width: 120}} src={t.white_logo} />,
+    icon: <img alt={t.config.name} style={{width: 80}} src={t.white_logo} />,
     key: t.config.id,
   }));
 
@@ -216,6 +216,7 @@ const Navigation = () => {
             )}
             {config?.modules.includes('club') && (
               <NavItem label={'Club'} icon={<PiUsers />}>
+                <NavItem label={'Asistencia'} icon={<PiUsersThree />} path={'/club/attendance'} />
                 <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
                 <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
                 <NavItem label={'Importar pagos'} icon={<PiMoney />} path={'/club/payments-import'} />
@@ -244,10 +245,6 @@ const Navigation = () => {
               <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
             )}
             {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
-            <li onClick={() => setWorkspace('app')}>App</li>
-            <li onClick={() => setWorkspace('mecatronic')}>Mtronic</li>
-            <li onClick={() => setWorkspace('villa')}>Villa</li>
-            <li onClick={() => setWorkspace('country')}>Country</li>
           </ul>
         </nav>
       </CustomScroll>
