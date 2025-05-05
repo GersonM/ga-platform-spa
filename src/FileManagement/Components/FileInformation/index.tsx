@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Divider, Form, Image, Input, InputNumber, List, message, Row, Select, Space, Tag} from 'antd';
+import {Button, Col, Divider, Form, Image, Input, InputNumber, message, Row, Select, Space, Tag} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
@@ -16,10 +16,8 @@ import FileDropdownActions from '../FileDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
 import FileIcon from '../FileIcon';
-import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {NavListItem} from '../../../CommonUI/NavList';
-import ListItem from 'antd/es/upload/UploadList/ListItem';
+import './styles.less';
 
 interface FileInformationProps {
   file?: ApiFile;
@@ -282,26 +280,26 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
         <>
           <div className={'information-header'}>
             <div className={'file-name'}>
-              <span className={'label'}>Varios archivos seleccionados</span>
+              <span className={'label'}>{files.length} archivos seleccionados</span>
             </div>
           </div>
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
             <div className="information-content">
               {files.map(f => (
-                <div key={f.uuid}>
-                  <FileIcon size={50} file={f} />
+                <div key={f.uuid} className={'selected-file-item'} onClick={() => onChange && onChange()}>
+                  <FileIcon size={19} file={f} />
                   <div className={'file-info'}>
                     <span className={'name'}>{f.name}</span>
                     <span className={'size'}>
                       <FileSize size={f.size} />
                     </span>
-                    <span className={'date'}></span>
                   </div>
                 </div>
               ))}
-              <Space direction={'vertical'}>
-                <PrimaryButton label={'Descargar todos'} href={files[0].download} block />
-                <PrimaryButton label={'Eliminar ' + files.length + ' archivos'} danger block />
+              <br />
+              <Space>
+                <PrimaryButton disabled label={'Descargar'} href={files[0].download} block size={'small'} />
+                <PrimaryButton disabled label={'Borrar ' + files.length + ' archivos'} danger block size={'small'} />
               </Space>
             </div>
           </OverlayScrollbarsComponent>

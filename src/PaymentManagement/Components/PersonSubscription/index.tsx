@@ -7,7 +7,6 @@ import {
   PiCalendarX,
   PiIdentificationCard,
   PiPencilSimple,
-  PiPlus,
   PiPlusBold,
   PiProhibitBold,
   PiThumbsUp,
@@ -163,7 +162,8 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                   console.log(response);
                   setReload(!reload);
                 })
-                .catch(erro => {
+                .catch(error => {
+                  ErrorHandler.showNotification(error);
                   setLoading(false);
                 });
             }}
@@ -251,24 +251,26 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 </Tag>
               </Space>
             }>
-            <div className={'subscription-info'}>
-              <Space>
+            <div>
+              <Space split={<Divider type={'vertical'} />}>
                 <InfoButton
                   icon={<PiCalendarCheck className={'icon'} />}
                   caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
                   label={'Inicio'}
                 />
-                <InfoButton
-                  icon={<PiCalendarX className={'icon'} />}
-                  caption={
-                    subscription.terminated_at
-                      ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
-                        ' - ' +
-                        dayjs(subscription.started_at).diff(new Date(), 'days')
-                      : 'Indefinido'
-                  }
-                  label={'Terminado'}
-                />
+                {subscription.terminated_at && (
+                  <InfoButton
+                    icon={<PiCalendarX className={'icon'} />}
+                    caption={
+                      subscription.terminated_at
+                        ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
+                          ' - ' +
+                          dayjs(subscription.started_at).diff(new Date(), 'days')
+                        : 'Indefinido'
+                    }
+                    label={'Terminado'}
+                  />
+                )}
                 <InfoButton
                   icon={<PiTicket className={'icon'} />}
                   caption={<TextMoney money={subscription.amount} currency={subscription.billing_currency} />}

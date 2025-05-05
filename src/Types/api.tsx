@@ -253,7 +253,7 @@ export type Container = {
 };
 
 export type ContainerContent = {
-  container: Container;
+  container?: Container;
   containers: Array<Container>;
   files: Array<ApiFile>;
 };

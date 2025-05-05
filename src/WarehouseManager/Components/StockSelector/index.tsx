@@ -65,7 +65,7 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
     <Select
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige una producto'}
+      placeholder={placeholder || 'Elige un producto'}
       showSearch={true}
       filterOption={false}
       loading={loading}

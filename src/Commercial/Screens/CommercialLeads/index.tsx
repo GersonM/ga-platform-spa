@@ -1,60 +1,84 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Card, Checkbox, Col, Drawer, Empty, Form, Input, InputNumber, Row, Space, Statistic} from 'antd';
+import {Card, Col, Drawer, Empty, Pagination, Row, Space, Statistic} from 'antd';
+import {useNavigate, useParams} from 'react-router-dom';
+import {BiCog} from 'react-icons/bi';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Campaign, Lead, Profile} from '../../../Types/api';
+import {Campaign, Lead, Profile, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import CampaignsManager from '../../Components/CampaignsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import CreateLeadForm from '../../Components/CreateLeadForm';
 import CampaignSelector from '../../Components/CampaignSelector';
-import {useNavigate, useParams} from 'react-router-dom';
-import {BiCog} from 'react-icons/bi';
 import AuthContext from '../../../Context/AuthContext';
 
 const CommercialLeads = () => {
   const {user} = useContext(AuthContext);
-  const [leads, setLeads] = useState<any>();
+  const [leads, setLeads] = useState<Lead[]>();
   const [openCampaignManager, setOpenCampaignManager] = useState(false);
   const [reload, setReload] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
+  const [pagination, setPagination] = useState<ResponsePagination>();
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
+      params: {
+        campaign_uuid: params.campaign,
+        page: currentPage,
+        page_size: pageSize,
+      },
     };
 
+    setLoading(true);
+
     axios
-      .get(`commercial/leads/stats`, config)
+      .get(`commercial/leads`, config)
       .then(response => {
         if (response) {
-          setLeads(response.data);
+          setLeads(response.data.data);
+          setPagination(response.data.meta);
         }
+        setLoading(false);
       })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
+      .catch(error => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
       });
 
     return cancelTokenSource.cancel;
-  }, [reload]);
+  }, [reload, params.campaign, currentPage, pageSize]);
 
   const columns = [
     {
+      dataIndex: 'created_at',
+      title: 'Fecha',
+      width: 100,
+      render: (created_at: string) => {
+        return dayjs(created_at).format('DD-MM-YYYY HH:mm:ss');
+      },
+    },
+    {
       dataIndex: 'profile',
       title: 'Nombres',
-      width: 100,
+      width: 190,
       render: (profile: Profile) => {
         return `${profile.name} ${profile.last_name}`;
       },
     },
     {
-      dataIndex: 'score',
-      title: 'Score',
+      dataIndex: 'profile',
+      title: 'DNI',
+      render: (profile: Profile) => profile.doc_number,
     },
     {
       dataIndex: 'referer',
@@ -101,7 +125,7 @@ const CommercialLeads = () => {
         }
       />
       <Row gutter={[20, 20]}>
-        <Col lg={12} xs={24}>
+        <Col lg={8} xs={24}>
           {params.campaign ? (
             <CreateLeadForm
               campaignUuid={params.campaign}
@@ -113,10 +137,23 @@ const CommercialLeads = () => {
             <Empty description={'Selecciona una campaña'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </Col>
-        <Col lg={12} xs={24}>
-          <Card size={'small'} bordered={false}>
-            <Statistic title={'Ingresos registrados'} value={leads?.total_leads} />
+        <Col lg={16} xs={24}>
+          <h3>Personas</h3>
+          <Card size={'small'} loading={loading}>
+            <Statistic title={'Ingresos registrados'} value={pagination?.total} />
+            <TableList columns={columns} dataSource={leads} />
           </Card>
+          {pagination && (
+            <Pagination
+              size={'small'}
+              current={pagination.current_page}
+              total={pagination.total}
+              onChange={(page, size) => {
+                setCurrentPage(page);
+                setPageSize(size);
+              }}
+            />
+          )}
         </Col>
       </Row>
       <Drawer

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Popover, Segmented, Tooltip} from 'antd';
+import {Button, Input, Popover, Segmented, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
 import {BsSortAlphaDown, BsSortNumericDown} from 'react-icons/bs';
-import {ArrowUpIcon, FolderPlusIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
+import {PiArrowUp, PiFolderSimplePlus, PiMagnifyingGlass} from 'react-icons/pi';
+import {InformationCircleIcon} from '@heroicons/react/24/outline';
 
 import ContainerForm from '../../Components/ContainerForm';
 import {Container} from '../../../Types/api';
@@ -16,6 +17,7 @@ interface ContainerHeaderProps {
   onToggleInformation?: (enabled: boolean) => void;
   upLevel?: () => void;
   onChangeViewMode?: (viewMode: string | number) => void;
+  onSearch?: (search: string) => void;
   onChangeOrder?: (order: string) => void;
   onOpenUpload?: () => void;
   allowUpload?: boolean;
@@ -30,6 +32,7 @@ const ContainerHeader = ({
   onChangeViewMode,
   onOpenUpload,
   allowUpload,
+  onSearch,
   onChangeOrder,
   onReload,
 }: ContainerHeaderProps) => {
@@ -77,14 +80,31 @@ const ContainerHeader = ({
             />
           </Tooltip>
           <Tooltip title={'Subir un nivel'}>
-            <Button type={'text'} onClick={upLevel} icon={<ArrowUpIcon height={20} />} />
+            <Button type={'text'} onClick={upLevel} icon={<PiArrowUp size={18} />} />
+          </Tooltip>
+          <Tooltip title={'Buscar'}>
+            <Popover
+              placement={'bottomRight'}
+              content={
+                <>
+                  <Input.Search
+                    placeholder={'Buscar'}
+                    onSearch={value => {
+                      onSearch && onSearch(value);
+                    }}
+                  />
+                </>
+              }
+              trigger={'click'}>
+              <Button type={'text'} onClick={upLevel} icon={<PiMagnifyingGlass size={18} />} />
+            </Popover>
           </Tooltip>
           <Tooltip title={'Nuevo folder'}>
             <Popover
               placement={'bottomRight'}
               content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange} />}
               trigger={'click'}>
-              <Button type={'text'} icon={<FolderPlusIcon height={20} />} />
+              <Button type={'text'} icon={<PiFolderSimplePlus size={18} />} />
             </Popover>
           </Tooltip>
           <Tooltip title={'Ordenar nombre o fecha'}>

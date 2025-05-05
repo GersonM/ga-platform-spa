@@ -13,7 +13,7 @@ interface TableListProps {
   loading?: boolean;
   size?: string;
   small?: boolean;
-  dataSource?: TableProps<AnyObject>['dataSource'];
+  dataSource?: TableProps['dataSource'];
   expandable?: ExpandableConfig<AnyObject>;
   rowKey?: string;
   onClick?: (record: any, index?: number) => void;

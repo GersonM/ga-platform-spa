@@ -4,6 +4,8 @@ import {DatePicker, Dropdown, Empty, Form, Image, Input, MenuProps, Space, Tag, 
 import {AiOutlineAlert} from 'react-icons/ai';
 import {useDropzone} from 'react-dropzone';
 import {GrSend} from 'react-icons/gr';
+import {PiCaretDownBold} from 'react-icons/pi';
+import {IoAttach} from 'react-icons/io5';
 import dayjs, {Dayjs} from 'dayjs';
 import {CalendarDaysIcon, ChatBubbleLeftIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 
@@ -12,13 +14,12 @@ import PrimaryButton from '../PrimaryButton';
 import IconButton from '../IconButton';
 import {ApiFile} from '../../Types/api';
 
-import './styles.less';
 import Config from '../../Config';
-import {IoAttach} from 'react-icons/io5';
 import FileIcon from '../../FileManagement/Components/FileIcon';
 import SearchProfile from '../SearchProfile';
 import EntityActivityIcon from './EntityActivityIcon';
 import EntityActivityCardViewer from '../../EntityActivity/Components/EntityActivityCardViewer';
+import './styles.less';
 
 interface EntityActivityManagerProps {
   uuid: string;
@@ -140,9 +141,10 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
       <div className={'message-form-wrapper'}>
         {isDragActive && <div className={'drop-message'}>Suelta archivos para cargar</div>}
         <Form onFinish={submitMessage}>
-          <Dropdown menu={{items, onClick: updateMessageType}} arrow>
+          <Dropdown menu={{items, onClick: updateMessageType}} arrow={true}>
             <div className="message-type-icon">
               <EntityActivityIcon type={messageType} />
+              <PiCaretDownBold />
             </div>
           </Dropdown>
           <Form.Item noStyle>

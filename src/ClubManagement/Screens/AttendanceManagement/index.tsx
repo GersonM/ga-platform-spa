@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PiSignIn, PiSignInBold, PiSignOut} from 'react-icons/pi';
+import {PiSignIn, PiSignOut} from 'react-icons/pi';
 import {DatePicker, Form, Pagination, Select, Table} from 'antd';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -24,7 +24,12 @@ const AttendanceManagement = () => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {...filters, date: filters?.date ? filters.date.format('YYYY-MM-DD') : null},
+      params: {
+        ...filters,
+        date: filters?.date ? filters.date.format('YYYY-MM-DD') : null,
+        page: currentPage,
+        page_size: pageSize,
+      },
     };
 
     setLoading(true);
@@ -43,7 +48,7 @@ const AttendanceManagement = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, filters]);
+  }, [reload, filters, pageSize, currentPage]);
 
   const columns: any[] = [
     {

@@ -1,8 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, Divider, Empty, Form, Input, Modal, Popconfirm, Row, Space, Tabs, Tooltip} from 'antd';
-import {TrashIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
-import {PiArrowRight, PiCheckBold, PiProhibit} from 'react-icons/pi';
+import {PiArrowRight, PiCheckBold, PiProhibit, PiTrash} from 'react-icons/pi';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {EntityActivity} from '../../../Types/api';
@@ -77,38 +76,34 @@ const EntityActivityCardViewer = ({entityActivityUUID, ...props}: EntityActivity
   return (
     <Modal footer={false} open={!!entityActivityUUID} {...props}>
       <h2>{entityActivity?.comment}</h2>
-      <Form.Item>
-        <Space>
-          {user?.roles?.includes('admin') && (
-            <Popconfirm
-              onConfirm={() => deleteTask()}
-              title={'¿Seguro que quieres borrar esta actividad?'}
-              description={'Se eliminará toda la información relacionada'}>
-              <Button icon={<TrashIcon />} danger>
-                Eliminar
-              </Button>
-            </Popconfirm>
-          )}
+      <Space>
+        {user?.roles?.includes('admin') && (
           <Popconfirm
-            onConfirm={completeTask}
-            title={
-              entityActivity.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'
-            }
-            description={
-              entityActivity.completed_at
-                ? 'Se reactivarán las alertas para esta tarea'
-                : 'No se emitirán nuevas alertas'
-            }>
-            <Tooltip
-              title={entityActivity.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
-              placement={'bottom'}>
-              <Button icon={entityActivity.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />}>
-                {entityActivity.completed_at ? 'Marca como pendiente' : 'Marca como completado'}
-              </Button>
-            </Tooltip>
+            onConfirm={() => deleteTask()}
+            title={'¿Seguro que quieres borrar esta actividad?'}
+            description={'Se eliminará toda la información relacionada'}>
+            <Button icon={<PiTrash size={16} />} danger>
+              Eliminar
+            </Button>
           </Popconfirm>
-        </Space>
-      </Form.Item>
+        )}
+        <Popconfirm
+          onConfirm={completeTask}
+          title={
+            entityActivity.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'
+          }
+          description={
+            entityActivity.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
+          }>
+          <Tooltip
+            title={entityActivity.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
+            placement={'bottom'}>
+            <Button icon={entityActivity.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />}>
+              {entityActivity.completed_at ? 'Marca como pendiente' : 'Marca como completado'}
+            </Button>
+          </Tooltip>
+        </Popconfirm>
+      </Space>
       <Divider />
       <Form.Item>
         <Input.TextArea variant={'filled'} onClick={completeTask} placeholder={'Sin detalles'} />

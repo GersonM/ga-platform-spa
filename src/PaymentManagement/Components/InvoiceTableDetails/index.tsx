@@ -1,6 +1,6 @@
 import React from 'react';
 import {TrashIcon} from '@heroicons/react/24/outline';
-import {Popconfirm, Space} from 'antd';
+import {Modal, Popconfirm, Space} from 'antd';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
@@ -8,13 +8,16 @@ import {Invoice} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import InvoiceItemForm from '../InvoiceItemForm';
 
 interface InvoiceTableDetailsProps {
-  invoice: Invoice;
+  invoice?: Invoice;
+  invoiceOwnerUuid?: string;
+  invoiceOwnerType?: string;
   onChange?: () => void;
 }
 
-const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
+const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerType}: InvoiceTableDetailsProps) => {
   const removeConcept = (uuid: string) => {
     console.log(uuid);
     axios
@@ -63,14 +66,19 @@ const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
       <TableList
         footer={() => (
           <>
-            Total: <MoneyString value={invoice.amount} /> <br />
-            Saldo: <MoneyString value={invoice.pending_payment} />
+            Total: <MoneyString value={invoice?.amount} /> <br />
+            Saldo: <MoneyString value={invoice?.pending_payment} />
           </>
         )}
         small
         columns={columns}
-        dataSource={invoice.items}
+        dataSource={invoice?.items}
         pagination={false}
+      />
+      <InvoiceItemForm
+        invoiceUuid={invoice?.uuid}
+        invoiceOwnerUuid={invoiceOwnerUuid}
+        invoiceOwnerType={invoiceOwnerType}
       />
     </div>
   );

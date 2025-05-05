@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Divider, Empty, Modal, Pagination, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
-import {PiPencilSimple, PiPlus, PiPlusBold} from 'react-icons/pi';
+import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -13,7 +13,6 @@ import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
 import InvoiceTablePayments from '../InvoiceTablePayments';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import InvoiceForm from '../InvoiceForm';
 
 interface InvoicesProps {
   entityUuid: string;
@@ -101,7 +100,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
     <>
       <div>
         {invoices?.length === 0 ? (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registradas'} />
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'} />
         ) : (
           <>
             <TableList columns={columns} dataSource={invoices} />
@@ -126,7 +125,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           ghost
           label={'Agregar factura'}
           onClick={() => setOpenNewInvoice(true)}
-          icon={<PiPlusBold size={18} />}
+          icon={<PiPlusBold size={16} />}
         />
       </div>
       <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
@@ -149,7 +148,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
         title={'Agregar factura'}
         onCancel={() => setOpenNewInvoice(false)}
         onOk={() => setOpenNewInvoice(true)}>
-        <InvoiceForm />
+        <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type} />
       </Modal>
     </>
   );

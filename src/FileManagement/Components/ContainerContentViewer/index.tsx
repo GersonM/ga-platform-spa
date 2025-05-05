@@ -1,8 +1,8 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
-import {Button, Empty} from 'antd';
+import {Button, Empty, Input, Space} from 'antd';
 import axios from 'axios';
-import {PiRecycle, PiUploadBold} from 'react-icons/pi';
+import {PiArrowBendLeftDown, PiArrowLeft, PiRecycle, PiUploadBold} from 'react-icons/pi';
 
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
@@ -15,6 +15,8 @@ import DropMessage from './DropMessage';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import UploadContext from '../../../Context/UploadContext';
 import './styles.less';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import IconButton from '../../../CommonUI/IconButton';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -24,13 +26,13 @@ interface ContainerContentViewerProps {
 
 const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: ContainerContentViewerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
-  const [selectedFile, setSelectedFile] = useState<ApiFile>();
   const [selectedFiles, setSelectedFiles] = useState<ApiFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
   const [viewMode, setViewMode] = useState<string | number>();
   const [orderBy, setOrderBy] = useState('name');
+  const [searchValue, setSearchValue] = useState<string>();
   const {addFile, lastFileCompleted} = useContext(UploadContext);
 
   useEffect(() => {
@@ -47,7 +49,11 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
   );
 
   useEffect(() => {
-    setSelectedFile(undefined);
+    setSelectedFiles([]);
+  }, [containerUuid]);
+
+  useEffect(() => {
+    setSearchValue(undefined);
   }, [containerUuid]);
 
   useEffect(() => {
@@ -56,11 +62,12 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
       cancelToken: cancelTokenSource.token,
       params: {
         order_by: orderBy,
+        search: searchValue,
       },
     };
     setLoading(true);
     axios
-      .get(`file-management/containers/${containerUuid}/view`, config)
+      .get(searchValue ? 'file-management/search' : `file-management/containers/${containerUuid}/view`, config)
       .then(response => {
         setLoading(false);
         if (response) {
@@ -73,10 +80,10 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
       });
 
     return cancelTokenSource.cancel;
-  }, [containerUuid, reload, orderBy]);
+  }, [containerUuid, reload, orderBy, searchValue]);
 
   const navigateToFolder = (container: Container) => {
-    setSelectedFile(undefined);
+    setSelectedFiles([]);
     if (onChange) {
       onChange(container.uuid, container);
     }
@@ -94,9 +101,8 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
   };
 
   const navigateToParent = () => {
-    console.log(containerContent);
     if (containerContent) {
-      if (containerContent.container.parent_container) {
+      if (containerContent.container?.parent_container) {
         navigateToFolder(containerContent.container.parent_container);
       }
     }
@@ -125,17 +131,38 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
       <input {...getInputProps()} />
       {containerContent && (
         <>
-          <ContainerHeader
-            container={containerContent.container}
-            allowUpload={allowUpload}
-            upLevel={navigateToParent}
-            onChange={() => setReload(!reload)}
-            onReload={() => setReload(!reload)}
-            onChangeOrder={order => setOrderBy(order)}
-            onOpenUpload={open}
-            onChangeViewMode={mode => setViewMode(mode)}
-            onToggleInformation={value => setShowFileInformation(value)}
-          />
+          {containerContent.container && (
+            <ContainerHeader
+              container={containerContent.container}
+              allowUpload={allowUpload}
+              upLevel={navigateToParent}
+              onChange={() => setReload(!reload)}
+              onReload={() => setReload(!reload)}
+              onSearch={value => setSearchValue(value)}
+              onChangeOrder={order => setOrderBy(order)}
+              onOpenUpload={open}
+              onChangeViewMode={mode => setViewMode(mode)}
+              onToggleInformation={value => setShowFileInformation(value)}
+            />
+          )}
+          {searchValue && !containerContent.container && (
+            <ContentHeader
+              title={'Resultados de búsqueda'}
+              description={containerContent.files.length + ' archivos encontrados'}
+              tools={
+                <Space>
+                  <Input.Search
+                    placeholder={searchValue ?? 'Buscar'}
+                    allowClear
+                    onSearch={value => {
+                      setSearchValue(value);
+                    }}
+                  />
+                  <IconButton title={'Volver'} icon={<PiArrowLeft />} onClick={() => setSearchValue(undefined)} />
+                </Space>
+              }
+            />
+          )}
           <div className="file-navigator-wrapper">
             {isDragActive && <DropMessage />}
             {showFileInformation && (
@@ -143,8 +170,6 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                 fileContainer={containerContent.container}
                 files={selectedFiles}
                 onChange={() => {
-                  //  setSelectedFile(undefined);
-                  //TODO: Check if the selected file exist
                   setReload(!reload);
                 }}
               />
@@ -162,7 +187,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                     <>
                       <span>No hay archivos en esta ubicación</span> <br />
                       <br />
-                      {allowUpload && (
+                      {allowUpload && !searchValue && (
                         <>
                           <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br />
                           <br />
