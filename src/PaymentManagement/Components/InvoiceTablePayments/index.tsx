@@ -57,7 +57,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
         return (
           <Space>
             <Popconfirm title={'¿Quieres eliminar este concepto?'}>
-              <IconButton disabled icon={<TrashIcon />} small danger />
+              <IconButton icon={<TrashIcon />} small danger />
             </Popconfirm>
           </Space>
         );

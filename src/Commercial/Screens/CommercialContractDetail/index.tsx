@@ -165,7 +165,12 @@ const CommercialContractDetail = () => {
                 key: invoice.uuid,
                 children: (
                   <div>
-                    <InvoiceTableDetails invoice={invoice} onChange={() => setReload(!reload)} />
+                    <InvoiceTableDetails
+                      invoiceOwnerType={'contract'}
+                      invoiceOwnerUuid={contract?.uuid}
+                      invoice={invoice}
+                      onChange={() => setReload(!reload)}
+                    />
                     <Divider />
                     <h3>Pagos</h3>
                     <InvoiceTablePayments invoice={invoice} onChange={() => setReload(!reload)} />
