@@ -165,7 +165,7 @@ const Invoices = () => {
               </Tag>
             </ContentHeader>
             <ProfileCard profile={selectedInvoice.customer} />
-            <InvoiceTableDetails invoice={selectedInvoice} />
+            <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={'234'} invoiceOwnerType={'person'} />
             <Divider>Pagos</Divider>
             <TableList columns={columns} dataSource={selectedInvoice.payments} />
             <Divider>Otras subscripciones</Divider>
