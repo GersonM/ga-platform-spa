@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Col, Collapse, Divider, Form, Input, Modal, Row, Space, Tag} from 'antd';
+import {Card, Col, Collapse, Divider, Form, Input, Modal, Row, Space, Tag} from 'antd';
 import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -164,17 +164,16 @@ const CommercialContractDetail = () => {
                 ),
                 key: invoice.uuid,
                 children: (
-                  <div>
+                  <>
                     <InvoiceTableDetails
                       invoiceOwnerType={'contract'}
                       invoiceOwnerUuid={contract?.uuid}
                       invoice={invoice}
                       onChange={() => setReload(!reload)}
                     />
-                    <Divider />
                     <h3>Pagos</h3>
                     <InvoiceTablePayments invoice={invoice} onChange={() => setReload(!reload)} />
-                  </div>
+                  </>
                 ),
               };
             })}

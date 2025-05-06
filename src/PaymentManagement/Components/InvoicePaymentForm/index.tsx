@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Col, Form, Input, InputNumber, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
+import {PiCheck} from 'react-icons/pi';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {Invoice, InvoicePayment} from '../../../Types/api';
 import FileUploader from '../../../CommonUI/FileUploader';
+import MoneyString from '../../../CommonUI/MoneyString';
 
 interface InvoicePaymentProps {
   onCompleted: () => void;
@@ -17,6 +20,8 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
   const [loading, setLoading] = useState(false);
   const [fileUuid, setFileUuid] = useState<string>();
   const [form] = useForm();
+
+  useEffect(() => {}, [invoice]);
 
   const submitForm = (values: any) => {
     const data = {
@@ -46,10 +51,17 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
 
   return (
     <>
-      <h1>Registrar nuevo pago</h1>
-      {invoice.amount_string}
-      {invoice.payments?.length}
-      <Form form={form} initialValues={invoice} requiredMark={false} layout={'vertical'} onFinish={submitForm}>
+      <h3>Registrar nuevo pago</h3>
+      <p>
+        <MoneyString value={invoice.amount} />
+        <MoneyString value={invoice.pending_payment} />
+      </p>
+      <Form
+        form={form}
+        initialValues={{amount: invoice.pending_payment ? invoice.pending_payment / 100 : null}}
+        requiredMark={false}
+        layout={'vertical'}
+        onFinish={submitForm}>
         <Row gutter={[15, 15]}>
           <Col span={7}>
             <Form.Item name={'amount'} label={'Monto'} rules={[{required: true}]}>
@@ -76,7 +88,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         <Form.Item name={'transaction_info'} label={'Información adicional (opcional)'}>
           <Input />
         </Form.Item>
-        <PrimaryButton loading={loading} label={'Guardar'} htmlType={'submit'} />
+        <PrimaryButton icon={<PiCheck />} block loading={loading} label={'Guardar'} htmlType={'submit'} />
       </Form>
     </>
   );

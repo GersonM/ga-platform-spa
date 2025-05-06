@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {Modal, Popconfirm, Space} from 'antd';
 import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
-import {PiPlus} from 'react-icons/pi';
+import {PiPlusBold} from 'react-icons/pi';
+import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import {Invoice, ApiFile} from '../../../Types/api';
+import {Invoice, ApiFile, InvoicePayment} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
@@ -18,12 +19,25 @@ interface InvoiceTablePayments {
 const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
 
+  const deletePayment = (uuid: string) => {
+    axios.delete('payment-management/payments/' + uuid).then(() => {
+      onChange && onChange();
+    });
+  };
+
   const columns = [
     {
       title: 'Descripción',
       dataIndex: 'method',
-      width: 110,
-      render: (method?: any) => method?.number,
+      render: (method: any, row: InvoicePayment) => {
+        return (
+          <>
+            {row.description}
+            <br />
+            <small>{method?.number}</small>
+          </>
+        );
+      },
     },
     {
       title: 'Monto',
@@ -56,7 +70,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       render: (uuid: string) => {
         return (
           <Space>
-            <Popconfirm title={'¿Quieres eliminar este concepto?'}>
+            <Popconfirm title={'¿Quieres eliminar este concepto?'} onConfirm={() => deletePayment(uuid)}>
               <IconButton icon={<TrashIcon />} small danger />
             </Popconfirm>
           </Space>
@@ -65,14 +79,15 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
     },
   ];
   return (
-    <div>
+    <>
       <TableList small columns={columns} dataSource={invoice.payments} pagination={false} />
       <PrimaryButton
-        icon={<PiPlus size={18} />}
+        icon={<PiPlusBold size={14} />}
         style={{marginTop: '10px'}}
         label={'Registrar pago'}
         block
         ghost
+        size={'small'}
         onClick={() => setOpenInvoiceForm(true)}
       />
       <Modal destroyOnClose open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
@@ -84,7 +99,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
           }}
         />
       </Modal>
-    </div>
+    </>
   );
 };
 
