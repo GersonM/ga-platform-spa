@@ -6,6 +6,7 @@ import LoadingIndicator from '../CommonUI/LoadingIndicator';
 
 const AuthenticatedLayout = () => {
   const {user, sessionToken} = useContext(AuthContext);
+  const {openMenu, setOpenMenu} = useContext(AuthContext);
 
   if (!user) {
     if (!sessionToken) {
@@ -22,6 +23,14 @@ const AuthenticatedLayout = () => {
           <Outlet />
         </Suspense>
       </div>
+      {openMenu && (
+        <div
+          className={'module-nav-overlay'}
+          onClick={() => {
+            setOpenMenu(!openMenu);
+          }}
+        />
+      )}
     </>
   );
 };

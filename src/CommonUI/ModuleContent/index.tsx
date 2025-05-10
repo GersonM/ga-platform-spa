@@ -32,14 +32,6 @@ const ModuleContent = ({children, opaque, withSidebar = false}: ModuleContentPro
         </div>
         {children}
       </div>
-      {openMenu && (
-        <div
-          className={'module-nav-overlay'}
-          onClick={() => {
-            setOpenMenu(!openMenu);
-          }}
-        />
-      )}
     </>
   );
 };

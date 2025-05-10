@@ -1,16 +1,14 @@
 export type TenantConfig = {
   dark_logo?: string;
+  white_logo?: string;
   primary_color?: string;
   version?: string;
-  white_logo?: string;
   modules: string[];
+  favicon?: string;
+  favicon_white?: string;
   config: {
     id: string;
-    color?: string;
     name?: string;
-    favicon?: string;
-    favicon_white?: string;
-    logo?: string;
   };
 };
 

@@ -1,4 +1,5 @@
 .module-nav-overlay {
+  z-index: 4;
   display: none;
 }
 
@@ -18,12 +19,12 @@
   animation-name: contentFadeIn;
 
   &.opaque {
-    background: var(--backgroung-color);
+    background: var(--background-color);
   }
 
-
   .mobile-header {
-    background: var(--backgroung-color);
+    //background: linear-gradient(var(--primary-color), var(--primary-color-darker));
+    background: var(--background-color);
     display: none;
     margin: -25px -25px 15px -25px;
     align-items: center;
@@ -43,7 +44,7 @@
   }
 
   .content-header {
-    background: var(--backgroung-color-body);
+    background: var(--background-color-body);
     position: sticky;
     top: 0;
     padding: 25px 25px 0 25px;
@@ -75,7 +76,7 @@
   .module-nav-overlay {
     position: fixed;
     display: block;
-    background: var(--backgroung-color);
+    background: var(--background-color);
     opacity: 0.8;
     height: 100dvh;
     width: 100%;

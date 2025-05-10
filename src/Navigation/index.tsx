@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Avatar, Badge, Dropdown, Image, Popover, Progress, Space} from 'antd';
+import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import {CustomScroll} from 'react-custom-scroll';
 import axios from 'axios';
@@ -43,6 +43,7 @@ import {TbBuildingEstate} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
+import Cookies from 'js-cookie';
 
 import ScreenModeSelector from './ScreenModeSelector';
 import logo from '../Assets/logo_square.png';
@@ -52,7 +53,6 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
-import Cookies from 'js-cookie';
 
 const menuItems: ItemType[] = [
   {
@@ -108,7 +108,6 @@ const Navigation = () => {
   };
 
   const handleUserMenuClick = (item: any) => {
-    console.log(item.key);
     navigate('/' + item.key);
     switch (item.key) {
       case 'logout':
@@ -131,11 +130,7 @@ const Navigation = () => {
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
-          <div
-            className="logo-square"
-            onClick={() => {
-              setOpenMenu(!open);
-            }}>
+          <div className="logo-square">
             <img src={navLogo || logo} alt="Logo" />
             <PiCaretUpDown />
           </div>

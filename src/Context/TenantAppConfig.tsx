@@ -19,7 +19,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
   const {darkMode, preferredMode, setDarkMode} = useContext(AuthContext);
 
   useEffect(() => {
-    if (tenant.config.favicon) {
+    if (tenant.favicon) {
       let link = document.querySelector("link[rel~='icon']");
       if (!link) {
         link = document.createElement('link');
