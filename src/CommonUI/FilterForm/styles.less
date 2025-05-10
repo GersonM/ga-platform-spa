@@ -1,7 +1,6 @@
 .filter-form-container {
-  padding: 8px 15px;
-  background: var(--backgroung-color);
-  border-radius: 8px;
+  border: solid var(--border-color-2);
+  border-width: 1px 0;
 
   label {
     font-weight: 600;
@@ -11,8 +10,30 @@
     padding-bottom: 0 !important;
   }
   .ant-form-item {
-    border-right: 1px solid var(--border-color);
-    padding-right: 10px;
+    border-right: 1px solid var(--border-color-2);
+    padding: 10px 10px 10px 0;
     margin-right: 10px;
+  }
+  .primary-button {
+    margin: 10px 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .filter-form-container {
+    .ant-form-item-label {
+      padding-bottom: 0 !important;
+      width: 20%;
+    }
+    .ant-form-item {
+      width: 100%;
+      border-right: none;
+      padding: 10px 0;
+      margin-right: 0;
+    }
+
+    .primary-button {
+      width: 100%;
+    }
   }
 }

@@ -258,19 +258,17 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                   caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
                   label={'Inicio'}
                 />
-                {subscription.terminated_at && (
-                  <InfoButton
-                    icon={<PiCalendarX className={'icon'} />}
-                    caption={
-                      subscription.terminated_at
-                        ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
-                          ' - ' +
-                          dayjs(subscription.started_at).diff(new Date(), 'days')
-                        : 'Indefinido'
-                    }
-                    label={'Terminado'}
-                  />
-                )}
+                <InfoButton
+                  icon={<PiCalendarX className={'icon'} />}
+                  caption={
+                    subscription.terminated_at
+                      ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
+                        ' - ' +
+                        dayjs(subscription.started_at).diff(new Date(), 'days')
+                      : 'Indeterminado'
+                  }
+                  label={'Fin'}
+                />
                 <InfoButton
                   icon={<PiTicket className={'icon'} />}
                   caption={<TextMoney money={subscription.amount} currency={subscription.billing_currency} />}

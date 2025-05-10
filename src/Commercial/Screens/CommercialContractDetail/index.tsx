@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Card, Col, Collapse, Divider, Form, Input, Modal, Row, Space, Tag} from 'antd';
+import {Col, Collapse, Form, Input, Modal, Row, Space, Tag} from 'antd';
 import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';

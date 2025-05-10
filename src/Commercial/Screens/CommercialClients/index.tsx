@@ -191,7 +191,6 @@ const CommercialClients = () => {
       <ContentHeader
         tools={
           <>
-            Total: {pagination?.total}
             <Tooltip title={'Exportar listado actual en formato excel'}>
               <PrimaryButton
                 icon={<RiFileExcel2Fill size={18} />}

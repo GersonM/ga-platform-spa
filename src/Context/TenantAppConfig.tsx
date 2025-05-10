@@ -65,7 +65,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
         token: {
           colorPrimary: tenant.primary_color ? tenant.primary_color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.primary_color ? tenant.primary_color : defaultColor,
-          fontFamily: '"Open Sans", sans-serif',
+          fontFamily: '"Red Hat Text", sans-serif',
           fontSize: 13,
         },
         components: {

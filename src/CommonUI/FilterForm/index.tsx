@@ -19,6 +19,7 @@ let timer: any = null;
 const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: FilterFormProps) => {
   const [searchParams] = useSearchParams();
   const [initialValues, setInitialValues] = useState<any>();
+  const [loading, setLoading] = useState(false);
   const [form] = useForm();
 
   useEffect(() => {
@@ -58,11 +59,13 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
     }
     timer = setTimeout(() => {
       onSubmit && onSubmit(o);
+      setLoading(false);
     }, 300);
   };
 
   const onFieldsChange = () => {
     if (liveUpdate) {
+      setLoading(true);
       form.submit();
     }
   };
@@ -71,13 +74,13 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
     <div className={'filter-form-container'}>
       <Form
         form={form}
+        size={'small'}
         onFieldsChange={onFieldsChange}
         initialValues={initialValues}
         onFinish={onSubmitHandler}
-        variant={'filled'}
         layout={'inline'}>
         {children}
-        <PrimaryButton icon={<PiFunnelBold size={18} />} label={'Filtrar'} htmlType={'submit'} />
+        <PrimaryButton loading={loading} icon={<PiFunnelBold size={16} />} label={'Filtrar'} htmlType={'submit'} />
       </Form>
     </div>
   );

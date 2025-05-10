@@ -56,8 +56,6 @@ const Login = () => {
 
   return (
     <>
-      <br />
-      <br />
       <Form onFinish={login}>
         <div className={'input-large'}>
           <div className="icon">
