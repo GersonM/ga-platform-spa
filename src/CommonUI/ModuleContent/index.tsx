@@ -19,17 +19,17 @@ const ModuleContent = ({children, opaque, withSidebar = false}: ModuleContentPro
 
   return (
     <>
-      <div className={`module-content-wrapper ${opaque ? ' opaque' : ''} ${withSidebar ? ' with-sidebar' : ''}`}>
-        <div className={'mobile-header'}>
-          <div
-            className="logo-square"
-            onClick={() => {
-              setOpenMenu(!openMenu);
-            }}>
-            <img src={navLogo || logo} alt="Logo" />
-          </div>
-          <IconButton icon={<Bars3Icon />} onClick={() => setOpenMenu(!openMenu)} />
+      <div className={'mobile-header'}>
+        <div
+          className="logo-square"
+          onClick={() => {
+            setOpenMenu(!openMenu);
+          }}>
+          <img src={navLogo || logo} alt="Logo" />
         </div>
+        <IconButton icon={<Bars3Icon />} onClick={() => setOpenMenu(!openMenu)} />
+      </div>
+      <div className={`module-content-wrapper ${opaque ? ' opaque' : ''} ${withSidebar ? ' with-sidebar' : ''}`}>
         {children}
       </div>
     </>

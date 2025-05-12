@@ -7,10 +7,11 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 65px;
-  height: calc(100dvh - 110px);
+  top: 80px;
+  height: calc(100dvh - 120px);
   border: 1px solid var(--border-color-active);
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+  margin-left: 15px;
 
   .information-header {
     display: flex;
@@ -156,11 +157,11 @@
 
 @media screen and (max-width: 500px) {
   .file-information-wrapper {
-    position: absolute;
-    top: 1px;
+    position: fixed;
+    top: 80px;
     bottom: 10px;
     right: 0;
-    z-index: 2;
+    z-index: 20;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   }
 }

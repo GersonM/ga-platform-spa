@@ -5,23 +5,17 @@
   flex-direction: column;
   transition: all 0.3s;
   position: sticky;
-  height: calc(100dvh - 20px);
-  top: 10px;
-  margin-left: 10px;
+  top: 0;
+  height: 100dvh;
 
   animation-duration: 0.7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
   animation-fill-mode: both;
   animation-name: sidebarFadeIn;
 
-  max-width: 20px;
-  min-width: 20px;
-  border-radius: 5px;
-
   &.open {
     max-width: 280px;
     min-width: 280px;
-    border-radius: 12px;
   }
 
   .open-menu {
@@ -29,9 +23,11 @@
     align-items: center;
     flex: 1;
     cursor: pointer;
+    transition: all 0.3s;
 
     &:hover {
       background: var(--background);
+      padding: 5px;
     }
   }
 
@@ -42,7 +38,8 @@
   }
 
   .module-nav-header {
-    background: linear-gradient(var(--background-color), var(--background-color), rgba(0, 0, 0, 0));
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(9px);
     position: sticky;
     top: 0;
     padding: 10px 15px;
@@ -98,22 +95,22 @@
 .dark-mode {
   .module-sidebar-wrapper {
     background: var(--background-color);
+
+    .module-nav-header {
+      background: rgba(20, 20, 20, 0.1);
+    }
   }
 }
 
 @media screen and (max-width: 700px) {
   .module-sidebar-wrapper {
-    position: fixed;
-    left: 0;
     z-index: 1;
-    height: calc(100dvh - 70px);
-    top: 60px;
-    transform: translateX(-120%);
-    border-radius: 0 9px 9px 0;
+    height: calc(100dvh - 50px);
+    top: 50px;
+    position: fixed;
 
     &.open {
-      transform: translateX(0%);
-      box-shadow: 0 0 25px rgba(0, 0, 0, .4);
+      box-shadow: 0 0 25px rgba(0, 0, 0, .2);
     }
   }
 }

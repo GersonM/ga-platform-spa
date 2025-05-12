@@ -36,9 +36,9 @@ const ModuleSidebar = ({
     <>
       <div className={`module-sidebar-wrapper ${openMenu ? 'open' : ''}`} style={{width: width}}>
         {!openMenu && (
-          <span className={'open-menu'} onClick={() => setOpenMenu(!openMenu)}>
-            <ChevronDoubleRightIcon height={20} />
-          </span>
+          <div className={'open-menu'} onClick={() => setOpenMenu(!openMenu)}>
+            <ChevronDoubleRightIcon height={18} />
+          </div>
         )}
         {openMenu && (
           <>

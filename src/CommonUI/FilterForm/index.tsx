@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
-import {PiFunnelBold} from 'react-icons/pi';
-import {Form} from 'antd';
+import {PiCaretDown, PiCaretUp, PiFunnelBold} from 'react-icons/pi';
+import {Button, Form} from 'antd';
 
 import PrimaryButton from '../PrimaryButton';
 import './styles.less';
@@ -21,6 +21,7 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   const [initialValues, setInitialValues] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     if (searchParams) {
@@ -72,16 +73,22 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
 
   return (
     <div className={'filter-form-container'}>
-      <Form
-        form={form}
-        size={'small'}
-        onFieldsChange={onFieldsChange}
-        initialValues={initialValues}
-        onFinish={onSubmitHandler}
-        layout={'inline'}>
-        {children}
-        <PrimaryButton loading={loading} icon={<PiFunnelBold size={16} />} label={'Filtrar'} htmlType={'submit'} />
-      </Form>
+      {open && (
+        <Form
+          form={form}
+          size={'small'}
+          onFieldsChange={onFieldsChange}
+          initialValues={initialValues}
+          onFinish={onSubmitHandler}
+          layout={'inline'}>
+          {children}
+          <PrimaryButton loading={loading} icon={<PiFunnelBold size={16} />} label={'Filtrar'} htmlType={'submit'} />
+        </Form>
+      )}
+      <Button size={'small'} block type={'text'} onClick={() => setOpen(!open)}>
+        {open ? 'Ocultar filtros' : 'Mostrar filtros'}
+        {open ? <PiCaretUp size={16} /> : <PiCaretDown size={16} />}
+      </Button>
     </div>
   );
 };
