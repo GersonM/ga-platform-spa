@@ -85,7 +85,7 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
           <PrimaryButton loading={loading} icon={<PiFunnelBold size={16} />} label={'Filtrar'} htmlType={'submit'} />
         </Form>
       )}
-      <Button size={'small'} block type={'text'} onClick={() => setOpen(!open)}>
+      <Button className={'filter-toggle'} size={'small'} block type={'text'} onClick={() => setOpen(!open)}>
         {open ? 'Ocultar filtros' : 'Mostrar filtros'}
         {open ? <PiCaretUp size={16} /> : <PiCaretDown size={16} />}
       </Button>
