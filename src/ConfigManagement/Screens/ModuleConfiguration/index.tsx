@@ -1,36 +1,28 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {Outlet} from 'react-router-dom';
-import {
-  EnvelopeIcon,
-  PaintBrushIcon,
-  QueueListIcon,
-  ServerStackIcon,
-  ShieldCheckIcon,
-} from '@heroicons/react/24/outline';
+import {TbBrush, TbMailbox, TbServerCog, TbShieldCheck, TbTagStarred} from 'react-icons/tb';
 
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
+import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 
 const ModuleConfiguration = () => {
   return (
     <>
       <ModuleSidebar title={'Configuración de módulos'}>
         <NavList>
-          <NavListItem
-            icon={<ServerStackIcon />}
-            height={45}
-            name={'Almacenamiento'}
-            path={'/config/file-management'}
-          />
-          <NavListItem icon={<EnvelopeIcon />} height={45} name={'E-mail'} path={'/config/inbox-management'} />
-          <NavListItem icon={<PaintBrushIcon />} height={45} name={'Preferencias'} path={'/config/preferences'} />
-          <NavListItem icon={<ShieldCheckIcon />} height={45} name={'Roles y permisos'} path={'/config/permissions'} />
-          <NavListItem icon={<QueueListIcon />} height={45} name={'Taxonomías'} path={'/config/taxonomy'} />
+          <NavListItem icon={<TbServerCog size={22} />} name={'Almacenamiento'} path={'/config/file-management'} />
+          <NavListItem icon={<TbMailbox size={22} />} name={'E-mail'} path={'/config/inbox-management'} />
+          <NavListItem icon={<TbBrush size={22} />} name={'Preferencias'} path={'/config/preferences'} />
+          <NavListItem icon={<TbShieldCheck size={22} />} name={'Roles y permisos'} path={'/config/permissions'} />
+          <NavListItem icon={<TbTagStarred size={22} />} name={'Taxonomías'} path={'/config/taxonomy'} />
         </NavList>
       </ModuleSidebar>
       <ModuleContent withSidebar>
-        <Outlet />
+        <Suspense fallback={<LoadingIndicator />}>
+          <Outlet />
+        </Suspense>
       </ModuleContent>
     </>
   );

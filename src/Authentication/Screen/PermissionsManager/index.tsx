@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Modal, Popconfirm, Space, Tabs} from 'antd';
+import {Divider, Modal, Popconfirm, Space, Tabs} from 'antd';
 import {TrashIcon, PencilIcon} from '@heroicons/react/24/solid';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
@@ -14,7 +14,7 @@ import './styles.less';
 
 const PermissionsManager = () => {
   const [roles, setRoles] = useState<Role[]>();
-  const [permissions, setPermissions] = useState<Permission[]>();
+  const [permissions, setPermissions] = useState<any>();
   const [reload, setReload] = useState(false);
   const [openRoleForm, setOpenRoleForm] = useState(false);
   const [syncing, setSyncing] = useState(false);
@@ -49,7 +49,14 @@ const PermissionsManager = () => {
       .get(`authentication/permissions`, config)
       .then(response => {
         if (response) {
-          setPermissions(response.data);
+          let p: any = {};
+          for (const r of response.data) {
+            if (!p[r.group]) {
+              p[r.group] = [];
+            }
+            p[r.group].push(r);
+          }
+          setPermissions(p);
         }
       })
       .catch(e => {
@@ -117,11 +124,21 @@ const PermissionsManager = () => {
                 </Popconfirm>
               </Space>
               <br />
-              <div className={'role-permissions-list'}>
-                {permissions?.map((permission, index) => (
-                  <RolePermissionSwitch key={index} permission={permission} role={role} />
-                ))}
-              </div>
+              {permissions &&
+                Object.keys(permissions).map(p => {
+                  return (
+                    <div key={p} className={'permissions-group'}>
+                      <Divider orientation={'left'} style={{textTransform: 'capitalize'}}>
+                        {p.replace('-', ' ')}
+                      </Divider>
+                      <div className={'role-permissions-list'}>
+                        {permissions[p].map((permission: Permission, index: number) => (
+                          <RolePermissionSwitch key={index} permission={permission} role={role} />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
             </>
           ),
         }))}

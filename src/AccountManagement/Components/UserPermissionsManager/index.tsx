@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Empty, Space} from 'antd';
+import {Button, Divider, Empty, List, Space} from 'antd';
 import {TrashIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
@@ -7,6 +7,7 @@ import {Role, User} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import IconButton from '../../../CommonUI/IconButton';
+import {PiPlus} from 'react-icons/pi';
 
 interface UserPermissionsManagerProps {
   user: User;
@@ -69,31 +70,37 @@ const UserPermissionsManager = ({user, onChange}: UserPermissionsManagerProps) =
     <>
       <LoadingIndicator visible={addingRole} />
       <h3>Roles asignados</h3>
-      {user.roles?.map((role, index) => (
-        <div key={index}>
-          <Space>
+      <List bordered size={'small'}>
+        {user.roles?.map((role, index) => (
+          <List.Item
+            key={index}
+            title={role.name}
+            actions={[<IconButton small danger icon={<TrashIcon />} onClick={() => removeRole(role.id)} />]}>
             {role.name}
-            <IconButton danger icon={<TrashIcon />} onClick={() => removeRole(role.id)} />
-          </Space>
-        </div>
-      ))}
+          </List.Item>
+        ))}
+      </List>
       {user.roles && user.roles.length === 0 && (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay roles asignados'} />
       )}
-      <Divider />
-      <h3>Agregar otro rol</h3>
-      {roles?.map(r => {
-        return (
-          <div key={r.id}>
-            <Space>
-              {r.name}
-              <Button size={'small'} onClick={() => assignRole(r.id)}>
-                Agregar
-              </Button>
-            </Space>
-          </div>
-        );
-      })}
+      <br />
+      <br />
+      <h3>Asignar un rol nuevo</h3>
+      <List bordered size={'small'}>
+        {roles?.map(r => {
+          return (
+            <List.Item
+              key={r.id}
+              actions={[
+                <Button icon={<PiPlus />} size={'small'} type={'link'} onClick={() => assignRole(r.id)}>
+                  Asignar
+                </Button>,
+              ]}>
+              <List.Item.Meta title={r.name} description={r.permissions.map(p => p.name.split('.')[1]).join(', ')} />
+            </List.Item>
+          );
+        })}
+      </List>
     </>
   );
 };

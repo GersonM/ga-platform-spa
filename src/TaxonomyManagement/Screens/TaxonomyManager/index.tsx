@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {TbPencil, TbTrash} from 'react-icons/tb';
 import {PlusIcon} from '@heroicons/react/24/solid';
-import {Modal, Popconfirm, Space, Tabs} from 'antd';
+import {Empty, Modal, Popconfirm, Space, Tabs} from 'antd';
 import {useNavigate, useParams} from 'react-router-dom';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
@@ -56,6 +56,9 @@ const TaxonomyManager = () => {
       <ContentHeader title={'Taxonomías'} onRefresh={() => setReload(!reload)} onAdd={() => setOpenTaxonomyForm(true)}>
         Las taxonomías ayudan a gestionar y clasificar la información
       </ContentHeader>
+      {taxonomies?.length == 0 && (
+        <Empty description={'No hay taxonomías creadas'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
       <Tabs
         animated={{inkBar: true, tabPane: true}}
         onChange={tab => {

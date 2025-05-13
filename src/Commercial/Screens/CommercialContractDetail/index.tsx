@@ -20,6 +20,7 @@ import ContractProvideForm from '../../Components/ContractProvideForm';
 import StockViewerState from '../../Components/StockViewerState';
 import CancelContract from '../../Components/CancelContract';
 import AlertMessage from '../../../CommonUI/AlertMessage';
+import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -134,6 +135,8 @@ const CommercialContractDetail = () => {
         </Col>
         <Col xs={24} lg={6}>
           <h3>Detalle del contrato</h3>
+          <StockSelector style={{width: '100%'}} />
+          <h3>Vendedor: {contract?.created_by?.uuid}</h3>
           {contract?.contractable && <StockViewerState stock={contract.contractable} />}
           <p>
             <strong>Observaciones: </strong> <br />

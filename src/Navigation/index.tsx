@@ -160,12 +160,10 @@ const Navigation = () => {
             )}
             {config?.modules.includes('commercial') && (
               <NavItem label={'Comercial'} icon={<PiHandshake />}>
-                {user?.roles?.includes('admin') && (
-                  <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/commercial/dashboard'} />
-                )}
+                <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/commercial/dashboard'} />
                 <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
                 <NavItem icon={<PiUserFocus />} label={'Leads'} path={'/commercial/leads'} />
-                {(user?.roles?.includes('admin') || user?.roles?.includes('Cajero')) && (
+                {(user?.roles?.includes('admin') || user?.roles?.includes('Ventas')) && (
                   <>
                     <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
                     <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />

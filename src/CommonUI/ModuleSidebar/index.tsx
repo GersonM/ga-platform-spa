@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {ChevronDoubleRightIcon, ChevronLeftIcon} from '@heroicons/react/16/solid';
+import {TbChevronRight, TbLayoutSidebarLeftCollapseFilled} from 'react-icons/tb';
 import {Tooltip} from 'antd';
 
 import LoadingIndicator from '../LoadingIndicator';
@@ -37,7 +37,7 @@ const ModuleSidebar = ({
       <div className={`module-sidebar-wrapper ${openMenu ? 'open' : ''}`} style={{width: width}}>
         {!openMenu && (
           <div className={'open-menu'} onClick={() => setOpenMenu(!openMenu)}>
-            <ChevronDoubleRightIcon height={18} />
+            <TbChevronRight height={20} />
           </div>
         )}
         {openMenu && (
@@ -52,7 +52,7 @@ const ModuleSidebar = ({
                     <Tooltip title={'Ocultar menu'}>
                       <IconButton
                         onClick={() => setOpenMenu(!openMenu)}
-                        icon={<ChevronLeftIcon fontSize={18} />}
+                        icon={<TbLayoutSidebarLeftCollapseFilled fontSize={18} />}
                         small
                       />
                     </Tooltip>
