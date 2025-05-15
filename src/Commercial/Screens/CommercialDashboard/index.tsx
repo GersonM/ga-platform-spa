@@ -123,27 +123,31 @@ const CommercialDashboard = () => {
               <h3>Ventas por año</h3>
             </Space>
             <div style={{height: 250}}>
-              <Chart
-                options={{
-                  dark: darkMode,
-                  data: salesDataMonthly,
-                  primaryAxis: primaryAxisDate,
-                  secondaryAxes: secondaryAxesDate,
-                }}
-              />
+              {commercialStats.sales.monthly.length > 0 && (
+                <Chart
+                  options={{
+                    dark: darkMode,
+                    data: salesDataMonthly,
+                    primaryAxis: primaryAxisDate,
+                    secondaryAxes: secondaryAxesDate,
+                  }}
+                />
+              )}
             </div>
           </Col>
           <Col md={12}>
             <h3>Ventas del mes actual</h3>
             <div style={{height: 250}}>
-              <Chart
-                options={{
-                  dark: darkMode,
-                  data: salesDataDaily,
-                  primaryAxis: primaryAxisDate,
-                  secondaryAxes: secondaryAxesDate,
-                }}
-              />
+              {commercialStats.sales.daily.length > 0 && (
+                <Chart
+                  options={{
+                    dark: darkMode,
+                    data: salesDataDaily,
+                    primaryAxis: primaryAxisDate,
+                    secondaryAxes: secondaryAxesDate,
+                  }}
+                />
+              )}
             </div>
           </Col>
         </Row>
@@ -179,28 +183,30 @@ const CommercialDashboard = () => {
             <Divider />
             <h3>Pago por mes</h3>
             <div style={{height: 250}}>
-              <Chart
-                options={{
-                  dark: darkMode,
-                  data: [
-                    {
-                      label: 'Pagos',
-                      data: commercialStats.financial.monthly,
-                    },
-                  ],
-                  primaryAxis: primaryAxisDate,
-                  secondaryAxes: secondaryAxesDate,
-                }}
-              />
+              {commercialStats.financial.monthly.length > 0 && (
+                <Chart
+                  options={{
+                    dark: darkMode,
+                    data: [
+                      {
+                        label: 'Pagos',
+                        data: commercialStats.financial.monthly,
+                      },
+                    ],
+                    primaryAxis: primaryAxisDate,
+                    secondaryAxes: secondaryAxesDate,
+                  }}
+                />
+              )}
             </div>
           </Col>
         </Row>
       </Card>
 
-      <Divider />
-      <h1>Entregas</h1>
-      {commercialStats.provisioning.dates.length > 0 ? (
+      {commercialStats.provisioning.dates.length > 0 && (
         <>
+          <Divider />
+          <h1>Entregas</h1>
           <Row gutter={[20, 20]}>
             <Col md={24}>
               <h3>Entregas por día</h3>
@@ -233,8 +239,6 @@ const CommercialDashboard = () => {
             <Col md={12}></Col>
           </Row>
         </>
-      ) : (
-        <Empty />
       )}
     </ModuleContent>
   );
