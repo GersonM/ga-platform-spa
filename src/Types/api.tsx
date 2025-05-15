@@ -348,6 +348,7 @@ export type Subscription = {
   is_active: boolean;
   code: string;
   plan: Plan;
+  observations: string;
   amount: number;
   started_at: string;
   terminated_at: string;

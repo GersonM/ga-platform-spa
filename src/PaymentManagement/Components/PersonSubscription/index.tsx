@@ -251,63 +251,62 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 </Tag>
               </Space>
             }>
-            <div>
-              <Space split={<Divider type={'vertical'} />}>
-                <InfoButton
-                  icon={<PiCalendarCheck className={'icon'} />}
-                  caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
-                  label={'Inicio'}
+            <Space split={<Divider type={'vertical'} />}>
+              <InfoButton
+                icon={<PiCalendarCheck className={'icon'} />}
+                caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
+                label={'Inicio'}
+              />
+              <InfoButton
+                icon={<PiCalendarX className={'icon'} />}
+                caption={
+                  subscription.terminated_at
+                    ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
+                      ' - ' +
+                      dayjs(subscription.started_at).diff(new Date(), 'days')
+                    : 'Indeterminado'
+                }
+                label={'Fin'}
+              />
+              <InfoButton
+                icon={<PiTicket className={'icon'} />}
+                caption={<TextMoney money={subscription.amount} currency={subscription.billing_currency} />}
+                label={'Subscripción'}
+              />
+              <InfoButton
+                icon={<PiTicket className={'icon'} />}
+                caption={<TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />}
+                label={'Plan'}
+              />
+              <div>
+                <span>Marca de agua</span> <br />
+                <Switch
+                  size={'small'}
+                  defaultValue={pdfWatermark}
+                  onChange={value => {
+                    setPdfWatermark(value);
+                    localStorage.setItem('field_watermark', value ? '1' : '0');
+                  }}
                 />
-                <InfoButton
-                  icon={<PiCalendarX className={'icon'} />}
-                  caption={
-                    subscription.terminated_at
-                      ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
-                        ' - ' +
-                        dayjs(subscription.started_at).diff(new Date(), 'days')
-                      : 'Indeterminado'
-                  }
-                  label={'Fin'}
+              </div>
+              <div>
+                <Select
+                  defaultValue={carnetTemplate}
+                  placeholder={'Plantilla'}
+                  style={{width: 150}}
+                  onChange={value => {
+                    setCarnetTemplate(value);
+                    localStorage.setItem('field_template', value);
+                  }}
+                  options={[
+                    {value: 'ilo', label: 'Carnet Ilo'},
+                    {value: 'moquegua', label: 'Carnet Moquegua'},
+                  ]}
+                  size={'small'}
                 />
-                <InfoButton
-                  icon={<PiTicket className={'icon'} />}
-                  caption={<TextMoney money={subscription.amount} currency={subscription.billing_currency} />}
-                  label={'Subscripción'}
-                />
-                <InfoButton
-                  icon={<PiTicket className={'icon'} />}
-                  caption={<TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />}
-                  label={'Plan'}
-                />
-                <div>
-                  <span>Marca de agua</span> <br />
-                  <Switch
-                    size={'small'}
-                    defaultValue={pdfWatermark}
-                    onChange={value => {
-                      setPdfWatermark(value);
-                      localStorage.setItem('field_watermark', value ? '1' : '0');
-                    }}
-                  />
-                </div>
-                <div>
-                  <Select
-                    defaultValue={carnetTemplate}
-                    placeholder={'Plantilla'}
-                    style={{width: 150}}
-                    onChange={value => {
-                      setCarnetTemplate(value);
-                      localStorage.setItem('field_template', value);
-                    }}
-                    options={[
-                      {value: 'ilo', label: 'Carnet Ilo'},
-                      {value: 'moquegua', label: 'Carnet Moquegua'},
-                    ]}
-                    size={'small'}
-                  />
-                </div>
-              </Space>
-            </div>
+              </div>
+            </Space>
+            <div style={{padding: '10px 0'}}>{subscription?.observations || 'Sin observaciones'}</div>
           </ContentHeader>
           <Row gutter={[30, 30]}>
             <Col xs={16}>
