@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
-import {PiArchiveDuotone, PiTerminalWindowDuotone} from 'react-icons/pi';
 
 import {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';

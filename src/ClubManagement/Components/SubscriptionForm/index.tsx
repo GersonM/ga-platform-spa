@@ -58,8 +58,7 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
   console.log(selectedPlan);
 
   return (
-    <div>
-      <h2>Crear subscripción</h2>
+    <>
       <Form form={form} onFinish={submitForm} layout="vertical" initialValues={selectedSubscription}>
         <Row gutter={[20, 20]}>
           <Col xs={8}>
@@ -98,7 +97,7 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         {!subscription && <AlertMessage message={'El núcleo familiar se podrá agregar posteriormente'} type={'info'} />}
         <PrimaryButton label={'Guardar'} htmlType={'submit'} block />
       </Form>
-    </div>
+    </>
   );
 };
 

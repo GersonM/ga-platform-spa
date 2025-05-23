@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Empty, Modal, Pagination, Space, Tag} from 'antd';
+import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
+import {TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -57,6 +58,17 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
     return cancelTokenSource.cancel;
   }, [pageSize, search, currentPage, reload]);
 
+  const deleteInvoice = (uuid: string) => {
+    axios
+      .delete('payment-management/invoices/' + uuid)
+      .then(response => {
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
   const columns = [
     {
       title: 'Concepto',
@@ -68,6 +80,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
     },
     {
       title: 'Creado',
+      width: 110,
       dataIndex: 'issued_on',
       render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
     },
@@ -75,23 +88,45 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
       title: 'Estado',
       width: 100,
       dataIndex: 'pending_payment',
-      render: (pending_payment: number) => (
-        <Tag color={pending_payment && pending_payment > 0 ? 'red' : 'green'}>
-          {pending_payment > 0 ? (
-            <>
-              <MoneyString value={pending_payment} />
-            </>
-          ) : (
-            'Pagado'
-          )}
-        </Tag>
-      ),
+      render: (pending_payment: number, i: Invoice) => {
+        if (i.paid_at) {
+          return <Tag color={'green'}>Pagado</Tag>;
+        }
+        if (i.expires_on) {
+          return (
+            <Tag color={dayjs(i.expires_on).isAfter(new Date()) ? 'yellow' : 'red'}>
+              {dayjs(i.expires_on).fromNow()}
+            </Tag>
+          );
+        }
+        return (
+          <Tag color={i.paid_at ? 'green' : 'red'}>
+            {pending_payment > 0 ? (
+              <>
+                <MoneyString value={pending_payment} />
+              </>
+            ) : (
+              'Pagado'
+            )}
+          </Tag>
+        );
+      },
     },
     {
       title: '',
       dataIndex: 'uuid',
+      width: 75,
       render: (uuid: string, row: Invoice) => (
-        <IconButton icon={<PiPencilSimple size={18} />} onClick={() => setSelectedInvoice(row)} />
+        <Space>
+          <IconButton small icon={<PiPencilSimple size={18} />} onClick={() => setSelectedInvoice(row)} />
+          <Popconfirm
+            title={'¿Quiere eliminar esta factura?'}
+            onConfirm={() => deleteInvoice(uuid)}
+            okText={'Si'}
+            cancelText={'No'}>
+            <IconButton small danger icon={<TbTrash size={18} />} />
+          </Popconfirm>
+        </Space>
       ),
     },
   ];

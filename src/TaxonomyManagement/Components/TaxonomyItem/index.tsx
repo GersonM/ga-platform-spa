@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {PlusIcon} from '@heroicons/react/24/solid';
-import {TbArrowsMoveVertical, TbPencil, TbTrash} from 'react-icons/tb';
+import {TbArrowsMoveVertical, TbPencil, TbTrash, TbZoom} from 'react-icons/tb';
 import {Modal, Popconfirm} from 'antd';
 import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import TaxonomyForm from '../TaxonomyForm';
 import './styles.less';
+import TaxonomyDefinitionItems from '../TaxonomyDefinitionItems';
 
 interface TaxonomyItemProps {
   taxonomy: TaxonomyDefinition;
@@ -26,6 +27,7 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openAddForm, setOpenAddForm] = useState(false);
+  const [openDefinitionItems, setOpenDefinitionItems] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -88,12 +90,14 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
               onEdit && onEdit(taxonomy);
             }}
           />
-          <Popconfirm
-            title={'¿Seguro que quieres eliminar esta taxonomía?'}
-            description={'Esto eliminar todas los elementos relacionados'}
-            onConfirm={() => deleteTaxonomy(taxonomy.uuid)}>
-            <IconButton small icon={<TbTrash size={18} />} danger />
-          </Popconfirm>
+          <IconButton
+            title={'Ver contenido'}
+            small
+            icon={<TbZoom size={18} />}
+            onClick={() => {
+              setOpenDefinitionItems(true);
+            }}
+          />
           <IconButton
             title={'Mover'}
             small
@@ -102,6 +106,12 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
               onEdit && onEdit(taxonomy);
             }}
           />
+          <Popconfirm
+            title={'¿Seguro que quieres eliminar esta taxonomía?'}
+            description={'Esto eliminar todas los elementos relacionados'}
+            onConfirm={() => deleteTaxonomy(taxonomy.uuid)}>
+            <IconButton small icon={<TbTrash size={18} />} danger />
+          </Popconfirm>
         </div>
       </div>
 
@@ -124,7 +134,6 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
               onDelete={() => {
                 //onDelete && onDelete(t);
                 setReload(!reload);
-                console.log('delete');
               }}
               onAdd={() => {
                 onAdd && onAdd(taxonomy);
@@ -150,6 +159,16 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
             setOpenAddForm(false);
           }}
         />
+      </Modal>
+      <Modal
+        footer={false}
+        open={openDefinitionItems}
+        destroyOnClose
+        onCancel={() => {
+          setOpenDefinitionItems(false);
+        }}
+        title={'Contenido de la taxonomía'}>
+        <TaxonomyDefinitionItems definition={taxonomy} />
       </Modal>
     </div>
   );

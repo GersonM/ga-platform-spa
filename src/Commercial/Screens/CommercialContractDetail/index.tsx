@@ -27,6 +27,7 @@ const CommercialContractDetail = () => {
   const [reload, setReload] = useState(false);
   const [contract, setContract] = useState<Contract>();
   const [loading, setLoading] = useState(false);
+  const [changeStockUuid, setChangeStockUuid] = useState<string>();
   const [openContractProvideForm, setOpenContractProvideForm] = useState(false);
   const [openProvisionRevert, setOpenProvisionRevert] = useState(false);
   const [openCancelContract, setOpenCancelContract] = useState(false);
@@ -60,6 +61,21 @@ const CommercialContractDetail = () => {
     setLoading(true);
     axios
       .post(`commercial/contracts/${contract?.uuid}/revert-provision`, values)
+      .then(() => {
+        setLoading(false);
+        setOpenProvisionRevert(false);
+        setReload(!reload);
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const updateStock = () => {
+    setLoading(true);
+    axios
+      .post(`commercial/contracts/${contract?.uuid}/update-stock`, {stock_uuid: changeStockUuid})
       .then(() => {
         setLoading(false);
         setOpenProvisionRevert(false);
@@ -135,7 +151,12 @@ const CommercialContractDetail = () => {
         </Col>
         <Col xs={24} lg={6}>
           <h3>Detalle del contrato</h3>
-          <StockSelector style={{width: '100%'}} />
+          <div style={{marginBottom: 15}}>
+            <StockSelector onChange={value => setChangeStockUuid(value)} style={{width: '100%'}} />
+            {changeStockUuid && (
+              <PrimaryButton style={{marginTop: 10}} block label={'Cambiar lote'} onClick={updateStock} />
+            )}
+          </div>
           <h3>Vendedor: {contract?.created_by?.uuid}</h3>
           {contract?.contractable && <StockViewerState stock={contract.contractable} />}
           <p>
