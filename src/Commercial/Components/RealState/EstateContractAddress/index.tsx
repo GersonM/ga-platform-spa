@@ -16,7 +16,7 @@ const EstateContractAddress = ({contract, onEdit, tooltip}: EstateContractAddres
       icon={<HomeModernIcon width={20} className={'icon'} />}
       caption={'Dirección'}
       onEdit={onEdit}
-      label={`
+      label={`${contract?.contractable?.sku}
         ${contract?.items?.find(i => i.description == 'Manzana')?.value} -
         ${contract?.items?.find(i => i.description == 'Lote')?.value}
         Etapa ${contract?.items?.find(i => i.description == 'Etapa')?.value}

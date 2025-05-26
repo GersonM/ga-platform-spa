@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Divider, Form, Input, Row, Select} from 'antd';
+import {Col, Divider, Form, Input, InputNumber, Row, Select} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
@@ -68,7 +68,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
       <Form layout="vertical" onFinish={submitForm}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
-            <Form.Item label={'Lote'} name={'fk_stock_uuid'}>
+            <Form.Item label={'Lote'} name={'stock_uuid'}>
               <StockSelector onChange={uuid => setSelectedStockUUID(uuid)} />
             </Form.Item>
             <Form.Item label={'Cliente'} name={'fk_profile_uuid'}>
@@ -81,6 +81,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
                 placeholder={'Seleccione modalidad'}
                 options={[
                   {value: '0', label: 'Ninguno'},
+                  {value: 'reservation', label: 'Reserva'},
                   {value: 'Techo Propio', label: 'Techo Propio'},
                   {value: 'Terreno', label: 'Terreno'},
                   {value: 'Mi Vivienda', label: 'Mi Vivienda'},
@@ -100,8 +101,8 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
                 ]}
               />
             </Form.Item>
-            <Form.Item label={'Precio'}>
-              <MoneyString value={selectedStock?.sale_price} />
+            <Form.Item label={'Precio de venta'} name={'sale_price'}>
+              <InputNumber addonBefore={'S/'} placeholder={selectedStock ? selectedStock.sale_price / 100 + '' : ''} />
             </Form.Item>
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea />
