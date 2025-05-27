@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
-import {TbTrash} from 'react-icons/tb';
+import {TbPlus, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -138,7 +138,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'} />
         ) : (
           <>
-            <TableList columns={columns} dataSource={invoices} />
+            <TableList loading={loading} columns={columns} dataSource={invoices} />
             <Space>
               <Pagination
                 showSizeChanger={false}
@@ -160,16 +160,18 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           ghost
           label={'Agregar factura'}
           onClick={() => setOpenNewInvoice(true)}
-          icon={<PiPlusBold size={16} />}
+          icon={<TbPlus size={16} />}
         />
       </div>
       <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
           <>
-            <h3>{selectedInvoice?.concept + ' - ' + selectedInvoice?.amount_string}</h3>
-            <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
-              Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
-            </Tag>
+            <div>
+              {selectedInvoice?.concept + ' | ' + selectedInvoice?.amount_string}
+              <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
+                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
+              </Tag>
+            </div>
             <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type} />
             <Divider>Pagos</Divider>
             <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)} />

@@ -49,7 +49,7 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
     {
       title: 'Cantidad',
       dataIndex: 'quantity',
-      width: 110,
+      width: 75,
     },
     {
       title: '',

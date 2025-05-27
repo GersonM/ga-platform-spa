@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Col, Collapse, Form, Input, Modal, Row, Space, Tag} from 'antd';
+import {Col, Form, Input, Modal, Row, Space, Tag} from 'antd';
 import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -10,8 +10,6 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 import {Contract} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import InvoiceTableDetails from '../../../PaymentManagement/Components/InvoiceTableDetails';
-import InvoiceTablePayments from '../../../PaymentManagement/Components/InvoiceTablePayments';
 import MoneyString from '../../../CommonUI/MoneyString';
 import ContractDetails from '../../Components/ContractDetails';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
@@ -21,6 +19,8 @@ import StockViewerState from '../../Components/StockViewerState';
 import CancelContract from '../../Components/CancelContract';
 import AlertMessage from '../../../CommonUI/AlertMessage';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
+import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
+import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -157,7 +157,14 @@ const CommercialContractDetail = () => {
               <PrimaryButton style={{marginTop: 10}} block label={'Cambiar lote'} onClick={updateStock} />
             )}
           </div>
-          <h3>Vendedor: {contract?.created_by?.uuid}</h3>
+          {contract?.created_by && (
+            <>
+              <h3>Vendedor:</h3>
+              <p>
+                <ProfileChip profile={contract?.created_by} />
+              </p>
+            </>
+          )}
           {contract?.contractable && <StockViewerState stock={contract.contractable} />}
           <p>
             <strong>Observaciones: </strong> <br />
@@ -167,41 +174,7 @@ const CommercialContractDetail = () => {
         </Col>
         <Col xs={24} lg={10}>
           <h3>Facturas</h3>
-          <Collapse
-            items={contract?.invoices?.map(invoice => {
-              return {
-                extra: (
-                  <>
-                    {invoice.paid_at ? (
-                      <Tag color={'green'}>Pagado</Tag>
-                    ) : (
-                      <Tag color={'red'}>
-                        Pendiente: <MoneyString value={invoice.pending_payment} />
-                      </Tag>
-                    )}
-                  </>
-                ),
-                label: (
-                  <>
-                    {invoice.concept} <MoneyString value={invoice.amount} />
-                  </>
-                ),
-                key: invoice.uuid,
-                children: (
-                  <>
-                    <InvoiceTableDetails
-                      invoiceOwnerType={'contract'}
-                      invoiceOwnerUuid={contract?.uuid}
-                      invoice={invoice}
-                      onChange={() => setReload(!reload)}
-                    />
-                    <h3>Pagos</h3>
-                    <InvoiceTablePayments invoice={invoice} onChange={() => setReload(!reload)} />
-                  </>
-                ),
-              };
-            })}
-          />
+          {contract && <InvoicesTable entityUuid={contract?.uuid} type={'contract'} />}
         </Col>
       </Row>
       <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnClose footer={null}>
