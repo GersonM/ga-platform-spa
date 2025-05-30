@@ -68,7 +68,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
       <Form layout="vertical" onFinish={submitForm}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
-            <Form.Item label={'Lote'} name={'stock_uuid'}>
+            <Form.Item label={'Producto'} name={'stock_uuid'}>
               <StockSelector onChange={uuid => setSelectedStockUUID(uuid)} />
             </Form.Item>
             <Form.Item label={'Cliente'} name={'fk_profile_uuid'}>

@@ -56,6 +56,7 @@ const FileManagerPreferences = lazy(() => import('../FileManagement/Screens/File
 const ImportPayments = lazy(() => import('../ClubManagement/Screens/ImportPayments'));
 const WarehouseProductsManager = lazy(() => import('../WarehouseManager/Screens/WarehouseProductsManager'));
 const AttendanceManager = lazy(() => import('../ClubManagement/Screens/AttendanceManagement'));
+const WorkspaceManagement = lazy(() => import('../Workspaces/Screens/WorkspaceManagement'));
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -116,6 +117,9 @@ const App = () => {
           <Route path={':uuid'} />
         </Route>
         <Route path={'config'} element={<ModuleConfiguration />}>
+          <Route path={'workspaces'} element={<WorkspaceManagement />}>
+            <Route path={':workspace'} element={null} />
+          </Route>
           <Route path={'inbox-management'} element={<ConfigOptions />}>
             <Route path={':tab'} element={null} />
           </Route>
@@ -173,6 +177,9 @@ const App = () => {
           <Route path={'estates'} element={<EstatesManager />} />
           <Route path={'estates/:state?'} element={<EstateDetailView />} />
           <Route path={'providing'} element={<EstateProviding />} />
+        </Route>
+        <Route path={'workspaces'}>
+          <Route path={'dashboard'} element={<RealEstateDashboard />} />
         </Route>
         {user && <Route path={'my-account'} element={<MyAccount />} />}
         <Route
