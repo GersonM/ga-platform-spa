@@ -117,9 +117,8 @@ const App = () => {
           <Route path={':uuid'} />
         </Route>
         <Route path={'config'} element={<ModuleConfiguration />}>
-          <Route path={'workspaces'} element={<WorkspaceManagement />}>
-            <Route path={':workspace'} element={null} />
-          </Route>
+          <Route path={'workspaces'} element={<WorkspaceManagement />} />
+          <Route path={'workspaces/:workspace'} element={<PreferencesManager />} />
           <Route path={'inbox-management'} element={<ConfigOptions />}>
             <Route path={':tab'} element={null} />
           </Route>

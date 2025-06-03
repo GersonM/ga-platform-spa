@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, ColorPicker, Input, InputNumber, Row, Space, Switch} from 'antd';
+import {Col, ColorPicker, Input, InputNumber, Row, Select, Space, Switch} from 'antd';
 import {CheckIcon, TrashIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
@@ -8,6 +8,7 @@ import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileUploader from '../../../FileManagement/Components/FileUploader';
 import './styles.less';
+import ContainerSelector from '../../../CommonUI/ContainerSelector';
 
 interface PreferenceValueProps {
   preference: SettingValue;
@@ -41,6 +42,18 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
         return <Switch defaultValue={preference.value == '1'} onChange={value => onChangeValue(value ? '1' : '0')} />;
       case 'number':
         return <InputNumber placeholder={'Value'} value={value} onChange={e => e && onChangeValue(e)} />;
+      case 'multiple':
+        return (
+          <Select
+            style={{width: '100%'}}
+            mode={'multiple'}
+            placeholder={'Módulo'}
+            allowClear
+            value={value}
+            options={preference.values?.map(v => ({value: v}))}
+            onChange={e => onChangeValue(e)}
+          />
+        );
       default:
         return <Input placeholder={'Value'} value={value} onChange={e => onChangeValue(e.target.value)} />;
     }
@@ -85,13 +98,15 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
   return (
     <div className={'preference-value-container'}>
       <Row align={'middle'} gutter={30}>
-        <Col md={6}>
+        <Col md={6} xs={9}>
           <span className={'label'}>{preference.label}</span>
           <small>{preference.hint}</small>
         </Col>
-        <Col md={12}>
+        <Col md={8} xs={12}>
+          {getControl()}
+        </Col>
+        <Col md={2} xs={2}>
           <Space>
-            {getControl()}
             <IconButton small disabled={!isModified} loading={loading} icon={<CheckIcon />} onClick={saveValue} />
             <IconButton small danger loading={loading} icon={<TrashIcon />} onClick={deleteValue} />
           </Space>

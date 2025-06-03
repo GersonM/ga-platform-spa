@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Divider} from 'antd';
+import {Col, Divider, Row, Space} from 'antd';
 import axios from 'axios';
 
 import MetaTitle from '../../../CommonUI/MetaTitle';
@@ -9,6 +9,8 @@ import {SettingsGroup} from '../../../Types/api';
 import PreferenceValue from '../../Components/PreferenceValue';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import './styles.less';
+import IconButton from '../../../CommonUI/IconButton';
+import {CheckIcon, TrashIcon} from '@heroicons/react/24/outline';
 
 const PreferencesManager = () => {
   const {config} = useContext(AuthContext);

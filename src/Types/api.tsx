@@ -2,6 +2,7 @@ export type TenantConfig = {
   dark_logo?: string;
   white_logo?: string;
   primary_color?: string;
+  is_cluster_owner?: boolean;
   version?: string;
   modules: string[];
   favicon?: string;
@@ -21,6 +22,7 @@ export type SettingsGroup = {
 export type SettingValue = {
   key: string;
   value?: string;
+  values?: string[];
   label?: string;
   hint?: string;
   type?: string;
