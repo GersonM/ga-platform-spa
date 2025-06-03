@@ -1,25 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Empty, Input, Pagination, Popover, Select, Space, Tabs, Tag, Tooltip} from 'antd';
-import {ArrowPathIcon, PlusCircleIcon} from '@heroicons/react/24/outline';
-import {IdentificationIcon, NoSymbolIcon, UserIcon} from '@heroicons/react/24/solid';
+import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tabs, Tag, Tooltip} from 'antd';
+import {TbLock, TbLockAccess, TbLockCog, TbLockUp, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
+import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-import {Profile, ResponsePagination} from '../../../Types/api';
+import {Profile, ResponsePagination, User} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ProfileEditor from '../../Components/ProfileEditor';
 import CreateUser from '../../Components/CreateUser';
 import IconButton from '../../../CommonUI/IconButton';
 import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
-import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import UserSessionsManager from '../../Components/UserSessionsManager';
 import './styles.less';
 import ProfilePayments from '../../../PaymentManagement/Components/ProfilePayments';
-import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 import ProfileActivity from '../../../EntityActivity/Components/ProfileActivity';
 import FileActivityProfile from '../../../FileManagement/Components/FileActivityProfile';
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import TableList from '../../../CommonUI/TableList';
+import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
+import {PiIdentificationCard, PiTrash, PiUser} from 'react-icons/pi';
+import FilterForm from '../../../CommonUI/FilterForm';
+import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
+import dayjs from 'dayjs';
 
 const Users = () => {
   const params = useParams();
@@ -57,35 +61,124 @@ const Users = () => {
 
     return cancelTokenSource.cancel;
   }, [reload, currentPage, pageSize, search, filterSubscription]);
+
+  const columns = [
+    {
+      title: 'Nombre',
+      dataIndex: 'name',
+      width: 280,
+      render: (name: string, row: Profile) => {
+        return <ProfileChip profile={row} />;
+      },
+    },
+    {
+      title: 'Login',
+      dataIndex: 'user',
+      width: 80,
+      render: (user: User, profile: Profile) => {
+        return (
+          <Space>
+            {user ? <PiIdentificationCard size={25} color={user.disabled_at ? 'red' : ''} /> : <PiUser />}
+            {profile.login_method === 'none' && <NoSymbolIcon width={15} />}
+          </Space>
+        );
+      },
+    },
+    {
+      title: 'Document',
+      dataIndex: 'uuid',
+      width: 160,
+      render: (_uuid: string, profile: Profile) => {
+        return <ProfileDocument profile={profile} />;
+      },
+    },
+    {
+      title: 'Roles',
+      dataIndex: 'user',
+      render: (user: any) => {
+        if (user?.roles?.length > 0) {
+          return user.roles.map((role: any, index: number) => {
+            return (
+              <Tag key={index} color={'#006bd1'}>
+                {role.name}
+              </Tag>
+            );
+          });
+        }
+        return <Tag color={'grey'}>Sin rol</Tag>;
+      },
+    },
+    {
+      title: 'Última conexión',
+      dataIndex: 'created_at',
+      width: 110,
+      render: (created_at: string) => {
+        return (
+          <Tooltip title={dayjs(created_at).format('dddd DD/MM/YYYY [a las] HH:mm a')}>
+            {dayjs(created_at).fromNow()}
+          </Tooltip>
+        );
+      },
+    },
+    {
+      title: 'Creado en',
+      dataIndex: 'created_at',
+      width: 110,
+      render: (created_at: string) => {
+        return (
+          <Tooltip title={dayjs(created_at).format('dddd DD/MM/YYYY [a las] HH:mm a')}>
+            {dayjs(created_at).fromNow()}
+          </Tooltip>
+        );
+      },
+    },
+    {
+      dataIndex: 'uuid',
+      width: 230,
+      render: (uuid: string) => {
+        return (
+          <Space>
+            <Tooltip title={'Editar'}>
+              <IconButton icon={<TbPencil size={20} />} onClick={() => navigate(`/users/${uuid}`)} />
+            </Tooltip>
+            <Tooltip title={'Cambiar contraseña'}>
+              <IconButton icon={<TbLockCog size={20} />} />
+            </Tooltip>
+            <Tooltip title={'Editar roles'}>
+              <IconButton icon={<TbUserShield size={20} />} />
+            </Tooltip>
+            <Tooltip title={'Bloquear usuario'}>
+              <IconButton icon={<TbUserOff size={20} />} danger />
+            </Tooltip>
+            <Tooltip title={'Eliminar usuario'}>
+              <Popconfirm
+                title={'¿Quieres eliminar este usuario?'}
+                description={'Toda la información relacionada será eliminada también'}
+                onConfirm={() => setReload(!reload)}>
+                <IconButton icon={<TbTrash size={20} />} danger />
+              </Popconfirm>
+            </Tooltip>
+          </Space>
+        );
+      },
+    },
+  ];
+
   return (
     <>
-      <ModuleSidebar
-        loading={loading}
-        actions={
-          <Popover
-            open={openCreateUser}
-            content={
-              <CreateUser
-                onCompleted={() => {
-                  setReload(!reload);
-                  setOpenCreateUser(false);
-                }}
-              />
-            }
-            onOpenChange={value => {
-              setOpenCreateUser(value);
-            }}
-            trigger={'click'}>
-            <Tooltip title={'Registrar nuevo usuario'} placement={'left'}>
-              <IconButton icon={<PlusCircleIcon />} />
-            </Tooltip>
-          </Popover>
-        }
-        title={'Personas registradas'}
-        header={
-          <Space direction={'vertical'} style={{width: '100%'}}>
+      <ModuleContent withSidebar>
+        <ContentHeader
+          loading={loading}
+          onRefresh={() => {
+            setReload(!reload);
+          }}
+          title={'Usuarios'}
+          description={`Total ${pagination?.total}`}
+          onAdd={() => setOpenCreateUser(true)}
+        />
+        <FilterForm>
+          <Form.Item>
             <Input.Search
-              style={{width: '100%'}}
               allowClear
               placeholder={'Buscar por nombre'}
               size={'small'}
@@ -94,6 +187,8 @@ const Users = () => {
                 setCurrentPage(1);
               }}
             />
+          </Form.Item>
+          <Form.Item>
             <Select
               style={{width: '100%'}}
               allowClear
@@ -106,67 +201,35 @@ const Users = () => {
                 {label: 'Con subscripción terminada', value: 'terminated'},
               ]}
             />
-          </Space>
-        }
-        footer={
-          <>
-            <Space>
-              <Pagination
-                showSizeChanger={false}
-                size={'small'}
-                total={pagination?.total}
-                pageSize={pagination?.per_page}
-                current={pagination?.current_page}
-                onChange={(page, size) => {
-                  setCurrentPage(page);
-                  setPageSize(size);
-                }}
-              />
-              <div>Total {pagination?.total}</div>
-              <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
-            </Space>
-          </>
-        }>
-        <NavList>
-          {profiles?.map((p, index) => {
-            let rolesLabel: string = '';
-            if (p.user?.roles && p.user?.roles?.length > 0) {
-              rolesLabel = p.user.roles[0].name;
-              if (p.user.roles.length > 1) {
-                rolesLabel += ' +' + (p.user.roles.length - 1);
-              }
-            }
-            return (
-              <NavListItem
-                key={index}
-                name={
-                  <Space>
-                    {`${p.name} ${p.last_name || ''}`}
-                    {rolesLabel && <Tag color={'blue'}>{rolesLabel}</Tag>}
-                    {p.login_method === 'none' && <NoSymbolIcon width={15} />}
-                  </Space>
-                }
-                caption={p.email || 'Sin correo'}
-                image={p.avatar?.thumbnail}
-                icon={p.user ? <IdentificationIcon color={p.user.disabled_at ? 'red' : ''} /> : <UserIcon />}
-                path={`/accounts/${p.uuid}`}
-              />
-            );
-          })}
-        </NavList>
-        {profiles?.length === 0 && (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay personas registradas'} />
-        )}
-      </ModuleSidebar>
-      <ModuleContent withSidebar>
+          </Form.Item>
+        </FilterForm>
+        <TableList columns={columns} dataSource={profiles} />
+        <Pagination
+          showSizeChanger={false}
+          size={'small'}
+          total={pagination?.total}
+          pageSize={pagination?.per_page}
+          current={pagination?.current_page}
+          onChange={(page, size) => {
+            setCurrentPage(page);
+            setPageSize(size);
+          }}
+        />
+        <Modal open={openCreateUser} destroyOnClose footer={false} onCancel={() => setOpenCreateUser(false)}>
+          <CreateUser
+            onCompleted={() => {
+              setReload(!reload);
+              setOpenCreateUser(false);
+            }}
+          />
+        </Modal>
         {params.uuid && (
           <Tabs
             onChange={tab => {
-              navigate(`/accounts/${params.uuid}/${tab}`);
+              navigate(`/users/${params.uuid}/${tab}`);
             }}
             className={'users-tab-bar'}
             type={'card'}
-            centered
             destroyInactiveTabPane
             activeKey={params.tab}
             items={[
