@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Input, Popover, Segmented, Tooltip} from 'antd';
+import {Button, Input, Popover, Segmented, Select, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
 import {BsSortAlphaDown, BsSortNumericDown} from 'react-icons/bs';
@@ -64,7 +64,7 @@ const ContainerHeader = ({
       onRefresh={onReload}
       bordered
       title={container.name}
-      description={container.parent_container?.name}
+      description={container.parent_container?.name + 'sdfasdfsdfa sdf asdfa sdfasdfasdasd asdfas dfa sdfasd sff'}
       tools={
         <>
           {allowUpload && (
@@ -107,26 +107,19 @@ const ContainerHeader = ({
               <Button type={'text'} icon={<PiFolderSimplePlus size={18} />} />
             </Popover>
           </Tooltip>
-          <Tooltip title={'Ordenar nombre o fecha'}>
-            <Segmented
-              onResize={() => {}}
-              onResizeCapture={() => {}}
-              options={[
-                {
-                  value: 'name',
-                  icon: <BsSortAlphaDown />,
-                  title: 'Nombre',
-                },
-                {
-                  value: 'date',
-                  icon: <BsSortNumericDown />,
-                  title: 'Fecha',
-                },
-              ]}
-              value={orderBy}
-              onChange={setOrderBy}
-            />
-          </Tooltip>
+          <Select
+            prefix={'Ordenar'}
+            value={orderBy}
+            onChange={setOrderBy}
+            placeholder={'Nombre'}
+            options={[
+              {label: 'por nombre A-Z', value: 'name'},
+              {label: 'nuevos primero', value: 'date'},
+              {label: 'antiguos primero', value: 'date_desc'},
+              {label: 'pesados primero', value: 'size_asc'},
+              {label: 'ligeros primero', value: 'size_desc'},
+            ]}
+          />
           <Segmented
             onResize={() => {}}
             onResizeCapture={() => {}}

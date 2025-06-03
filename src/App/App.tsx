@@ -20,7 +20,8 @@ const HRManagementLayout = lazy(() => import('../HRManagement/Screens/HRManageme
 const ReservationsLayout = lazy(() => import('../ReservationsManagement/Screens/ReservationsLayout'));
 const ModuleConfiguration = lazy(() => import('../ConfigManagement/Screens/ModuleConfiguration'));
 const ConfigOptions = lazy(() => import('../InboxManagement/Screens/ConfigOptions'));
-const Users = lazy(() => import('../AccountManagement/Screens/Users'));
+const ProfilesManagement = lazy(() => import('../AccountManagement/Screens/ProfilesManagement'));
+const UserProfileDetails = lazy(() => import('../AccountManagement/Screens/UserProfileDetails'));
 const FileDetailViewer = lazy(() => import('../FileManagement/Screens/FileDetailViewer'));
 const Invoices = lazy(() => import('../PaymentManagement/Screens/Invoices'));
 const PreferencesManager = lazy(() => import('../Preferences/Screens/PreferencesManager'));
@@ -108,10 +109,9 @@ const App = () => {
             <Route path={':tab'} />
           </Route>
         </Route>
-        <Route path={'accounts'} element={<Users />}>
-          <Route path={':uuid'}>
-            <Route path={':tab'} />
-          </Route>
+        <Route path={'profiles'} element={<ProfilesManagement />} />
+        <Route path={'profiles/:uuid'} element={<UserProfileDetails />}>
+          <Route path={':tab'} />
         </Route>
         <Route path={'invoices'} element={<Invoices />}>
           <Route path={':uuid'} />

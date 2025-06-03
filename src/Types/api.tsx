@@ -165,12 +165,13 @@ export type Token = {
 
 export type User = {
   uuid: number;
+  last_login_at: string;
   /**
    * email is not been used anymore, use profile email instead
    * @deprecated
    */
   email: string;
-  profile: Profile;
+  profile?: Profile;
   roles?: Role[];
   /**
    * name will be removed, use profile name instead

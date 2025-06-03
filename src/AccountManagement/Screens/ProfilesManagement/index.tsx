@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tabs, Tag, Tooltip} from 'antd';
-import {TbLock, TbLockAccess, TbLockCog, TbLockUp, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
+import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
 import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 import {Profile, ResponsePagination, User} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -20,13 +21,11 @@ import FileActivityProfile from '../../../FileManagement/Components/FileActivity
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
-import {PiIdentificationCard, PiTrash, PiUser} from 'react-icons/pi';
+import {PiIdentificationCard, PiUser} from 'react-icons/pi';
 import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import dayjs from 'dayjs';
 
-const Users = () => {
-  const params = useParams();
+const ProfilesManagement = () => {
   const navigate = useNavigate();
   const [profiles, setProfiles] = useState<Profile[]>();
   const [reload, setReload] = useState(false);
@@ -86,6 +85,7 @@ const Users = () => {
     },
     {
       title: 'Document',
+      responsive: ['lg'],
       dataIndex: 'uuid',
       width: 160,
       render: (_uuid: string, profile: Profile) => {
@@ -110,12 +110,13 @@ const Users = () => {
     },
     {
       title: 'Última conexión',
-      dataIndex: 'created_at',
-      width: 110,
-      render: (created_at: string) => {
+      dataIndex: 'user',
+      width: 130,
+      render: (user?: User) => {
+        if (!user || !user.last_login_at) return 'Nunca';
         return (
-          <Tooltip title={dayjs(created_at).format('dddd DD/MM/YYYY [a las] HH:mm a')}>
-            {dayjs(created_at).fromNow()}
+          <Tooltip title={dayjs(user.last_login_at).format('dddd DD/MM/YYYY [a las] HH:mm a')}>
+            {dayjs(user.last_login_at).fromNow()}
           </Tooltip>
         );
       },
@@ -124,6 +125,7 @@ const Users = () => {
       title: 'Creado en',
       dataIndex: 'created_at',
       width: 110,
+      responsive: ['lg'],
       render: (created_at: string) => {
         return (
           <Tooltip title={dayjs(created_at).format('dddd DD/MM/YYYY [a las] HH:mm a')}>
@@ -134,12 +136,13 @@ const Users = () => {
     },
     {
       dataIndex: 'uuid',
+      responsive: ['lg'],
       width: 230,
       render: (uuid: string) => {
         return (
-          <Space>
+          <Space wrap>
             <Tooltip title={'Editar'}>
-              <IconButton icon={<TbPencil size={20} />} onClick={() => navigate(`/users/${uuid}`)} />
+              <IconButton icon={<TbPencil size={20} />} onClick={() => navigate(`/profiles/${uuid}`)} />
             </Tooltip>
             <Tooltip title={'Cambiar contraseña'}>
               <IconButton icon={<TbLockCog size={20} />} />
@@ -223,77 +226,9 @@ const Users = () => {
             }}
           />
         </Modal>
-        {params.uuid && (
-          <Tabs
-            onChange={tab => {
-              navigate(`/users/${params.uuid}/${tab}`);
-            }}
-            className={'users-tab-bar'}
-            type={'card'}
-            destroyInactiveTabPane
-            activeKey={params.tab}
-            items={[
-              {
-                label: 'Información personal',
-                style: {border: 3},
-                key: 'info',
-                children: (
-                  <div className={'users-tab-content'}>
-                    <ProfileEditor profileUuid={params.uuid} onCompleted={() => setReload(!reload)} />
-                  </div>
-                ),
-              },
-              {
-                label: 'Sesiones',
-                key: 'sessions',
-                children: (
-                  <div className={'users-tab-content'}>
-                    <UserSessionsManager profileUuid={params.uuid} />
-                  </div>
-                ),
-              },
-              {
-                label: 'Suscripciones',
-                key: 'subscriptions',
-                children: (
-                  <div className={'users-tab-content'}>
-                    <PersonSubscription profileUuid={params.uuid} />
-                  </div>
-                ),
-              },
-              {
-                label: 'Finanzas',
-                key: 'payments',
-                children: (
-                  <div className={'users-tab-content'}>
-                    <ProfilePayments profileUuid={params.uuid} />
-                  </div>
-                ),
-              },
-              {
-                label: 'Actividad',
-                key: 'activity',
-                children: (
-                  <div className={'users-tab-content'}>
-                    <ProfileActivity profileUuid={params.uuid} />
-                  </div>
-                ),
-              },
-              {
-                label: 'Actividad de archivos',
-                key: 'file-activity',
-                children: (
-                  <div className={'users-tab-content'}>
-                    <FileActivityProfile profileUuid={params.uuid} />
-                  </div>
-                ),
-              },
-            ]}
-          />
-        )}
       </ModuleContent>
     </>
   );
 };
 
-export default Users;
+export default ProfilesManagement;

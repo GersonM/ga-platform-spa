@@ -7,6 +7,7 @@ import axios from 'axios';
 import {
   PiBooksLight,
   PiBoxArrowUp,
+  PiBuilding,
   PiBuildingsLight,
   PiBulldozerLight,
   PiCalendarCheckLight,
@@ -237,7 +238,8 @@ const Navigation = () => {
             )}
             {user?.roles?.includes('admin') && (
               <>
-                <NavItem label={'Usuarios'} icon={<PiFingerprint />} path={'/accounts'} />
+                <NavItem label={'Usuarios'} icon={<PiFingerprint />} path={'/profiles'} />
+                <NavItem label={'Empresas'} icon={<PiBuilding />} path={'/companies'} />
                 <NavItem label={'Administración'} icon={<PiGear />} path={'/config'} />
               </>
             )}

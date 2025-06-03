@@ -1,5 +1,5 @@
-import React from 'react';
-import {Divider, Space, Tooltip} from 'antd';
+import React, {useEffect} from 'react';
+import {Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {PlusIcon, ArrowPathIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
 import {PiPencilSimple} from 'react-icons/pi';
@@ -15,8 +15,8 @@ interface ContentHeaderProps {
   onAdd?: () => void;
   onEdit?: () => void;
   onBack?: () => void;
-  showBack?: boolean;
   onRefresh?: () => void;
+  showBack?: boolean;
   loading?: boolean;
   bordered?: boolean;
 }
@@ -37,6 +37,30 @@ const ContentHeader = ({
 }: ContentHeaderProps) => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const shortcutHandler = (e: KeyboardEvent) => {
+      if (e.ctrlKey) {
+        if (e.key.toLowerCase() === 'r') {
+          onRefresh && onRefresh();
+        }
+        if (e.key.toLowerCase() === 'n') {
+          onAdd && onAdd();
+        }
+        if (e.key.toLowerCase() === 'e') {
+          onEdit && onEdit();
+        }
+        if (e.key.toLowerCase() === 'Escape') {
+          onBack && onBack();
+        }
+      }
+    };
+    document.addEventListener('keypress', shortcutHandler);
+
+    return () => {
+      document.removeEventListener('keypress', shortcutHandler);
+    };
+  }, []);
+
   return (
     <div className={`content-header ${bordered ? 'bordered' : ''}`}>
       <Space wrap>
@@ -56,11 +80,9 @@ const ContentHeader = ({
         )}
         <div>
           <h1>{title}</h1>
-          {description && <small>{description}</small>}
         </div>
         {(tools || onAdd || onRefresh || onEdit) && (
           <>
-            <Divider type={'vertical'} />
             {onAdd && (
               <Tooltip title={'Nuevo'}>
                 <IconButton icon={<PlusIcon />} onClick={onAdd} />
@@ -80,6 +102,7 @@ const ContentHeader = ({
           </>
         )}
       </Space>
+      {description && <div style={{marginTop: 10, fontSize: 12}}>{description}</div>}
       {children && <div className={'content-header-caption'}>{children}</div>}
     </div>
   );
