@@ -2,6 +2,7 @@ export type TenantConfig = {
   dark_logo?: string;
   white_logo?: string;
   primary_color?: string;
+  is_cluster_owner?: boolean;
   version?: string;
   modules: string[];
   favicon?: string;
@@ -21,6 +22,7 @@ export type SettingsGroup = {
 export type SettingValue = {
   key: string;
   value?: string;
+  values?: string[];
   label?: string;
   hint?: string;
   type?: string;
@@ -165,12 +167,13 @@ export type Token = {
 
 export type User = {
   uuid: number;
+  last_login_at: string;
   /**
    * email is not been used anymore, use profile email instead
    * @deprecated
    */
   email: string;
-  profile: Profile;
+  profile?: Profile;
   roles?: Role[];
   /**
    * name will be removed, use profile name instead

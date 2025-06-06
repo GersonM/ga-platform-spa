@@ -147,6 +147,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
           )}
           {searchValue && !containerContent.container && (
             <ContentHeader
+              bordered
               title={'Resultados de búsqueda'}
               description={containerContent.files.length + ' archivos encontrados'}
               tools={

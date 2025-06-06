@@ -11,6 +11,7 @@ import './styles.less';
 interface ContainerSelectorProps {
   onChange?: (value: string) => void;
   value?: string;
+  hidden?: string;
 }
 
 const ContainerSelector = ({value, onChange}: ContainerSelectorProps) => {

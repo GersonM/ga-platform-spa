@@ -20,7 +20,8 @@ const HRManagementLayout = lazy(() => import('../HRManagement/Screens/HRManageme
 const ReservationsLayout = lazy(() => import('../ReservationsManagement/Screens/ReservationsLayout'));
 const ModuleConfiguration = lazy(() => import('../ConfigManagement/Screens/ModuleConfiguration'));
 const ConfigOptions = lazy(() => import('../InboxManagement/Screens/ConfigOptions'));
-const Users = lazy(() => import('../AccountManagement/Screens/Users'));
+const ProfilesManagement = lazy(() => import('../AccountManagement/Screens/ProfilesManagement'));
+const UserProfileDetails = lazy(() => import('../AccountManagement/Screens/UserProfileDetails'));
 const FileDetailViewer = lazy(() => import('../FileManagement/Screens/FileDetailViewer'));
 const Invoices = lazy(() => import('../PaymentManagement/Screens/Invoices'));
 const PreferencesManager = lazy(() => import('../Preferences/Screens/PreferencesManager'));
@@ -57,6 +58,7 @@ const ImportPayments = lazy(() => import('../ClubManagement/Screens/ImportPaymen
 const WarehouseProductsManager = lazy(() => import('../WarehouseManager/Screens/WarehouseProductsManager'));
 const AttendanceManager = lazy(() => import('../ClubManagement/Screens/AttendanceManagement'));
 const GoogleCallback = lazy(() => import('../Authentication/Screen/GoogleCallback'));
+const WorkspaceManagement = lazy(() => import('../Workspaces/Screens/WorkspaceManagement'));
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -110,15 +112,16 @@ const App = () => {
             <Route path={':tab'} />
           </Route>
         </Route>
-        <Route path={'accounts'} element={<Users />}>
-          <Route path={':uuid'}>
-            <Route path={':tab'} />
-          </Route>
+        <Route path={'profiles'} element={<ProfilesManagement />} />
+        <Route path={'profiles/:uuid'} element={<UserProfileDetails />}>
+          <Route path={':tab'} />
         </Route>
         <Route path={'invoices'} element={<Invoices />}>
           <Route path={':uuid'} />
         </Route>
         <Route path={'config'} element={<ModuleConfiguration />}>
+          <Route path={'workspaces'} element={<WorkspaceManagement />} />
+          <Route path={'workspaces/:workspace'} element={<PreferencesManager />} />
           <Route path={'inbox-management'} element={<ConfigOptions />}>
             <Route path={':tab'} element={null} />
           </Route>
@@ -176,6 +179,9 @@ const App = () => {
           <Route path={'estates'} element={<EstatesManager />} />
           <Route path={'estates/:state?'} element={<EstateDetailView />} />
           <Route path={'providing'} element={<EstateProviding />} />
+        </Route>
+        <Route path={'workspaces'}>
+          <Route path={'dashboard'} element={<RealEstateDashboard />} />
         </Route>
         {user && <Route path={'my-account'} element={<MyAccount />} />}
         <Route

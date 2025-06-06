@@ -7,6 +7,7 @@ import axios from 'axios';
 import {
   PiBooksLight,
   PiBoxArrowUp,
+  PiBuilding,
   PiBuildingsLight,
   PiBulldozerLight,
   PiCalendarCheckLight,
@@ -217,9 +218,7 @@ const Navigation = () => {
             )}
 
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
-            {user?.roles?.includes('admin') && (
-              <NavItem label={'Personas'} icon={<PiFingerprint />} path={'/accounts'} />
-            )}
+
             {config?.modules.includes('lms') && (
               <NavItem label={'LMS'} icon={<PiGraduationCap />}>
                 <NavItem label={'Cursos'} icon={<PiBooksLight />} path={'/lms/courses'} />
@@ -237,7 +236,13 @@ const Navigation = () => {
             {config?.modules.includes('payments') && (
               <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
             )}
-            {user?.roles?.includes('admin') && <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />}
+            {user?.roles?.includes('admin') && (
+              <>
+                <NavItem label={'Usuarios'} icon={<PiFingerprint />} path={'/profiles'} />
+                <NavItem label={'Empresas'} icon={<PiBuilding />} path={'/companies'} />
+                <NavItem label={'Administración'} icon={<PiGear />} path={'/config'} />
+              </>
+            )}
           </ul>
         </nav>
       </CustomScroll>
