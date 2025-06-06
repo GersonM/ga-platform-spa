@@ -25,7 +25,7 @@ const PreferencesManager = () => {
     };
     setLoading(true);
     axios
-      .get(`tenant-management/settings`, config)
+      .get(`workspaces/settings`, config)
       .then(response => {
         setLoading(false);
         if (response) {
