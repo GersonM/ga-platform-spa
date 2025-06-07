@@ -47,6 +47,7 @@ const WorkspaceManagement = () => {
       .delete(`workspaces/${tenantId}`)
       .then(() => {
         setLoading(false);
+        setReload(!reload);
       })
       .catch(error => {
         setLoading(false);
@@ -131,7 +132,12 @@ const WorkspaceManagement = () => {
         onCancel={() => setOpenAddTenant(false)}
         destroyOnClose
         footer={false}>
-        <WorkspaceForm />
+        <WorkspaceForm
+          onComplete={() => {
+            setOpenAddTenant(false);
+            setReload(!reload);
+          }}
+        />
       </Modal>
     </div>
   );
