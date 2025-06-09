@@ -1,17 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import AuthContext from '../../../Context/AuthContext';
-import {TenantConfig} from '../../../Types/api';
-import axios from 'axios';
-import {Image, Popconfirm, Space, Tabs, TabsProps, Tag, Tooltip} from 'antd';
-import PreferencesManager from '../../../Preferences/Screens/PreferencesManager';
+import React, {useEffect, useState} from 'react';
 import {TbBuilding, TbPencil, TbStarFilled, TbTrash} from 'react-icons/tb';
+import {Image, Popconfirm, Space, Tag, Tooltip} from 'antd';
+import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
+
+import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import {TenantConfig} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
-import {useNavigate} from 'react-router-dom';
 
 const WorkspaceManagement = () => {
-  const {user} = useContext(AuthContext);
   const [workspaces, setWorkspaces] = useState<TenantConfig[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);

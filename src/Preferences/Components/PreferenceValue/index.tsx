@@ -8,7 +8,6 @@ import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileUploader from '../../../FileManagement/Components/FileUploader';
 import './styles.less';
-import ContainerSelector from '../../../CommonUI/ContainerSelector';
 
 interface PreferenceValueProps {
   preference: SettingValue;
