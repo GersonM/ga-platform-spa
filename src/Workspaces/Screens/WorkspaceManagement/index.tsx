@@ -8,12 +8,15 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import {TenantConfig} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
+import ErrorHandler from '../../../Utils/ErrorHandler';
+import WorkspaceForm from '../../Components/WorkspaceForm';
 
 const WorkspaceManagement = () => {
   const [workspaces, setWorkspaces] = useState<TenantConfig[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const navigate = useNavigate();
+  const [openAddTenant, setOpenAddTenant] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -38,15 +41,31 @@ const WorkspaceManagement = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
+  const removeWorkspace = (tenantId: string) => {
+    setLoading(true);
+    axios
+      .delete(`workspaces/${tenantId}`)
+      .then(() => {
+        setLoading(false);
+        setReload(!reload);
+      })
+      .catch(error => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      });
+  };
+
   const columns = [
     {
       dataIndex: 'favicon',
       width: 70,
       align: 'center',
-      render: (favicon: string) => (favicon ? <Image width={40} src={favicon} /> : <TbBuilding />),
+      render: (favicon: string, tenant: TenantConfig) =>
+        favicon ? <img alt={tenant.id} style={{width: 40}} src={favicon} /> : <TbBuilding size={30} />,
     },
     {
       title: 'Nombre',
+      width: 160,
       dataIndex: 'config',
       render: (config: any, tenant: TenantConfig) => (
         <>
@@ -83,7 +102,10 @@ const WorkspaceManagement = () => {
           <Tooltip title={'Editar'}>
             <IconButton icon={<TbPencil size={18} />} onClick={() => navigate(`/config/workspaces/${id}`)} />
           </Tooltip>
-          <Popconfirm title={'¿Quieres eliminar este workspace?'}>
+          <Popconfirm
+            title={'¿Quieres eliminar este workspace?'}
+            description={'Esto eliminará la base de datos y todos los archivos cargados por completo'}
+            onConfirm={() => removeWorkspace(id)}>
             <IconButton icon={<TbTrash size={18} />} danger />
           </Popconfirm>
         </Space>
@@ -92,8 +114,31 @@ const WorkspaceManagement = () => {
   ];
   return (
     <div>
-      <ContentHeader title={'Configuración de workspaces'} onRefresh={() => setReload(!reload)} />
+      <ContentHeader
+        loading={loading}
+        title={'Configuración de workspaces'}
+        onAdd={() => setOpenAddTenant(true)}
+        onRefresh={() => setReload(!reload)}>
+        <p>
+          Los espacios de trabajo o workspaces, permiten gestionar la información de una empresa de manera
+          independiente, tienen su propio espacio de trabajo y la información no se comparte con ningún otro entorno
+        </p>
+      </ContentHeader>
       <TableList rowKey={'id'} columns={columns} dataSource={workspaces} />
+
+      <Modal
+        title={'Crear nuevo workspace'}
+        open={openAddTenant}
+        onCancel={() => setOpenAddTenant(false)}
+        destroyOnClose
+        footer={false}>
+        <WorkspaceForm
+          onComplete={() => {
+            setOpenAddTenant(false);
+            setReload(!reload);
+          }}
+        />
+      </Modal>
     </div>
   );
 };

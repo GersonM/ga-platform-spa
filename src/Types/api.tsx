@@ -1,4 +1,5 @@
 export type TenantConfig = {
+  id?: string;
   dark_logo?: string;
   white_logo?: string;
   primary_color?: string;

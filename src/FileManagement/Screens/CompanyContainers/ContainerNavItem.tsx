@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {NavLink} from 'react-router-dom';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
+import {FiHardDrive, FiTerminal} from 'react-icons/fi';
 
 import {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
-import {FiHardDrive, FiTerminal} from 'react-icons/fi';
+import AuthContext from '../../../Context/AuthContext';
 
 interface ContainerNavItemProps {
   container: Container;
@@ -14,6 +15,7 @@ interface ContainerNavItemProps {
 }
 
 const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
+  const {user} = useContext(AuthContext);
   return (
     <>
       <NavLink to={`/file-management/${container.uuid}`}>
@@ -27,7 +29,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
           )}
         </span>
       </NavLink>
-      {!container.is_locked && (
+      {(!container.is_locked || user?.roles?.includes('admin')) && (
         <>
           <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
           <ContainerDropdownActions

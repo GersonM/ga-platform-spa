@@ -66,7 +66,7 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
   const saveValue = () => {
     setLoading(true);
     axios
-      .put('/tenant-management/settings', {value, key: preference.key})
+      .put('/workspaces/settings', {value, key: preference.key})
       .then(() => {
         setLoading(false);
         if (preference.key.includes('color') || preference.key.includes('logo')) {
@@ -83,7 +83,7 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
   const deleteValue = () => {
     setLoading(true);
     axios
-      .delete('/tenant-management/settings/' + preference.key)
+      .delete('/workspaces/settings/' + preference.key)
       .then(() => {
         setLoading(false);
         onUpdated && onUpdated();
