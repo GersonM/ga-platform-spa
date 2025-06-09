@@ -4,8 +4,8 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
 import {AtSymbolIcon} from '@heroicons/react/24/solid';
-import {KeyIcon} from '@heroicons/react/24/outline';
 import {ChevronRightIcon} from '@heroicons/react/16/solid';
+import {TbKey} from 'react-icons/tb';
 import GoogleButton from './GoogleButton';
 
 const Login = () => {
@@ -93,7 +93,7 @@ const Login = () => {
         </div>
         <div className={'input-large'}>
           <div className="icon">
-            <KeyIcon width={17} />
+            <TbKey width={17} />
           </div>
           <Form.Item name={'password'} noStyle>
             <Input.Password size={'large'} variant={'borderless'} placeholder={'Contraseña'} />

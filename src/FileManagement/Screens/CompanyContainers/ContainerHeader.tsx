@@ -121,8 +121,6 @@ const ContainerHeader = ({
             ]}
           />
           <Segmented
-            onResize={() => {}}
-            onResizeCapture={() => {}}
             options={[
               {
                 value: 'list',

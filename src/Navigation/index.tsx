@@ -40,7 +40,7 @@ import {
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
-import {TbBuildingEstate} from 'react-icons/tb';
+import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbPackage} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
@@ -174,6 +174,11 @@ const Navigation = () => {
                 )}
               </NavItem>
             )}
+            <NavItem label={'Inventario'} icon={<TbBuildingWarehouse />}>
+              <NavItem icon={<TbForklift />} label={'Movimientos'} path={'/commercial/dashboard'} />
+              <NavItem icon={<TbPackage />} label={'Productos'} path={'/commercial/incidents'} />
+              <NavItem icon={<PiUserFocus />} label={'Stock'} path={'/commercial/leads'} />
+            </NavItem>
             {config?.modules.includes('move') && (
               <NavItem icon={<PiCarProfile />} label={'Transporte'}>
                 <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/move/reservation'} />

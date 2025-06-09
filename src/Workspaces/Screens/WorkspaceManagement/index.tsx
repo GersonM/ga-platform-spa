@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {TbBuilding, TbPencil, TbStarFilled, TbTrash} from 'react-icons/tb';
-import {Image, Popconfirm, Space, Tag, Tooltip} from 'antd';
+import {Modal, Popconfirm, Space, Tag, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
