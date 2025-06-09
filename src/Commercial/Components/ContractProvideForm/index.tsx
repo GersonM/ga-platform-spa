@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {DatePicker, Form, Input} from 'antd';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';

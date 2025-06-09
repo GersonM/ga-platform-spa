@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {TbPencil, TbTrash} from 'react-icons/tb';
 import {PlusIcon} from '@heroicons/react/24/solid';
@@ -8,7 +8,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TaxonomyForm from '../../Components/TaxonomyForm';
-import {TaxonomyDefinition} from '../../../Types/api';
+import type {TaxonomyDefinition} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import TaxonomyItem from '../../Components/TaxonomyItem';
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Form, Input, InputNumber, Modal, Pagination} from 'antd';
 import {PiEye} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';

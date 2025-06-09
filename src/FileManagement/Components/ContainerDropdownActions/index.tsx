@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {Dropdown, MenuProps, Modal} from 'antd';
 import axios from 'axios';
 import {LockClosedIcon, LockOpenIcon} from '@heroicons/react/24/outline';

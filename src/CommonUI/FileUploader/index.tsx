@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {message, Progress} from 'antd';
 import axios from 'axios';
 import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';

@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import {notification} from 'antd';

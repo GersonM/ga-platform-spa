@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {DatePicker, Form, Input} from 'antd';
 import dayjs, {Dayjs} from 'dayjs';
 import axios from 'axios';

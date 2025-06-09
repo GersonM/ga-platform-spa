@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Alert, Button, Form, Input, notification} from 'antd';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import {useForm} from 'antd/lib/form/Form';

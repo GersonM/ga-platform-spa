@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Form, Input} from 'antd';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -15,7 +15,7 @@ const WorkspaceForm = ({onComplete}: WorkspaceFormProps) => {
     setLoading(true);
     axios
       .post('workspaces', values)
-      .then(res => {
+      .then(() => {
         setLoading(false);
         onComplete && onComplete();
       })

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {PiFunnelBold} from 'react-icons/pi';
 import {TrashIcon, EyeIcon} from '@heroicons/react/24/outline';
 import {Form, Modal, Popconfirm, Progress, Select, Space, Table} from 'antd';

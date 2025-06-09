@@ -1,4 +1,4 @@
-import React, {lazy, useContext, useEffect} from 'react';
+import {lazy, useContext, useEffect} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import {Modal} from 'antd';
 import axios from 'axios';

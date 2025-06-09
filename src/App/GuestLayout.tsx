@@ -1,4 +1,4 @@
-import React, {Suspense, useContext} from 'react';
+import {Suspense, useContext} from 'react';
 import {Outlet} from 'react-router-dom';
 
 import logo from './../Assets/logo_full.png';

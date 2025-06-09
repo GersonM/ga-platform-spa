@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import axios, {AxiosProgressEvent} from 'axios';
 import {sha256} from 'js-sha256';
 

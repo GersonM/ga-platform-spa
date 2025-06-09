@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {Button, Popover} from 'antd';
 

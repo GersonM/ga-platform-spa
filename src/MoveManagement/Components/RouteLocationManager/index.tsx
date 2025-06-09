@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {MapPinIcon, TrashIcon} from '@heroicons/react/16/solid';
 import {Divider, Space, Timeline} from 'antd';
 import axios from 'axios';

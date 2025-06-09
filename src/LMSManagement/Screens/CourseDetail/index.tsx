@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Checkbox, Col, Collapse, Form, Input, InputNumber, List, Modal, Row, Space} from 'antd';
 import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
 import {useParams} from 'react-router-dom';

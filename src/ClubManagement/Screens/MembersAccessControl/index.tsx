@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
 import {Alert, Avatar, Col, Divider, Form, Input, Modal, notification, Row, Select, Space} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';

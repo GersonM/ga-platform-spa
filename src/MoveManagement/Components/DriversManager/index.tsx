@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/24/solid';
 import {Col, Popconfirm, Row} from 'antd';
 import axios from 'axios';

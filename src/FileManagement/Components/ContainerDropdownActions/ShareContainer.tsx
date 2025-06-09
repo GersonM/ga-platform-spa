@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Divider, Dropdown, List, MenuProps, notification, Space, Tooltip} from 'antd';
 import {DownOutlined} from '@ant-design/icons';
 import axios from 'axios';

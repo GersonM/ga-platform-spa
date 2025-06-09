@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import {Progress} from 'antd';
 import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';

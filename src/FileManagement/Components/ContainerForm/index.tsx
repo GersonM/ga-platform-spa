@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Form, Input, Radio} from 'antd';
 import {BiCheck} from 'react-icons/bi';
 import {useForm} from 'antd/lib/form/Form';

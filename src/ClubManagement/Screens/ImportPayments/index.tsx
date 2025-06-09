@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Alert, Col, Row, Space, Statistic} from 'antd';
 import axios from 'axios';
 

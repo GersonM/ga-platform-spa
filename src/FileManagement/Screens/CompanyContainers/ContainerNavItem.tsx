@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {NavLink} from 'react-router-dom';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 import {FiHardDrive, FiTerminal} from 'react-icons/fi';

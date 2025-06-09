@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Flex, Form, Input, Steps} from 'antd';
 import {ArrowLeftIcon, ArrowRightIcon, CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';

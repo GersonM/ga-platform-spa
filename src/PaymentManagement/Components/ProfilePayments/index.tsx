@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {InvoicePayment, PaymentMethod} from '../../../Types/api';

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import {Drawer, Modal, Popconfirm, Space, Tag, Tooltip} from 'antd';
 import LocationsManager from '../../Components/LocationsManager';

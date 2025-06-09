@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Col, Divider, Empty, Input, Modal, Row} from 'antd';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import {MoveTrip, Profile} from '../../../Types/api';

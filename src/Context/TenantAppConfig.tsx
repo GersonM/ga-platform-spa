@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {ConfigProvider, theme} from 'antd';
 import tinyColor from 'tinycolor2';
 import locale from 'antd/locale/es_ES';

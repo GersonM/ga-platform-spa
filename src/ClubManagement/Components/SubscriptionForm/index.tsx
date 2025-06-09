@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Col, DatePicker, Divider, Form, Input, InputNumber, Row, Select} from 'antd';
 import axios from 'axios';
 

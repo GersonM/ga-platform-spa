@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Divider, Form, Input} from 'antd';
 import {AtSymbolIcon} from '@heroicons/react/24/solid';
 import {NavLink, useNavigate} from 'react-router-dom';

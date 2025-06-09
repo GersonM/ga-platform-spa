@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Card, Empty, Form, Input, Select} from 'antd';
 import {SiCpanel, SiGmail} from 'react-icons/si';
 import axios from 'axios';

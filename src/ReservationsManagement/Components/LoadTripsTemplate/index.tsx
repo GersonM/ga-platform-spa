@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {TrashIcon} from '@heroicons/react/24/outline';
 import {PiCheck} from 'react-icons/pi';

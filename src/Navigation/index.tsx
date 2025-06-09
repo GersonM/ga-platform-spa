@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
@@ -42,7 +42,7 @@ import {
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
 import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbPackage} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
-import {ItemType} from 'antd/es/menu/interface';
+import type {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
 import Cookies from 'js-cookie';
 

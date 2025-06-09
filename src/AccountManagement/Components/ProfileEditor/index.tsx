@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -13,7 +13,7 @@ import {
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import {Profile} from '../../../Types/api';
+import type {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';

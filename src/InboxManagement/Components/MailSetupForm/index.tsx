@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Form, Input} from 'antd';
 import axios from 'axios';
 import {MailAccount} from '../../../Types/api';

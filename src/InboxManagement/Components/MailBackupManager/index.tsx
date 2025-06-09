@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Alert, Button, Col, Popover, Progress, Row} from 'antd';
 import MailSetupForm from '../MailSetupForm';
 import {PencilIcon} from '@heroicons/react/24/outline';

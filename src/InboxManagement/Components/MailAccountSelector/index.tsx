@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 import {Dropdown, Empty} from 'antd';

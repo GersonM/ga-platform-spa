@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Course, CourseModule} from '../../../Types/api';
 import axios from 'axios';
 import {Collapse, Empty, List, Modal, Popconfirm, Space} from 'antd';

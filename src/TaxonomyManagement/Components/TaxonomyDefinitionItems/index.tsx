@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/24/solid';
 import {Form, Modal, Popconfirm, Space} from 'antd';
 import {Link} from 'react-router-dom';

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Dropdown, MenuProps, Modal} from 'antd';
 import {PiArrowsOutCardinal, PiPencilSimpleLine, PiTrash} from 'react-icons/pi';
 import axios from 'axios';

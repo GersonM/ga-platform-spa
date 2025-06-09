@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {IoReload} from 'react-icons/io5';
 import dayjs from 'dayjs';
