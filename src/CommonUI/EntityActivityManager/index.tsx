@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {DatePicker, Dropdown, Empty, Form, Image, Input, MenuProps, Space, Tag, Tooltip} from 'antd';
+import {DatePicker, Dropdown, Empty, Form, Image, Input, type MenuProps, Space, Tag, Tooltip} from 'antd';
 import {AiOutlineAlert} from 'react-icons/ai';
 import {useDropzone} from 'react-dropzone';
 import {GrSend} from 'react-icons/gr';

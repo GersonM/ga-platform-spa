@@ -1,10 +1,7 @@
-import {useEffect, useState} from 'react';
+import {Card, Space} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import {Card, _Col, _Row, Space} from 'antd';
 import ServiceStatus from '../../../FileManagement/Components/ServiceStatus';
-import _Helmet from 'react-helmet';
 import MetaTitle from '../../../CommonUI/MetaTitle';
-import _axios from 'axios';
 
 const DashboardHome = () => {
   return (

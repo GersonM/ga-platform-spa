@@ -149,7 +149,7 @@ const PermissionsManager = () => {
         onCancel={() => setOpenRoleForm(false)}
         footer={null}
         open={openRoleForm}
-        destroyOnClose>
+        destroyOnHidden>
         <AuthRoleForm
           onComplete={() => {
             setOpenRoleForm(false);

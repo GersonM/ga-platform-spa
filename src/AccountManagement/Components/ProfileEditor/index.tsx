@@ -305,7 +305,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
         </Col>
       </Row>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         open={openChangePassword}
         title={'Actualizar contraseña para ' + profile.name}
         onClose={() => setOpenChangePassword(false)}>
@@ -319,7 +319,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
         )}
       </Drawer>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         open={openPermissionsManager}
         title={'Actualizar permisos para ' + profile.name}
         onClose={() => setOpenPermissionsManager(false)}>

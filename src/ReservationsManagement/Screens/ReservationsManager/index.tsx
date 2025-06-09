@@ -210,7 +210,7 @@ const ReservationsManager = () => {
         title={'Nueva reservas'}
         footer={false}
         open={openTripModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenTripModal(false);
         }}>
@@ -225,7 +225,7 @@ const ReservationsManager = () => {
         title={'Cargar plantilla'}
         footer={false}
         open={openLoadTemplate}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenLoadTemplate(false);
         }}>
@@ -241,7 +241,7 @@ const ReservationsManager = () => {
         width={700}
         footer={false}
         open={openPrintDocuments}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenPrintDocuments(false);
         }}>
@@ -251,7 +251,7 @@ const ReservationsManager = () => {
         title={'Crear plantilla'}
         footer={false}
         open={openCreateTemplate}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenCreateTemplate(false);
         }}>

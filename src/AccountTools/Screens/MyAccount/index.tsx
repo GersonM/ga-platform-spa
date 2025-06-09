@@ -79,7 +79,7 @@ const MyAccount = () => {
         </Col>
       </Row>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         title={'Actualizar mi contraseña'}
         open={openPasswordModal}
         onClose={() => setOpenPasswordModal(false)}>

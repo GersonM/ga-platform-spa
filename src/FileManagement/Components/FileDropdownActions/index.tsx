@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Dropdown, MenuProps, Modal} from 'antd';
+import {Dropdown, type MenuProps, Modal} from 'antd';
 import {PiArrowsOutCardinal, PiPencilSimpleLine, PiTrash} from 'react-icons/pi';
 import axios from 'axios';
 
@@ -66,7 +66,7 @@ const FileDropdownActions = ({children, trigger, file, onChange}: FileDropdownAc
       <Dropdown menu={{items, onClick}} arrow trigger={trigger}>
         {children}
       </Dropdown>
-      <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
+      <Modal destroyOnHidden open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
         {getContent()}
       </Modal>
     </>

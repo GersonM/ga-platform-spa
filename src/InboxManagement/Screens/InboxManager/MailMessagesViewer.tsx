@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useOutletContext, useParams} from 'react-router-dom';
 import axios from 'axios';
-import {_Button, Segmented} from 'antd';
-import {_ArrowPathIcon} from '@heroicons/react/24/outline';
+import {Segmented} from 'antd';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ListMailMessages from '../../Components/ListMailMessages';
 import type {MailFolder, MailFolderPageContent, MailMessage} from '../../../Types/api';

@@ -122,7 +122,7 @@ const TaxonomyDefinitionItems = ({definition}: TaxonomyDefinitionItemsProps) => 
     <>
       <TableList loading={loading} columns={columns} dataSource={items} />
       <Modal
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         open={openContainer}
         onCancel={() => setOpenContainer(false)}

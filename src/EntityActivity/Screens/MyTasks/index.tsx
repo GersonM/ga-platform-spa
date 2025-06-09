@@ -68,7 +68,9 @@ const MyComponent = () => {
       .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
       .then(_response => {
         setReload(!reload);
-        updateActivityCount && updateActivityCount();
+        if (updateActivityCount) {
+          updateActivityCount();
+        }
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -90,7 +92,7 @@ const MyComponent = () => {
       dataIndex: 'profile',
       width: 180,
       render: (profile: Profile, row: EntityActivity) => {
-        return <ProfileChip profile={profile} caption={dayjs(_row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
+        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
       },
     },
     {
@@ -166,7 +168,7 @@ const MyComponent = () => {
             label={'Asignar fecha'}
             onClick={() => {
               setOpenActivityEditor(true);
-              setSelectedActivity(_row);
+              setSelectedActivity(row);
             }}
           />
         );
@@ -180,15 +182,15 @@ const MyComponent = () => {
         return (
           <Space>
             <Popconfirm
-              onConfirm={() => completeTask(uuid, !!_row.completed_at)}
-              title={_row.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
+              onConfirm={() => completeTask(uuid, !!row.completed_at)}
+              title={row.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
               description={
-                _row.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
+                row.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
               }>
               <Tooltip
-                title={_row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
+                title={row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
                 placement={'bottom'}>
-                <IconButton icon={_row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
+                <IconButton icon={row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
               </Tooltip>
             </Popconfirm>
           </Space>

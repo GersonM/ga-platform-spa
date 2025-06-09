@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
+import {Pagination} from 'antd';
 import axios from 'axios';
+import dayjs from 'dayjs';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {InvoicePayment, PaymentMethod} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
-import {Pagination} from 'antd';
-import dayjs from 'dayjs';
 
 interface ProfilePaymentsProps {
   profileUuid: string;
@@ -119,7 +119,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
       <TableList columns={columns} dataSource={payments} loading={loading} />
       <Pagination
         showSizeChanger={false}
-        _size={'small'}
+        size={'small'}
         total={pagination?.total}
         pageSize={pagination?.per_page}
         current={pagination?.current_page}

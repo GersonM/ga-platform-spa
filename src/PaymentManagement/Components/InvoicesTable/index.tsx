@@ -163,7 +163,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           icon={<TbPlus size={16} />}
         />
       </div>
-      <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
+      <Modal open={!!selectedInvoice} destroyOnHidden footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
           <>
             <div>
@@ -180,7 +180,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
       </Modal>
       <Modal
         open={openNewInvoice}
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         title={'Agregar factura'}
         onCancel={() => setOpenNewInvoice(false)}

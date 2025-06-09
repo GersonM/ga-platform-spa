@@ -130,7 +130,7 @@ const WorkspaceManagement = () => {
         title={'Crear nuevo workspace'}
         open={openAddTenant}
         onCancel={() => setOpenAddTenant(false)}
-        destroyOnClose
+        destroyOnHidden
         footer={false}>
         <WorkspaceForm
           onComplete={() => {

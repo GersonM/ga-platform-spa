@@ -124,7 +124,7 @@ const TaxonomyManager = () => {
       <Modal
         footer={false}
         open={openTaxonomyForm}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenTaxonomyForm(false);
           setSelectedTaxonomy(undefined);

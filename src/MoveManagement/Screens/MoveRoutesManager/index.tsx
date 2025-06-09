@@ -99,14 +99,14 @@ const MoveRoutesManager = () => {
         <PrimaryButton icon={<MapPinIcon />} label={'Lugares'} onClick={() => setOpenLocationModal(true)} />
       </Space>
       <TableList columns={routesColumns} dataSource={routes} />
-      <Modal footer={false} open={openLocationModal} destroyOnClose onCancel={() => setOpenLocationModal(false)}>
+      <Modal footer={false} open={openLocationModal} destroyOnHidden onCancel={() => setOpenLocationModal(false)}>
         <LocationsManager />
       </Modal>
       <Modal
         title={'Nueva ruta'}
         footer={false}
         open={openRouteManager}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenRouteManager(false);
           setSelectedRoute(undefined);

@@ -189,7 +189,7 @@ const ConfigProviders = () => {
         onCancel={() => setOpenCreateProvider(false)}
         footer={null}
         open={openCreateProvider}
-        destroyOnClose>
+        destroyOnHidden>
         <CreateProvider
           onFinish={() => {
             setReload(!reload);
@@ -198,7 +198,7 @@ const ConfigProviders = () => {
         />
       </Modal>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         open={!!selectedAccount}
         title={'Backup de cuenta'}
         onClose={() => setSelectedAccount(undefined)}>

@@ -1,11 +1,9 @@
 import {useState} from 'react';
-import {_PiFunnelBold} from 'react-icons/pi';
 import {TrashIcon, EyeIcon} from '@heroicons/react/24/outline';
 import {Form, Modal, Popconfirm, Progress, Select, Space, Table} from 'antd';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import type {EntityActivity} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import FilterForm from '../../../CommonUI/FilterForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -51,8 +49,8 @@ const tmp = [
 ];
 
 const EstatesManager = () => {
-  const [loading, _setLoading] = useState(false);
-  const [estates, _setEstates] = useState<any[]>(tmp);
+  const [loading, setLoading] = useState(false);
+  const [estates, setEstates] = useState<any[]>(tmp);
   const [reload, setReload] = useState(false);
   const [selectedEstates, setSelectedEstates] = useState<string[]>();
   const [openBulkUpdate, setOpenBulkUpdate] = useState(false);
@@ -86,7 +84,7 @@ const EstatesManager = () => {
       dataIndex: '_price',
       title: 'Valor del terreno',
       render: (price: number) => {
-        return <MoneyString value={_price} />;
+        return <MoneyString value={price} />;
       },
     },
     {
@@ -129,7 +127,7 @@ const EstatesManager = () => {
       dataIndex: 'uuid',
       title: 'Acciones',
       width: 100,
-      render: (uuid: string, row: EntityActivity) => {
+      render: (uuid: string) => {
         return (
           <Space>
             <IconButton small icon={<EyeIcon />} onClick={() => navigate(`/real-estate/estates/${uuid}`)} />
@@ -203,8 +201,8 @@ const EstatesManager = () => {
       </FilterForm>
       <Table
         rowSelection={{
-          onChange: (selectedRowKeys, selectedRows: any[]) => {
-            // @ts-ignore
+          onChange: (selectedRowKeys) => {
+            // @ts-expect-error
             setSelectedEstates(selectedRowKeys);
           },
         }}

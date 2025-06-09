@@ -155,7 +155,7 @@ const ClubMembersManagement = () => {
       <Modal
         title={'Editar subscripción'}
         open={openAddSubscription}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => setOpenAddSubscription(false)}
         footer={null}>
         <SubscriptionForm

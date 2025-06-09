@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react';
-import {_Checkbox, Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
+import {Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
 
@@ -141,7 +141,7 @@ const TicketsManager = () => {
         title={'Nuevo viaje'}
         footer={false}
         open={openTripModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenTripModal(false);
         }}>

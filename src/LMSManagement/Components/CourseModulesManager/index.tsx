@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react';
-import type {_Course, CourseModule} from '../../../Types/api';
-import axios from 'axios';
-import {Collapse, Empty, List, Modal, Popconfirm, Space} from 'antd';
-import IconButton from '../../../CommonUI/IconButton';
 import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
+import {Collapse, Empty, List, Modal, Popconfirm, Space} from 'antd';
+import axios from 'axios';
+
+import type {CourseModule} from '../../../Types/api';
+import IconButton from '../../../CommonUI/IconButton';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import _CourseForm from '../CourseForm';
 import ModuleSessionForm from '../ModuleSessionForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
@@ -114,7 +114,7 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
       </Collapse>
 
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Crear sesión'}
         open={openSessionForm}
         onCancel={() => setOpenSessionForm(false)}

@@ -97,7 +97,7 @@ const MoveVehiclesManager = () => {
         title={'Conductores'}
         footer={false}
         open={openDriverModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => setOpenDriverModal(false)}>
         <DriversManager />
       </Modal>
@@ -105,7 +105,7 @@ const MoveVehiclesManager = () => {
         title={selectedVehicle ? 'Actualizar vehículo' : 'Nuevo vehículo'}
         footer={false}
         open={openVehicleForm}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenVehicleForm(false);
           setSelectedVehicle(undefined);

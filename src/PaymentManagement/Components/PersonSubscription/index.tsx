@@ -340,7 +340,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         </div>
       ))}
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Agregar miembro'}
         footer={false}
         open={openAddMember}
@@ -359,7 +359,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         )}
       </Modal>
       <Modal
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         open={openEditSubscription}
         onCancel={() => {
@@ -378,7 +378,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       </Modal>
       <Modal
         width={800}
-        destroyOnClose
+        destroyOnHidden
         title={'Editar datos'}
         footer={false}
         open={!!selectedProfile}
@@ -388,7 +388,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         {selectedProfile && <ProfileEditor profileUuid={selectedProfile.uuid} />}
       </Modal>
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Carnet de socio'}
         footer={false}
         open={openPrint}

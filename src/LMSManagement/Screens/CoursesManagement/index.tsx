@@ -107,7 +107,7 @@ const CoursesManagement = () => {
       />
       <TableList columns={columns} dataSource={courses} />
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Crear curso'}
         open={openCourseForm}
         onCancel={() => setOpenCourseForm(false)}

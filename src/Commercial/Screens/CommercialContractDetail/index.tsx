@@ -177,7 +177,7 @@ const CommercialContractDetail = () => {
           {contract && <InvoicesTable entityUuid={contract?.uuid} type={'contract'} />}
         </Col>
       </Row>
-      <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnClose footer={null}>
+      <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnHidden footer={null}>
         <h2>Revertir entrega</h2>
         <p>Especifique el motivo de la reversión de la entrega</p>
         <Form onFinish={submitProvisionRevert}>
@@ -190,7 +190,7 @@ const CommercialContractDetail = () => {
       <Modal
         open={openContractProvideForm}
         onCancel={() => setOpenContractProvideForm(false)}
-        destroyOnClose
+        destroyOnHidden
         footer={null}
         title={'Registrar entrega'}>
         <ContractProvideForm
@@ -201,7 +201,7 @@ const CommercialContractDetail = () => {
           }}
         />
       </Modal>
-      <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnClose footer={null}>
+      <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnHidden footer={null}>
         {contract && (
           <CancelContract
             contract={contract}

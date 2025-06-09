@@ -3,7 +3,7 @@ import {Col, Modal, Popconfirm, Row, Space} from 'antd';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import type {Invoice, InvoiceItem} from '../../../Types/api';
+import type {Invoice} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -26,7 +26,9 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
     axios
       .delete('payment-management/invoice-items/' + uuid)
       .then(() => {
-        onChange && onChange();
+        if (onChange) {
+          onChange();
+        }
       })
       .catch(error => {
         ErrorHandler.showNotification(error);

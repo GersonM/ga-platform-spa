@@ -279,7 +279,7 @@ const CommercialClients = () => {
         />
       )}
       <Modal
-        destroyOnClose
+        destroyOnHidden
         width={800}
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}

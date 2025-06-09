@@ -2,7 +2,7 @@ import {useCallback, useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Empty, Input, Space} from 'antd';
 import axios from 'axios';
-import {_PiArrowBendLeftDown, PiArrowLeft, PiRecycle, PiUploadBold} from 'react-icons/pi';
+import {PiArrowLeft, PiRecycle, PiUploadBold} from 'react-icons/pi';
 
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
@@ -14,9 +14,9 @@ import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import DropMessage from './DropMessage';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import UploadContext from '../../../Context/UploadContext';
-import './styles.less';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import IconButton from '../../../CommonUI/IconButton';
+import './styles.less';
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -45,7 +45,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
         addFile(acceptedFiles[acceptedFilesKey], containerUuid);
       }
     },
-    [containerUuid],
+    [addFile, containerUuid],
   );
 
   useEffect(() => {
@@ -95,6 +95,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
       'https://' + import.meta.env.VITE_WEB + '/' + tenant + `/storage/file-management/files/${file.uuid}/download`;
     const element = document.getElementById('my_iframe');
     if (element) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       element.src = link;
     }
@@ -217,7 +218,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                   <FileItem
                     size={viewMode == 'grid' ? 45 : 28}
                     key={file.uuid}
-                    _selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
+                    selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
                     file={file}
                     onChange={() => setReload(!reload)}
                     onDoubleClick={() => downloadFile(file)}

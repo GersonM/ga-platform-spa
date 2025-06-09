@@ -317,7 +317,7 @@ const CommercialIncidents = () => {
       <Modal
         open={openActivityEditor}
         title={'Editar actividad'}
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         onCancel={() => setOpenActivityEditor(false)}>
         {selectedActivity && (

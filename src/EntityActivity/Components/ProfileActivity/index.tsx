@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
 import {Empty, Image, Tooltip} from 'antd';
 import axios from 'axios';
@@ -6,7 +6,6 @@ import axios from 'axios';
 import type {ApiFile} from '../../../Types/api';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import AuthContext from '../../../Context/AuthContext';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 
@@ -17,7 +16,6 @@ interface ProfileActivityProps {
 const ProfileActivity = ({profileUuid}: ProfileActivityProps) => {
   const [activity, setActivity] = useState<any[]>();
   const [loading, setLoading] = useState(false);
-  const {_user} = useContext(AuthContext);
   const [reload, _setReload] = useState(false);
 
   useEffect(() => {

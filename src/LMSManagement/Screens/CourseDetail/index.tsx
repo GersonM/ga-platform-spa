@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
-import {Checkbox, Col, _Collapse, Form, Input, InputNumber, _List, Modal, Row, Space} from 'antd';
-import {PlusIcon, _TrashIcon} from '@heroicons/react/24/solid';
+import {Checkbox, Col, Form, Input, InputNumber, Modal, Row, Space} from 'antd';
+import {PlusIcon} from '@heroicons/react/24/solid';
 import {useParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
@@ -8,7 +8,6 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import _CourseForm from '../../Components/CourseForm';
 import TaxonomySelector from '../../../TaxonomyManagement/Components/TaxonomySelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import type {Course} from '../../../Types/api';
@@ -123,7 +122,7 @@ const CourseDetail = () => {
         </Col>
       </Row>
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Crear módulo'}
         open={openCreateModule}
         onCancel={() => setOpenCreateModule(false)}

@@ -14,8 +14,10 @@ const CourseForm = ({onComplete}: ICourseFormProps) => {
   const submitForm = (values: any) => {
     axios
       .post('/lms/courses', values)
-      .then(_response => {
-        onComplete && onComplete();
+      .then(() => {
+        if (onComplete) {
+          onComplete();
+        }
       })
       .catch(error => {
         ErrorHandler.showNotification(error);

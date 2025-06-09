@@ -212,7 +212,7 @@ const ProfilesManagement = () => {
             setPageSize(size);
           }}
         />
-        <Modal open={openCreateUser} destroyOnClose footer={false} onCancel={() => setOpenCreateUser(false)}>
+        <Modal open={openCreateUser} destroyOnHidden footer={false} onCancel={() => setOpenCreateUser(false)}>
           <CreateUser
             onCompleted={() => {
               setReload(!reload);

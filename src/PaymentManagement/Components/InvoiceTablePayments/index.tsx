@@ -90,7 +90,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
         size={'small'}
         onClick={() => setOpenInvoiceForm(true)}
       />
-      <Modal destroyOnClose open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
+      <Modal destroyOnHidden open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
         <InvoicePaymentForm
           invoice={invoice}
           onCompleted={() => {

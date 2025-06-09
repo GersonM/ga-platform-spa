@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Button, Divider, Dropdown, List, MenuProps, notification, Space, Tooltip} from 'antd';
+import {Button, Divider, Dropdown, List, type MenuProps, notification, Space, Tooltip} from 'antd';
 import {DownOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {PencilIcon, UserIcon, UserMinusIcon, UserPlusIcon, EyeIcon} from '@heroicons/react/24/solid';

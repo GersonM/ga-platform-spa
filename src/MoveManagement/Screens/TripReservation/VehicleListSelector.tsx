@@ -1,15 +1,14 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
+import {PiCarProfile} from 'react-icons/pi';
+import {Dayjs} from 'dayjs';
 import {Empty, Tag} from 'antd';
 
 import type {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import './styles.less';
-import {Dayjs} from 'dayjs';
 import Config from '../../../Config';
-import {_GrCar} from 'react-icons/gr';
-import {PiCarProfile} from 'react-icons/pi';
+import './styles.less';
 
 interface VehicleListSelectorProps {
   _value?: string;
@@ -64,7 +63,9 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, _value}: Veh
               className={`${selectedVehicle && selectedVehicle.uuid == vehicle.uuid ? 'selected' : ''}`}
               onClick={() => {
                 setSelectedVehicle(vehicle);
-                onChange && onChange(vehicle.uuid, vehicle);
+                if (onChange) {
+                  onChange(vehicle.uuid, vehicle);
+                }
               }}>
               <PiCarProfile className={'icon'} />
               <div className={'vehicle-info'}>

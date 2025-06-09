@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {AxisOptions, Chart} from 'react-charts';
+import {type AxisOptions, Chart} from 'react-charts';
 import {Col, Row} from 'antd';
 
 const RealEstateDashboard = () => {
@@ -33,14 +33,14 @@ const RealEstateDashboard = () => {
     },
   ];
 
-  const primaryAxis = React.useMemo(
+  const primaryAxis = useMemo(
     (): AxisOptions<any> => ({
       getValue: datum => datum.date,
     }),
     [],
   );
 
-  const secondaryAxes = React.useMemo(
+  const secondaryAxes = useMemo(
     (): AxisOptions<any>[] => [
       {
         min: 0,
