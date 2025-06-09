@@ -1,12 +1,11 @@
 import {useState} from 'react';
-import {Col, DatePicker, Form, Row, Tooltip} from 'antd';
+import {Col, DatePicker, Form, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
-import {IoInformationCircle} from 'react-icons/io5';
 import {Dayjs} from 'dayjs';
 import axios from 'axios';
 
-import {MoveLocation, MoveRoute, MoveVehicle} from '../../../Types/api';
+import type {MoveLocation, MoveRoute, MoveVehicle} from '../../../Types/api';
 import VehicleListSelector from '../../Screens/NewReservation/VehicleListSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RouteSelector from '../RouteSelector';

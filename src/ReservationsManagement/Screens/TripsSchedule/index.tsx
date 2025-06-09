@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -75,8 +75,8 @@ const TripsSchedule = () => {
           defaultView={'agenda'}
           events={events}
           formats={{
-            dayFormat: (date, culture, l) => (l ? l.format(date, 'dddd D', culture) : ''),
-            timeGutterFormat: (date, culture, l) => (l ? l.format(date, 'hh:mm A', culture) : ''),
+            dayFormat: (date: Date, culture: string | undefined, l: any) => (l ? l.format(date, 'dddd D', culture) : ''),
+            timeGutterFormat: (date: Date, culture: string | undefined, l: any) => (l ? l.format(date, 'hh:mm A', culture) : ''),
           }}
           localizer={localizer}
           startAccessor="start"

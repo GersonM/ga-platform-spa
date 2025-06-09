@@ -7,7 +7,7 @@ import {PiDownload, PiEye, PiImage} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {Container, ApiFile, FileActivity} from '../../../Types/api';
+import type {Container, ApiFile, FileActivity} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';

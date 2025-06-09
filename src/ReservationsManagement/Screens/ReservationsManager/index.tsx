@@ -7,7 +7,7 @@ import {BiPrinter, BiSave} from 'react-icons/bi';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import RouteSelector from '../../Components/RouteSelector';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import TripStatus from '../../Components/TripStatus';
@@ -18,8 +18,8 @@ import ReservationForm from '../../Components/ReservationForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import LoadTripsTemplate from '../../Components/LoadTripsTemplate';
 import Config from '../../../Config';
-import './styles.less';
 import PrintContractsDocuments from '../../Components/PrintContractsDocuments';
+import './styles.less';
 
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -80,7 +80,7 @@ const ReservationsManager = () => {
     setSavingTemplate(true);
     axios
       .post('move/templates', values)
-      .then(response => {
+      .then(() => {
         setSavingTemplate(false);
         setOpenCreateTemplate(false);
       })

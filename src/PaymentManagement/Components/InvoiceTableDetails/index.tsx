@@ -1,15 +1,14 @@
 import {useState} from 'react';
-import {TrashIcon} from '@heroicons/react/24/outline';
 import {Col, Modal, Popconfirm, Row, Space} from 'antd';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import {Invoice, InvoiceItem} from '../../../Types/api';
+import type {Invoice, InvoiceItem} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import InvoiceItemForm from '../InvoiceItemForm';
-import {PiPencil, PiPencilSimple, PiPlus, PiTrash} from 'react-icons/pi';
+import {PiPencilSimple, PiPlus, PiTrash} from 'react-icons/pi';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface InvoiceTableDetailsProps {
@@ -21,13 +20,12 @@ interface InvoiceTableDetailsProps {
 
 const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerType}: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
 
   const removeConcept = (uuid: string) => {
     console.log(uuid);
     axios
       .delete('payment-management/invoice-items/' + uuid)
-      .then(response => {
+      .then(() => {
         onChange && onChange();
       })
       .catch(error => {

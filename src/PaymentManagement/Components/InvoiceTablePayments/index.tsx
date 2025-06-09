@@ -5,7 +5,7 @@ import {PiPlusBold} from 'react-icons/pi';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import {Invoice, ApiFile, InvoicePayment} from '../../../Types/api';
+import type {Invoice, ApiFile, InvoicePayment} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';

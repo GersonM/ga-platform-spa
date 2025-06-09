@@ -2,7 +2,6 @@ import {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
-import {CustomScroll} from 'react-custom-scroll';
 import axios from 'axios';
 import {
   PiBooksLight,
@@ -138,7 +137,6 @@ const Navigation = () => {
         </Dropdown>
       </div>
 
-      <CustomScroll heightRelativeToParent="calc(100% - 20px)">
         <nav>
           <ul className="navigation-list">
             <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
@@ -250,7 +248,6 @@ const Navigation = () => {
             )}
           </ul>
         </nav>
-      </CustomScroll>
 
       <div className="bottom-nav">
         {uploadProgress && (

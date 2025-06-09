@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Button, Divider, Form, Input, Modal} from 'antd';
 import {NavLink, useNavigate} from 'react-router-dom';
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, {type AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
 import {AtSymbolIcon} from '@heroicons/react/24/solid';
 import {ChevronRightIcon} from '@heroicons/react/16/solid';
@@ -60,7 +60,7 @@ const Login = () => {
   };
 
   // Función para manejar el callback de Google (si necesitas procesarlo en el frontend)
-  const handleGoogleCallback = async (token: string, profileUuid: string) => {
+  /*const handleGoogleCallback = async (token: string, profileUuid: string) => {
     try {
       axios.defaults.headers.common.Authorization = 'Bearer ' + token;
       Cookies.set('session_token', token);
@@ -78,7 +78,7 @@ const Login = () => {
       });
       setGoogleLoading(false);
     }
-  };
+  };*/
 
   return (
     <>

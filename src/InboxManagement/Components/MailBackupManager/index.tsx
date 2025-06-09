@@ -4,7 +4,7 @@ import MailSetupForm from '../MailSetupForm';
 import {PencilIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-import {MailAccount, MailAccountStats} from '../../../Types/api';
+import type {MailAccount, MailAccountStats} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import './styles.less';

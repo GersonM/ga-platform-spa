@@ -1,6 +1,4 @@
-import React from 'react';
-
-import {MailMessage} from '../../../Types/api';
+import type {MailMessage} from '../../../Types/api';
 
 interface MailMessageViewerProps {
   message: MailMessage;

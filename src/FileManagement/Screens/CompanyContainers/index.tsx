@@ -13,7 +13,7 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ContainerContentViewer from '../../Components/ContainerContentViewer';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';

@@ -2,12 +2,11 @@ import {useState} from 'react';
 import {Form, Input} from 'antd';
 import axios from 'axios';
 
-import {TaxonomyDefinition, ApiFile} from '../../../Types/api';
+import type {TaxonomyDefinition, ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
 import {CheckIcon} from '@heroicons/react/24/solid';
-import taxonomyItem from '../TaxonomyItem';
 
 interface TaxonomyFormProps {
   entity?: TaxonomyDefinition;

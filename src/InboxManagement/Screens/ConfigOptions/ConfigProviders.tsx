@@ -4,7 +4,7 @@ import {SiCpanel, SiGmail} from 'react-icons/si';
 import {PlusIcon, ChartPieIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-import {MailAccount, MailProvider} from '../../../Types/api';
+import type {MailAccount, MailProvider} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateProvider from './CreateProvider';
 import FileSize from '../../../CommonUI/FileSize';
@@ -121,7 +121,7 @@ const ConfigProviders = () => {
     },
     {
       title: '',
-      render: (id: any, account: any) => (
+      render: (_id: any, account: any) => (
         <Button
           size={'small'}
           type={'primary'}

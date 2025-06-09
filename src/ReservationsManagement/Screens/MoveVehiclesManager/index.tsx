@@ -10,7 +10,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
 import DriversManager from '../../Components/DriversManager';
 import VehicleForm from '../../Components/VehicleForm';
-import {MoveDriver, MoveVehicle} from '../../../Types/api';
+import type {MoveDriver, MoveVehicle} from '../../../Types/api';
 
 const MoveVehiclesManager = () => {
   const [openDriverModal, setOpenDriverModal] = useState(false);

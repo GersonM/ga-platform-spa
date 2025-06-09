@@ -4,7 +4,7 @@ import axios from 'axios';
 import {Dropdown, Empty} from 'antd';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MailAccount} from '../../../Types/api';
+import type {MailAccount} from '../../../Types/api';
 import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import {PlusIcon} from '@heroicons/react/24/solid';

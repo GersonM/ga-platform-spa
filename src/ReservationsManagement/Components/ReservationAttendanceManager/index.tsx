@@ -8,7 +8,7 @@ import {TbBuildingEstate, TbClock} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {Contract, MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
+import type {Contract, MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';

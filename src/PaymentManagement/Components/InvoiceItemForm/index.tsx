@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Col, Form, Input, InputNumber, Row} from 'antd';
-import {InvoiceItem, StorageStock} from '../../../Types/api';
+import type {InvoiceItem, StorageStock} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {useForm} from 'antd/lib/form/Form';

@@ -1,7 +1,8 @@
-import {TablePaginationConfig} from 'antd/lib/table';
-import {Table, TableProps} from 'antd';
-import {AnyObject} from 'antd/es/_util/type';
-import {ExpandableConfig} from 'antd/lib/table/interface';
+import type {TablePaginationConfig} from 'antd/lib/table';
+import {Table} from 'antd';
+import type {TableProps} from 'antd';
+import type {AnyObject} from 'antd/es/_util/type';
+import type {ExpandableConfig} from 'antd/lib/table/interface';
 
 import './styles.less';
 

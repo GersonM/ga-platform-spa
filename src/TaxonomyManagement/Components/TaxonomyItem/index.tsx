@@ -5,7 +5,7 @@ import {Modal, Popconfirm} from 'antd';
 import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-import {TaxonomyDefinition} from '../../../Types/api';
+import type {TaxonomyDefinition} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';

@@ -4,7 +4,7 @@ import axios from 'axios';
 import {notification} from 'antd';
 
 import {version} from '../../package.json';
-import {EntityActivityStats, SessionUser, TenantConfig} from '../Types/api';
+import type {EntityActivityStats, SessionUser, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface AuthContextDefaults {

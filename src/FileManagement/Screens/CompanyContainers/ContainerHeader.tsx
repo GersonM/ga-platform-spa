@@ -2,12 +2,11 @@ import {useEffect, useState} from 'react';
 import {Button, Input, Popover, Segmented, Select, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
-import {BsSortAlphaDown, BsSortNumericDown} from 'react-icons/bs';
 import {PiArrowUp, PiFolderSimplePlus, PiMagnifyingGlass} from 'react-icons/pi';
 import {InformationCircleIcon} from '@heroicons/react/24/outline';
 
 import ContainerForm from '../../Components/ContainerForm';
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 

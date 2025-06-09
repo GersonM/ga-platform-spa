@@ -4,7 +4,7 @@ import tinyColor from 'tinycolor2';
 import locale from 'antd/locale/es_ES';
 import 'dayjs/locale/es-mx.js';
 
-import {TenantConfig} from '../Types/api';
+import type {TenantConfig} from '../Types/api';
 import AuthContext from './AuthContext';
 
 interface AntConfigProps {
