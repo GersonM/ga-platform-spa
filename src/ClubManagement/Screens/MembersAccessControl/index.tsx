@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
-import {Alert, Avatar, Col, Divider, Form, Input, Modal, notification, Row, Select, Space} from 'antd';
+import {Alert, Avatar, Col, Divider, Form, Input, Modal, notification, Row, Select} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import axios from 'axios';
 

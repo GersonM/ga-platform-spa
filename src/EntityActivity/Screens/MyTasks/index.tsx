@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
+import type {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -19,17 +19,17 @@ import AuthContext from '../../../Context/AuthContext';
 
 const MyComponent = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
-  const [searchText, setSearchText] = useState<string>();
+  const [searchText, _setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(100);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<string>();
-  const [statusFilter, setStatusFilter] = useState<string>();
+  const [typeFilter, _setTypeFilter] = useState<string>();
+  const [statusFilter, _setStatusFilter] = useState<string>();
   const navigate = useNavigate();
-  const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
-  const [openActivityEditor, setOpenActivityEditor] = useState(false);
+  const [_selectedActivity, setSelectedActivity] = useState<EntityActivity>();
+  const [_openActivityEditor, setOpenActivityEditor] = useState(false);
   const {updateActivityCount, activityCount} = useContext(AuthContext);
 
   useEffect(() => {
@@ -48,11 +48,11 @@ const MyComponent = () => {
     setLoading(true);
     axios
       .get(`entity-activity/my-tasks`, config)
-      .then(response => {
+      .then(_response => {
         setLoading(false);
-        if (response) {
-          setActivities(response.data.data);
-          setPagination(response.data.meta);
+        if (_response) {
+          setActivities(_response.data.data);
+          setPagination(_response.data.meta);
         }
       })
       .catch(e => {
@@ -66,7 +66,7 @@ const MyComponent = () => {
   const completeTask = (uuid: string, resolve: boolean) => {
     axios
       .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
-      .then(response => {
+      .then(_response => {
         setReload(!reload);
         updateActivityCount && updateActivityCount();
       })
@@ -90,7 +90,7 @@ const MyComponent = () => {
       dataIndex: 'profile',
       width: 180,
       render: (profile: Profile, row: EntityActivity) => {
-        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
+        return <ProfileChip profile={profile} caption={dayjs(_row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
       },
     },
     {
@@ -138,8 +138,8 @@ const MyComponent = () => {
       title: 'Asunto',
       dataIndex: 'entity',
       width: 200,
-      render: (entity?: any, row?: EntityActivity) => {
-        if (row?.entity_type.includes('Subscription')) {
+      render: (entity?: any, _row?: EntityActivity) => {
+        if (_row?.entity_type.includes('Subscription')) {
           return entity.code;
         }
         return (
@@ -166,7 +166,7 @@ const MyComponent = () => {
             label={'Asignar fecha'}
             onClick={() => {
               setOpenActivityEditor(true);
-              setSelectedActivity(row);
+              setSelectedActivity(_row);
             }}
           />
         );
@@ -180,15 +180,15 @@ const MyComponent = () => {
         return (
           <Space>
             <Popconfirm
-              onConfirm={() => completeTask(uuid, !!row.completed_at)}
-              title={row.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
+              onConfirm={() => completeTask(uuid, !!_row.completed_at)}
+              title={_row.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
               description={
-                row.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
+                _row.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
               }>
               <Tooltip
-                title={row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
+                title={_row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
                 placement={'bottom'}>
-                <IconButton icon={row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
+                <IconButton icon={_row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
               </Tooltip>
             </Popconfirm>
           </Space>

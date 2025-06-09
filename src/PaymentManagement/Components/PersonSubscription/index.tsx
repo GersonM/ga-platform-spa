@@ -15,7 +15,7 @@ import {
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Profile, Subscription, SubscriptionMember} from '../../../Types/api';
+import type {Profile, Subscription, SubscriptionMember} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import TextMoney from '../../../CommonUI/TextMoney';
 import IconButton from '../../../CommonUI/IconButton';

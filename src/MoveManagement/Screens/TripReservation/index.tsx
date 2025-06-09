@@ -4,13 +4,13 @@ import dayjs from 'dayjs';
 
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import TripForm from '../../Components/TripForm';
 
 const TripReservation = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedTrip, setSelectedTrip] = useState<MoveTrip>();
-  const [loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
 
   const createTrip = (tripData: any) => {
     setSelectedTrip(tripData);

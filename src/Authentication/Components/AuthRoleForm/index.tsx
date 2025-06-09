@@ -1,4 +1,3 @@
-import React from 'react';
 import {Form, Input} from 'antd';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';

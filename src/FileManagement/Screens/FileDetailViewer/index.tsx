@@ -7,7 +7,7 @@ import {PiDownloadDuotone} from 'react-icons/pi';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';

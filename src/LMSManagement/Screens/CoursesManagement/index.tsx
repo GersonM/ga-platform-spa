@@ -11,7 +11,7 @@ import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CourseForm from '../../Components/CourseForm';
 import IconButton from '../../../CommonUI/IconButton';
-import {Course} from '../../../Types/api';
+import type {Course} from '../../../Types/api';
 
 const CoursesManagement = () => {
   const [courses, setCourses] = useState<Course[]>();

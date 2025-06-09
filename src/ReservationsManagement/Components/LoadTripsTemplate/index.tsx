@@ -29,15 +29,15 @@ const LoadTripsTemplate = ({onCompleted}: ILoadTripsTemplateProps) => {
     setLoading(true);
     axios
       .get(`move/templates`, config)
-      .then(response => {
+      .then(_response => {
         setLoading(false);
-        if (response) {
-          setTemplates(response.data);
+        if (_response) {
+          setTemplates(_response.data);
         }
       })
-      .catch(e => {
+      .catch(_e => {
         setLoading(false);
-        ErrorHandler.showNotification(e);
+        ErrorHandler.showNotification(_e);
       });
 
     return cancelTokenSource.cancel;
@@ -48,13 +48,13 @@ const LoadTripsTemplate = ({onCompleted}: ILoadTripsTemplateProps) => {
     setLoadingTemplate(true);
     axios
       .post('move/templates/load', {...template, date_to_apply: selectedDate?.format(Config.dateFormatServer)})
-      .then(response => {
+      .then(_response => {
         setLoadingTemplate(false);
         onCompleted && onCompleted();
       })
-      .catch(e => {
+      .catch(_e => {
         setLoadingTemplate(false);
-        ErrorHandler.showNotification(e);
+        ErrorHandler.showNotification(_e);
       });
   };
 
@@ -64,10 +64,10 @@ const LoadTripsTemplate = ({onCompleted}: ILoadTripsTemplateProps) => {
         ...template,
         date_to_apply: selectedDate?.format(Config.dateFormatServer),
       })
-      .then(response => {
+      .then(_response => {
         setReload(!reload);
       })
-      .catch(e => {});
+      .catch(_e => {});
   };
 
   return (

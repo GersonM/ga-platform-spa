@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Tabs} from 'antd';
 import ConfigAccounts from './ConfigAccounts';
 import ConfigProviders from './ConfigProviders';

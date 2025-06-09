@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {FileActivity} from '../../../Types/api';
+import type {FileActivity} from '../../../Types/api';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import dayjs from 'dayjs';
@@ -11,8 +11,8 @@ interface FileActivityProfileProps {
 
 const FileActivityProfile = ({profileUuid}: FileActivityProfileProps) => {
   const [fileActivity, setFileActivity] = useState<FileActivity[]>();
-  const [loading, setLoading] = useState(false);
-  const [reload, setReload] = useState(false);
+  const [_loading, setLoading] = useState(false);
+  const [reload, _setReload] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();

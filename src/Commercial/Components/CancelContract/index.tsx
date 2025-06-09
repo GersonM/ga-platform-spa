@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Checkbox, Form, Input} from 'antd';
 import axios from 'axios';
 

@@ -1,9 +1,9 @@
-import React from 'react';
+
 import {Form, Input} from 'antd';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';

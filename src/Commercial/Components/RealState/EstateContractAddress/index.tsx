@@ -1,7 +1,7 @@
-import React from 'react';
+
 import {HomeModernIcon} from '@heroicons/react/24/outline';
 import InfoButton from '../../../../CommonUI/InfoButton';
-import {Contract} from '../../../../Types/api';
+import type {Contract} from '../../../../Types/api';
 
 interface EstateContractAddressProps {
   contract?: Contract;

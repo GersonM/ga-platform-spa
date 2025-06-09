@@ -4,7 +4,7 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {MoveRoute} from '../../../Types/api';
+import type {MoveRoute} from '../../../Types/api';
 
 interface CountryFormProps {
   onCompleted: () => void;

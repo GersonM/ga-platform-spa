@@ -1,9 +1,9 @@
-import React from 'react';
+
 import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
 import {PiFile, PiFileDoc, PiFilePdf, PiFilePpt, PiFileSqlLight, PiFileXls, PiVectorThree} from 'react-icons/pi';
 import {DiPhotoshop} from 'react-icons/di';
 
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 
 interface FileIconProps {
   file: ApiFile;

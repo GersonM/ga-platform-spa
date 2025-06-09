@@ -14,7 +14,7 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ContractList from './ContractList';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
 import FilterForm from '../../../CommonUI/FilterForm';
-import {Client, Profile, ResponsePagination} from '../../../Types/api';
+import type {Client, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import CreateContractForm from '../../Components/CreateContractForm';
 import './styles.less';

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {MoveRoute, MoveVehicle} from '../../../Types/api';
+import type {MoveRoute, MoveVehicle} from '../../../Types/api';
 import DriverSelector from '../../../CommonUI/DriverSelector';
 import {PiCheckBold} from 'react-icons/pi';
 

@@ -5,7 +5,7 @@ import axios from 'axios';
 import MetaTitle from '../../../CommonUI/MetaTitle';
 import AuthContext from '../../../Context/AuthContext';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {SettingsGroup} from '../../../Types/api';
+import type {SettingsGroup} from '../../../Types/api';
 import PreferenceValue from '../../Components/PreferenceValue';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import './styles.less';

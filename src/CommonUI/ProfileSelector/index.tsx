@@ -1,10 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Modal} from 'antd';
-import axios from 'axios';
 import {PiPlusBold} from 'react-icons/pi';
 
-import {Profile} from '../../Types/api';
-import ErrorHandler from '../../Utils/ErrorHandler';
+import type {_Profile} from '../../Types/api';
 import SearchProfile from '../SearchProfile';
 import PrimaryButton from '../PrimaryButton';
 import CreateProfile from '../../AccountManagement/Components/CreateProfile';
@@ -31,7 +29,7 @@ const ProfileSelector = ({
   value,
   onChange,
   allowCreate = true,
-  ...props
+  ...__props
 }: ProfileSelectorProps) => {
   const [openCreateProfile, setOpenCreateProfile] = useState(false);
 

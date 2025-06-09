@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
-import {Contract} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import MoneyString from '../../../CommonUI/MoneyString';
 import ContractDetails from '../../Components/ContractDetails';

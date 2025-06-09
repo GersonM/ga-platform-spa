@@ -1,8 +1,8 @@
-import React from 'react';
+
 import dayjs from 'dayjs';
 import {PiFolderLockLight, PiFolderOpenLight} from 'react-icons/pi';
 
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import IconItem from './IconItem';
 import ContainerDropdownActions from '../ContainerDropdownActions';
 

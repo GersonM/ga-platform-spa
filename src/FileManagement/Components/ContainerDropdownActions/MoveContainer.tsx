@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {Form} from 'antd';
 import axios from 'axios';
 
-import {ApiFile, Container} from '../../../Types/api';
+import type {ApiFile, Container} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContainerSelector from '../../../CommonUI/ContainerSelector';

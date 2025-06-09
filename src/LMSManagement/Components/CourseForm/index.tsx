@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Checkbox, Form, Input} from 'antd';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -14,7 +14,7 @@ const CourseForm = ({onComplete}: ICourseFormProps) => {
   const submitForm = (values: any) => {
     axios
       .post('/lms/courses', values)
-      .then(response => {
+      .then(_response => {
         onComplete && onComplete();
       })
       .catch(error => {

@@ -8,7 +8,7 @@ import TableList from '../../../CommonUI/TableList';
 import RouteForm from '../../Components/RouteForm';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveLocation, MoveRoute} from '../../../Types/api';
+import type {MoveLocation, MoveRoute} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import RouteLocationManager from '../../Components/RouteLocationManager';
 

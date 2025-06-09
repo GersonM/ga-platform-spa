@@ -8,7 +8,7 @@ import axios from 'axios';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Campaign, Lead, Profile, ResponsePagination} from '../../../Types/api';
+import type {Campaign, Lead, Profile, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import CampaignsManager from '../../Components/CampaignsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';

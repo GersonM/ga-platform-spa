@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {PiUploadDuotone} from 'react-icons/pi';
 
 const DropMessage = () => {

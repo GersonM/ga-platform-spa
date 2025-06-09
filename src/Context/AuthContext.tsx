@@ -47,7 +47,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [darkMode, setDarkMode] = useState<boolean>();
   const [openMenu, setOpenMenu] = useState(false);
   const [preferredMode, setPreferredMode] = useState<string>('auto');
-  const [uploadProgress, setUploadProgress] = useState<any>();
+  const [uploadProgress, _setUploadProgress] = useState<any>();
   const [activityCount, setActivityCount] = useState<any>();
   const [reloadActivity, setReloadActivity] = useState(false);
 

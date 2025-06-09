@@ -4,7 +4,7 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../Utils/ErrorHandler';
-import {ApiFile} from '../../Types/api';
+import type {ApiFile} from '../../Types/api';
 
 interface FileActivityFormProps {
   file: ApiFile;

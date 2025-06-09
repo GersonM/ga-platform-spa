@@ -39,7 +39,7 @@ axios
       <AuthContextProvider config={response.data}>
         <TenantAppConfig tenant={response.data}>
           <UploadContextProvider>
-            <BrowserRouter>
+            <BrowserRouter future={{v7_relativeSplatPath:true}}>
               <App />
             </BrowserRouter>
           </UploadContextProvider>

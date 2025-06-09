@@ -5,7 +5,7 @@ import {AxisOptions, Chart} from 'react-charts';
 import {Col, Row} from 'antd';
 
 const RealEstateDashboard = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [reload, setReload] = useState(false);
 
   const data: any[] = [

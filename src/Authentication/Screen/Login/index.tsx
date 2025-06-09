@@ -11,7 +11,7 @@ import GoogleButton from './GoogleButton';
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [_googleLoading, setGoogleLoading] = useState(false);
 
   const login = ({email, password}: any) => {
     axios.defaults.headers.common.Authorization = 'Bearer token';

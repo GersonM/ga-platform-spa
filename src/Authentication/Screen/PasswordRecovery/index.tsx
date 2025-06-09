@@ -2,8 +2,7 @@ import {useState} from 'react';
 import {Button, Divider, Form, Input} from 'antd';
 import {AtSymbolIcon} from '@heroicons/react/24/solid';
 import {NavLink, useNavigate} from 'react-router-dom';
-import axios, {AxiosRequestConfig} from 'axios';
-import {ChevronRightIcon} from '@heroicons/react/16/solid';
+import axios, {type AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';

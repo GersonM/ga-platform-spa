@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TableList from '../../../CommonUI/TableList';
-import {MoveDriver} from '../../../Types/api';
+import type {MoveDriver} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import DriverForm from '../DriverForm';
 

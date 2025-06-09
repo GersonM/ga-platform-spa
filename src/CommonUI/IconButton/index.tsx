@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Button, Tooltip} from 'antd';
 import './styles.less';
 

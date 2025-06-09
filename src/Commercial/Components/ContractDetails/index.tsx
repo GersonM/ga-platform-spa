@@ -6,15 +6,8 @@ interface ContractDetailsProps {
   contract: Contract;
 }
 
-const GROUPS: any = {
-  address: 'Dirección',
-  stage: 'Etapa',
-  financial: 'Financiamiento',
-  sale: 'Venta',
-};
-
 const ContractDetails = ({contract}: ContractDetailsProps) => {
-  const [groups, setGroups] = useState<any>();
+  const [_groups, setGroups] = useState<any>();
 
   useEffect(() => {
     // @ts-ignore

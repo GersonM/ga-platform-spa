@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Token} from '../../../Types/api';
+import type {Token} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
 import {Space} from 'antd';

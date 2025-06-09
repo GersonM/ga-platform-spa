@@ -8,7 +8,7 @@ import {TbClock, TbSteeringWheel} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
+import type {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';

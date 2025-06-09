@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {MovePassenger} from '../../../Types/api';
+import type {MovePassenger} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {Dayjs} from 'dayjs';
 import Config from '../../../Config';

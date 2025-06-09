@@ -7,7 +7,7 @@ import timeString from 'timestring';
 import {Dayjs} from 'dayjs';
 import axios from 'axios';
 
-import {MoveLocation, MoveRoute, MoveVehicle} from '../../../Types/api';
+import type {MoveLocation, MoveRoute, MoveVehicle} from '../../../Types/api';
 import VehicleListSelector from '../../Screens/TripReservation/VehicleListSelector';
 import LocationsSelector from '../LocationsSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';

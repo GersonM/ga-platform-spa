@@ -1,6 +1,6 @@
-import React from 'react';
-import {Descriptions, DescriptionsProps, Divider} from 'antd';
-import {StorageStock} from '../../../Types/api';
+
+import {Descriptions, type DescriptionsProps, Divider} from 'antd';
+import type {StorageStock} from '../../../Types/api';
 
 interface StockViewerStateProps {
   stock: StorageStock;

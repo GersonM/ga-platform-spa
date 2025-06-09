@@ -2,14 +2,14 @@ import {useCallback, useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Empty, Input, Space} from 'antd';
 import axios from 'axios';
-import {PiArrowBendLeftDown, PiArrowLeft, PiRecycle, PiUploadBold} from 'react-icons/pi';
+import {_PiArrowBendLeftDown, PiArrowLeft, PiRecycle, PiUploadBold} from 'react-icons/pi';
 
 import FileItem from './FileItem';
 import FolderItem from './FolderItem';
 import FileInformation from '../FileInformation';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {Container, ContainerContent, ApiFile} from '../../../Types/api';
+import type {Container, ContainerContent, ApiFile} from '../../../Types/api';
 import ContainerHeader from '../../Screens/CompanyContainers/ContainerHeader';
 import DropMessage from './DropMessage';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -217,11 +217,11 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                   <FileItem
                     size={viewMode == 'grid' ? 45 : 28}
                     key={file.uuid}
-                    selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
+                    _selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
                     file={file}
                     onChange={() => setReload(!reload)}
                     onDoubleClick={() => downloadFile(file)}
-                    onClick={(selected, evt) => {
+                    onClick={(_selected, evt) => {
                       if (evt.shiftKey) {
                         if (selectedFiles.findIndex(f => f.uuid === file.uuid) == -1) {
                           setSelectedFiles([...selectedFiles, file]);

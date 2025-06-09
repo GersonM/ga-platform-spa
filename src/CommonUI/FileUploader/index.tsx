@@ -5,7 +5,7 @@ import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';
 
 import IconButton from '../IconButton';
-import {ApiFile} from '../../Types/api';
+import type {ApiFile} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
 import './styles.less';
 
@@ -42,7 +42,7 @@ const FileUploader = ({
     try {
       setLoading(true);
 
-      const response = await axios.post(`file-management/files`, formData, {
+      const _response = await axios.post(`file-management/files`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -53,9 +53,9 @@ const FileUploader = ({
         },
       });
 
-      setUploadedFile(response.data);
-      onFilesUploaded && onFilesUploaded(response.data);
-      onChange && onChange(response.data.uuid);
+      setUploadedFile(_response.data);
+      onFilesUploaded && onFilesUploaded(_response.data);
+      onChange && onChange(_response.data.uuid);
 
       setLoading(false);
       message.success('Archivo cargado!');
@@ -72,7 +72,7 @@ const FileUploader = ({
     try {
       setLoading(true);
 
-      const response = await axios.post(`file-management/files/${fileUuid}`, formData, {
+      const _response = await axios.post(`file-management/files/${fileUuid}`, formData, {
         onUploadProgress: progressEvent => {
           const total = progressEvent.total || 0;
           const percentCompleted = Math.floor((progressEvent.loaded / total) * 100);
@@ -80,8 +80,8 @@ const FileUploader = ({
         },
       });
 
-      //setUploadedFile(response.data);
-      //onFilesUploaded && onFilesUploaded(response.data);
+      //setUploadedFile(_response.data);
+      //onFilesUploaded && onFilesUploaded(_response.data);
 
       setLoading(false);
       message.success('Archivo cargado!');

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import {Empty, Image, Tooltip} from 'antd';
 import axios from 'axios';
 
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import AuthContext from '../../../Context/AuthContext';
@@ -17,8 +17,8 @@ interface ProfileActivityProps {
 const ProfileActivity = ({profileUuid}: ProfileActivityProps) => {
   const [activity, setActivity] = useState<any[]>();
   const [loading, setLoading] = useState(false);
-  const {user} = useContext(AuthContext);
-  const [reload, setReload] = useState(false);
+  const {_user} = useContext(AuthContext);
+  const [reload, _setReload] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();

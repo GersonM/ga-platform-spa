@@ -3,11 +3,11 @@ import './styles.less';
 
 interface SelectLargeProps {
   items?: string[];
-  value?: string;
-  onChange?: (value: string) => void;
+  _value?: string;
+  _onChange?: (value: string) => void;
 }
 
-const SelectLarge = ({value, onChange, items}: SelectLargeProps) => {
+const SelectLarge = ({_value, _onChange, items}: SelectLargeProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<string>();
 

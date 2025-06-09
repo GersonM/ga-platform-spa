@@ -3,7 +3,7 @@ import {Col, ColorPicker, Input, InputNumber, Row, Select, Space, Switch} from '
 import {CheckIcon, TrashIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-import {SettingValue} from '../../../Types/api';
+import type {SettingValue} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileUploader from '../../../FileManagement/Components/FileUploader';

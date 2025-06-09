@@ -5,7 +5,7 @@ import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface ContainerFormProps {

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {PiFile} from 'react-icons/pi';
 
 interface IconItemProps {

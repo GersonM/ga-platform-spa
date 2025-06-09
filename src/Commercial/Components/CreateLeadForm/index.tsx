@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Profile} from '../../../Types/api';
+import type {Profile} from '../../../Types/api';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 
@@ -60,7 +60,7 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
     setSaving(true);
     axios
       .post('commercial/leads', data)
-      .then(res => {
+      .then(_res => {
         setSelectedProfile(undefined);
         setSaving(false);
         form.resetFields();

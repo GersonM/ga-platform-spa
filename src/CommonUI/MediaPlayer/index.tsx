@@ -2,7 +2,7 @@ import {useContext, useEffect, useRef, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {Button, Popover} from 'antd';
 
-import {ApiFile} from '../../Types/api';
+import type {ApiFile} from '../../Types/api';
 import AuthContext from '../../Context/AuthContext';
 import FileActivityForm from '../FileActivityForm';
 import Hotkey from '../Hotkey';

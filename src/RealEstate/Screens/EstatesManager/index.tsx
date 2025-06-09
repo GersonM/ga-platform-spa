@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {PiFunnelBold} from 'react-icons/pi';
+import {_PiFunnelBold} from 'react-icons/pi';
 import {TrashIcon, EyeIcon} from '@heroicons/react/24/outline';
 import {Form, Modal, Popconfirm, Progress, Select, Space, Table} from 'antd';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {EntityActivity} from '../../../Types/api';
+import type {EntityActivity} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import FilterForm from '../../../CommonUI/FilterForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -51,8 +51,8 @@ const tmp = [
 ];
 
 const EstatesManager = () => {
-  const [loading, setLoading] = useState(false);
-  const [estates, setEstates] = useState<any[]>(tmp);
+  const [loading, _setLoading] = useState(false);
+  const [estates, _setEstates] = useState<any[]>(tmp);
   const [reload, setReload] = useState(false);
   const [selectedEstates, setSelectedEstates] = useState<string[]>();
   const [openBulkUpdate, setOpenBulkUpdate] = useState(false);
@@ -83,10 +83,10 @@ const EstatesManager = () => {
       },
     },
     {
-      dataIndex: 'price',
+      dataIndex: '_price',
       title: 'Valor del terreno',
       render: (price: number) => {
-        return <MoneyString value={price} />;
+        return <MoneyString value={_price} />;
       },
     },
     {

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {NavLink} from 'react-router-dom';
 import {Dropdown} from 'antd';
 import type {MenuProps} from 'antd';

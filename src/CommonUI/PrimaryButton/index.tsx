@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Button} from 'antd';
 import type {SizeType} from 'antd/es/config-provider/SizeContext';
 import './styles.less';

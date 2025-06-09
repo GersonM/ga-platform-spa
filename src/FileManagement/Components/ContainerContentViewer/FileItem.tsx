@@ -1,7 +1,7 @@
-import React from 'react';
+
 import dayjs from 'dayjs';
 
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 import IconItem from './IconItem';
 import FileIcon from '../FileIcon';
 import FileDropdownActions from '../FileDropdownActions';

@@ -1,8 +1,8 @@
-import React from 'react';
+
 import {Avatar} from 'antd';
 import {TbUserSquareRounded} from 'react-icons/tb';
 
-import {Profile} from '../../Types/api';
+import type {Profile} from '../../Types/api';
 import LoadingIndicator from '../LoadingIndicator';
 import './styles.less';
 

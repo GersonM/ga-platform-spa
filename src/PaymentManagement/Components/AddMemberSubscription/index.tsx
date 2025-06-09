@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {Subscription} from '../../../Types/api';
+import type {Subscription} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FamilyRelationSelector from '../../../CommonUI/FamilyRelationSelector';
 

@@ -1,12 +1,12 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Checkbox, Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
+import {_Checkbox, Collapse, DatePicker, Empty, Modal, Progress, Select, Space} from 'antd';
 import axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TripForm from '../../Components/TripForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import TripPassengersManager from '../../Components/TripPassengersManager';
 import RouteSelector from '../../Components/RouteSelector';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Col, DatePicker, Divider, Form, Input, InputNumber, Row, Select} from 'antd';
+import {Col, DatePicker, Divider, Form, Input, InputNumber, Row} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
@@ -47,7 +47,7 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         method: subscription ? 'PUT' : 'POST',
         data: values,
       })
-      .then(res => {
+      .then(_res => {
         onComplete && onComplete();
       })
       .catch(err => {

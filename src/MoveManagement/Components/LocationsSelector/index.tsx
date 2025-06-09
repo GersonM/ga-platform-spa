@@ -3,7 +3,7 @@ import {Select, Tooltip} from 'antd';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import {MoveLocation} from '../../../Types/api';
+import type {MoveLocation} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 

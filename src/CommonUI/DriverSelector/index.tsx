@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {MoveDriver} from '../../Types/api';
+import type {MoveDriver} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
 
 interface DriverSelectorProps {

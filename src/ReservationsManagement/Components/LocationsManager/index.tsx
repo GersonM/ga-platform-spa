@@ -5,7 +5,7 @@ import {Popconfirm} from 'antd';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TableList from '../../../CommonUI/TableList';
-import {MoveLocation} from '../../../Types/api';
+import type {MoveLocation} from '../../../Types/api';
 import LocationForm from '../LocationForm';
 import IconButton from '../../../CommonUI/IconButton';
 

@@ -12,7 +12,7 @@ import {CalendarDaysIcon, ChatBubbleLeftIcon, PaperClipIcon} from '@heroicons/re
 import ErrorHandler from '../../Utils/ErrorHandler';
 import PrimaryButton from '../PrimaryButton';
 import IconButton from '../IconButton';
-import {ApiFile} from '../../Types/api';
+import type {ApiFile} from '../../Types/api';
 
 import Config from '../../Config';
 import FileIcon from '../../FileManagement/Components/FileIcon';
@@ -36,7 +36,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
   const [messageAssignedTo, setMessageAssignedTo] = useState();
   const [files, setFiles] = useState<ApiFile[]>([]);
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [_uploading, setUploading] = useState(false);
   const [selectedActivityUUID, setSelectedActivityUUID] = useState<string>();
 
   useEffect(() => {

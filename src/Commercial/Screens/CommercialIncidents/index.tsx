@@ -2,14 +2,14 @@ import {useEffect, useState} from 'react';
 import {Image, Input, Modal, Pagination, Popconfirm, Progress, Select, Space, Statistic, Table, Tooltip} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useNavigate} from 'react-router-dom';
-import {PiCheckBold, PiCross, PiProhibit} from 'react-icons/pi';
+import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {EntityActivity, EntityActivityStats, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
+import type {EntityActivity, EntityActivityStats, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -80,7 +80,7 @@ const CommercialIncidents = () => {
   const completeTask = (uuid: string, resolve: boolean) => {
     axios
       .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
-      .then(response => {
+      .then(_response => {
         setReload(!reload);
       })
       .catch(e => {
@@ -91,7 +91,7 @@ const CommercialIncidents = () => {
   const deleteTask = (uuid: string) => {
     axios
       .delete(`entity-activity/${uuid}`, {})
-      .then(response => {
+      .then(_response => {
         setReload(!reload);
       })
       .catch(e => {
@@ -127,7 +127,7 @@ const CommercialIncidents = () => {
     {
       title: 'Archivos',
       dataIndex: 'attachments',
-      render: (attachments: ApiFile[], row: EntityActivity) => {
+      render: (attachments: ApiFile[], _row: EntityActivity) => {
         return (
           <>
             <Image.PreviewGroup>

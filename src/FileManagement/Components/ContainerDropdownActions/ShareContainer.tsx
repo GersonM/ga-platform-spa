@@ -4,7 +4,7 @@ import {DownOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {PencilIcon, UserIcon, UserMinusIcon, UserPlusIcon, EyeIcon} from '@heroicons/react/24/solid';
 
-import {Container, SharedProfile} from '../../../Types/api';
+import type {Container, SharedProfile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';

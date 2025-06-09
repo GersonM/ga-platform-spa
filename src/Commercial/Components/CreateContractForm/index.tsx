@@ -7,7 +7,7 @@ import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Contract, StorageStock} from '../../../Types/api';
+import type {Contract, StorageStock} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import StockViewerState from '../StockViewerState';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';

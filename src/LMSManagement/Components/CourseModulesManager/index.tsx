@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react';
-import {Course, CourseModule} from '../../../Types/api';
+import type {_Course, CourseModule} from '../../../Types/api';
 import axios from 'axios';
 import {Collapse, Empty, List, Modal, Popconfirm, Space} from 'antd';
 import IconButton from '../../../CommonUI/IconButton';
 import {PlusIcon, TrashIcon} from '@heroicons/react/24/solid';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import CourseForm from '../CourseForm';
+import _CourseForm from '../CourseForm';
 import ModuleSessionForm from '../ModuleSessionForm';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
@@ -15,7 +15,7 @@ interface CourseModulesManagerProps {
 }
 
 const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) => {
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [modules, setModules] = useState<CourseModule[]>();
   const [openSessionForm, setOpenSessionForm] = useState(false);
   const [selectedModule, setSelectedModule] = useState<CourseModule>();
@@ -68,13 +68,13 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
   return (
     <div>
       <Collapse size={'small'}>
-        {modules?.map((module, index) => (
-          <Collapse.Panel key={index} header={module.name}>
+        {modules?.map((module, _index) => (
+          <Collapse.Panel key={_index} header={module.name}>
             {module.sessions?.length === 0 && (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay sesiones registradas'} />
             )}
             <List size={'small'}>
-              {module.sessions?.map((session, index) => (
+              {module.sessions?.map((session, _index) => (
                 <List.Item
                   extra={
                     <Popconfirm

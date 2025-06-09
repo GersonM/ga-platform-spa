@@ -17,7 +17,7 @@ import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import MailAccountSelector from '../../Components/MailAccountSelector';
-import {MailAccount, MailFolder} from '../../../Types/api';
+import type {MailAccount, MailFolder} from '../../../Types/api';
 import MailSetupForm from '../../Components/MailSetupForm';
 
 const InboxManager = () => {

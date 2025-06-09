@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 
 const localizer = dayjsLocalizer(dayjs);
 

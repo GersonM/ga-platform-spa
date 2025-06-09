@@ -5,7 +5,7 @@ import {LockClosedIcon, LockOpenIcon} from '@heroicons/react/24/outline';
 import {PiArrowsOutCardinal, PiPencilSimpleLine, PiStar, PiTrash, PiUserPlus} from 'react-icons/pi';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import RenameContainer from './RenameContainer';
 import ShareContainer from './ShareContainer';
 import AuthContext from '../../../Context/AuthContext';

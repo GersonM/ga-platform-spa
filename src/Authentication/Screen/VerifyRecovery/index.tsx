@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {Button, Divider, Form} from 'antd';
 import {ArrowLeftIcon, ArrowRightIcon} from '@heroicons/react/24/solid';
 import {NavLink} from 'react-router-dom';
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, {type AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
 import OtpInput from 'react-otp-input';
 
