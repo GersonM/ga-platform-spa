@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TbBuilding, TbPencil, TbStarFilled, TbTrash} from 'react-icons/tb';
 import {Modal, Popconfirm, Space, Tag, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {TenantConfig} from '../../../Types/api';
+import type {TenantConfig} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -130,7 +130,7 @@ const WorkspaceManagement = () => {
         title={'Crear nuevo workspace'}
         open={openAddTenant}
         onCancel={() => setOpenAddTenant(false)}
-        destroyOnClose
+        destroyOnHidden
         footer={false}>
         <WorkspaceForm
           onComplete={() => {

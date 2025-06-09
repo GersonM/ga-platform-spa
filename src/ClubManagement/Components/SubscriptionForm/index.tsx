@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {Col, DatePicker, Divider, Form, Input, InputNumber, Row, Select} from 'antd';
+import {useEffect, useState} from 'react';
+import {Col, DatePicker, Divider, Form, Input, InputNumber, Row} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AlertMessage from '../../../CommonUI/AlertMessage';
-import {Plan, Subscription} from '../../../Types/api';
+import type {Plan, Subscription} from '../../../Types/api';
 import SubscriptionPlanSelector from '../SubscriptionPlanSelector';
 import dayjs from 'dayjs';
 import {useForm} from 'antd/lib/form/Form';
@@ -47,7 +47,7 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         method: subscription ? 'PUT' : 'POST',
         data: values,
       })
-      .then(res => {
+      .then(_res => {
         onComplete && onComplete();
       })
       .catch(err => {

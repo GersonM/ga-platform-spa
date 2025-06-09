@@ -1,20 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {Contract, ContractItem} from '../../../Types/api';
+import {useEffect, useState} from 'react';
+import type {Contract, ContractItem} from '../../../Types/api';
 import {Statistic, Tag} from 'antd';
 
 interface ContractDetailsProps {
   contract: Contract;
 }
 
-const GROUPS: any = {
-  address: 'Dirección',
-  stage: 'Etapa',
-  financial: 'Financiamiento',
-  sale: 'Venta',
-};
-
 const ContractDetails = ({contract}: ContractDetailsProps) => {
-  const [groups, setGroups] = useState<any>();
+  const [_groups, setGroups] = useState<any>();
 
   useEffect(() => {
     // @ts-ignore

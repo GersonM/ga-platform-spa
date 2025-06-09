@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Calendar, dayjsLocalizer} from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios from 'axios';
@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 
 const localizer = dayjsLocalizer(dayjs);
 

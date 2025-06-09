@@ -22,8 +22,9 @@ module.exports = {
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     'no-inline-comments': 'warn',
+    'ban-ts-comment': 'off'
   },
   globals: {
     React: 'writable',
   },
-};
+}

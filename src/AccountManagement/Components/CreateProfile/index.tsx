@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Col, Form, Input, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Profile} from '../../../Types/api';
+import type {Profile} from '../../../Types/api';
 
 interface CreateUserProps {
   onCompleted?: (profile: Profile) => void;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Col, Divider, Form, Image, Input, InputNumber, message, Row, Select, Space, Tag} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
@@ -7,7 +7,7 @@ import {PiDownload, PiEye, PiImage} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {Container, ApiFile, FileActivity} from '../../../Types/api';
+import type {Container, ApiFile, FileActivity} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import FileSize from '../../../CommonUI/FileSize';

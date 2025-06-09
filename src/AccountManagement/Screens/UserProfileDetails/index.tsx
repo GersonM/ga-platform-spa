@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Tabs} from 'antd';
 import ProfileEditor from '../../Components/ProfileEditor';
 import UserSessionsManager from '../../Components/UserSessionsManager';

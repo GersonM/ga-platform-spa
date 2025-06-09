@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Col, Form, Input, InputNumber, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {MoveRoute, MoveVehicle} from '../../../Types/api';
+import type {MoveRoute, MoveVehicle} from '../../../Types/api';
 import DriverSelector from '../../../CommonUI/DriverSelector';
 
 interface VehicleFormProps {

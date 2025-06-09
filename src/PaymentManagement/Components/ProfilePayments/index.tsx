@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import ErrorHandler from '../../../Utils/ErrorHandler';
-import {InvoicePayment, PaymentMethod} from '../../../Types/api';
-import TableList from '../../../CommonUI/TableList';
+import {useEffect, useState} from 'react';
 import {Pagination} from 'antd';
+import axios from 'axios';
 import dayjs from 'dayjs';
+import ErrorHandler from '../../../Utils/ErrorHandler';
+import type {InvoicePayment, PaymentMethod} from '../../../Types/api';
+import TableList from '../../../CommonUI/TableList';
 
 interface ProfilePaymentsProps {
   profileUuid: string;
@@ -14,7 +14,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
   const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState<InvoicePayment[]>();
   const [pagination, setPagination] = useState<any>();
-  const [reload, setReload] = useState(false);
+  const [reload, _setReload] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
         total={pagination?.total}
         pageSize={pagination?.per_page}
         current={pagination?.current_page}
-        onChange={(page, size) => {
+        onChange={(page, _size) => {
           setCurrentPage(page);
         }}
       />

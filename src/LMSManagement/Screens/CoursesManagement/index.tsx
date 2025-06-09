@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/24/solid';
 import {Modal, Popconfirm, Space} from 'antd';
 import {useNavigate} from 'react-router-dom';
@@ -11,7 +11,7 @@ import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CourseForm from '../../Components/CourseForm';
 import IconButton from '../../../CommonUI/IconButton';
-import {Course} from '../../../Types/api';
+import type {Course} from '../../../Types/api';
 
 const CoursesManagement = () => {
   const [courses, setCourses] = useState<Course[]>();
@@ -107,7 +107,7 @@ const CoursesManagement = () => {
       />
       <TableList columns={columns} dataSource={courses} />
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Crear curso'}
         open={openCourseForm}
         onCancel={() => setOpenCourseForm(false)}

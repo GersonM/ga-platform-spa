@@ -1,10 +1,9 @@
-import React from 'react';
 import {Form, Input} from 'antd';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {Role} from '../../../Types/api';
+import type {Role} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface AuthRoleFormProps {

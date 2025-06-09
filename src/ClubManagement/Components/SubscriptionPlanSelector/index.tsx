@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import axios from 'axios';
-import {Plan} from '../../../Types/api';
+import type {Plan} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import MoneyString from '../../../CommonUI/MoneyString';
 

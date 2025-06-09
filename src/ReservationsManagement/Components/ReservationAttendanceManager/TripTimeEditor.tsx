@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {DatePicker, Form, Input} from 'antd';
 import dayjs, {Dayjs} from 'dayjs';
 import axios from 'axios';
 
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import Config from '../../../Config';
@@ -14,7 +14,7 @@ interface TripTimeEditorProps {
 }
 
 const TripTimeEditor = ({trip, onCompleted}: TripTimeEditorProps) => {
-  const [arrivalTime, setArrivalTime] = useState<Dayjs>();
+  const [_arrivalTime, _setArrivalTime] = useState<Dayjs>();
   const [loading, setLoading] = useState(false);
 
   const updateTrip = (tripData: any) => {
@@ -27,7 +27,7 @@ const TripTimeEditor = ({trip, onCompleted}: TripTimeEditorProps) => {
           : undefined,
         arrival_time: tripData.arrival_time ? tripData.arrival_time.format(Config.datetimeFormatServer) : undefined,
       })
-      .then(response => {
+      .then(_response => {
         setLoading(false);
         onCompleted && onCompleted();
       })

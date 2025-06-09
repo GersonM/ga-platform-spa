@@ -1,24 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
+import {PiCarProfile} from 'react-icons/pi';
+import {Dayjs} from 'dayjs';
 import {Empty, Tag} from 'antd';
 
-import {MoveVehicle} from '../../../Types/api';
+import type {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import './styles.less';
-import {Dayjs} from 'dayjs';
 import Config from '../../../Config';
-import {GrCar} from 'react-icons/gr';
-import {PiCarProfile} from 'react-icons/pi';
+import './styles.less';
 
 interface VehicleListSelectorProps {
-  value?: string;
+  _value?: string;
   departureTime?: Dayjs;
   arrivalTime?: Dayjs;
   onChange?: (value: string, vehicle: MoveVehicle) => void;
 }
 
-const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: VehicleListSelectorProps) => {
+const VehicleListSelector = ({onChange, departureTime, arrivalTime, _value}: VehicleListSelectorProps) => {
   const [vehicles, setVehicles] = useState<MoveVehicle | any>([]);
   const [loading, setLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<MoveVehicle>();
@@ -64,7 +63,9 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: Vehi
               className={`${selectedVehicle && selectedVehicle.uuid == vehicle.uuid ? 'selected' : ''}`}
               onClick={() => {
                 setSelectedVehicle(vehicle);
-                onChange && onChange(vehicle.uuid, vehicle);
+                if (onChange) {
+                  onChange(vehicle.uuid, vehicle);
+                }
               }}>
               <PiCarProfile className={'icon'} />
               <div className={'vehicle-info'}>

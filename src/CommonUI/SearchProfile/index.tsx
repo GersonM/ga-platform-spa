@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Select} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 
-import {Profile} from '../../Types/api';
+import type {Profile} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
 import ProfileDocument from '../ProfileTools/ProfileDocument';
 

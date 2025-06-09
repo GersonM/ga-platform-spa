@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 
 import './styles.less';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {FileManagementStatus} from '../../../Types/api';
+import type {FileManagementStatus} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileSize from '../../../CommonUI/FileSize';
 

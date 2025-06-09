@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import {TbArrowsMoveVertical, TbPencil, TbTrash, TbZoom} from 'react-icons/tb';
 import {Modal, Popconfirm} from 'antd';
 import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
-import {TaxonomyDefinition} from '../../../Types/api';
+import type {TaxonomyDefinition} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
@@ -58,8 +58,9 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
     axios
       .delete(`taxonomy/definitions/${uuid}`)
       .then(() => {
-        onDelete && onDelete();
-        //setReload(!reload);
+        if (onDelete) {
+          onDelete();
+        }
       })
       .catch(error => ErrorHandler.showNotification(error));
   };
@@ -87,7 +88,9 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
             small
             icon={<TbPencil size={18} />}
             onClick={() => {
-              onEdit && onEdit(taxonomy);
+              if (onEdit) {
+                onEdit(taxonomy);
+              }
             }}
           />
           <IconButton
@@ -103,7 +106,9 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
             small
             icon={<TbArrowsMoveVertical size={18} />}
             onClick={() => {
-              onEdit && onEdit(taxonomy);
+              if (onEdit) {
+                onEdit(taxonomy);
+              }
             }}
           />
           <Popconfirm
@@ -136,7 +141,9 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
                 setReload(!reload);
               }}
               onAdd={() => {
-                onAdd && onAdd(taxonomy);
+                if (onAdd) {
+                  onAdd(taxonomy);
+                }
               }}
               onEdit={onEdit}
             />
@@ -147,7 +154,7 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
       <Modal
         footer={false}
         open={openAddForm}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenAddForm(false);
         }}
@@ -163,7 +170,7 @@ const TaxonomyItem = ({taxonomy, onEdit, onDelete, onAdd}: TaxonomyItemProps) =>
       <Modal
         footer={false}
         open={openDefinitionItems}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenDefinitionItems(false);
         }}

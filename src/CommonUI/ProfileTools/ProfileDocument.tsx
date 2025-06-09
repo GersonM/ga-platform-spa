@@ -1,5 +1,5 @@
-import React from 'react';
-import {Profile} from '../../Types/api';
+
+import type {Profile} from '../../Types/api';
 
 interface ProfileDocumentProps {
   profile?: Profile;

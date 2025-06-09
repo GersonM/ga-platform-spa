@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Modal, Popconfirm, Space} from 'antd';
 import {PencilIcon, TrashIcon, UserIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
 import DriversManager from '../../Components/DriversManager';
 import VehicleForm from '../../Components/VehicleForm';
-import {MoveDriver, MoveVehicle} from '../../../Types/api';
+import type {MoveDriver, MoveVehicle} from '../../../Types/api';
 
 const MoveVehiclesManager = () => {
   const [openDriverModal, setOpenDriverModal] = useState(false);
@@ -97,7 +97,7 @@ const MoveVehiclesManager = () => {
         title={'Conductores'}
         footer={false}
         open={openDriverModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => setOpenDriverModal(false)}>
         <DriversManager />
       </Modal>
@@ -105,7 +105,7 @@ const MoveVehiclesManager = () => {
         title={selectedVehicle ? 'Actualizar espacio' : 'Nuevo espacio'}
         footer={false}
         open={openVehicleForm}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenVehicleForm(false);
           setSelectedVehicle(undefined);

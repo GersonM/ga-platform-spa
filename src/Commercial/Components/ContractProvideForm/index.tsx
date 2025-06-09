@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {DatePicker, Form, Input} from 'antd';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Contract} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 

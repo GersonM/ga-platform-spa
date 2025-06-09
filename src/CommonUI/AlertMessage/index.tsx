@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {XMarkIcon} from '@heroicons/react/24/solid';
 import {InformationCircleIcon} from '@heroicons/react/24/solid';
 import {PiCheck, PiExclamationMark, PiWarningDiamond} from 'react-icons/pi';

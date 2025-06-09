@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
@@ -12,7 +12,7 @@ import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import FilterForm from '../../../CommonUI/FilterForm';
-import {Client, Invoice, Profile, ResponsePagination} from '../../../Types/api';
+import type {Client, Invoice, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
 import './styles.less';
@@ -25,11 +25,11 @@ const EstateProviding = () => {
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [commercialStats, setCommercialStats] = useState<any>();
+  const [commercialStats, _setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
   const [blockFilter, setBlockFilter] = useState<string>();
   const [providedFilter, setProvidedFilter] = useState<string>();
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const lastSearchText = useDebounce(searchText, 300);
   const lastSearchBlock = useDebounce(blockFilter, 300);
   const [paymentFilter, setPaymentFilter] = useState<string>();
@@ -109,7 +109,7 @@ const EstateProviding = () => {
       });
   };
 
-  const deleteClient = (uuid: string) => {
+  const _deleteClient = (uuid: string) => {
     axios
       .delete(`commercial/clients/${uuid}`)
       .then(() => {
@@ -186,7 +186,7 @@ const EstateProviding = () => {
       title: 'Deuda',
       dataIndex: 'invoices',
       render: (invoices: Invoice[]) => {
-        return invoices?.map((i, index) => {
+        return invoices?.map((i, _index) => {
           return (
             <Tooltip
               title={

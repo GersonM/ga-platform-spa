@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCaretDown, PiCaretUp, PiFunnelBold} from 'react-icons/pi';

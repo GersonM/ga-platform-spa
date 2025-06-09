@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {Bars3Icon} from '@heroicons/react/24/solid';
 
 import logo from '../../Assets/logo_square.png';

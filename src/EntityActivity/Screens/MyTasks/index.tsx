@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Image, Modal, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
+import type {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
@@ -19,17 +19,17 @@ import AuthContext from '../../../Context/AuthContext';
 
 const MyComponent = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
-  const [searchText, setSearchText] = useState<string>();
+  const [searchText, _setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(100);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<string>();
-  const [statusFilter, setStatusFilter] = useState<string>();
+  const [typeFilter, _setTypeFilter] = useState<string>();
+  const [statusFilter, _setStatusFilter] = useState<string>();
   const navigate = useNavigate();
-  const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
-  const [openActivityEditor, setOpenActivityEditor] = useState(false);
+  const [_selectedActivity, setSelectedActivity] = useState<EntityActivity>();
+  const [_openActivityEditor, setOpenActivityEditor] = useState(false);
   const {updateActivityCount, activityCount} = useContext(AuthContext);
 
   useEffect(() => {
@@ -48,11 +48,11 @@ const MyComponent = () => {
     setLoading(true);
     axios
       .get(`entity-activity/my-tasks`, config)
-      .then(response => {
+      .then(_response => {
         setLoading(false);
-        if (response) {
-          setActivities(response.data.data);
-          setPagination(response.data.meta);
+        if (_response) {
+          setActivities(_response.data.data);
+          setPagination(_response.data.meta);
         }
       })
       .catch(e => {
@@ -66,9 +66,11 @@ const MyComponent = () => {
   const completeTask = (uuid: string, resolve: boolean) => {
     axios
       .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
-      .then(response => {
+      .then(_response => {
         setReload(!reload);
-        updateActivityCount && updateActivityCount();
+        if (updateActivityCount) {
+          updateActivityCount();
+        }
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -138,8 +140,8 @@ const MyComponent = () => {
       title: 'Asunto',
       dataIndex: 'entity',
       width: 200,
-      render: (entity?: any, row?: EntityActivity) => {
-        if (row?.entity_type.includes('Subscription')) {
+      render: (entity?: any, _row?: EntityActivity) => {
+        if (_row?.entity_type.includes('Subscription')) {
           return entity.code;
         }
         return (

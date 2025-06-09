@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Form, Input, Radio} from 'antd';
 import {BiCheck} from 'react-icons/bi';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface ContainerFormProps {

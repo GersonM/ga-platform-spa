@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Form, Input} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';

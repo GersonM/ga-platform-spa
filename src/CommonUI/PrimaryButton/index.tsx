@@ -1,6 +1,6 @@
-import React from 'react';
+
 import {Button} from 'antd';
-import {SizeType} from 'antd/es/config-provider/SizeContext';
+import type {SizeType} from 'antd/es/config-provider/SizeContext';
 import './styles.less';
 
 interface PrimaryButtonProps {

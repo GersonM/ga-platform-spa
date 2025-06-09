@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
-import {Alert, Avatar, Col, Divider, Form, Input, Modal, notification, Row, Select, Space} from 'antd';
+import {Alert, Avatar, Col, Divider, Form, Input, Modal, notification, Row, Select} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {SubscriptionMember} from '../../../Types/api';
+import type {SubscriptionMember} from '../../../Types/api';
 import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';

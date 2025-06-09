@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Alert, Button, Form, Input, notification} from 'antd';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
-import {Profile} from '../../../Types/api';
+import type {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import AlertMessage from '../../../CommonUI/AlertMessage';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';

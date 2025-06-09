@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {DatePicker, Form} from 'antd';
 import dayjs, {Dayjs} from 'dayjs';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
-import {EntityActivity} from '../../../Types/api';
+import type {EntityActivity} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -19,12 +19,12 @@ const ScheduleActivityForm = ({activity, onComplete}: ScheduleActivityFormProps)
   const [selectedDate, setSelectedDate] = useState<Dayjs>();
   const {updateActivityCount} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [form] = useForm();
+  const [_form] = useForm();
 
   const submitForm = (data: any) => {
     axios
       .put(`/entity-activity/${activity.uuid}/`, data)
-      .then(response => {
+      .then(_response => {
         setLoading(false);
         onComplete && onComplete();
         updateActivityCount && updateActivityCount();

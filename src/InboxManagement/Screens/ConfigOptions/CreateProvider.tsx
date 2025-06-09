@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Flex, Form, Input, Steps} from 'antd';
 import {ArrowLeftIcon, ArrowRightIcon, CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import webMailImg from '../../Assets/webmail-logo.svg';
 import gmailImg from '../../Assets/gmail_Logo.png';
-import {MailProvider} from '../../../Types/api';
+import type {MailProvider} from '../../../Types/api';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import AlertMessage from '../../../CommonUI/AlertMessage';

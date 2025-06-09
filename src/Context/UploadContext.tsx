@@ -1,8 +1,8 @@
-import React, {createContext, useEffect, useState} from 'react';
-import axios, {AxiosProgressEvent} from 'axios';
+import {createContext, useEffect, useState} from 'react';
+import axios, {type AxiosProgressEvent} from 'axios';
 import {sha256} from 'js-sha256';
 
-import {UploadQueueFile} from '../Types/api';
+import type {UploadQueueFile} from '../Types/api';
 
 interface UploadContextDefaults {
   fileList?: UploadQueueFile[];
@@ -73,7 +73,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       const response = await axios.post('file-management/chunked-files', formData, config);
       const isLastChunk = currentChunkIndex === Math.ceil(currentFile.file.size / chunkSize) - 1;
       const fileProgress =
-        totalChunks === 1 ? chunkProgress : Math.round(((currentChunkIndex + 1) / totalChunks) * 100);
+              totalChunks === 1 ? chunkProgress : Math.round(((currentChunkIndex + 1) / totalChunks) * 100);
 
       console.log('progress: ', fileProgress);
       setFileList(copy => {
@@ -111,7 +111,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       if (!currentFile) return;
       const from = currentChunkIndex * chunkSize;
       const to =
-        (currentChunkIndex + 1) * chunkSize >= currentFile.file.size ? currentFile.file.size : from + chunkSize;
+              (currentChunkIndex + 1) * chunkSize >= currentFile.file.size ? currentFile.file.size : from + chunkSize;
 
       const blob = currentFile.file.slice(from, to);
       uploadChunk(blob).then();
@@ -146,15 +146,15 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
   };
 
   return (
-    <UploadContext.Provider
-      value={{
-        fileList,
-        addFile,
-        isUploading,
-        lastFileCompleted,
-      }}>
-      {children}
-    </UploadContext.Provider>
+          <UploadContext.Provider
+                  value={{
+                    fileList,
+                    addFile,
+                    isUploading,
+                    lastFileCompleted,
+                  }}>
+            {children}
+          </UploadContext.Provider>
   );
 };
 

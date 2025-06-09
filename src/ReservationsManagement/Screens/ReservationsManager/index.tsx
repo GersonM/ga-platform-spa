@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Button, Collapse, DatePicker, Empty, Form, Input, Modal, Popover, Select, Space} from 'antd';
 import {PiStampBold} from 'react-icons/pi';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import {BiPrinter, BiSave} from 'react-icons/bi';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import RouteSelector from '../../Components/RouteSelector';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import TripStatus from '../../Components/TripStatus';
@@ -18,8 +18,8 @@ import ReservationForm from '../../Components/ReservationForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import LoadTripsTemplate from '../../Components/LoadTripsTemplate';
 import Config from '../../../Config';
-import './styles.less';
 import PrintContractsDocuments from '../../Components/PrintContractsDocuments';
+import './styles.less';
 
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -80,7 +80,7 @@ const ReservationsManager = () => {
     setSavingTemplate(true);
     axios
       .post('move/templates', values)
-      .then(response => {
+      .then(() => {
         setSavingTemplate(false);
         setOpenCreateTemplate(false);
       })
@@ -210,7 +210,7 @@ const ReservationsManager = () => {
         title={'Nueva reservas'}
         footer={false}
         open={openTripModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenTripModal(false);
         }}>
@@ -225,7 +225,7 @@ const ReservationsManager = () => {
         title={'Cargar plantilla'}
         footer={false}
         open={openLoadTemplate}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenLoadTemplate(false);
         }}>
@@ -241,7 +241,7 @@ const ReservationsManager = () => {
         width={700}
         footer={false}
         open={openPrintDocuments}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenPrintDocuments(false);
         }}>
@@ -251,7 +251,7 @@ const ReservationsManager = () => {
         title={'Crear plantilla'}
         footer={false}
         open={openCreateTemplate}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenCreateTemplate(false);
         }}>

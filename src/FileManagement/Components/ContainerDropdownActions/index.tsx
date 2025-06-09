@@ -1,11 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {Dropdown, MenuProps, Modal} from 'antd';
+import {useContext, useState} from 'react';
+import {Dropdown, type MenuProps, Modal} from 'antd';
 import axios from 'axios';
 import {LockClosedIcon, LockOpenIcon} from '@heroicons/react/24/outline';
 import {PiArrowsOutCardinal, PiPencilSimpleLine, PiStar, PiTrash, PiUserPlus} from 'react-icons/pi';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import RenameContainer from './RenameContainer';
 import ShareContainer from './ShareContainer';
 import AuthContext from '../../../Context/AuthContext';
@@ -117,7 +117,7 @@ const ContainerDropdownActions = ({children, trigger, container, onChange}: Cont
       <Dropdown menu={{items, onClick}} arrow trigger={trigger}>
         {children}
       </Dropdown>
-      <Modal destroyOnClose={true} open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
+      <Modal destroyOnHidden open={!!activeAction} footer={null} onCancel={() => setActiveAction(undefined)}>
         {getContent()}
       </Modal>
     </>

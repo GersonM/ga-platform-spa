@@ -1,29 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tabs, Tag, Tooltip} from 'antd';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
 import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
 import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import {Profile, ResponsePagination, User} from '../../../Types/api';
+import type {Profile, ResponsePagination, User} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import ProfileEditor from '../../Components/ProfileEditor';
 import CreateUser from '../../Components/CreateUser';
 import IconButton from '../../../CommonUI/IconButton';
-import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
-import UserSessionsManager from '../../Components/UserSessionsManager';
-import './styles.less';
-import ProfilePayments from '../../../PaymentManagement/Components/ProfilePayments';
-import ProfileActivity from '../../../EntityActivity/Components/ProfileActivity';
-import FileActivityProfile from '../../../FileManagement/Components/FileActivityProfile';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import {PiIdentificationCard, PiUser} from 'react-icons/pi';
 import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
+import './styles.less';
 
 const ProfilesManagement = () => {
   const navigate = useNavigate();
@@ -64,9 +58,9 @@ const ProfilesManagement = () => {
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'name',
+      dataIndex: '_name',
       width: 280,
-      render: (name: string, row: Profile) => {
+      render: (_name: string, row: Profile) => {
         return <ProfileChip profile={row} />;
       },
     },
@@ -100,7 +94,7 @@ const ProfilesManagement = () => {
           return user.roles.map((role: any, index: number) => {
             return (
               <Tag key={index} color={'#006bd1'}>
-                {role.name}
+                {role._name}
               </Tag>
             );
           });
@@ -218,7 +212,7 @@ const ProfilesManagement = () => {
             setPageSize(size);
           }}
         />
-        <Modal open={openCreateUser} destroyOnClose footer={false} onCancel={() => setOpenCreateUser(false)}>
+        <Modal open={openCreateUser} destroyOnHidden footer={false} onCancel={() => setOpenCreateUser(false)}>
           <CreateUser
             onCompleted={() => {
               setReload(!reload);

@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Modal, Popconfirm, Space} from 'antd';
 import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
 import {PiPlusBold} from 'react-icons/pi';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import {Invoice, ApiFile, InvoicePayment} from '../../../Types/api';
+import type {Invoice, ApiFile, InvoicePayment} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
@@ -90,7 +90,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
         size={'small'}
         onClick={() => setOpenInvoiceForm(true)}
       />
-      <Modal destroyOnClose open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
+      <Modal destroyOnHidden open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
         <InvoicePaymentForm
           invoice={invoice}
           onCompleted={() => {

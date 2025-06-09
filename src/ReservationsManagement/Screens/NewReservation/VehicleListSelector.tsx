@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {PiBuildings, PiCallBellDuotone, PiCarProfile, PiHardHatDuotone, PiOvenDuotone} from 'react-icons/pi';
 import {Dayjs} from 'dayjs';
 import {Empty, Tag} from 'antd';
 import axios from 'axios';
 
-import {MoveVehicle} from '../../../Types/api';
+import type {MoveVehicle} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import Config from '../../../Config';
@@ -17,7 +17,7 @@ interface VehicleListSelectorProps {
   onChange?: (value: string, vehicle: MoveVehicle) => void;
 }
 
-const VehicleListSelector = ({onChange, departureTime, arrivalTime, value}: VehicleListSelectorProps) => {
+const VehicleListSelector = ({onChange, departureTime, arrivalTime}: VehicleListSelectorProps) => {
   const [vehicles, setVehicles] = useState<MoveVehicle | any>([]);
   const [loading, setLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<MoveVehicle>();

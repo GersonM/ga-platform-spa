@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Form, InputNumber, Select} from 'antd';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 

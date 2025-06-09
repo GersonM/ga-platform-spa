@@ -1,9 +1,9 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {NavLink} from 'react-router-dom';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 import {FiHardDrive, FiTerminal} from 'react-icons/fi';
 
-import {Container} from '../../../Types/api';
+import type {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
 import IconButton from '../../../CommonUI/IconButton';
 import AuthContext from '../../../Context/AuthContext';

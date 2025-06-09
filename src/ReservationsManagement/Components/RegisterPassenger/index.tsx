@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Col, Divider, Empty, Input, Modal, Row} from 'antd';
 import {PlusIcon} from '@heroicons/react/24/solid';
-import {MoveTrip, Profile} from '../../../Types/api';
+import type {MoveTrip, Profile} from '../../../Types/api';
 import SearchProfile from '../../../CommonUI/SearchProfile';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import axios from 'axios';
@@ -34,7 +34,7 @@ const RegisterPassenger = ({trip, onComplete}: RegisterPassengerProps) => {
 
     axios
       .post('move/passengers', data)
-      .then(response => {
+      .then(_response => {
         onComplete && onComplete();
       })
       .catch(error => {

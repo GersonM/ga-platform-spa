@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/24/solid';
 import {Form, Modal, Popconfirm, Space} from 'antd';
 import {Link} from 'react-router-dom';
 import {TbPlus} from 'react-icons/tb';
 import axios from 'axios';
 
-import {TaxonomyDefinition, TaxonomyDefinitionItem} from '../../../Types/api';
+import type {TaxonomyDefinition, TaxonomyDefinitionItem} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -122,7 +122,7 @@ const TaxonomyDefinitionItems = ({definition}: TaxonomyDefinitionItemsProps) => 
     <>
       <TableList loading={loading} columns={columns} dataSource={items} />
       <Modal
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         open={openContainer}
         onCancel={() => setOpenContainer(false)}

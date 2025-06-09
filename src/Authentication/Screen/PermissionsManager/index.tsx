@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Divider, Modal, Popconfirm, Space, Tabs} from 'antd';
 import {TrashIcon, PencilIcon} from '@heroicons/react/24/solid';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {Permission, Role} from '../../../Types/api';
+import type {Permission, Role} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RolePermissionSwitch from './RolePermissionSwitch';
@@ -149,7 +149,7 @@ const PermissionsManager = () => {
         onCancel={() => setOpenRoleForm(false)}
         footer={null}
         open={openRoleForm}
-        destroyOnClose>
+        destroyOnHidden>
         <AuthRoleForm
           onComplete={() => {
             setOpenRoleForm(false);

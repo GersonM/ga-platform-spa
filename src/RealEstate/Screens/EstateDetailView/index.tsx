@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import {Col, Row} from 'antd';
 
 const EstateDetailView = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   return (
     <ModuleContent>

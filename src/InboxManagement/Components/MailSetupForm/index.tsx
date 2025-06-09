@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Button, Form, Input} from 'antd';
 import axios from 'axios';
-import {MailAccount} from '../../../Types/api';
+import type {MailAccount} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface MailSetupFormProps {

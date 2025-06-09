@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
 import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from 'antd';
@@ -15,7 +15,7 @@ import {
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Profile, Subscription, SubscriptionMember} from '../../../Types/api';
+import type {Profile, Subscription, SubscriptionMember} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import TextMoney from '../../../CommonUI/TextMoney';
 import IconButton from '../../../CommonUI/IconButton';
@@ -340,7 +340,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         </div>
       ))}
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Agregar miembro'}
         footer={false}
         open={openAddMember}
@@ -359,7 +359,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         )}
       </Modal>
       <Modal
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         open={openEditSubscription}
         onCancel={() => {
@@ -378,7 +378,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       </Modal>
       <Modal
         width={800}
-        destroyOnClose
+        destroyOnHidden
         title={'Editar datos'}
         footer={false}
         open={!!selectedProfile}
@@ -388,7 +388,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         {selectedProfile && <ProfileEditor profileUuid={selectedProfile.uuid} />}
       </Modal>
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={'Carnet de socio'}
         footer={false}
         open={openPrint}

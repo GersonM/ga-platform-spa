@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
@@ -40,7 +39,7 @@ axios
       <AuthContextProvider config={response.data}>
         <TenantAppConfig tenant={response.data}>
           <UploadContextProvider>
-            <BrowserRouter>
+            <BrowserRouter future={{v7_relativeSplatPath:true, v7_startTransition:false}}>
               <App />
             </BrowserRouter>
           </UploadContextProvider>

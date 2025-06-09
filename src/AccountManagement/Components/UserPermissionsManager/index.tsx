@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Divider, Empty, List, Space} from 'antd';
+import {useEffect, useState} from 'react';
+import {Button, Empty, List} from 'antd';
 import {TrashIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-import {Role, User} from '../../../Types/api';
+import type {Role, User} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import IconButton from '../../../CommonUI/IconButton';

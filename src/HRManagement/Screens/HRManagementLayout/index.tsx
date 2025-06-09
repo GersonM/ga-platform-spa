@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {Outlet} from 'react-router-dom';
 import {BuildingOffice2Icon, DocumentPlusIcon, MapPinIcon, UserPlusIcon, UsersIcon} from '@heroicons/react/24/solid';
 

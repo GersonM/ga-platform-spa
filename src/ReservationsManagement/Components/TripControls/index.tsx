@@ -1,11 +1,11 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {Button, Popconfirm, Space} from 'antd';
 import {TrashIcon} from '@heroicons/react/24/solid';
 import {PiCalendarXBold, PiCheckBold} from 'react-icons/pi';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AuthContext from '../../../Context/AuthContext';
 

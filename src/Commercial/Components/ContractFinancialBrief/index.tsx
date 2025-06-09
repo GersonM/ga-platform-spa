@@ -1,7 +1,7 @@
-import React from 'react';
+
 import {Tag, Tooltip} from 'antd';
 
-import {Contract} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 
 interface ContractFinancialBriefProps {

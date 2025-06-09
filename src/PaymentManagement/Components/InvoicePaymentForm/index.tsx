@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Col, Form, Input, InputNumber, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCheck} from 'react-icons/pi';
@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {Invoice, InvoicePayment} from '../../../Types/api';
+import type {Invoice, InvoicePayment} from '../../../Types/api';
 import FileUploader from '../../../CommonUI/FileUploader';
 import MoneyString from '../../../CommonUI/MoneyString';
 
@@ -20,8 +20,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
   const [loading, setLoading] = useState(false);
   const [fileUuid, setFileUuid] = useState<string>();
   const [form] = useForm();
-
-  useEffect(() => {}, [invoice]);
 
   const submitForm = (values: any) => {
     const data = {

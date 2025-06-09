@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Switch} from 'antd';
 import axios from 'axios';
 
-import {Permission, Role} from '../../../Types/api';
+import type {Permission, Role} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface IRolePermissionSwitchProps {

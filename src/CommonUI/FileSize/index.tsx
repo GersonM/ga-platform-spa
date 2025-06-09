@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 interface FileSizeProps {
   size: number;
@@ -7,7 +7,7 @@ interface FileSizeProps {
 }
 
 const FileSize = ({size, showUnit = true, binary = false}: FileSizeProps) => {
-  const getSize = (size: number) => {
+  const _getSize = (size: number) => {
     const unitSize = binary ? 1024 : 1000;
     let unit = 'KB';
     let stepSize = size / unitSize;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import {Drawer, Modal, Popconfirm, Space, Tag, Tooltip} from 'antd';
 import LocationsManager from '../../Components/LocationsManager';
@@ -8,7 +8,7 @@ import TableList from '../../../CommonUI/TableList';
 import RouteForm from '../../Components/RouteForm';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {MoveLocation, MoveRoute} from '../../../Types/api';
+import type {MoveLocation, MoveRoute} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import RouteLocationManager from '../../Components/RouteLocationManager';
 
@@ -99,14 +99,14 @@ const MoveRoutesManager = () => {
         <PrimaryButton icon={<MapPinIcon />} label={'Lugares'} onClick={() => setOpenLocationModal(true)} />
       </Space>
       <TableList columns={routesColumns} dataSource={routes} />
-      <Modal footer={false} open={openLocationModal} destroyOnClose onCancel={() => setOpenLocationModal(false)}>
+      <Modal footer={false} open={openLocationModal} destroyOnHidden onCancel={() => setOpenLocationModal(false)}>
         <LocationsManager />
       </Modal>
       <Modal
         title={'Nueva ruta'}
         footer={false}
         open={openRouteManager}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenRouteManager(false);
           setSelectedRoute(undefined);

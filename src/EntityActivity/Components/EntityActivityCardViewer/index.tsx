@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Button, Col, Divider, Empty, Form, Input, Modal, Popconfirm, Row, Space, Tabs, Tooltip} from 'antd';
 import axios from 'axios';
 import {PiArrowRight, PiCheckBold, PiProhibit, PiTrash} from 'react-icons/pi';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {EntityActivity} from '../../../Types/api';
+import type {EntityActivity} from '../../../Types/api';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';

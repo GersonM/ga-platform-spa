@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Steps} from 'antd';
 import dayjs from 'dayjs';
 
 import TripPassengersManager from '../../Components/ReservationAttendanceManager';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 import ReservationForm from '../../Components/ReservationForm';
 
 const NewReservation = () => {

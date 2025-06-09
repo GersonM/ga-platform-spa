@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
-import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
+import {PiPencilSimple} from 'react-icons/pi';
 import {TbPlus, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
-import {Invoice, ResponsePagination} from '../../../Types/api';
+import type {Invoice, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -24,7 +24,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [search, setSearch] = useState<string>();
+  const [search] = useState<string>();
   const [currentPage, setCurrentPage] = useState<number>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [pageSize, setPageSize] = useState<number>(20);
@@ -61,7 +61,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
   const deleteInvoice = (uuid: string) => {
     axios
       .delete('payment-management/invoices/' + uuid)
-      .then(response => {
+      .then(() => {
         setReload(!reload);
       })
       .catch(error => {
@@ -163,7 +163,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           icon={<TbPlus size={16} />}
         />
       </div>
-      <Modal open={!!selectedInvoice} destroyOnClose footer={false} onCancel={() => setSelectedInvoice(undefined)}>
+      <Modal open={!!selectedInvoice} destroyOnHidden footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
           <>
             <div>
@@ -180,7 +180,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
       </Modal>
       <Modal
         open={openNewInvoice}
-        destroyOnClose
+        destroyOnHidden
         footer={false}
         title={'Agregar factura'}
         onCancel={() => setOpenNewInvoice(false)}

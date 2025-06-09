@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Progress, Spin} from 'antd';
 import {PiCheckCircleFill, PiXCircle} from 'react-icons/pi';
-import {AxiosProgressEvent} from 'axios';
+import type {AxiosProgressEvent} from 'axios';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
@@ -15,7 +15,7 @@ interface UploadInformationProps {
 
 const UploadInformation = ({}: UploadInformationProps) => {
   const [open, setOpen] = useState(true);
-  const {lastFileCompleted, fileList, isUploading} = useContext(UploadContext);
+  const {fileList} = useContext(UploadContext);
 
   useEffect(() => {
     console.log(fileList?.length);

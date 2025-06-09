@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {TbChevronRight, TbLayoutSidebarLeftCollapseFilled} from 'react-icons/tb';
 import {Tooltip} from 'antd';

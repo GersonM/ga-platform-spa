@@ -1,10 +1,10 @@
-import React, {createContext, useEffect, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import {notification} from 'antd';
 
 import {version} from '../../package.json';
-import {EntityActivityStats, SessionUser, TenantConfig} from '../Types/api';
+import type {EntityActivityStats, SessionUser, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
 
 interface AuthContextDefaults {
@@ -47,7 +47,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [darkMode, setDarkMode] = useState<boolean>();
   const [openMenu, setOpenMenu] = useState(false);
   const [preferredMode, setPreferredMode] = useState<string>('auto');
-  const [uploadProgress, setUploadProgress] = useState<any>();
+  const [uploadProgress, _setUploadProgress] = useState<any>();
   const [activityCount, setActivityCount] = useState<any>();
   const [reloadActivity, setReloadActivity] = useState(false);
 

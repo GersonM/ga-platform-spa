@@ -1,6 +1,6 @@
-import React from 'react';
+
 import {Tag} from 'antd';
-import {MoveTrip} from '../../../Types/api';
+import type {MoveTrip} from '../../../Types/api';
 
 interface TripStatusProps {
   trip: MoveTrip;

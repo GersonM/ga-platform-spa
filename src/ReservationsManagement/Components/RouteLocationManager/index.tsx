@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {MapPinIcon, TrashIcon} from '@heroicons/react/16/solid';
 import {Divider, Space, Timeline} from 'antd';
 import axios from 'axios';
 
-import {MoveRoute} from '../../../Types/api';
+import type {MoveRoute} from '../../../Types/api';
 import LocationsSelector from '../LocationsSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';

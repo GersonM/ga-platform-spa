@@ -1,15 +1,13 @@
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
+import {Avatar, Col, Divider, Drawer, Empty, List, Row, Space} from 'antd';
+import {PiLock} from 'react-icons/pi';
+
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import ProfileEditor from '../../../AccountManagement/Components/ProfileEditor';
 import AuthContext from '../../../Context/AuthContext';
-import {Avatar, Card, Col, Collapse, Divider, Drawer, Empty, List, Row, Space} from 'antd';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {PiLock} from 'react-icons/pi';
-import PasswordRecovery from '../../../Authentication/Screen/PasswordRecovery';
 import UpdateUserPassword from '../../../AccountManagement/Components/UpdateUserPassword';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import ListItem from 'antd/es/upload/UploadList/ListItem';
 
 const MyAccount = () => {
   const {user} = useContext(AuthContext);
@@ -81,7 +79,7 @@ const MyAccount = () => {
         </Col>
       </Row>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         title={'Actualizar mi contraseña'}
         open={openPasswordModal}
         onClose={() => setOpenPasswordModal(false)}>

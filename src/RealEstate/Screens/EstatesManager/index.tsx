@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
-import {PiFunnelBold} from 'react-icons/pi';
+import {useState} from 'react';
 import {TrashIcon, EyeIcon} from '@heroicons/react/24/outline';
 import {Form, Modal, Popconfirm, Progress, Select, Space, Table} from 'antd';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {EntityActivity} from '../../../Types/api';
 import IconButton from '../../../CommonUI/IconButton';
 import FilterForm from '../../../CommonUI/FilterForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -83,7 +81,7 @@ const EstatesManager = () => {
       },
     },
     {
-      dataIndex: 'price',
+      dataIndex: '_price',
       title: 'Valor del terreno',
       render: (price: number) => {
         return <MoneyString value={price} />;
@@ -129,7 +127,7 @@ const EstatesManager = () => {
       dataIndex: 'uuid',
       title: 'Acciones',
       width: 100,
-      render: (uuid: string, row: EntityActivity) => {
+      render: (uuid: string) => {
         return (
           <Space>
             <IconButton small icon={<EyeIcon />} onClick={() => navigate(`/real-estate/estates/${uuid}`)} />
@@ -203,8 +201,8 @@ const EstatesManager = () => {
       </FilterForm>
       <Table
         rowSelection={{
-          onChange: (selectedRowKeys, selectedRows: any[]) => {
-            // @ts-ignore
+          onChange: (selectedRowKeys) => {
+            // @ts-expect-error
             setSelectedEstates(selectedRowKeys);
           },
         }}

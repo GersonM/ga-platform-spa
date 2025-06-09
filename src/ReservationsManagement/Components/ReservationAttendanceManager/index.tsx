@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Button, Drawer, Empty, Modal, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {FaUserTie} from 'react-icons/fa6';
@@ -8,7 +8,7 @@ import {TbBuildingEstate, TbClock} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {Contract, MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
+import type {Contract, MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';
@@ -207,7 +207,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
         footer={false}
         title={'Asignar encargado'}
         open={openAssignDriver}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenAssignDriver(false);
           setReload(!reload);
@@ -227,7 +227,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
         footer={false}
         width={650}
         open={openPassengerModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenPassengerModal(false);
         }}>
@@ -243,7 +243,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
         title={'Editar reserva'}
         footer={false}
         open={openEditTime}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenEditTime(false);
         }}>
@@ -257,7 +257,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
       </Modal>
       <Drawer
         open={openContractIncidents}
-        destroyOnClose
+        destroyOnHidden
         title={
           <Link to={`/commercial/contracts/${selectedContract?.uuid}`} target={'_blank'}>
             <EstateContractAddress contract={selectedContract} tooltip={'Abrir en otra pestaña'} />

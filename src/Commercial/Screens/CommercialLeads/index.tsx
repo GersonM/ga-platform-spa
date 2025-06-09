@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Card, Col, Drawer, Empty, Pagination, Row, Space, Statistic} from 'antd';
 import {useNavigate, useParams} from 'react-router-dom';
 import {BiCog} from 'react-icons/bi';
@@ -8,7 +8,7 @@ import axios from 'axios';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {Campaign, Lead, Profile, ResponsePagination} from '../../../Types/api';
+import type {Campaign, Lead, Profile, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import CampaignsManager from '../../Components/CampaignsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';

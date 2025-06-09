@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Card, Col, Divider, Empty, Progress, Row, Select, Space} from 'antd';
-import {AxisOptions, Chart} from 'react-charts';
+import {useContext, useEffect, useMemo, useState} from 'react';
+import {Card, Col, Divider, Progress, Row, Select, Space} from 'antd';
+import {type AxisOptions, Chart} from 'react-charts';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -39,14 +39,14 @@ const CommercialDashboard = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
-  const primaryAxis = React.useMemo(
+  const primaryAxis = useMemo(
     (): AxisOptions<any> => ({
       getValue: datum => datum.label,
     }),
     [],
   );
 
-  const secondaryAxes = React.useMemo(
+  const secondaryAxes = useMemo(
     (): AxisOptions<any>[] => [
       {
         min: 0,
@@ -57,14 +57,14 @@ const CommercialDashboard = () => {
     [],
   );
 
-  const primaryAxisDate = React.useMemo(
+  const primaryAxisDate = useMemo(
     (): AxisOptions<any> => ({
       getValue: datum => datum.date,
     }),
     [],
   );
 
-  const secondaryAxesDate = React.useMemo(
+  const secondaryAxesDate = useMemo(
     (): AxisOptions<any>[] => [
       {
         min: 0,

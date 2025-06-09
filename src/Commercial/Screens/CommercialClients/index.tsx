@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
@@ -14,7 +14,7 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ContractList from './ContractList';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
 import FilterForm from '../../../CommonUI/FilterForm';
-import {Client, Profile, ResponsePagination} from '../../../Types/api';
+import type {Client, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import CreateContractForm from '../../Components/CreateContractForm';
 import './styles.less';
@@ -279,7 +279,7 @@ const CommercialClients = () => {
         />
       )}
       <Modal
-        destroyOnClose
+        destroyOnHidden
         width={800}
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}

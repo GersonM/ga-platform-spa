@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Card, Empty, Form, Input, Select} from 'antd';
 import {SiCpanel, SiGmail} from 'react-icons/si';
 import axios from 'axios';
 
-import {MailAccount, MailProvider} from '../../../Types/api';
+import type {MailAccount, MailProvider} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import {useForm} from 'antd/lib/form/Form';
 
 const ConfigAccounts = () => {
   const [providers, setProviders] = useState<MailProvider[]>();
-  const [accounts, setAccounts] = useState<MailAccount[]>();
+  const [_accounts, _setAccounts] = useState<MailAccount[]>();
   const [reload, setReload] = useState(false);
   const [form] = useForm();
 

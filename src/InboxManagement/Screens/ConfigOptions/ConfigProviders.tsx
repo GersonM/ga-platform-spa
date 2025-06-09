@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Drawer, Empty, Modal, Select, Space} from 'antd';
 import {SiCpanel, SiGmail} from 'react-icons/si';
 import {PlusIcon, ChartPieIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-import {MailAccount, MailProvider} from '../../../Types/api';
+import type {MailAccount, MailProvider} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CreateProvider from './CreateProvider';
 import FileSize from '../../../CommonUI/FileSize';
@@ -121,7 +121,7 @@ const ConfigProviders = () => {
     },
     {
       title: '',
-      render: (id: any, account: any) => (
+      render: (_id: any, account: any) => (
         <Button
           size={'small'}
           type={'primary'}
@@ -189,7 +189,7 @@ const ConfigProviders = () => {
         onCancel={() => setOpenCreateProvider(false)}
         footer={null}
         open={openCreateProvider}
-        destroyOnClose>
+        destroyOnHidden>
         <CreateProvider
           onFinish={() => {
             setReload(!reload);
@@ -198,7 +198,7 @@ const ConfigProviders = () => {
         />
       </Modal>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         open={!!selectedAccount}
         title={'Backup de cuenta'}
         onClose={() => setSelectedAccount(undefined)}>

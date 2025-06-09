@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Divider, Empty, Input, Pagination, Select, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
@@ -9,7 +9,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import IconButton from '../../../CommonUI/IconButton';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
-import {Invoice, ResponsePagination} from '../../../Types/api';
+import type {Invoice, ResponsePagination} from '../../../Types/api';
 import PersonSubscription from '../../Components/PersonSubscription';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ProfileCard from '../../../AccountManagement/Components/ProfileCard';

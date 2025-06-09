@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Col, DatePicker, Form, Input, Row} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useForm} from 'antd/lib/form/Form';
@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import {Campaign} from '../../../Types/api';
+import type {Campaign} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import IconButton from '../../../CommonUI/IconButton';

@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {Avatar} from 'antd';
 import axios from 'axios';
 
-import {Profile, ApiFile} from '../../../Types/api';
+import type {Profile, ApiFile} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
 import ErrorHandler from '../../../Utils/ErrorHandler';

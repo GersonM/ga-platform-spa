@@ -1,9 +1,9 @@
-import React from 'react';
+
 import {Checkbox, Form, Input} from 'antd';
 import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import {Contract} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface CancelContractsProps {

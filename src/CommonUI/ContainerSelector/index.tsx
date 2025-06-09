@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Empty} from 'antd';
 import {PiCaretRight, PiFolder, PiFolderOpen} from 'react-icons/pi';
 
-import {Container} from '../../Types/api';
+import type {Container} from '../../Types/api';
 import ErrorHandler from '../../Utils/ErrorHandler';
 import LoadingIndicator from '../LoadingIndicator';
 import './styles.less';
 
 interface ContainerSelectorProps {
   onChange?: (value: string) => void;
-  value?: string;
+  _value?: string;
   hidden?: string;
 }
 
-const ContainerSelector = ({value, onChange}: ContainerSelectorProps) => {
+const ContainerSelector = ({_value, onChange}: ContainerSelectorProps) => {
   const [containerLevels, setContainerLevels] = useState<Container[][]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedContainer, setSelectedContainer] = useState<Container>();

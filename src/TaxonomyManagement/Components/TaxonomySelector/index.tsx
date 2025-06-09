@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {TreeSelect, TreeSelectProps} from 'antd';
+import {useEffect, useState} from 'react';
+import {TreeSelect, type TreeSelectProps} from 'antd';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import {TaxonomyDefinition} from '../../../Types/api';
+import type {TaxonomyDefinition} from '../../../Types/api';
 
 interface ITaxonomySelectorProps {
   value?: any;
@@ -62,9 +62,6 @@ const TaxonomySelector = ({value, ...props}: ITaxonomySelectorProps) => {
     setTaxonomy(newTax);
   };
 
-  const onSelected = (newValue: string) => {
-    console.log(newValue);
-  };
   return (
     <TreeSelect
       treeDataSimpleMode

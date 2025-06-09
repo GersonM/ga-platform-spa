@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Button, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {MdEmojiPeople} from 'react-icons/md';
@@ -8,7 +8,7 @@ import {TbClock, TbSteeringWheel} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-import {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
+import type {MoveDriver, MovePassenger, MoveTrip} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RegisterPassenger from '../RegisterPassenger';
@@ -261,7 +261,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
         footer={false}
         title={'Asignar conductor'}
         open={openAssignDriver}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenAssignDriver(false);
           setReload(!reload);
@@ -281,7 +281,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
         footer={false}
         width={650}
         open={openPassengerModal}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenPassengerModal(false);
         }}>
@@ -297,7 +297,7 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
         title={'Editar reserva'}
         footer={false}
         open={openEditTime}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => {
           setOpenEditTime(false);
         }}>

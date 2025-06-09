@@ -1,9 +1,8 @@
-import React from 'react';
 import {Tag} from 'antd';
 import dayjs from 'dayjs';
 
 import './styles.less';
-import {MailFolderPageContent, MailMessage} from '../../../Types/api';
+import type {MailFolderPageContent, MailMessage} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 
 interface ListMailMessagesProps {

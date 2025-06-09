@@ -1,12 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
 import {Empty, Image, Tooltip} from 'antd';
 import axios from 'axios';
 
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import AuthContext from '../../../Context/AuthContext';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 
@@ -17,8 +16,7 @@ interface ProfileActivityProps {
 const ProfileActivity = ({profileUuid}: ProfileActivityProps) => {
   const [activity, setActivity] = useState<any[]>();
   const [loading, setLoading] = useState(false);
-  const {user} = useContext(AuthContext);
-  const [reload, setReload] = useState(false);
+  const [reload, _setReload] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();

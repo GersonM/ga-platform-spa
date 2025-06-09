@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Form, Input, InputNumber, Modal, Pagination} from 'antd';
 import {PiEye} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
@@ -7,7 +7,7 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import SubscriptionForm from '../../Components/SubscriptionForm';
-import {EntityActivity, Plan, Profile, Subscription} from '../../../Types/api';
+import type {EntityActivity, Plan, Profile, Subscription} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TableList from '../../../CommonUI/TableList';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -155,7 +155,7 @@ const ClubMembersManagement = () => {
       <Modal
         title={'Editar subscripción'}
         open={openAddSubscription}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => setOpenAddSubscription(false)}
         footer={null}>
         <SubscriptionForm

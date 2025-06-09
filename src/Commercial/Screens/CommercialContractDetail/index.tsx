@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {Col, Form, Input, Modal, Row, Space, Tag} from 'antd';
 import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
-import {Contract} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import MoneyString from '../../../CommonUI/MoneyString';
 import ContractDetails from '../../Components/ContractDetails';
@@ -177,7 +177,7 @@ const CommercialContractDetail = () => {
           {contract && <InvoicesTable entityUuid={contract?.uuid} type={'contract'} />}
         </Col>
       </Row>
-      <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnClose footer={null}>
+      <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnHidden footer={null}>
         <h2>Revertir entrega</h2>
         <p>Especifique el motivo de la reversión de la entrega</p>
         <Form onFinish={submitProvisionRevert}>
@@ -190,7 +190,7 @@ const CommercialContractDetail = () => {
       <Modal
         open={openContractProvideForm}
         onCancel={() => setOpenContractProvideForm(false)}
-        destroyOnClose
+        destroyOnHidden
         footer={null}
         title={'Registrar entrega'}>
         <ContractProvideForm
@@ -201,7 +201,7 @@ const CommercialContractDetail = () => {
           }}
         />
       </Modal>
-      <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnClose footer={null}>
+      <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnHidden footer={null}>
         {contract && (
           <CancelContract
             contract={contract}

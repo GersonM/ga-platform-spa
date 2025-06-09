@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {
   TrashIcon,
   CheckIcon,
@@ -13,7 +13,7 @@ import {
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import {Profile} from '../../../Types/api';
+import type {Profile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ProfileCard from '../ProfileCard';
 import UpdateUserPassword from '../UpdateUserPassword';
@@ -34,7 +34,6 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [openPermissionsManager, setOpenPermissionsManager] = useState(false);
   const [reload, setReload] = useState(false);
-  const params = useParams();
   const [form] = useForm();
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [params.uuid, reload]);
+  }, [profileUuid, reload]);
 
   useEffect(() => {
     if (profile) {
@@ -306,7 +305,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
         </Col>
       </Row>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         open={openChangePassword}
         title={'Actualizar contraseña para ' + profile.name}
         onClose={() => setOpenChangePassword(false)}>
@@ -320,7 +319,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
         )}
       </Drawer>
       <Drawer
-        destroyOnClose
+        destroyOnHidden
         open={openPermissionsManager}
         title={'Actualizar permisos para ' + profile.name}
         onClose={() => setOpenPermissionsManager(false)}>
