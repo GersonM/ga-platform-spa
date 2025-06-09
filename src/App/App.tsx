@@ -57,6 +57,7 @@ const FileManagerPreferences = lazy(() => import('../FileManagement/Screens/File
 const ImportPayments = lazy(() => import('../ClubManagement/Screens/ImportPayments'));
 const WarehouseProductsManager = lazy(() => import('../WarehouseManager/Screens/WarehouseProductsManager'));
 const AttendanceManager = lazy(() => import('../ClubManagement/Screens/AttendanceManagement'));
+const GoogleCallback = lazy(() => import('../Authentication/Screen/GoogleCallback'));
 const WorkspaceManagement = lazy(() => import('../Workspaces/Screens/WorkspaceManagement'));
 
 const App = () => {
@@ -90,10 +91,12 @@ const App = () => {
 
   return (
     <Routes>
+
       <Route path={'/auth'} element={<GuestLayout />}>
         <Route path={'login'} element={<Login />} />
         <Route path={'recover'} element={<PasswordRecovery />} />
         <Route path={'verify-recovery'} element={<VerifyRecovery />} />
+        <Route path={'google/callback'} element={<GoogleCallback />} />
       </Route>
       <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
       <Route path={'/'} element={<AuthenticatedLayout />}>

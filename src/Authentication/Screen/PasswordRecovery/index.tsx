@@ -7,6 +7,7 @@ import {ChevronRightIcon} from '@heroicons/react/16/solid';
 import Cookies from 'js-cookie';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import {TbChevronLeft, TbChevronRight} from 'react-icons/tb';
 
 const PasswordRecovery = () => {
   const [loading, setLoading] = useState(false);
@@ -48,13 +49,13 @@ const PasswordRecovery = () => {
           </Form.Item>
         </div>
         <Button shape={'round'} block loading={loading} htmlType={'submit'} type="primary">
-          Enviar <ChevronRightIcon style={{marginTop: 1}} />
+          Enviar <TbChevronRight />
         </Button>
       </Form>
       <Divider />
       <NavLink to={'/auth/login'}>
         <Button block type={'text'}>
-          Iniciar sesión
+          <TbChevronLeft /> Volver a iniciar sesión
         </Button>
       </NavLink>
     </>

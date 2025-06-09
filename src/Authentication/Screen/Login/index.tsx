@@ -4,15 +4,14 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
 import {AtSymbolIcon} from '@heroicons/react/24/solid';
-
 import {KeyIcon} from '@heroicons/react/24/outline';
 import {ChevronRightIcon} from '@heroicons/react/16/solid';
-
-//const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_KEY_PUBLIC);
+import GoogleButton from './GoogleButton';
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const login = ({email, password}: any) => {
     axios.defaults.headers.common.Authorization = 'Bearer token';
@@ -54,6 +53,33 @@ const Login = () => {
       });
   };
 
+  const handleGoogleLogin = () => {
+    setGoogleLoading(true);
+    //window.location.href = axios.defaults.baseURL + 'authenticate/auth/google/redirect';
+    window.location.href = 'http://localhost:8000/api/v1/authenticate/auth/google/redirect';
+  };
+
+  // Función para manejar el callback de Google (si necesitas procesarlo en el frontend)
+  const handleGoogleCallback = async (token: string, profileUuid: string) => {
+    try {
+      axios.defaults.headers.common.Authorization = 'Bearer ' + token;
+      Cookies.set('session_token', token);
+      if (profileUuid) {
+        Cookies.set('profile_uuid', profileUuid);
+      }
+      document.location.href = '/';
+    } catch (error) {
+      console.error('Error processing Google callback:', error);
+      Modal.error({
+        title: 'Error de autenticación',
+        content: 'No se pudo completar el login con Google',
+        okText: 'Volver a intentar',
+        centered: true,
+      });
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <>
       <Form onFinish={login}>
@@ -77,6 +103,9 @@ const Login = () => {
           Ingresar <ChevronRightIcon style={{marginTop: 1}} />
         </Button>
       </Form>
+
+      <Divider>o</Divider>
+      <GoogleButton onClick={handleGoogleLogin} />
       <Divider />
       <NavLink to={'/auth/recover'}>
         <Button block type={'text'}>
