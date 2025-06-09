@@ -5,7 +5,7 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import FileUploader from '../../../CommonUI/FileUploader';
-import {ApiFile} from '../../../Types/api';
+import type {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 

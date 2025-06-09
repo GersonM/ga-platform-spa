@@ -9,7 +9,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FilterForm from '../../../CommonUI/FilterForm';
 import SearchProfile from '../../../CommonUI/SearchProfile';
-import {ResponsePagination} from '../../../Types/api';
+import type {ResponsePagination} from '../../../Types/api';
 
 const AttendanceManagement = () => {
   const [attendance, setAttendance] = useState([]);

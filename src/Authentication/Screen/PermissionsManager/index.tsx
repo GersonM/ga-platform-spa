@@ -4,7 +4,7 @@ import {Divider, Modal, Popconfirm, Space, Tabs} from 'antd';
 import {TrashIcon, PencilIcon} from '@heroicons/react/24/solid';
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import {Permission, Role} from '../../../Types/api';
+import type {Permission, Role} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RolePermissionSwitch from './RolePermissionSwitch';

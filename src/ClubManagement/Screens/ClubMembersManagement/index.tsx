@@ -7,7 +7,7 @@ import axios from 'axios';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import SubscriptionForm from '../../Components/SubscriptionForm';
-import {EntityActivity, Plan, Profile, Subscription} from '../../../Types/api';
+import type {EntityActivity, Plan, Profile, Subscription} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TableList from '../../../CommonUI/TableList';
 import MoneyString from '../../../CommonUI/MoneyString';

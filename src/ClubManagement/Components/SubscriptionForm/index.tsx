@@ -6,7 +6,7 @@ import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AlertMessage from '../../../CommonUI/AlertMessage';
-import {Plan, Subscription} from '../../../Types/api';
+import type {Plan, Subscription} from '../../../Types/api';
 import SubscriptionPlanSelector from '../SubscriptionPlanSelector';
 import dayjs from 'dayjs';
 import {useForm} from 'antd/lib/form/Form';

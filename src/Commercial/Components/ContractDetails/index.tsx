@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Contract, ContractItem} from '../../../Types/api';
+import type {Contract, ContractItem} from '../../../Types/api';
 import {Statistic, Tag} from 'antd';
 
 interface ContractDetailsProps {

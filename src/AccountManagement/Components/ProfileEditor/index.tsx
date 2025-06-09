@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Col, DatePicker, Divider, Drawer, Form, Input, Popconfirm, Row, Select, Space} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {
   TrashIcon,
   CheckIcon,
@@ -34,7 +34,6 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [openPermissionsManager, setOpenPermissionsManager] = useState(false);
   const [reload, setReload] = useState(false);
-  const params = useParams();
   const [form] = useForm();
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [params.uuid, reload]);
+  }, [profileUuid, reload]);
 
   useEffect(() => {
     if (profile) {
