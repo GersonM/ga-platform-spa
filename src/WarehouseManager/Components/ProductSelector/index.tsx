@@ -1,26 +1,23 @@
-import {useEffect, useState} from 'react';
-import {Select, Tooltip} from 'antd';
-import {PlusIcon} from '@heroicons/react/24/solid';
+import {type CSSProperties, useEffect, useState} from 'react';
+import {Select} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-
-import type {MoveLocation} from '../../../Types/api';
+import type {MoveLocation, StorageProduct} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
-interface LocationsSelectorProps {
+interface ProductSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
   value?: any;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const LocationsSelector = ({placeholder, mode, style, ...props}: LocationsSelectorProps) => {
-  const [locations, setLocations] = useState<MoveLocation | any>([]);
+const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorProps) => {
+  const [products, setProducts] = useState<StorageProduct[]>();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
@@ -37,12 +34,12 @@ const LocationsSelector = ({placeholder, mode, style, ...props}: LocationsSelect
     };
 
     axios
-      .get(`move/locations`, config)
+      .get(`warehouses/products`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setLocations(
-            response.data.map((item: MoveLocation) => {
+          setProducts(
+            response.data.data.map((item: MoveLocation) => {
               return {value: item.uuid, label: `${item.name}`, entity: item};
             }),
           );
@@ -56,20 +53,6 @@ const LocationsSelector = ({placeholder, mode, style, ...props}: LocationsSelect
     return cancelTokenSource.cancel;
   }, [reload, lastSearchText]);
 
-  const addItem = () => {
-    setLoading(true);
-    axios
-      .post('move/locations', {name, address: name})
-      .then(() => {
-        setLoading(false);
-        setReload(!reload);
-      })
-      .catch(error => {
-        setLoading(false);
-        ErrorHandler.showNotification(error);
-      });
-  };
-
   return (
     <Select
       {...props}
@@ -80,29 +63,20 @@ const LocationsSelector = ({placeholder, mode, style, ...props}: LocationsSelect
       filterOption={false}
       loading={loading}
       style={style ? style : {width: '100%'}}
-      options={locations}
+      options={products}
       mode={mode}
-      optionRender={option => (
-        <div>
+      optionRender={option => {
+        console.log({option});
+        return <div>
           {option.label}
-          <br />
-          <small>{option.data.entity.address}</small>
-        </div>
-      )}
-      dropdownRender={menu => (
-        <>
-          {menu}
-          {name.length > 2 && (
-            <>
-              <Tooltip title={'Agregar'}>
-                <PrimaryButton block icon={<PlusIcon />} onClick={addItem} label={'Crear "' + name + '"'} />
-              </Tooltip>
-            </>
-          )}
-        </>
-      )}
+          <br/>
+          {/* @ts-ignore */}
+          <small>{option?.data.entity?.code}</small>
+        </div>;
+      }
+      }
     />
   );
 };
 
-export default LocationsSelector;
+export default ProductSelector;

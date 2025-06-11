@@ -170,7 +170,7 @@ export type User = {
   uuid: number;
   last_login_at: string;
   /**
-   * email is not been used anymore, use profile email instead
+   * email is not used anymore, use profile email instead
    * @deprecated
    */
   email: string;
@@ -617,6 +617,7 @@ export type StorageProduct = {
   created_at: string;
   description: string;
   manufacturer: string;
+  available_stock?: number;
   metadata?: any;
   model?: string;
   name: string;
@@ -635,4 +636,12 @@ export type StorageStock = {
   status: string;
   updated_at: string;
   product?: StorageProduct;
+  warehouse?: StorageWarehouse;
 };
+export type StorageWarehouse = {
+  uuid: string;
+  name: string;
+  address?: string;
+  is_physical: boolean;
+  created_at: string;
+}

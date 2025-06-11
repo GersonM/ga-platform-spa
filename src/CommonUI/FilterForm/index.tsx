@@ -1,14 +1,15 @@
-import {useEffect, useState} from 'react';
+import {type ReactNode, useEffect, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
-import {PiCaretDown, PiCaretUp, PiFunnelBold} from 'react-icons/pi';
+import {PiCaretDown, PiCaretUp} from 'react-icons/pi';
 import {Button, Form} from 'antd';
 
 import PrimaryButton from '../PrimaryButton';
+import {TbFilter} from "react-icons/tb";
 import './styles.less';
 
 interface FilterFormProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   onInitialValues?: (values: any) => void;
   onSubmit?: (values: any) => void;
   liveUpdate?: boolean;
@@ -25,7 +26,7 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
 
   useEffect(() => {
     if (searchParams) {
-      let newInitial: any = {};
+      const newInitial: any = {};
       for (const value of searchParams.keys()) {
         if (searchParams.has(value)) {
           newInitial[value] = searchParams.get(value);
@@ -37,11 +38,13 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
 
   useEffect(() => {
     form.resetFields();
-    onInitialValues && onInitialValues(initialValues);
-  }, [initialValues]);
+    if (onInitialValues) {
+      onInitialValues(initialValues);
+    }
+  }, [form, initialValues, onInitialValues]);
 
   const onSubmitHandler = (values: any) => {
-    let o = Object.fromEntries(
+    const o = Object.fromEntries(
       Object.entries(values).filter(([_, v]) => {
         return v != null;
       }),
@@ -59,7 +62,9 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
       clearTimeout(timer);
     }
     timer = setTimeout(() => {
-      onSubmit && onSubmit(o);
+      if (onSubmit) {
+        onSubmit(o);
+      }
       setLoading(false);
     }, 300);
   };
@@ -82,12 +87,12 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
           onFinish={onSubmitHandler}
           layout={'inline'}>
           {children}
-          <PrimaryButton loading={loading} icon={<PiFunnelBold size={16} />} label={'Filtrar'} htmlType={'submit'} />
+          <PrimaryButton loading={loading} icon={<TbFilter/>} label={'Filtrar'} htmlType={'submit'}/>
         </Form>
       )}
       <Button className={'filter-toggle'} size={'small'} block type={'text'} onClick={() => setOpen(!open)}>
         {open ? 'Ocultar filtros' : 'Mostrar filtros'}
-        {open ? <PiCaretUp size={16} /> : <PiCaretDown size={16} />}
+        {open ? <PiCaretUp size={16}/> : <PiCaretDown size={16}/>}
       </Button>
     </div>
   );

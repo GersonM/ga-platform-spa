@@ -1,5 +1,5 @@
-
 import {Button} from 'antd';
+import type {ReactNode} from "react";
 import type {SizeType} from 'antd/es/config-provider/SizeContext';
 import './styles.less';
 
@@ -9,12 +9,12 @@ interface PrimaryButtonProps {
   href?: string;
   htmlType?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
   style?: object;
   height?: number;
   ghost?: boolean;
   danger?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   onClick?: any;
   props?: object;
   size?: SizeType;

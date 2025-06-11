@@ -12,7 +12,7 @@ const MoneyString = ({value}: MoneyStringProps) => {
   return (
     <span
       style={{
-        color: amount < 0 ? 'red' : 'green',
+        color: amount < 0 ? 'red' : '',
       }}>
       {string}
     </span>

@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {type ReactNode, useContext} from 'react';
 import {Bars3Icon} from '@heroicons/react/24/solid';
 
 import logo from '../../Assets/logo_square.png';
@@ -8,7 +8,7 @@ import IconButton from '../IconButton';
 import './styles.less';
 
 interface ModuleContentProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   opaque?: boolean;
   withSidebar?: boolean;
 }

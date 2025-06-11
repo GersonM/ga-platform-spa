@@ -39,7 +39,7 @@ import {
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
-import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbPackage} from 'react-icons/tb';
+import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbPackage, TbStack} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
@@ -53,6 +53,7 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
+import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 
 const menuItems: ItemType[] = [
   {
@@ -136,7 +137,7 @@ const Navigation = () => {
           </div>
         </Dropdown>
       </div>
-
+      <OverlayScrollbarsComponent className={'scroll-content'} defer options={{scrollbars: {autoHide: 'scroll'}}}>
         <nav>
           <ul className="navigation-list">
             <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
@@ -173,9 +174,9 @@ const Navigation = () => {
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse />}>
-              <NavItem icon={<TbForklift />} label={'Movimientos'} path={'/commercial/dashboard'} />
-              <NavItem icon={<TbPackage />} label={'Productos'} path={'/commercial/incidents'} />
-              <NavItem icon={<PiUserFocus />} label={'Stock'} path={'/commercial/leads'} />
+              <NavItem icon={<TbForklift />} label={'Movimientos'} path={'/warehouse/actividad'} />
+              <NavItem icon={<TbPackage />} label={'Productos'} path={'/warehouse/products'} />
+              <NavItem icon={<TbStack />} label={'Stock'} path={'/warehouse/stock'} />
             </NavItem>
             {config?.modules.includes('move') && (
               <NavItem icon={<PiCarProfile />} label={'Transporte'}>
@@ -248,7 +249,7 @@ const Navigation = () => {
             )}
           </ul>
         </nav>
-
+      </OverlayScrollbarsComponent>
       <div className="bottom-nav">
         {uploadProgress && (
           <Popover
