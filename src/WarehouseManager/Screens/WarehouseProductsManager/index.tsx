@@ -111,7 +111,6 @@ const WarehouseProductsManager = () => {
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenAddProduct(true)}/>
       <FilterForm
-        liveUpdate
         onSubmit={values => {
           setFilters(values);
           console.log({values})

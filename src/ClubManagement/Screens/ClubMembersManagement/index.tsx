@@ -20,9 +20,7 @@ import './styles.less';
 const ClubMembersManagement = () => {
   const [openAddSubscription, setOpenAddSubscription] = useState(false);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>();
-  const [codeFilter, setCodeFilter] = useState<string>();
-  const [searchFilter, setSearchFilter] = useState<string>();
-  const [paymentsFilter, setPaymentsFilter] = useState<number>();
+  const [filters, setFilters] = useState<any>();
   const [pagination, setPagination] = useState<any>();
   const [currentPage, setCurrentPage] = useState<number>();
   const [pageSize, setPageSize] = useState<number>();
@@ -34,11 +32,9 @@ const ClubMembersManagement = () => {
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        code: codeFilter,
-        search: searchFilter,
         page: currentPage,
         page_size: pageSize,
-        pending_payments: paymentsFilter,
+        ...filters
       },
     };
 
@@ -55,7 +51,7 @@ const ClubMembersManagement = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, codeFilter, searchFilter, pageSize, currentPage, paymentsFilter]);
+  }, [reload, pageSize, currentPage, filters]);
 
   const columns = [
     {
@@ -118,14 +114,10 @@ const ClubMembersManagement = () => {
       <ContentHeader onRefresh={() => setReload(!reload)} title={'Socios'} onAdd={() => setOpenAddSubscription(true)}>
         <FilterForm
           onInitialValues={values => {
-            if (values?.search) setSearchFilter(values.search);
-            if (values?.code) setCodeFilter(values.code);
-            if (values?.pending_payments) setPaymentsFilter(values.pending_payments);
+            setFilters(values);
           }}
           onSubmit={values => {
-            setSearchFilter(values.search);
-            setCodeFilter(values?.code);
-            setPaymentsFilter(values?.pending_payments);
+            setFilters(values);
           }}>
           <Form.Item name={'search'} label={'Buscar'}>
             <Input allowClear placeholder={'Nombre o dni del titular'} />
