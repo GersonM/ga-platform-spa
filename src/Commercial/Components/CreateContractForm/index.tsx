@@ -54,7 +54,9 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
       .post('commercial/contracts', data)
       .then(response => {
         setLoading(false);
-        onComplete && onComplete(response.data);
+        if (onComplete) {
+          onComplete(response.data);
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -113,6 +115,9 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
             <h3 style={{fontWeight: 'bold'}}>Información adicional</h3>
             {selectedStock ? (
               <>
+                <strong>{selectedStock.product?.name}</strong>
+                <br/>
+                <p>{selectedStock.product?.description}</p>
                 <StockViewerState stock={selectedStock} />
                 <Divider />
                 <p>
@@ -123,7 +128,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
                 </p>
               </>
             ) : (
-              <EmptyMessage message={'Elige un lote para ver los detalles'} />
+              <EmptyMessage message={'Elige un producto para ver los detalles'} />
             )}
             <p>
               <strong>Vendedor: </strong>

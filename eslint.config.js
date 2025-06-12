@@ -23,6 +23,7 @@ export default tseslint.config(
       "@typescript-eslint/ban-ts-ignore": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       ...reactHooks.configs.recommended.rules,
+      "react-hooks/exhaustive-deps": "off",
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

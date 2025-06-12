@@ -2,10 +2,10 @@ import {type ReactNode, useEffect, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCaretDown, PiCaretUp} from 'react-icons/pi';
+import {TbFilter} from "react-icons/tb";
 import {Button, Form} from 'antd';
 
 import PrimaryButton from '../PrimaryButton';
-import {TbFilter} from "react-icons/tb";
 import './styles.less';
 
 interface FilterFormProps {
@@ -46,11 +46,6 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   }, [initialValues]);
 
   const onSubmitHandler = (values: any) => {
-    const o = Object.fromEntries(
-      Object.entries(values).filter(([_, v]) => {
-        return v != null;
-      }),
-    );
     const url = new URL(window.location.href);
     Object.keys(values).forEach(k => {
       if (values[k]) {
