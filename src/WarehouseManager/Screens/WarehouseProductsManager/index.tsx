@@ -29,6 +29,7 @@ const WarehouseProductsManager = () => {
   const [filters, setFilters] = useState<any>()
 
   useEffect(() => {
+    console.log('init component');
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -111,10 +112,11 @@ const WarehouseProductsManager = () => {
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenAddProduct(true)}/>
       <FilterForm
-        onSubmit={values => {
-          setFilters(values);
-          console.log({values})
+        onInitialValues={values => {
+          console.log(values);
+          setFilters(values)
         }}
+        onSubmit={values => setFilters(values)}
       >
         <Form.Item name={'search'} label={'Buscar'}>
           <Input.Search

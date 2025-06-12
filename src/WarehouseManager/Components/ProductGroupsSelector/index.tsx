@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {AutoComplete} from "antd";
 import axios from "axios";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 interface ProductGroupsSelectorProps {
   placeholder?: string;
@@ -14,7 +15,6 @@ interface ProductGroupsSelectorProps {
 }
 
 const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorProps) => {
-  const [loading, setLoading] = useState(false);
   const [groups, setGroups] = useState<string[]>();
 
   useEffect(() => {
@@ -22,8 +22,6 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
     const config = {
       cancelToken: cancelTokenSource.token,
     };
-
-    setLoading(true);
 
     axios
       .get(`warehouses/products/list-values/group`, config)
@@ -36,10 +34,9 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
             })),
           );
         }
-        setLoading(false);
       })
-      .catch(() => {
-        setLoading(false);
+      .catch(error => {
+        ErrorHandler.showNotification(error);
       });
 
     return cancelTokenSource.cancel;
@@ -51,7 +48,7 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
       allowClear
       placeholder={placeholder || 'Elige un grupo'}
       showSearch={true}
-      style={{ minWidth: 120 }}
+      style={{minWidth: 120}}
       optionFilterProp={'label'}
       options={groups}
     />

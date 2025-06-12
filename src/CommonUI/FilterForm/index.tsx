@@ -25,27 +25,27 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
-    console.log('check params');
     if (searchParams) {
-      console.log('change params', searchParams);
       const newInitial: any = {};
+      let hasValues = false;
       for (const value of searchParams.keys()) {
         newInitial[value] = searchParams.get(value);
+        hasValues = true;
       }
-      setInitialValues({...newInitial});
+      if (hasValues) {
+        setInitialValues({...newInitial});
+      }
     }
   }, []);
 
   useEffect(() => {
-    console.log('reset form')
     form.resetFields();
-    if (onInitialValues) {
+    if (onInitialValues && initialValues) {
       onInitialValues(initialValues);
     }
   }, [initialValues]);
 
   const onSubmitHandler = (values: any) => {
-    console.log('submit', values);
     const o = Object.fromEntries(
       Object.entries(values).filter(([_, v]) => {
         return v != null;
@@ -59,7 +59,6 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
         url.searchParams.delete(k);
       }
     });
-    console.log(url.toString());
     history.pushState(null, '', url);
     if (onSubmit) {
       onSubmit({...values});
@@ -68,7 +67,6 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   };
 
   const onFieldsChange = () => {
-    console.log({liveUpdate})
     if (liveUpdate) {
       setLoading(true);
       if (timer) {

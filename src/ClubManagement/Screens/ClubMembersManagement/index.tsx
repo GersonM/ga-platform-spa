@@ -73,11 +73,11 @@ const ClubMembersManagement = () => {
       title: 'Monto',
       width: 90,
       render: (amount: number, row: Subscription) => (
-        <>{amount ? <MoneyString value={amount} /> : <MoneyString value={row.plan.price} />}</>
+        <>{amount ? <MoneyString value={amount}/> : <MoneyString value={row.plan.price}/>}</>
       ),
     },
-    {dataIndex: 'profile', title: 'Titular', render: (profile: Profile) => <ProfileChip profile={profile} />},
-    {dataIndex: 'profile', title: 'Documento', render: (profile: Profile) => <ProfileDocument profile={profile} />},
+    {dataIndex: 'profile', title: 'Titular', render: (profile: Profile) => <ProfileChip profile={profile}/>},
+    {dataIndex: 'profile', title: 'Documento', render: (profile: Profile) => <ProfileDocument profile={profile}/>},
     {
       dataIndex: 'activity',
       title: 'Actividad',
@@ -99,7 +99,7 @@ const ClubMembersManagement = () => {
         <>
           <IconButton
             title={'Ver detalles'}
-            icon={<PiEye size={18} />}
+            icon={<PiEye size={18}/>}
             onClick={() => {
               navigate('/club/subscriptions/' + row.profile.uuid);
             }}
@@ -113,25 +113,21 @@ const ClubMembersManagement = () => {
     <ModuleContent>
       <ContentHeader onRefresh={() => setReload(!reload)} title={'Socios'} onAdd={() => setOpenAddSubscription(true)}>
         <FilterForm
-          onInitialValues={values => {
-            setFilters(values);
-          }}
-          onSubmit={values => {
-            setFilters(values);
-          }}>
+          onInitialValues={values => setFilters(values)}
+          onSubmit={values => setFilters(values)}>
           <Form.Item name={'search'} label={'Buscar'}>
-            <Input allowClear placeholder={'Nombre o dni del titular'} />
+            <Input allowClear placeholder={'Nombre o dni del titular'}/>
           </Form.Item>
           <Form.Item name={'code'} label={'Código'}>
-            <Input allowClear placeholder={'N° de socio'} />
+            <Input allowClear placeholder={'N° de socio'}/>
           </Form.Item>
           <Form.Item name={'pending_payments'} label={'Cuotas vencidas'}>
-            <InputNumber placeholder={'Todos'} />
+            <InputNumber placeholder={'Todos'}/>
           </Form.Item>
         </FilterForm>
       </ContentHeader>
 
-      <TableList columns={columns} dataSource={subscriptions} />
+      <TableList columns={columns} dataSource={subscriptions}/>
       <Pagination
         showSizeChanger={false}
         size={'small'}
