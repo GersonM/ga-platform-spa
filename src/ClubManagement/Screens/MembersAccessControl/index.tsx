@@ -18,7 +18,6 @@ const MembersAccessControl = () => {
   const [profileDocument, setProfileDocument] = useState<string>()
   const [documentSearching, setDocumentSearching] = useState(false);
   const [profileFound, setProfileFound] = useState<any>();
-  const [notFound, setNotFound] = useState<boolean>()
   const [inProcess, setInProcess] = useState(false);
 
   const searchExternal = () => {
@@ -49,6 +48,7 @@ const MembersAccessControl = () => {
       .get('subscriptions/validate-member/' + barCode[0].rawValue)
       .then(response => {
         setSubscriptionMember(response.data);
+        setInProcess(true);
       })
       .catch(error => {
         ErrorHandler.showNotification(error);
@@ -81,27 +81,23 @@ const MembersAccessControl = () => {
             }
             {inProcess ? (
                 <>
-                  {notFound == true && (
-                    <>
-                      <PrimaryButton block label={'Registrar persona'} onClick={searchExternal}/>
-                    </>
-                  )}
                   <Card>
                     <h3>Registrar ingreso</h3>
                     {profileFound && profileFound.uuid && <>
                       <ProfileChip profile={profileFound}/>
                     </>}
-                    <ReportAttendance profile={profileFound} onCompleted={() => {
+                    <ReportAttendance subscription={subscriptionMember} profile={profileFound} onCompleted={() => {
                       setInProcess(false);
                       setProfileFound(undefined);
                       setProfileDocument(undefined);
                     }}/>
-                  </Card>
-                  <Button type="link" block onClick={() => {
+                  </Card><br/>
+                  <Button size={"large"} block onClick={() => {
                     setInProcess(false);
                     setProfileFound(undefined);
+                    setSubscriptionMember(undefined);
                   }}>
-                    Volver
+                    Terminar
                   </Button>
                 </>)
               :
@@ -124,47 +120,6 @@ const MembersAccessControl = () => {
           </div>
         </Col>
       </Row>
-      <Modal open={!!subscriptionMember} onCancel={() => setSubscriptionMember(undefined)} footer={false}>
-        {subscriptionMember && (
-          <div>
-            {subscriptionMember.suspended_at && (
-              <Alert
-                style={{marginBottom: 10}}
-                type={'error'}
-                message={'Suspendido desde ' + subscriptionMember.suspended_at}
-                showIcon
-              />
-            )}
-            <h2 style={{textAlign: 'center'}}>
-              <Avatar size={80} src={subscriptionMember.profile.avatar?.thumbnail}/> <br/>
-              {subscriptionMember.profile.name} {subscriptionMember.profile.last_name} <br/>
-              <ProfileDocument profile={subscriptionMember.profile}/> <br/>
-              N° {subscriptionMember.subscription?.code}
-            </h2>
-            <Divider>Pagos</Divider>
-            {subscriptionMember.subscription && (
-              <InvoicesTable entityUuid={subscriptionMember.subscription.uuid} type={'subscription'}/>
-            )}
-            <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit}>
-              <Form.Item label={'Lugar a visitar'} name={'area_uuid'}>
-                <Select
-                  placeholder={'Ingreso al club'}
-                  options={[
-                    {value: 'Restaurante', label: 'Restaurante'},
-                    {value: 'Oficia de atención', label: 'Oficia de atención'},
-                    {value: 'Club', label: 'Club'},
-                  ]}
-                  style={{width: '100%'}}
-                />
-              </Form.Item>
-              <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-                <Input.TextArea/>
-              </Form.Item>
-              <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
-            </Form>
-          </div>
-        )}
-      </Modal>
     </ModuleContent>
   );
 };

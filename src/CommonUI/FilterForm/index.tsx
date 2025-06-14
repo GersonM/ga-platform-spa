@@ -78,7 +78,6 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
       {open && (
         <Form
           form={form}
-          size={'small'}
           onFieldsChange={onFieldsChange}
           initialValues={initialValues}
           onFinish={onSubmitHandler}

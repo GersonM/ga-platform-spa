@@ -1,26 +1,27 @@
 import React from 'react';
-import {Alert, Avatar, Form, Input, notification, Select} from "antd";
+import {Alert, Avatar, Divider, Form, Input, notification, Select, Space} from "antd";
 import axios from "axios";
 
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import type {Profile} from "../../../Types/api.tsx";
+import type {Profile, SubscriptionMember} from "../../../Types/api.tsx";
 import CampaignSelector from "../../../Commercial/Components/CampaignSelector";
 import ProfileDocument from "../../../CommonUI/ProfileTools/ProfileDocument.tsx";
+import InvoicesTable from "../../../PaymentManagement/Components/InvoicesTable";
 
 interface ReportAttendanceProps {
   profile: Profile;
+  subscription?: SubscriptionMember;
   onCompleted?: () => void;
 }
 
-const ReportAttendance = ({profile, onCompleted}: ReportAttendanceProps) => {
-  const [api, contextHolder] = notification.useNotification();
-
+const ReportAttendance = ({profile, subscription, onCompleted}: ReportAttendanceProps) => {
   const registerVisit = (values: any) => {
+    const currentProfile = profile || subscription?.profile;
     axios
-      .post('attendances', {...values, profile_uuid: profile.uuid})
+      .post('attendances', {...values, profile_uuid: currentProfile?.uuid})
       .then(() => {
-        api.success({message: 'Ingreso registrado', placement: 'top'});
+        notification.success({message: 'Ingreso registrado', placement: 'top'});
         if (onCompleted) onCompleted();
       })
       .catch(error => {
@@ -28,51 +29,61 @@ const ReportAttendance = ({profile, onCompleted}: ReportAttendanceProps) => {
       });
   };
 
+  const currentProfile = profile || subscription?.profile;
   return (
     <div>
-      {contextHolder}
-      {profile && profile.name}
-      {profile && profile.uuid &&
-        <h2 style={{textAlign: 'center'}}>
-          {profile.name} {profile.last_name} <br/>
-          <ProfileDocument profile={profile}/>
-        </h2>
+      {currentProfile && currentProfile.uuid &&
+        <Space>
+          <Avatar size={80} src={currentProfile.avatar?.thumbnail}/> <br/>
+          <div>
+            {currentProfile.name} {currentProfile.last_name} <br/>
+            <ProfileDocument profile={currentProfile}/> <br/>
+            N° {subscription?.subscription?.code}
+          </div>
+        </Space>
       }
-      <Alert message={'Esta persona no está registrada'} showIcon />
+      {!currentProfile.uuid &&
+        <Alert message={'Esta persona no está registrada, completa sus datos para registrarla como invitado'} showIcon/>
+      }
       <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit} initialValues={profile}>
-      {!profile?.uuid && <>
-        <Form.Item label={'Nombre'} name={'name'}>
-          <Input/>
+        {!currentProfile?.uuid && <>
+          <Form.Item label={'Nombre'} name={'name'}>
+            <Input/>
+          </Form.Item>
+          <Form.Item label={'Apellidos'} name={'last_name'}>
+            <Input/>
+          </Form.Item>
+          <Form.Item label={'DNI'} name={'doc_number'}>
+            <Input/>
+          </Form.Item>
+        </>}
+        <Form.Item label={'Lugar a visitar (opcional)'} name={'area_uuid'}>
+          <Select
+            placeholder={'Ingreso al club'}
+            options={[
+              {value: 'Restaurante', label: 'Restaurante'},
+              {value: 'Oficia de atención', label: 'Oficia de atención'},
+              {value: 'Club', label: 'Club'},
+            ]}
+            style={{width: '100%'}}
+          />
         </Form.Item>
-        <Form.Item label={'Apellidos'} name={'last_name'}>
-          <Input/>
+        <Form.Item label={'Campaña (opcional)'} name={'campaign_uuid'}>
+          <CampaignSelector/>
         </Form.Item>
-        <Form.Item label={'DNI'} name={'doc_number'}>
-          <Input/>
+        <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
+          <Input.TextArea/>
         </Form.Item>
-      </>}
-      <Form.Item label={'Lugar a visitar (opcional)'} name={'area_uuid'}>
-        <Select
-          placeholder={'Ingreso al club'}
-          options={[
-            {value: 'Restaurante', label: 'Restaurante'},
-            {value: 'Oficia de atención', label: 'Oficia de atención'},
-            {value: 'Club', label: 'Club'},
-          ]}
-          style={{width: '100%'}}
-        />
-      </Form.Item>
-      <Form.Item label={'Campaña (opcional)'} name={'campaign_uuid'}>
-        <CampaignSelector/>
-      </Form.Item>
-      <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-        <Input.TextArea/>
-      </Form.Item>
-      <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
-    </Form>
-</div>
-)
-  ;
+        <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
+        {subscription && (<>
+            <Divider>Pagos</Divider>
+            <InvoicesTable entityUuid={subscription.uuid} type={'subscription'}/>
+          </>
+        )}
+      </Form>
+    </div>
+  )
+    ;
 };
 
 export default ReportAttendance;
