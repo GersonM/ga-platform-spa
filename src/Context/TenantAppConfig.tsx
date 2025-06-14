@@ -1,4 +1,4 @@
-import {useContext, useEffect} from 'react';
+import {type ReactNode, useContext, useEffect} from 'react';
 import {ConfigProvider, theme} from 'antd';
 import tinyColor from 'tinycolor2';
 import locale from 'antd/locale/es_ES';
@@ -8,7 +8,7 @@ import type {TenantConfig} from '../Types/api';
 import AuthContext from './AuthContext';
 
 interface AntConfigProps {
-  children: React.ReactNode;
+  children: ReactNode;
   tenant: TenantConfig;
 }
 

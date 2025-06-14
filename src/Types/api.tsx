@@ -621,17 +621,19 @@ export type StorageProduct = {
   metadata?: any;
   model?: string;
   name: string;
+  type?: string;
   updated_at: string;
 };
 export type StorageStock = {
   uuid: string;
+  currency?: string;
   cost_price?: number;
+  sale_price?: number;
   created_at: string;
   fk_product_uuid: string;
   fk_warehouse_uuid: string;
   metadata?: any;
   observations?: string;
-  sale_price: number;
   sku: string;
   status: string;
   updated_at: string;

@@ -70,6 +70,13 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
       filterOption={false}
       loading={loading}
       options={stock}
+      optionRender={item => {
+        return <>
+          {item.label} <br/>
+          {/* @ts-ignore */}
+          <small>{item.data.entity?.product?.name}</small>
+        </>
+      }}
       mode={mode || undefined}
       onSearch={value => setStockSearch(value)}
     />

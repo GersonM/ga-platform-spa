@@ -11,6 +11,7 @@ import type {Contract, StorageStock} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import StockViewerState from '../StockViewerState';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
+import MoneyInput from "../../../CommonUI/MoneyInput";
 
 interface CreateContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -104,7 +105,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
               />
             </Form.Item>
             <Form.Item label={'Precio de venta'} name={'sale_price'}>
-              <InputNumber addonBefore={'S/'} placeholder={selectedStock ? selectedStock.sale_price / 100 + '' : ''} />
+              <MoneyInput placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''} />
             </Form.Item>
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea />
@@ -112,13 +113,14 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
             <PrimaryButton loading={loading} block htmlType={'submit'} label={'Registrar contrato'} />
           </Col>
           <Col span={12}>
-            <h3 style={{fontWeight: 'bold'}}>Información adicional</h3>
+            <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
             {selectedStock ? (
               <>
                 <strong>{selectedStock.product?.name}</strong>
-                <br/>
                 <p>{selectedStock.product?.description}</p>
+                {selectedStock.product?.type == 'property' &&
                 <StockViewerState stock={selectedStock} />
+                }
                 <Divider />
                 <p>
                   <strong>Precio de venta: </strong>

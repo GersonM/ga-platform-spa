@@ -63,7 +63,7 @@ const ContainerHeader = ({
       onRefresh={onReload}
       bordered
       title={container.name}
-      description={container.parent_container?.name + 'sdfasdfsdfa sdf asdfa sdfasdfasdasd asdfas dfa sdfasd sff'}
+      description={container.parent_container?.name}
       tools={
         <>
           {allowUpload && (

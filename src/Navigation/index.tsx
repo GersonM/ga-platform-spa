@@ -1,6 +1,6 @@
 import {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Avatar, Badge, Dropdown, Popover, Progress, Space} from 'antd';
+import {Avatar, Badge, Dropdown, notification, Popover, Progress, Space} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {
@@ -43,6 +43,7 @@ import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbPackage, TbStack} f
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
+import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 import Cookies from 'js-cookie';
 
 import ScreenModeSelector from './ScreenModeSelector';
@@ -53,7 +54,6 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
-import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 
 const menuItems: ItemType[] = [
   {
@@ -79,6 +79,7 @@ const Navigation = () => {
     useContext(AuthContext);
   const {pathname} = useLocation();
   const navigate = useNavigate();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     setOpenMenu(false);
@@ -129,6 +130,7 @@ const Navigation = () => {
 
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
+      {contextHolder}
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
           <div className="logo-square">
@@ -137,7 +139,7 @@ const Navigation = () => {
           </div>
         </Dropdown>
       </div>
-      <OverlayScrollbarsComponent className={'scroll-content'} defer options={{scrollbars: {autoHide: 'scroll'}}}>
+      <OverlayScrollbarsComponent style={{flex:1}} className={'scroll-content'} defer options={{scrollbars: {autoHide: 'scroll'}}}>
         <nav>
           <ul className="navigation-list">
             <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
@@ -267,7 +269,10 @@ const Navigation = () => {
         )}
         <Space>
           <Badge count={0}>
-            <div className={'user-tool'}>
+            <div className={'user-tool'} onClick={() => {
+              api.success({message:'Hola'});
+              console.log('alert');
+            }}>
               <BellIcon />
             </div>
           </Badge>

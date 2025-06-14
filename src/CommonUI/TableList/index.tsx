@@ -11,6 +11,7 @@ interface TableListProps {
   components?: any;
   scroll?: any;
   footer?: any;
+  customStyle?: boolean;
   loading?: boolean;
   size?: string;
   small?: boolean;
@@ -22,28 +23,31 @@ interface TableListProps {
 }
 
 const TableList = ({
-  small,
-  loading,
-  columns,
-  dataSource,
-  expandable,
-  onClick,
-  size,
-  rowKey = 'uuid',
-  ...props
-}: TableListProps) => {
+                     small,
+                     loading,
+                     columns,
+                     customStyle = true,
+                     dataSource,
+                     expandable,
+                     onClick,
+                     size,
+                     rowKey = 'uuid',
+                     ...props
+                   }: TableListProps) => {
   return (
     <Table
       onRow={(record, rowIndex) => {
         return {
           onClick: () => {
-            onClick && onClick(record, rowIndex);
+            if (onClick) {
+              onClick(record, rowIndex);
+            }
           },
         };
       }}
       size={small ? 'small' : 'middle'}
       loading={loading}
-      className={'table-list'}
+      className={customStyle ? 'table-list' : undefined}
       rowClassName={(record, index) => {
         let rowColor = index % 2 === 0 ? 'table-row-light' : 'table-row-dark';
         if (record.is_read !== undefined) {

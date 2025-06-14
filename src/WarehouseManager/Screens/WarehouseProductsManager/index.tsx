@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Modal, Pagination, Space, Tag, Tooltip} from 'antd';
+import {Form, Input, Modal, Pagination, Space, Tooltip} from 'antd';
 import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import axios from "axios";
 

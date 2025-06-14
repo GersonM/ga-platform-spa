@@ -7,6 +7,7 @@ import 'dayjs/locale/es.js';
 import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import '@ant-design/v5-patch-for-react-19';
 
 import {AuthContextProvider} from './Context/AuthContext';
 import {UploadContextProvider} from './Context/UploadContext';

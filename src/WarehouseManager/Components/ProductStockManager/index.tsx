@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
+import {TbPencil, TbPlus, TbTrash} from "react-icons/tb";
+import {Form, Modal, Popover, Select, Space, Tag, Tooltip} from "antd";
 import axios from "axios";
+
 import type {StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
 import TableList from "../../../CommonUI/TableList";
 import MoneyString from "../../../CommonUI/MoneyString";
 import FilterForm from "../../../CommonUI/FilterForm";
-import {Divider, Form, Modal, Select, Space} from "antd";
 import ProductStockForm from "../ProductStockForm";
 import IconButton from "../../../CommonUI/IconButton";
-import {TbPencil, TbTrash} from "react-icons/tb";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import {PiWarning} from "react-icons/pi";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -50,20 +52,16 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     {
       title: 'SKU',
       dataIndex: 'sku',
-      width: 60,
+      width: 80,
     },
     {
       title: 'Estado',
       dataIndex: 'status',
     },
     {
-      title: 'Nombre',
-      dataIndex: 'product',
-      render: (product: StorageProduct) => product.name
-    },
-    {
       title: 'Almacén',
       dataIndex: 'warehouse',
+      responsive:['md'],
       render: (warehouse: StorageWarehouse) => <>
         {warehouse.name} <br/>
         <small>{warehouse.address}</small>
@@ -72,21 +70,35 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     {
       title: 'Consumible',
       dataIndex: 'is_consumable',
-      render: (is_consumable: boolean) => is_consumable ? 'SI':'No'
+      render: (is_consumable: boolean) => is_consumable ? 'SI' : 'No'
     },
     {
       title: 'Venta',
       dataIndex: 'sale_price',
-      render: (sale_price: number, row: StorageStock) => <>
-        <MoneyString value={sale_price}/> <br/>
-        <small>
-          Costo: <MoneyString value={row.cost_price}/>
-        </small>
-      </>
+      render: (sale_price: number, row: StorageStock) => {
+        const earn = (row.sale_price || 0) - (row.cost_price || 0);
+        return <>
+          <Popover content={<>
+            Ganancia: <MoneyString value={earn} currency={row.currency}/> <br/>
+            Porcentaje: {((earn * 100) / (row.sale_price || 1)).toFixed(2)}%
+          </>}>
+            <Space>
+              <div>
+                <MoneyString value={sale_price} currency={row.currency}/> <br/>
+                <small>
+                  Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
+                </small>
+              </div>
+              {earn < 0 && <PiWarning size={18} color="red"/>}
+            </Space>
+          </Popover>
+        </>;
+      }
     },
     {
       title: '',
       dataIndex: 'uuid',
+      width: 70,
       render: (uuid: string, stock: StorageStock) => {
         return <Space>
           <IconButton small icon={<TbPencil/>} onClick={() => {
@@ -99,10 +111,16 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     }
   ]
 
-
   return (
     <div>
-      <h3>Existencias</h3>
+      <h2>Existencias para {product.name} <Tag color={'blue'} bordered={false}>{product.code}</Tag></h2>
+      <p>{product.description}</p>
+      <p>
+        <PrimaryButton icon={<TbPlus/>} ghost label={'Agregar stock'} onClick={() => {
+          setOpenStockForm(true);
+          setSelectedStock(undefined);
+        }}/>
+      </p>
       <FilterForm>
         <Form.Item>
           <Select
@@ -118,11 +136,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
           ]}/>
         </Form.Item>
       </FilterForm>
-      <TableList columns={columns} dataSource={productStock}/>
-      <PrimaryButton label={'Agregar stock'} onClick={() => {
-        setOpenStockForm(true);
-        setSelectedStock(undefined);
-      }}/>
+      <TableList loading={loading} columns={columns} dataSource={productStock}/>
       <Modal footer={null} open={openStockForm} onCancel={() => {
         setOpenStockForm(false);
         setSelectedStock(undefined);

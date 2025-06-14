@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
-import {Alert, Avatar, Col, Divider, Form, Input, Modal, notification, Row, Select} from 'antd';
+import {Alert, Avatar, Button, Card, Col, Divider, Form, Input, Modal, notification, Row, Select} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import axios from 'axios';
 
@@ -10,15 +10,43 @@ import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import ReportAttendance from "./ReportAttendance.tsx";
 
 const MembersAccessControl = () => {
   const [subscriptionMember, setSubscriptionMember] = useState<SubscriptionMember>();
+  const [profileDocument, setProfileDocument] = useState<string>()
+  const [documentSearching, setDocumentSearching] = useState(false);
+  const [profileFound, setProfileFound] = useState<any>();
+  const [notFound, setNotFound] = useState<boolean>()
+  const [inProcess, setInProcess] = useState(false);
+
+  const searchExternal = () => {
+    const config = {
+      params: {doc_number: profileDocument}
+    };
+
+    setDocumentSearching(true);
+
+    axios
+      .get(`hr-management/profiles/external-search`, config)
+      .then(response => {
+        if (response) {
+          setProfileFound(response.data);
+        }
+        setInProcess(true);
+        setDocumentSearching(false);
+      })
+      .catch((error) => {
+        setDocumentSearching(false);
+        ErrorHandler.showNotification(error);
+      });
+  }
 
   const onScan = (barCode: any) => {
     axios
       .get('subscriptions/validate-member/' + barCode[0].rawValue)
       .then(response => {
-        console.log(response);
         setSubscriptionMember(response.data);
       })
       .catch(error => {
@@ -30,7 +58,6 @@ const MembersAccessControl = () => {
     axios
       .post('attendances', {...values, profile_uuid: subscriptionMember?.profile.uuid})
       .then(response => {
-        console.log(response);
         notification.success({message: 'Ingreso registrado', placement: 'top'});
         setSubscriptionMember(undefined);
       })
@@ -41,12 +68,58 @@ const MembersAccessControl = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title={'Acceso a miembros'} />
-      <p>Acerca la credencial a la camara para escanearla</p>
+      <ContentHeader title={'Control de acceso'}/>
+      <p>Acerca la credencial a la camara para escanearla o digital el DNI en el campo</p>
       <Row justify={'center'}>
         <Col md={12} xs={24}>
           <div>
-            <Scanner allowMultiple onScan={onScan} />
+            {!inProcess && <>
+              <Scanner allowMultiple onScan={onScan}/>
+              <Divider>o</Divider>
+            </>
+            }
+            {inProcess ? (
+                <>
+                  {notFound == true && (
+                    <>
+                      <PrimaryButton block label={'Registrar persona'} onClick={searchExternal}/>
+                    </>
+                  )}
+                  <Card>
+                    <h3>Registrar ingreso</h3>
+                    {profileFound && profileFound.uuid && <>
+                      <ProfileChip profile={profileFound}/>
+                    </>}
+                    <ReportAttendance profile={profileFound} onCompleted={() => {
+                      setInProcess(false);
+                      setProfileFound(undefined);
+                      setProfileDocument(undefined);
+                    }}/>
+                  </Card>
+                  <Button type="link" block onClick={() => {
+                    setInProcess(false);
+                    setProfileFound(undefined);
+                  }}>
+                    Volver
+                  </Button>
+                </>)
+              :
+              <Row gutter={16}>
+                <Col md={12} xs={24}>
+                  <Input
+                    size={"large"}
+                    prefix={'DNI/CE'}
+                    onChange={e => setProfileDocument(e.target.value)}
+                  />
+                </Col>
+                <Col md={12} xs={24}>
+                  <PrimaryButton
+                    size={"large"} block label={'Buscar'} disabled={!profileDocument}
+                    loading={documentSearching}
+                    onClick={searchExternal}/>
+                </Col>
+              </Row>
+            }
           </div>
         </Col>
       </Row>
@@ -62,14 +135,14 @@ const MembersAccessControl = () => {
               />
             )}
             <h2 style={{textAlign: 'center'}}>
-              <Avatar size={80} src={subscriptionMember.profile.avatar?.thumbnail} /> <br />
-              {subscriptionMember.profile.name} {subscriptionMember.profile.last_name} <br />
-              <ProfileDocument profile={subscriptionMember.profile} /> <br />
+              <Avatar size={80} src={subscriptionMember.profile.avatar?.thumbnail}/> <br/>
+              {subscriptionMember.profile.name} {subscriptionMember.profile.last_name} <br/>
+              <ProfileDocument profile={subscriptionMember.profile}/> <br/>
               N° {subscriptionMember.subscription?.code}
             </h2>
             <Divider>Pagos</Divider>
             {subscriptionMember.subscription && (
-              <InvoicesTable entityUuid={subscriptionMember.subscription.uuid} type={'subscription'} />
+              <InvoicesTable entityUuid={subscriptionMember.subscription.uuid} type={'subscription'}/>
             )}
             <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit}>
               <Form.Item label={'Lugar a visitar'} name={'area_uuid'}>
@@ -84,9 +157,9 @@ const MembersAccessControl = () => {
                 />
               </Form.Item>
               <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-                <Input.TextArea />
+                <Input.TextArea/>
               </Form.Item>
-              <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'} />
+              <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
             </Form>
           </div>
         )}

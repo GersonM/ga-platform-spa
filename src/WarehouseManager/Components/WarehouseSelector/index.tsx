@@ -65,7 +65,6 @@ const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelect
       options={products}
       mode={mode}
       optionRender={option => {
-        console.log({option});
         return <div>
           {option.label}
           <br/>
