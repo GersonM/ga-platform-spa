@@ -72,8 +72,7 @@ class ErrorHandler {
   }
 
   show(time: number) {
-    const [api, contextHolder] = notification.useNotification();
-    api.open({
+    notification.open({
       // @ts-ignore
       type: this.type,
       duration: this.errors ? 15 : time,
