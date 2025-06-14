@@ -24,17 +24,17 @@ interface ContainerHeaderProps {
 }
 
 const ContainerHeader = ({
-  container,
-  onChange,
-  onToggleInformation,
-  upLevel,
-  onChangeViewMode,
-  onOpenUpload,
-  allowUpload,
-  onSearch,
-  onChangeOrder,
-  onReload,
-}: ContainerHeaderProps) => {
+                           container,
+                           onChange,
+                           onToggleInformation,
+                           upLevel,
+                           onChangeViewMode,
+                           onOpenUpload,
+                           allowUpload,
+                           onSearch,
+                           onChangeOrder,
+                           onReload,
+                         }: ContainerHeaderProps) => {
   const [viewMode, setViewMode] = useState<string | number>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
   const [orderBy, setOrderBy] = useState('name');
@@ -46,15 +46,21 @@ const ContainerHeader = ({
   }, []);
 
   useEffect(() => {
-    onChangeViewMode && onChangeViewMode(viewMode);
+    if (onChangeViewMode) {
+      onChangeViewMode(viewMode);
+    }
   }, [onChangeViewMode, viewMode]);
 
   useEffect(() => {
-    onToggleInformation && onToggleInformation(informationEnabled);
+    if (onToggleInformation) {
+      onToggleInformation(informationEnabled);
+    }
   }, [informationEnabled, onToggleInformation]);
 
   useEffect(() => {
-    onChangeOrder && onChangeOrder(orderBy);
+    if (onChangeOrder) {
+      onChangeOrder(orderBy);
+    }
   }, [orderBy, onChangeOrder]);
 
   return (
@@ -67,7 +73,7 @@ const ContainerHeader = ({
       tools={
         <>
           {allowUpload && (
-            <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon />}>
+            <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon/>}>
               Cargar archivos
             </PrimaryButton>
           )}
@@ -75,11 +81,11 @@ const ContainerHeader = ({
             <Button
               type={informationEnabled ? 'primary' : 'default'}
               onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<InformationCircleIcon />}
+              icon={<InformationCircleIcon/>}
             />
           </Tooltip>
           <Tooltip title={'Subir un nivel'}>
-            <Button type={'text'} onClick={upLevel} icon={<PiArrowUp size={18} />} />
+            <Button type={'text'} onClick={upLevel} icon={<PiArrowUp size={18}/>}/>
           </Tooltip>
           <Tooltip title={'Buscar'}>
             <Popover
@@ -89,21 +95,23 @@ const ContainerHeader = ({
                   <Input.Search
                     placeholder={'Buscar'}
                     onSearch={value => {
-                      onSearch && onSearch(value);
+                      if (onSearch) {
+                        onSearch(value);
+                      }
                     }}
                   />
                 </>
               }
               trigger={'click'}>
-              <Button type={'text'} onClick={upLevel} icon={<PiMagnifyingGlass size={18} />} />
+              <Button type={'text'} onClick={upLevel} icon={<PiMagnifyingGlass size={18}/>}/>
             </Popover>
           </Tooltip>
           <Tooltip title={'Nuevo folder'}>
             <Popover
               placement={'bottomRight'}
-              content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange} />}
+              content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange}/>}
               trigger={'click'}>
-              <Button type={'text'} icon={<PiFolderSimplePlus size={18} />} />
+              <Button type={'text'} icon={<PiFolderSimplePlus size={18}/>}/>
             </Popover>
           </Tooltip>
           <Select
@@ -123,11 +131,11 @@ const ContainerHeader = ({
             options={[
               {
                 value: 'list',
-                icon: <BarsOutlined />,
+                icon: <BarsOutlined/>,
               },
               {
                 value: 'grid',
-                icon: <AppstoreOutlined />,
+                icon: <AppstoreOutlined/>,
               },
             ]}
             value={viewMode}
