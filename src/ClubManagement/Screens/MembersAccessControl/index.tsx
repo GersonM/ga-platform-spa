@@ -38,6 +38,7 @@ const MembersAccessControl = () => {
         setDocumentSearching(false);
       })
       .catch((error) => {
+        setInProcess(true);
         setDocumentSearching(false);
         ErrorHandler.showNotification(error);
       });

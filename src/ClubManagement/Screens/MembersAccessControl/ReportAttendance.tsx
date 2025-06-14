@@ -40,11 +40,11 @@ const ReportAttendance = ({profile, onCompleted}: ReportAttendanceProps) => {
       }
       <Alert message={'Esta persona no está registrada'} showIcon />
       <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit} initialValues={profile}>
-      {profile && !profile.uuid && <>
+      {!profile?.uuid && <>
         <Form.Item label={'Nombre'} name={'name'}>
           <Input/>
         </Form.Item>
-        <Form.Item label={'Nombre'} name={'last_name'}>
+        <Form.Item label={'Apellidos'} name={'last_name'}>
           <Input/>
         </Form.Item>
         <Form.Item label={'DNI'} name={'doc_number'}>
