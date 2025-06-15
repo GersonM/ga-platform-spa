@@ -71,13 +71,18 @@ const ReportAttendance = ({profile, subscription, onCompleted}: ReportAttendance
         <Form.Item label={'Campaña (opcional)'} name={'campaign_uuid'}>
           <CampaignSelector/>
         </Form.Item>
+        <Form.Item label={'Código de socio que invita (opcional)'} name={'referer'}>
+          <Input/>
+        </Form.Item>
         <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
           <Input.TextArea/>
         </Form.Item>
         <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
         {subscription && (<>
             <Divider>Pagos</Divider>
-            <InvoicesTable entityUuid={subscription.uuid} type={'subscription'}/>
+            {subscription.subscription &&
+              <InvoicesTable entityUuid={subscription.subscription?.uuid} type={'subscription'}/>
+            }
           </>
         )}
       </Form>

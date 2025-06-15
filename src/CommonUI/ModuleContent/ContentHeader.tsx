@@ -22,35 +22,43 @@ interface ContentHeaderProps {
 }
 
 const ContentHeader = ({
-  title,
-  children,
-  tools,
-  backLocation,
-  description,
-  onRefresh,
-  onEdit,
-  onBack,
-  onAdd,
-  loading,
-  showBack,
-  bordered = false,
-}: ContentHeaderProps) => {
+                         title,
+                         children,
+                         tools,
+                         backLocation,
+                         description,
+                         onRefresh,
+                         onEdit,
+                         onBack,
+                         onAdd,
+                         loading,
+                         showBack,
+                         bordered = false,
+                       }: ContentHeaderProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const shortcutHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey) {
         if (e.key.toLowerCase() === 'r') {
-          onRefresh && onRefresh();
+          if (onRefresh) {
+            onRefresh();
+          }
         }
         if (e.key.toLowerCase() === 'n') {
-          onAdd && onAdd();
+          if (onAdd) {
+            onAdd();
+          }
         }
         if (e.key.toLowerCase() === 'e') {
-          onEdit && onEdit();
+          if (onEdit) {
+            onEdit();
+          }
         }
         if (e.key.toLowerCase() === 'Escape') {
-          onBack && onBack();
+          if (onBack) {
+            onBack();
+          }
         }
       }
     };
@@ -71,10 +79,11 @@ const ContentHeader = ({
                 if (backLocation) {
                   navigate(backLocation);
                 } else {
-                  onBack ? onBack() : navigate(-1);
+                  if (onBack) onBack()
+                  else navigate(-1);
                 }
               }}
-              icon={<ArrowUturnLeftIcon />}
+              icon={<ArrowUturnLeftIcon/>}
             />
           </Tooltip>
         )}
@@ -85,17 +94,17 @@ const ContentHeader = ({
           <>
             {onAdd && (
               <Tooltip title={'Nuevo'}>
-                <IconButton icon={<PlusIcon />} onClick={onAdd} />
+                <IconButton icon={<PlusIcon/>} onClick={onAdd}/>
               </Tooltip>
             )}
             {onRefresh && (
               <Tooltip title={'Actualizar'}>
-                <IconButton icon={<ArrowPathIcon className={loading ? 'spin' : ''} />} onClick={onRefresh} />
+                <IconButton icon={<ArrowPathIcon className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
               </Tooltip>
             )}
             {onEdit && (
               <Tooltip title={'Editar'}>
-                <IconButton icon={<PiPencilSimple size={18} />} onClick={onEdit} />
+                <IconButton icon={<PiPencilSimple size={18}/>} onClick={onEdit}/>
               </Tooltip>
             )}
             {tools}

@@ -20,7 +20,7 @@ const MembersAccessControl = () => {
   const [profileFound, setProfileFound] = useState<any>();
   const [inProcess, setInProcess] = useState(false);
 
-  const searchExternal = () => {
+  const searchExternal = (values: any) => {
     const config = {
       params: {doc_number: profileDocument}
     };
@@ -55,18 +55,6 @@ const MembersAccessControl = () => {
       });
   };
 
-  const registerVisit = (values: any) => {
-    axios
-      .post('attendances', {...values, profile_uuid: subscriptionMember?.profile.uuid})
-      .then(response => {
-        notification.success({message: 'Ingreso registrado', placement: 'top'});
-        setSubscriptionMember(undefined);
-      })
-      .catch(error => {
-        ErrorHandler.showNotification(error);
-      });
-  };
-
   return (
     <ModuleContent>
       <ContentHeader title={'Control de acceso'}/>
@@ -81,11 +69,7 @@ const MembersAccessControl = () => {
             }
             {inProcess ? (
                 <>
-                  <Card>
-                    <h3>Registrar ingreso</h3>
-                    {profileFound && profileFound.uuid && <>
-                      <ProfileChip profile={profileFound}/>
-                    </>}
+                  <Card title={'Registro de acceso'}>
                     <ReportAttendance subscription={subscriptionMember} profile={profileFound} onCompleted={() => {
                       setInProcess(false);
                       setProfileFound(undefined);
@@ -101,21 +85,25 @@ const MembersAccessControl = () => {
                   </Button>
                 </>)
               :
-              <Row gutter={16}>
-                <Col md={12} xs={24}>
-                  <Input
-                    size={"large"}
-                    prefix={'DNI/CE'}
-                    onChange={e => setProfileDocument(e.target.value)}
-                  />
-                </Col>
-                <Col md={12} xs={24}>
-                  <PrimaryButton
-                    size={"large"} block label={'Buscar'} disabled={!profileDocument}
-                    loading={documentSearching}
-                    onClick={searchExternal}/>
-                </Col>
-              </Row>
+              <Form onFinish={searchExternal}>
+                <Row gutter={16}>
+                  <Col md={12} xs={24}>
+                    <Form.Item name={'doc_number'}>
+                      <Input
+                        size={"large"}
+                        prefix={'DNI/CE'}
+                        onChange={e => setProfileDocument(e.target.value)}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col md={12} xs={24}>
+                    <PrimaryButton
+                      htmlType={'submit'}
+                      size={"large"} block label={'Buscar'} disabled={!profileDocument}
+                      loading={documentSearching}/>
+                  </Col>
+                </Row>
+              </Form>
             }
           </div>
         </Col>

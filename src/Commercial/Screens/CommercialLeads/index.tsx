@@ -82,7 +82,7 @@ const CommercialLeads = () => {
     },
     {
       dataIndex: 'referer',
-      title: 'Asesor',
+      title: 'Sponsor',
       render: (profile: Profile) => {
         return profile ? `${profile.name} ${profile.last_name}` : '';
       },
