@@ -12,21 +12,28 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  // configurar Axios para que envie cookies automaticamente
+  axios.defaults.withCredentials = true;
+  // configura la URL base directamente en el componente Login
+  axios.defaults.baseURL = 'http://127.0.0.1:8000';  //Estableciendo la url base para desarrollo
+
   const login = ({email, password}: any) => {
     axios.defaults.headers.common.Authorization = 'Bearer token';
-
+    console.log(`email:${email}, password: ${password}`);
     const requestConfig: AxiosRequestConfig = {
-      url: '/authenticate',
+      url: '/api/v1/authenticate',
       method: 'post',
       data: {
         email,
         password,
       },
     };
+    console.log(requestConfig);
     setLoading(true);
     axios(requestConfig)
             .then(({data}) => {
               setLoading(false);
+              console.log("TOKEN:", data.token);
               axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
               Cookies.set('session_token', data.token);
               document.location.href = '/';
@@ -58,7 +65,7 @@ const Login = () => {
     window.location.href = 'http://localhost:8000/api/v1/authenticate/auth/google/redirect';
   };
 
-  // Función para manejar el callback de Google (si necesitas procesarlo en el frontend)
+
   const handleGoogleCallback = async (token: string, profileUuid: string) => {
     try {
       axios.defaults.headers.common.Authorization = 'Bearer ' + token;

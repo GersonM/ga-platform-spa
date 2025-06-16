@@ -62,6 +62,8 @@ const WorkspaceManagement = lazy(() => import('../Workspaces/Screens/WorkspaceMa
 
 const App = () => {
   const {user} = useContext(AuthContext);
+  axios.defaults.baseURL = 'http://127.0.0.1:8000/api/v1';  // Establecer la URL base local
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
     axios.interceptors.response.use(undefined, error => {
@@ -91,12 +93,12 @@ const App = () => {
 
   return (
     <Routes>
-
+      <Route path={'/api/v1/authenticate/auth/google/callback'} element={<GoogleCallback />} />
       <Route path={'/auth'} element={<GuestLayout />}>
         <Route path={'login'} element={<Login />} />
         <Route path={'recover'} element={<PasswordRecovery />} />
         <Route path={'verify-recovery'} element={<VerifyRecovery />} />
-        <Route path={'google/callback'} element={<GoogleCallback />} />
+
       </Route>
       <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
       <Route path={'/'} element={<AuthenticatedLayout />}>
