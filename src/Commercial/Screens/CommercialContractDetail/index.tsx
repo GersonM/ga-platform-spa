@@ -228,7 +228,7 @@ const CommercialContractDetail = () => {
                 key: 'documents',
                 label: 'Documentos',
                 children: <>
-                  {contract && <ProcessDetail entityUuid={contract?.uuid} type={'contract'}/>}
+                  {contract && <ProcessDetail profile={contract.client?.entity} entityUuid={contract?.client?.entity.uuid} type={'contract'}/>}
                 </>
               },
             ]} />

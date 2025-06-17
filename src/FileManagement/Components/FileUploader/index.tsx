@@ -1,10 +1,9 @@
 import {useCallback, useContext, useEffect, useState} from 'react';
 import {Progress} from 'antd';
-import {ArrowUpTrayIcon, PaperClipIcon} from '@heroicons/react/24/outline';
+import {ArrowUpTrayIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';
 
 import UploadContext from '../../../Context/UploadContext';
-import IconButton from '../../../CommonUI/IconButton';
 import FileSize from '../../../CommonUI/FileSize';
 import './styles.less';
 
@@ -25,7 +24,7 @@ const FileUploader = ({
                         imagePath,
                         showPreview = false,
                       }: FileUploaderProps) => {
-  const [files] = useState<File[]>();
+
   const [uploadedFile, setUploadedFile] = useState<any>();
   const [ownedFiles, setOwnedFiles] = useState<string[]>([]);
   const {addFile, lastFileCompleted, fileList} = useContext(UploadContext);
@@ -38,7 +37,9 @@ const FileUploader = ({
     if (lastFileCompleted && lastFileCompleted.fileData) {
       if (ownedFiles.includes(lastFileCompleted.id)) {
         setUploadedFile(lastFileCompleted.fileData);
-        onChange && onChange(lastFileCompleted.fileData?.uuid);
+        if (onChange) {
+          onChange(lastFileCompleted.fileData?.uuid);
+        }
       }
     }
   }, [lastFileCompleted]);
@@ -52,47 +53,36 @@ const FileUploader = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, noDragEventsBubbling: true, multiple});
 
-  return (
-          <>
-            <div {...getRootProps()} className={`file-uploader-wrapper`} style={{height}}>
-              <input {...getInputProps()} />
-              {files && (
-                      <span className={'file-name'}>
-            {files.map((f, index) => {
-              return (
-                      <div key={index}>
-                        <IconButton icon={<PaperClipIcon/>}/>
-                        {f.name}
-                      </div>
-              );
-            })}
-          </span>
-              )}
-              {fileList
-                      ?.filter(f => ownedFiles.includes(f.id))
-                      .map((item, index) => (
-                              <li key={index}>
-                                {item.file.name} - <FileSize size={item.file.size}/>
-                                <Progress percent={item.progress} size={'small'}/>
-                              </li>
-                      ))}
+  const ownedFilesFilter = fileList
+    ?.filter(f => ownedFiles.includes(f.id)) || [];
 
-              {(isDragActive || !files) && (
-                      <div className={'content-label'}>
-                        <ArrowUpTrayIcon width={25}/>
-                        {isDragActive ? <>Suelta tus archivos aquí</> : <>Arrastra archivos aquí</>}
-                      </div>
-              )}
-              {showPreview && uploadedFile && (
-                      <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}}/>
-              )}
-              {showPreview && imagePath && (
-                      <>
-                        <div className={'preview'} style={{backgroundImage: 'url(' + imagePath + ')'}}/>
-                      </>
-              )}
-            </div>
+  return (
+    <>
+      <div {...getRootProps()} className={`file-uploader-wrapper`} style={{height}}>
+        <input {...getInputProps()} />
+        {ownedFilesFilter?.map((item, index) => (
+            <li key={index}>
+              {item.file.name} - <FileSize size={item.file.size}/>
+              <Progress percent={item.progress} size={'small'}/>
+            </li>
+          ))}
+
+        {(isDragActive || ownedFilesFilter.length == 0) && (
+          <div className={'content-label'}>
+            <ArrowUpTrayIcon width={25}/>
+            {isDragActive ? <>Suelta tus archivos aquí</> : <>Arrastra archivos aquí</>}
+          </div>
+        )}
+        {showPreview && uploadedFile && (
+          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}}/>
+        )}
+        {showPreview && imagePath && (
+          <>
+            <div className={'preview'} style={{backgroundImage: 'url(' + imagePath + ')'}}/>
           </>
+        )}
+      </div>
+    </>
   );
 };
 
