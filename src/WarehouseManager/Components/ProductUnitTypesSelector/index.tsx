@@ -3,7 +3,7 @@ import {AutoComplete} from "antd";
 import axios from "axios";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
-interface ProductGroupsSelectorProps {
+interface ProductUnitTypesSelector {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -14,7 +14,7 @@ interface ProductGroupsSelectorProps {
   size?: 'small' | 'large';
 }
 
-const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorProps) => {
+const ProductUnitTypesSelector = ({placeholder, ...props}: ProductUnitTypesSelector) => {
   const [groups, setGroups] = useState<string[]>();
 
   useEffect(() => {
@@ -24,13 +24,13 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
     };
 
     axios
-      .get(`warehouses/products/list-values/group`, config)
+      .get(`warehouses/products/list-values/unit_type`, config)
       .then(response => {
         if (response) {
           setGroups(
             response.data.map((item?: string) => ({
               value: item || 'none',
-              label: item || 'Sin grupo',
+              label: item || 'Sin tipo',
             })),
           );
         }
@@ -46,7 +46,7 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
     <AutoComplete
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige un grupo'}
+      placeholder={placeholder || 'Elige o ingresar el tipo de unidad'}
       showSearch={true}
       style={{minWidth: 120}}
       optionFilterProp={'label'}
@@ -55,4 +55,4 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
   );
 };
 
-export default ProductGroupsSelector;
+export default ProductUnitTypesSelector;

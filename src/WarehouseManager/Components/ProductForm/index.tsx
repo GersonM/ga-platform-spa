@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Divider, Form, Input, Row} from "antd";
+import {Col, Divider, Form, Input, Row, Select} from "antd";
 import axios from "axios";
 
 import type {StorageProduct} from "../../../Types/api.tsx";
@@ -8,6 +8,7 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import ProductBrandSelector from "../ProductBrandSelector";
 import ProductManufacturerSelector from "../ProductManufacturerSelector";
 import ProductGroupsSelector from "../ProductGroupsSelector";
+import ProductUnitTypesSelector from "../ProductUnitTypesSelector";
 
 interface ProductFormProps {
   product?: StorageProduct;
@@ -44,13 +45,18 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       </Form.Item>
       <Row gutter={[15, 15]}>
         <Col md={12}>
+          <Form.Item label="Tipo de unidad" name={'unit_type'}>
+            <ProductUnitTypesSelector/>
+          </Form.Item>
+        </Col>
+        <Col md={12}>
           <Form.Item label="Código" name={'code'}>
             <Input/>
           </Form.Item>
         </Col>
         <Col md={12}>
           <Form.Item label="Grupo" name={'group'}>
-            <ProductGroupsSelector />
+            <ProductGroupsSelector/>
           </Form.Item>
         </Col>
       </Row>
@@ -58,7 +64,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       <Row gutter={[15, 15]}>
         <Col md={12}>
           <Form.Item label="Marca" name={'brand'}>
-            <ProductBrandSelector />
+            <ProductBrandSelector/>
           </Form.Item>
         </Col>
         <Col md={12}>
@@ -68,7 +74,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
         </Col>
       </Row>
       <Form.Item label="Fabricante/Proveedor" name={'manufacturer'}>
-        <ProductManufacturerSelector />
+        <ProductManufacturerSelector/>
       </Form.Item>
       <Divider>Avanzado</Divider>
       <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>

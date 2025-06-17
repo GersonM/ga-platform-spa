@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {type ReactNode, useEffect} from 'react';
 import {Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {PlusIcon, ArrowPathIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
@@ -7,11 +7,11 @@ import {PiPencilSimple} from 'react-icons/pi';
 import IconButton from '../IconButton';
 
 interface ContentHeaderProps {
-  title?: string | React.ReactNode;
-  description?: string | React.ReactNode;
+  title?: string | ReactNode;
+  description?: string | ReactNode;
   backLocation?: string;
-  tools?: React.ReactNode;
-  children?: React.ReactNode;
+  tools?: ReactNode;
+  children?: ReactNode;
   onAdd?: () => void;
   onEdit?: () => void;
   onBack?: () => void;
@@ -55,10 +55,10 @@ const ContentHeader = ({
             onEdit();
           }
         }
-        if (e.key.toLowerCase() === 'Escape') {
-          if (onBack) {
-            onBack();
-          }
+      }
+      if (e.key.toLowerCase() === 'Escape') {
+        if (onBack) {
+          onBack();
         }
       }
     };

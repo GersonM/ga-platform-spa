@@ -39,7 +39,7 @@ import {
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
-import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbPackage, TbStack} from 'react-icons/tb';
+import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbListCheck, TbPackage, TbStack} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
 import {GoTasklist} from 'react-icons/go';
@@ -145,7 +145,7 @@ const Navigation = () => {
             <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
             <NavItem
               label={'Mis tareas'}
-              icon={<GoTasklist />}
+              icon={<TbListCheck />}
               path={'/my-tasks'}
               notifications={activityCount?.pending}
             />

@@ -1,4 +1,3 @@
-
 import {Button, Tooltip} from 'antd';
 import './styles.less';
 
@@ -16,12 +15,13 @@ interface IconButtonProps {
 const IconButton = ({title, icon, small, type = 'text', loading, ...props}: IconButtonProps) => {
   const button = (
     <Button
-      {...props}
       size={small ? 'small' : 'middle'}
       type={type}
       loading={loading}
       className={`icon-button-wrapper ${small ? 'small' : ''}`}
-      shape={'circle'}>
+      shape={'circle'}
+      {...props}
+    >
       {loading ? null : icon}
     </Button>
   );

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, Form, Input, Row, Select} from "antd";
+import {Checkbox, Col, DatePicker, Form, Input, Row, Select} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
 
@@ -54,8 +54,8 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
   return (
     <Form form={form} layout="vertical" initialValues={stock} onFinish={submit}>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
-      <Row gutter={15}>
-        <Col md={9} xs={24}>
+      <Row>
+        <Col xs={11}>
           <Form.Item label="Producto" name={'product_uuid'}>
             {product ?
               <div>
@@ -64,8 +64,20 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
               : <ProductSelector/>}
           </Form.Item>
         </Col>
+        <Col xs={13}>
+          <Form.Item label="Nombre de la variación (opcional)" name={'variation_name'}>
+            <Input placeholder={product?.name}/>
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={15}>
+        <Col md={9} xs={24}>
+          <Form.Item label="Fecha de vencimiento" name={'expiration_date'}>
+            <DatePicker style={{width: '100%'}}/>
+          </Form.Item>
+        </Col>
         <Col md={7} xs={12}>
-          <Form.Item label="SKU" name={'sku'}>
+          <Form.Item label="SKU" name={'sku'} rules={[{required:true}]}>
             <Input/>
           </Form.Item>
         </Col>

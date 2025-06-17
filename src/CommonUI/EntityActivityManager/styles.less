@@ -1,20 +1,15 @@
 .activity-wrapper {
+  background: var(--background-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
   .activity-item {
-    cursor: pointer;
-    padding: 10px 0 10px 10px;
-    margin-bottom: 5px;
+    padding: 10px;
     display: flex;
     transition: all 0.2s;
 
-    &:active {
-      transform: scale(0.95);
-    }
-
     &:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    &.alert {
+      background: rgba(0, 0, 0, 0.03);
     }
 
     &:not(:last-child) {
@@ -26,26 +21,25 @@
     }
 
     .message {
+      flex: 1;
       line-height: 18px;
+      small {
+        margin-top: 5px;
+      }
     }
 
     small {
       svg {
         vertical-align: middle;
       }
-
-      display: block;
     }
   }
 
   .message-form-wrapper {
     padding: 5px;
-    margin-bottom: 10px;
-    border-radius: 9px;
     z-index: 1;
-    background: var(--background-color);
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
+    border-bottom: 1px solid var(--border-color);
 
     .drop-message {
       position: absolute;

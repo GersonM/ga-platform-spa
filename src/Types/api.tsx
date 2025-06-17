@@ -60,6 +60,7 @@ export type Profile = {
 
 export type Client = {
   uuid: string;
+  type: string;
   entity?: Profile | Company | any;
   contracts?: Contract[];
 };

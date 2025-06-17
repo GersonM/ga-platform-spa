@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
-import {PiPencilSimple} from 'react-icons/pi';
-import {TbPlus, TbTrash} from 'react-icons/tb';
+import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
+import {TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -103,7 +103,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           <Tag color={i.paid_at ? 'green' : 'red'}>
             {pending_payment > 0 ? (
               <>
-                <MoneyString value={pending_payment} />
+                <MoneyString value={pending_payment}/>
               </>
             ) : (
               'Pagado'
@@ -118,13 +118,13 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
       width: 75,
       render: (uuid: string, row: Invoice) => (
         <Space>
-          <IconButton small icon={<PiPencilSimple size={18} />} onClick={() => setSelectedInvoice(row)} />
+          <IconButton small icon={<PiPencilSimple size={18}/>} onClick={() => setSelectedInvoice(row)}/>
           <Popconfirm
             title={'¿Quiere eliminar esta factura?'}
             onConfirm={() => deleteInvoice(uuid)}
             okText={'Si'}
             cancelText={'No'}>
-            <IconButton small danger icon={<TbTrash size={18} />} />
+            <IconButton small danger icon={<TbTrash size={18}/>}/>
           </Popconfirm>
         </Space>
       ),
@@ -135,10 +135,10 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
     <>
       <div>
         {invoices?.length === 0 ? (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'} />
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'}/>
         ) : (
           <>
-            <TableList loading={loading} columns={columns} dataSource={invoices} />
+            <TableList loading={loading} columns={columns} dataSource={invoices}/>
             <Space>
               <Pagination
                 showSizeChanger={false}
@@ -151,7 +151,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
                   setPageSize(size);
                 }}
               />
-              <IconButton icon={<ArrowPathIcon />} onClick={() => setReload(!reload)} />
+              <IconButton icon={<ArrowPathIcon/>} onClick={() => setReload(!reload)}/>
             </Space>
           </>
         )}
@@ -160,7 +160,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
           ghost
           label={'Agregar factura'}
           onClick={() => setOpenNewInvoice(true)}
-          icon={<TbPlus size={16} />}
+          icon={<PiPlusBold/>}
         />
       </div>
       <Modal open={!!selectedInvoice} destroyOnHidden footer={false} onCancel={() => setSelectedInvoice(undefined)}>
@@ -169,12 +169,12 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
             <div>
               {selectedInvoice?.concept + ' | ' + selectedInvoice?.amount_string}
               <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
-                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment} />
+                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment}/>
               </Tag>
             </div>
-            <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type} />
+            <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
             <Divider>Pagos</Divider>
-            <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)} />
+            <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
           </>
         )}
       </Modal>
@@ -185,7 +185,7 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
         title={'Agregar factura'}
         onCancel={() => setOpenNewInvoice(false)}
         onOk={() => setOpenNewInvoice(true)}>
-        <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type} />
+        <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
       </Modal>
     </>
   );

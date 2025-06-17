@@ -3,11 +3,11 @@ import axios from 'axios';
 import {DatePicker, Dropdown, Empty, Form, Image, Input, type MenuProps, Space, Tag, Tooltip} from 'antd';
 import {AiOutlineAlert} from 'react-icons/ai';
 import {useDropzone} from 'react-dropzone';
-import {GrSend} from 'react-icons/gr';
 import {PiCaretDownBold} from 'react-icons/pi';
 import {IoAttach} from 'react-icons/io5';
 import dayjs, {Dayjs} from 'dayjs';
 import {CalendarDaysIcon, ChatBubbleLeftIcon, PaperClipIcon} from '@heroicons/react/24/outline';
+import {TbPencil, TbSend} from "react-icons/tb";
 
 import ErrorHandler from '../../Utils/ErrorHandler';
 import PrimaryButton from '../PrimaryButton';
@@ -91,18 +91,18 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
     {
       label: 'Mensaje',
       key: 'entry',
-      icon: <ChatBubbleLeftIcon width={20} />,
+      icon: <ChatBubbleLeftIcon width={20}/>,
     },
     {
       label: 'Tarea',
       key: 'schedule',
-      icon: <CalendarDaysIcon width={20} />,
+      icon: <CalendarDaysIcon width={20}/>,
     },
     {
       label: 'Alerta',
       key: 'alert',
       danger: true,
-      icon: <AiOutlineAlert size={20} />,
+      icon: <AiOutlineAlert size={20}/>,
     },
   ];
 
@@ -143,8 +143,8 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
         <Form onFinish={submitMessage}>
           <Dropdown menu={{items, onClick: updateMessageType}} arrow={true}>
             <div className="message-type-icon">
-              <EntityActivityIcon type={messageType} />
-              <PiCaretDownBold />
+              <EntityActivityIcon type={messageType}/>
+              <PiCaretDownBold/>
             </div>
           </Dropdown>
           <Form.Item noStyle>
@@ -157,10 +157,10 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
             />
           </Form.Item>
 
-          <IconButton onClick={open} loading={loading} icon={<PaperClipIcon />} />
+          <IconButton onClick={open} loading={loading} icon={<PaperClipIcon/>}/>
           <PrimaryButton
             disabled={files.length == 0 && !message}
-            icon={<GrSend size={16} />}
+            icon={<TbSend size={16}/>}
             label={'Enviar'}
             htmlType={'submit'}
           />
@@ -187,7 +187,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                 {files.map((f, index) => {
                   return (
                     <Tag
-                      icon={<IoAttach size={14} style={{verticalAlign: 'middle'}} />}
+                      icon={<IoAttach size={14} style={{verticalAlign: 'middle'}}/>}
                       bordered={false}
                       color={'blue'}
                       key={index}
@@ -209,17 +209,17 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
           </div>
         )}
       </div>
-      {activity?.length == 0 && <Empty description={'Aún no hay actividad'} image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+      {activity?.length == 0 && <Empty description={'Aún no hay actividad'} image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
       {activity?.map(a => {
         return (
-          <div key={a.uuid} className={`activity-item ${a.type}`} onClick={() => setSelectedActivityUUID(a.uuid)}>
+          <div key={a.uuid} className={`activity-item ${a.type}`}>
             <div className={'author'}>
-              <EntityActivityIcon type={a.type} size={25} />
-              <br />
+              <EntityActivityIcon type={a.type} size={25}/>
+              <br/>
               {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
             </div>
             <div className={'message'}>
-              <p>{a.comment}</p>
+              <div>{a.comment}</div>
               <small>
                 {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
               </small>
@@ -240,7 +240,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                     ) : (
                       <Tooltip title={at.name}>
                         <a href={at.source} target={'_blank'}>
-                          <FileIcon file={at} size={25} />
+                          <FileIcon file={at} size={25}/>
                         </a>
                       </Tooltip>
                     )}
@@ -248,6 +248,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                 ))}
               </Image.PreviewGroup>
             </div>
+            <IconButton type={'primary'} onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil />}/>
           </div>
         );
       })}

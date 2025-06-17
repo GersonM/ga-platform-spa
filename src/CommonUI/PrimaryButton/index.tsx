@@ -1,7 +1,6 @@
 import {Button} from 'antd';
 import type {ReactNode} from "react";
 import type {SizeType} from 'antd/es/config-provider/SizeContext';
-import './styles.less';
 
 interface PrimaryButtonProps {
   label?: string;
@@ -25,7 +24,6 @@ interface PrimaryButtonProps {
 const PrimaryButton = ({label, size, disabled, children, icon, href, onClick, ...props}: PrimaryButtonProps) => {
   return (
     <Button
-      className={'primary-button'}
       disabled={disabled}
       type="primary"
       icon={icon}

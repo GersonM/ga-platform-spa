@@ -170,40 +170,39 @@ const ProfilesManagement = () => {
             setReload(!reload);
           }}
           title={'Usuarios'}
-          description={`Total ${pagination?.total}`}
+          tools={`${pagination?.total} personas encontradas`}
           onAdd={() => setOpenCreateUser(true)}
-        />
-        <FilterForm>
-          <Form.Item>
-            <Input.Search
-              allowClear
-              placeholder={'Buscar por nombre'}
-              size={'small'}
-              onSearch={value => {
-                setSearch(value);
-                setCurrentPage(1);
-              }}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Select
-              style={{width: '100%'}}
-              allowClear
-              placeholder={'Suscripción'}
-              size={'small'}
-              onChange={value => setFilterSubscription(value)}
-              options={[
-                {label: 'Con alguna subscripción', value: 'any'},
-                {label: 'Con subscripción activa', value: 'active'},
-                {label: 'Con subscripción terminada', value: 'terminated'},
-              ]}
-            />
-          </Form.Item>
-        </FilterForm>
+        >
+          <FilterForm>
+            <Form.Item label={'Buscar'}>
+              <Input.Search
+                allowClear
+                placeholder={'por nombre'}
+                onSearch={value => {
+                  setSearch(value);
+                  setCurrentPage(1);
+                }}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Select
+                allowClear
+                popupMatchSelectWidth={false}
+                placeholder={'Suscripción'}
+                onChange={value => setFilterSubscription(value)}
+                options={[
+                  {label: 'Con alguna subscripción', value: 'any'},
+                  {label: 'Con subscripción activa', value: 'active'},
+                  {label: 'Con subscripción terminada', value: 'terminated'},
+                ]}
+              />
+            </Form.Item>
+          </FilterForm>
+        </ContentHeader>
         <TableList columns={columns} dataSource={profiles} />
         <Pagination
+          align={'center'}
           showSizeChanger={false}
-          size={'small'}
           total={pagination?.total}
           pageSize={pagination?.per_page}
           current={pagination?.current_page}

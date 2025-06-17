@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Form, Input, Modal, Pagination, Space, Tooltip} from 'antd';
-import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
+import {TbContainer, TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import axios from "axios";
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -14,6 +14,8 @@ import ProductGroupsSelector from "../../Components/ProductGroupsSelector";
 import ProductBrandSelector from "../../Components/ProductBrandSelector";
 import ProductManufacturerSelector from "../../Components/ProductManufacturerSelector";
 import ProductStockManager from "../../Components/ProductStockManager";
+import {PiShippingContainer} from "react-icons/pi";
+import WarehouseManager from "../../Components/WarehouseManager";
 
 const WarehouseProductsManager = () => {
   const [loading, setLoading] = useState(false);
@@ -24,9 +26,9 @@ const WarehouseProductsManager = () => {
   const [pageSize, setPageSize] = useState<number>();
   const [openAddProduct, setOpenAddProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StorageProduct>();
-  const [search, setSearch] = useState<string>();
   const [openStockManager, setOpenStockManager] = useState(false);
   const [filters, setFilters] = useState<any>()
+  const [openWarehouseManager, setOpenWarehouseManager] = useState(false);
 
   useEffect(() => {
     console.log('init component');
@@ -52,7 +54,7 @@ const WarehouseProductsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, currentPage, pageSize, search, filters]);
+  }, [reload, currentPage, pageSize, filters]);
 
   const columns = [
     {
@@ -110,6 +112,11 @@ const WarehouseProductsManager = () => {
         title={'Productos'}
         loading={loading}
         onRefresh={() => setReload(!reload)}
+        tools={<Space>
+          <Tooltip title={'Gestionar almacenes'}>
+            <IconButton icon={<PiShippingContainer />} onClick={() => setOpenWarehouseManager(true)} />
+          </Tooltip>
+        </Space>}
         onAdd={() => setOpenAddProduct(true)}/>
       <FilterForm
         onInitialValues={values => {
@@ -162,6 +169,12 @@ const WarehouseProductsManager = () => {
         setSelectedProduct(undefined);
       }}>
         {selectedProduct && <ProductStockManager product={selectedProduct}/>}
+      </Modal>
+      <Modal width={700} destroyOnHidden open={openWarehouseManager} footer={null} onCancel={() => {
+        setOpenWarehouseManager(false);
+        setSelectedProduct(undefined);
+      }}>
+        <WarehouseManager />
       </Modal>
     </ModuleContent>
   );
