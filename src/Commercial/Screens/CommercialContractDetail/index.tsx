@@ -111,17 +111,18 @@ const CommercialContractDetail = () => {
       )
     },
     {key: '2', span: 3, label: 'Monto', children: <MoneyString value={contract?.amount}/>},
+    {key: 'product', span: 3, label: 'Producto', children: contract?.contractable.sku},
     {
       key: '3',
       span: 3,
       label: 'Fecha de firma',
-      children: contract?.signed_at ? dayjs(contract?.signed_at).format('DD/MM/YYYY HH:mm:ss') : 'Sin firma de contrato'
+      children: contract?.signed_at ? dayjs(contract?.signed_at).format('DD/MM/YYYY HH:mm a') : 'Sin firma de contrato'
     },
     {
       key: '4',
       span: 3,
       label: 'Fecha de inicio',
-      children: dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm:ss')
+      children: dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm a')
     },
     {key: '5', span: 3, label: 'Observaciones', children: contract?.observations},
     {

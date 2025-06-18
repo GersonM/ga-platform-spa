@@ -48,7 +48,8 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
         setDarkMode(colorScheme === 'dark');
       });
       return () => {
-        window.removeEventListener('change', function () {});
+        window.removeEventListener('change', function () {
+        });
       };
     }
   }, [preferredMode]);

@@ -1,18 +1,18 @@
-
+import type {ReactNode} from "react";
 import {NavLink} from 'react-router-dom';
 import {Dropdown} from 'antd';
 import type {MenuProps} from 'antd';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 
-import './styles.less';
 import IconButton from '../IconButton';
+import './styles.less';
 
 interface NavItemProps {
-  name: string | React.ReactNode;
+  name: string | ReactNode;
   caption?: string;
   path: string;
   image?: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   height?: number;
   onClick?: () => void;
   menuItems?: MenuProps;
@@ -23,10 +23,10 @@ const NavListItem = ({image, name, caption, icon, onClick, path, menuItems, heig
     <li className={'nav-list-item'}>
       <NavLink to={path} onClick={onClick} style={{height}}>
         {image ? <img className={'avatar'} src={image} alt="Imae" /> : icon && <span className={'icon'}>{icon}</span>}
-        <span className="label">
+        <div className="label">
           {name}
           {caption && <span className={'caption'}>{caption}</span>}
-        </span>
+        </div>
       </NavLink>
       {menuItems && (
         <Dropdown trigger={['click']} menu={menuItems} arrow={true}>
@@ -38,7 +38,7 @@ const NavListItem = ({image, name, caption, icon, onClick, path, menuItems, heig
 };
 
 interface NavListProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const NavList = ({children}: NavListProps) => {

@@ -6,6 +6,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import {useForm} from 'antd/lib/form/Form';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import MoneyInput from "../../../CommonUI/MoneyInput";
 
 interface InvoiceItemFormProps {
   invoiceItem?: InvoiceItem;
@@ -13,6 +14,8 @@ interface InvoiceItemFormProps {
   onCompleted?: () => void;
   invoiceOwnerUuid?: string;
   invoiceOwnerType?: string;
+  invoiceableUuid?: string;
+  invoiceableType?: string;
 }
 
 const InvoiceItemForm = ({
@@ -21,6 +24,8 @@ const InvoiceItemForm = ({
   onCompleted,
   invoiceOwnerUuid,
   invoiceOwnerType,
+  invoiceableUuid,
+  invoiceableType,
 }: InvoiceItemFormProps) => {
   const [loading, setLoading] = useState(false);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
@@ -37,6 +42,8 @@ const InvoiceItemForm = ({
           invoice_uuid: invoiceUuid,
           invoice_owner_uuid: invoiceOwnerUuid,
           invoice_owner_type: invoiceOwnerType,
+          invoiceable_uuid:invoiceableUuid,
+          invoiceable_type:invoiceableType,
         },
       })
       .then(() => {
@@ -65,7 +72,7 @@ const InvoiceItemForm = ({
         </Col>
         <Col sm={7}>
           <Form.Item name={'amount'} label={'Monto'}>
-            <Input addonBefore={'S/'} placeholder={'0'} />
+            <MoneyInput />
           </Form.Item>
         </Col>
         <Col sm={6}>

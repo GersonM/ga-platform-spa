@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import './styles.less';
-import {Avatar, Button, Divider, List, Modal, Tag} from "antd";
+import {Avatar, Button, Col, Divider, List, Modal, Row, Tag} from "antd";
 import FileUploader from "../../../FileManagement/Components/FileUploader";
-import {TbCheck, TbCircleCheck, TbCircleCheckFilled, TbClockFilled, TbPrinter} from "react-icons/tb";
+import {TbCheck, TbCircleCheck, TbCircleCheckFilled, TbClockFilled, TbFileExport, TbPrinter} from "react-icons/tb";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -140,10 +140,20 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
 
   return (
     <div>
-      <PrimaryButton
-        block
-        icon={<TbPrinter />}
-        label={'Imprimir documentos'} onClick={generateDocuments}/>
+      <Row gutter={20}>
+        <Col xs={12}>
+          <PrimaryButton
+            block
+            icon={<TbPrinter />}
+            label={'Imprimir documentos'} onClick={generateDocuments}/>
+        </Col>
+        <Col xs={12}>
+          <PrimaryButton
+            block
+            icon={<TbFileExport />}
+            label={'Exportar documentos'} onClick={generateDocuments}/>
+        </Col>
+      </Row>
       <Divider>Área legal</Divider>
       <List
         dataSource={list}

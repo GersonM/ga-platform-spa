@@ -15,10 +15,19 @@ interface InvoiceTableDetailsProps {
   invoice?: Invoice;
   invoiceOwnerUuid: string;
   invoiceOwnerType: string;
+  invoiceableUuid?: string;
+  invoiceableType?: string;
   onChange?: () => void;
 }
 
-const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerType}: InvoiceTableDetailsProps) => {
+const InvoiceTableDetails = ({
+                               invoice,
+                               onChange,
+                               invoiceableType,
+                               invoiceableUuid,
+                               invoiceOwnerUuid,
+                               invoiceOwnerType
+                             }: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
 
   const removeConcept = (uuid: string) => {
@@ -44,7 +53,7 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
       title: 'Monto',
       dataIndex: 'amount',
       width: 110,
-      render: (value: number) => <MoneyString value={value} />,
+      render: (value: number) => <MoneyString value={value}/>,
     },
     {
       title: 'Cantidad',
@@ -58,9 +67,9 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
       render: (uuid: string) => {
         return (
           <Space>
-            <IconButton icon={<PiPencilSimple size={18} />} small />
+            <IconButton icon={<PiPencilSimple size={18}/>} small/>
             <Popconfirm title={'¿Quieres eliminar este item?'} onConfirm={() => removeConcept(uuid)}>
-              <IconButton icon={<PiTrash size={18} />} small danger />
+              <IconButton icon={<PiTrash size={18}/>} small danger/>
             </Popconfirm>
           </Space>
         );
@@ -69,10 +78,10 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
   ];
   return (
     <div>
-      <TableList small columns={columns} dataSource={invoice?.items} pagination={false} />
+      <TableList small columns={columns} dataSource={invoice?.items} pagination={false}/>
       <PrimaryButton
         size={'small'}
-        icon={<PiPlus size={16} />}
+        icon={<PiPlus size={16}/>}
         style={{marginTop: '10px'}}
         label={'Agregar item'}
         ghost
@@ -82,8 +91,8 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
       <Row gutter={[20, 20]}>
         <Col>
           <div>
-            Total: <MoneyString value={invoice?.amount} /> <br />
-            Saldo: <MoneyString value={invoice?.pending_payment} />
+            Total: <MoneyString value={invoice?.amount}/> <br/>
+            Saldo: <MoneyString value={invoice?.pending_payment}/>
           </div>
         </Col>
         <Col></Col>
@@ -97,11 +106,15 @@ const InvoiceTableDetails = ({invoice, onChange, invoiceOwnerUuid, invoiceOwnerT
         <InvoiceItemForm
           onCompleted={() => {
             setOpenInvoiceItemForm(false);
-            onChange && onChange();
+            if (onChange) {
+              onChange();
+            }
           }}
           invoiceUuid={invoice?.uuid}
           invoiceOwnerUuid={invoiceOwnerUuid}
           invoiceOwnerType={invoiceOwnerType}
+          invoiceableUuid={invoiceableUuid}
+          invoiceableType={invoiceableType}
         />
       </Modal>
     </div>

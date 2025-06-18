@@ -55,6 +55,7 @@ export type Profile = {
   created_at?: string;
   login_method?: string;
   user?: User;
+  active_subscriptions?: Subscription[];
   avatar?: ApiFile;
 };
 

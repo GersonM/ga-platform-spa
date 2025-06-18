@@ -9,7 +9,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FilterForm from '../../../CommonUI/FilterForm';
 import SearchProfile from '../../../CommonUI/SearchProfile';
-import type {ResponsePagination} from '../../../Types/api';
+import type {Profile, ResponsePagination} from '../../../Types/api';
 
 const AttendanceManagement = () => {
   const [attendance, setAttendance] = useState([]);
@@ -54,21 +54,35 @@ const AttendanceManagement = () => {
     {
       title: 'Acción',
       dataIndex: 'action',
-      width: 60,
+      width: 65,
       fixed: 'left',
       align: 'center',
       render: (action: any) => {
-        return action == 'enter' ? <PiSignIn size={22} color={'#009800'} /> : <PiSignOut size={22} color={'#ff0000'} />;
+        return action == 'enter' ? <PiSignIn size={22} color={'#009800'}/> : <PiSignOut size={22} color={'#ff0000'}/>;
       },
     },
     {
       title: 'Fecha',
+      width: 190,
       dataIndex: 'created_at',
       render: (date: any) => {
         return (
           <>
-            {dayjs(date).fromNow()} <br />
+            {dayjs(date).fromNow()} <br/>
             <small>{dayjs(date).format('DD [de] MMMM [del] YYYY hh:mm a')}</small>
+          </>
+        );
+      },
+    },
+    {
+      title: '¿Es socio?',
+      width: 90,
+      align: 'center',
+      dataIndex: 'profile',
+      render: (profile: Profile) => {
+        return (
+          <>
+            {profile.active_subscriptions && profile.active_subscriptions?.length > 0 ? 'Si' : ''}
           </>
         );
       },
@@ -76,9 +90,8 @@ const AttendanceManagement = () => {
     {
       title: 'Nombre',
       dataIndex: 'profile',
-      width: 240,
       render: (area: any) => {
-        return <ProfileChip profile={area} />;
+        return <ProfileChip profile={area}/>;
       },
     },
     {
@@ -86,7 +99,7 @@ const AttendanceManagement = () => {
       width: 240,
       dataIndex: 'authorized_by',
       render: (area: any) => {
-        return <ProfileChip profile={area} />;
+        return <ProfileChip profile={area}/>;
       },
     },
     {
@@ -99,7 +112,11 @@ const AttendanceManagement = () => {
   ];
   return (
     <ModuleContent>
-      <ContentHeader title={'Asistencia'} onRefresh={() => setReload(!reload)} loading={loading} />
+      <ContentHeader
+        title={'Asistencia'}
+        onRefresh={() => setReload(!reload)}
+        tools={pagination?.total + ' registros'}
+        loading={loading}/>
       <FilterForm
         onSubmit={values => {
           if (values) {
@@ -107,10 +124,10 @@ const AttendanceManagement = () => {
           }
         }}>
         <Form.Item name={'date'} label={'Fecha'}>
-          <DatePicker />
+          <DatePicker/>
         </Form.Item>
         <Form.Item name={'profile_uuid'} label={'Persona'}>
-          <SearchProfile />
+          <SearchProfile/>
         </Form.Item>
         <Form.Item name={'action'} label={'Acción'}>
           <Select
