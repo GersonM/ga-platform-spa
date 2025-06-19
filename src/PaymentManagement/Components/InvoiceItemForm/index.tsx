@@ -7,6 +7,8 @@ import {useForm} from 'antd/lib/form/Form';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyInput from "../../../CommonUI/MoneyInput";
+import type {Dayjs} from "dayjs";
+import Config from "../../../Config.tsx";
 
 interface InvoiceItemFormProps {
   invoiceItem?: InvoiceItem;
@@ -16,6 +18,7 @@ interface InvoiceItemFormProps {
   invoiceOwnerType?: string;
   invoiceableUuid?: string;
   invoiceableType?: string;
+  expiresOn?: Dayjs;
 }
 
 const InvoiceItemForm = ({
@@ -26,6 +29,7 @@ const InvoiceItemForm = ({
   invoiceOwnerType,
   invoiceableUuid,
   invoiceableType,
+  expiresOn,
 }: InvoiceItemFormProps) => {
   const [loading, setLoading] = useState(false);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
@@ -40,8 +44,9 @@ const InvoiceItemForm = ({
         data: {
           ...values,
           invoice_uuid: invoiceUuid,
-          invoice_owner_uuid: invoiceOwnerUuid,
-          invoice_owner_type: invoiceOwnerType,
+          expires_on: expiresOn?.format(Config.dateFormatServer),
+          invoice_customer_uuid: invoiceOwnerUuid,
+          invoice_customer_type: invoiceOwnerType,
           invoiceable_uuid:invoiceableUuid,
           invoiceable_type:invoiceableType,
         },

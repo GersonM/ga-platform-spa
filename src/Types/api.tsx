@@ -30,7 +30,7 @@ export type SettingValue = {
 };
 
 export type Company = {
-  uuid: number;
+  uuid: string;
   name: string;
   legal_name: string;
   legal_uid: string;

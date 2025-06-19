@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag} from 'antd';
+import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag, Tooltip} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
 import {TbTrash} from 'react-icons/tb';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
-import type {Invoice, ResponsePagination} from '../../../Types/api';
+import type {Company, Invoice, Profile, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -18,9 +18,10 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 interface InvoicesProps {
   entityUuid: string;
   type: string;
+  customer?: Profile | Company;
 }
 
-const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
+const InvoicesTable = ({entityUuid, type, customer}: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -94,9 +95,11 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
         }
         if (i.expires_on) {
           return (
-            <Tag color={dayjs(i.expires_on).isAfter(new Date()) ? 'yellow' : 'red'}>
-              {dayjs(i.expires_on).fromNow()}
+            <Tooltip title={'Vence: ' + dayjs(i.expires_on).format('DD/MM/YYYY')}>
+            <Tag color={dayjs(i.expires_on).isAfter(new Date()) ? 'orange' : 'red'}>
+              Vence {dayjs(i.expires_on).fromNow()}
             </Tag>
+            </Tooltip>
           );
         }
         return (
@@ -155,23 +158,22 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
             </Space>
           </>
         )}
-        <PrimaryButton
-          size={'small'}
-          ghost
-          label={'Agregar factura'}
-          onClick={() => setOpenNewInvoice(true)}
-          icon={<PiPlusBold/>}
-        />
+        {customer &&
+          <PrimaryButton
+            size={'small'}
+            ghost
+            label={'Agregar factura'}
+            onClick={() => setOpenNewInvoice(true)}
+            icon={<PiPlusBold/>}
+          />
+        }
       </div>
       <Modal open={!!selectedInvoice} destroyOnHidden footer={false} onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
           <>
-            <div>
-              {selectedInvoice?.concept + ' | ' + selectedInvoice?.amount_string}
-              <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
-                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment}/>
-              </Tag>
-            </div>
+            <h3>
+              {selectedInvoice?.concept}
+            </h3>
             <InvoiceTableDetails onChange={() => {
               setReload(!reload);
             }} invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
@@ -185,9 +187,19 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
         destroyOnHidden
         footer={false}
         title={'Agregar factura'}
-        onCancel={() => setOpenNewInvoice(false)}
-        onOk={() => setOpenNewInvoice(true)}>
-        <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
+        onCancel={() => setOpenNewInvoice(false)}>
+        {customer &&
+          <InvoiceTableDetails
+            invoiceableUuid={entityUuid}
+            invoiceableType={type}
+            onChange={() => {
+              setOpenNewInvoice(false);
+              setReload(!reload);
+            }}
+            invoiceOwnerUuid={customer?.uuid}
+            invoiceOwnerType={'profile'}
+          />
+        }
       </Modal>
     </>
   );

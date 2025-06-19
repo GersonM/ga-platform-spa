@@ -1,5 +1,16 @@
 import {useState} from 'react';
-import {Col, Modal, Popconfirm, Row, Space} from 'antd';
+import {
+  Col,
+  DatePicker,
+  Descriptions,
+  type DescriptionsProps,
+  Divider,
+  Form,
+  Modal,
+  Popconfirm,
+  Row,
+  Space, Tag
+} from 'antd';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
@@ -10,6 +21,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import InvoiceItemForm from '../InvoiceItemForm';
 import {PiPencilSimple, PiPlus, PiTrash} from 'react-icons/pi';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import dayjs, {type Dayjs} from "dayjs";
 
 interface InvoiceTableDetailsProps {
   invoice?: Invoice;
@@ -30,6 +42,7 @@ const InvoiceTableDetails = ({
                              }: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
+  const [expirationDate, setExpirationDate] = useState<Dayjs>();
 
   const removeConcept = (uuid: string) => {
     console.log(uuid);
@@ -80,8 +93,22 @@ const InvoiceTableDetails = ({
       },
     },
   ];
+
+  const invoicesItems: DescriptionsProps['items'] = [
+    {key: '1', label: 'Vencimiento', children: <DatePicker onChange={(d) => setExpirationDate(d)} value={expirationDate} defaultValue={dayjs(invoice?.expires_on)}/>},
+    {key: 'total', label: 'Total', children: <MoneyString value={invoice?.amount}/>},
+    {
+      key: 'pending', label: 'Pendiente', children: <>
+        {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
+          <Tag color={'orange'}><MoneyString value={invoice?.pending_payment}/></Tag> :
+          <Tag color={'green'}>Pagado</Tag>
+        )}
+      </>
+    },
+  ];
   return (
     <div>
+      <Descriptions layout={"vertical"} size={"small"} items={invoicesItems}/>
       <TableList small columns={columns} dataSource={invoice?.items} pagination={false}/>
       <PrimaryButton
         size={'small'}
@@ -92,16 +119,6 @@ const InvoiceTableDetails = ({
         block
         onClick={() => setOpenInvoiceItemForm(true)}
       />
-      <Row gutter={[20, 20]}>
-        <Col>
-          <div>
-            Total: <MoneyString value={invoice?.amount}/> <br/>
-            Saldo: <MoneyString value={invoice?.pending_payment}/>
-          </div>
-        </Col>
-        <Col></Col>
-      </Row>
-
       <Modal
         open={openInvoiceItemForm}
         destroyOnHidden
@@ -119,6 +136,7 @@ const InvoiceTableDetails = ({
               onChange();
             }
           }}
+          expiresOn={expirationDate}
           invoiceItem={selectedItem}
           invoiceUuid={invoice?.uuid}
           invoiceOwnerUuid={invoiceOwnerUuid}

@@ -196,7 +196,7 @@ const CommercialContractDetail = () => {
                 key: 'finances',
                 label: 'Finanzas',
                 children: <>
-                  {contract && <InvoicesTable entityUuid={contract?.uuid} type={'contract'}/>}
+                  {contract && <InvoicesTable customer={contract.client?.entity} entityUuid={contract?.uuid} type={'contract'}/>}
                 </>
               },
               {

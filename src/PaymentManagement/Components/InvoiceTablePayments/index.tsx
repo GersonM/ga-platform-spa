@@ -46,7 +46,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       render: (value: number) => <MoneyString value={value} />,
     },
     {
-      title: 'Comprobante',
+      title: 'N° Voucher',
       dataIndex: 'voucher_code',
       width: 110,
     },
