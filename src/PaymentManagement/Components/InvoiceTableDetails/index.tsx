@@ -3,7 +3,7 @@ import {Col, Modal, Popconfirm, Row, Space} from 'antd';
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import type {Invoice} from '../../../Types/api';
+import type {Invoice, InvoiceItem} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -29,6 +29,7 @@ const InvoiceTableDetails = ({
                                invoiceOwnerType
                              }: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
 
   const removeConcept = (uuid: string) => {
     console.log(uuid);
@@ -64,10 +65,13 @@ const InvoiceTableDetails = ({
       title: '',
       dataIndex: 'uuid',
       width: 50,
-      render: (uuid: string) => {
+      render: (uuid: string, item: InvoiceItem) => {
         return (
           <Space>
-            <IconButton icon={<PiPencilSimple size={18}/>} small/>
+            <IconButton icon={<PiPencilSimple size={18}/>} small onClick={() => {
+              setOpenInvoiceItemForm(true);
+              setSelectedItem(item);
+            }}/>
             <Popconfirm title={'¿Quieres eliminar este item?'} onConfirm={() => removeConcept(uuid)}>
               <IconButton icon={<PiTrash size={18}/>} small danger/>
             </Popconfirm>
@@ -100,16 +104,22 @@ const InvoiceTableDetails = ({
 
       <Modal
         open={openInvoiceItemForm}
+        destroyOnHidden
         footer={null}
         title={'Agregar item'}
-        onCancel={() => setOpenInvoiceItemForm(false)}>
+        onCancel={() => {
+          setOpenInvoiceItemForm(false);
+          setSelectedItem(undefined);
+        }}>
         <InvoiceItemForm
           onCompleted={() => {
+            setSelectedItem(undefined);
             setOpenInvoiceItemForm(false);
             if (onChange) {
               onChange();
             }
           }}
+          invoiceItem={selectedItem}
           invoiceUuid={invoice?.uuid}
           invoiceOwnerUuid={invoiceOwnerUuid}
           invoiceOwnerType={invoiceOwnerType}

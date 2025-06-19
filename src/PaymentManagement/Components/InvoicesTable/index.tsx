@@ -172,7 +172,9 @@ const InvoicesTable = ({entityUuid, type}: InvoicesProps) => {
                 Pago pendiente: <MoneyString value={selectedInvoice.pending_payment}/>
               </Tag>
             </div>
-            <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
+            <InvoiceTableDetails onChange={() => {
+              setReload(!reload);
+            }} invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
             <Divider>Pagos</Divider>
             <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
           </>

@@ -152,7 +152,8 @@ const AttendanceManagement = () => {
       />
       {pagination && (
         <Pagination
-          size="small"
+          style={{marginTop:10}}
+          align={'center'}
           onChange={(page, size) => {
             setCurrentPage(page);
             setPageSize(size);
