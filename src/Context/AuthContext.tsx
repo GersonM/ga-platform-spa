@@ -126,7 +126,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
                 backgroundColor: 'rgba(255,255,255,0.6)',
                 borderRadius: '5px',
               }}>
-              <li>Nuevo motor de carga de archivos, permite cambiar de pantalla sin perder el progreso de carga</li>
+              <li>Corrección de error al agregar un invoice para un cliente</li>
             </ul>
           ),
           duration: 0,
