@@ -11,6 +11,7 @@ import SubscriptionPlanSelector from '../SubscriptionPlanSelector';
 import dayjs from 'dayjs';
 import {useForm} from 'antd/lib/form/Form';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
+import MoneyInput from "../../../CommonUI/MoneyInput";
 
 interface SubscriptionFormProps {
   onComplete?: () => void;
@@ -33,7 +34,6 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         ...subscription,
         fk_profile_uuid: subscription.members.find(m => m.relation_type == 'SOCIO')?.profile.uuid,
         fk_plan_uuid: subscription.plan.uuid,
-        amount: subscription.amount != null ? subscription.amount / 100 : null,
         started_at: dayjs(subscription.started_at),
       });
       setSelectedPlan(subscription.plan);
@@ -48,7 +48,9 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
         data: values,
       })
       .then(_res => {
-        onComplete && onComplete();
+        if (onComplete) {
+          onComplete();
+        }
       })
       .catch(err => {
         ErrorHandler.showNotification(err);
@@ -89,7 +91,7 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
           />
         </Form.Item>
         <Form.Item name={'amount'} label={'Precio'}>
-          <InputNumber prefix={'S/'} placeholder={selectedPlan ? (selectedPlan?.price / 100).toString() : ''} />
+          <MoneyInput placeholder={selectedPlan ? (selectedPlan?.price / 100).toString() : ''} />
         </Form.Item>
         <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
           <Input.TextArea />
