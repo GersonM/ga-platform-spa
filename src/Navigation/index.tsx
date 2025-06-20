@@ -216,6 +216,7 @@ const Navigation = () => {
             )}
             {config?.modules.includes('club') && (
               <NavItem label={'Club'} icon={<PiUsers />}>
+                <NavItem label={'Dashboard'} icon={<PiPresentationChart />} path={'/club/dashboard'} />
                 <NavItem label={'Asistencia'} icon={<PiUsersThree />} path={'/club/attendance'} />
                 <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
                 <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />

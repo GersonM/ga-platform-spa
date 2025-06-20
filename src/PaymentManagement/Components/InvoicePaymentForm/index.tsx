@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Col, Form, Input, InputNumber, Row} from 'antd';
+import {Col, Form, Input, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCheck} from 'react-icons/pi';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import type {Invoice, InvoicePayment} from '../../../Types/api';
 import FileUploader from '../../../CommonUI/FileUploader';
 import MoneyString from '../../../CommonUI/MoneyString';
+import MoneyInput from "../../../CommonUI/MoneyInput";
 
 interface InvoicePaymentProps {
   onCompleted: () => void;
@@ -56,14 +57,14 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       </p>
       <Form
         form={form}
-        initialValues={{amount: invoice.pending_payment ? invoice.pending_payment / 100 : null}}
+        initialValues={{amount: invoice.pending_payment}}
         requiredMark={false}
         layout={'vertical'}
         onFinish={submitForm}>
         <Row gutter={[15, 15]}>
           <Col span={7}>
             <Form.Item name={'amount'} label={'Monto'} rules={[{required: true}]}>
-              <InputNumber style={{width: '100%'}} prefix={'S/'} />
+              <MoneyInput />
             </Form.Item>
           </Col>
           <Col span={17}>

@@ -9,6 +9,7 @@ import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import GuestLayout from './GuestLayout';
 
+const ClubDashboard = lazy(() => import('../ClubManagement/Screens/ClubDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
 const DashboardHome = lazy(() => import('../Dashboard/Screens/DashboardHome'));
 const CommercialClients = lazy(() => import('../Commercial/Screens/CommercialClients'));
@@ -158,6 +159,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'club'}>
+          <Route path={'dashboard'} element={<ClubDashboard />} />
           <Route path={'attendance'} element={<AttendanceManager />} />
           <Route path={'access-control'} element={<MembersAccessControl />} />
           <Route path={'subscriptions'} element={<ClubMembersManagement />} />
