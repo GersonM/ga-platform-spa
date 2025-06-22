@@ -9,7 +9,7 @@ import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import GuestLayout from './GuestLayout';
 
-const ClubDashboard = lazy(() => import('../ClubManagement/Screens/ClubDashboard'));
+const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
 const DashboardHome = lazy(() => import('../Dashboard/Screens/DashboardHome'));
 const CommercialClients = lazy(() => import('../Commercial/Screens/CommercialClients'));
@@ -159,12 +159,14 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'club'}>
-          <Route path={'dashboard'} element={<ClubDashboard />} />
-          <Route path={'attendance'} element={<AttendanceManager />} />
-          <Route path={'access-control'} element={<MembersAccessControl />} />
           <Route path={'subscriptions'} element={<ClubMembersManagement />} />
           <Route path={'subscriptions/:subscription'} element={<ClubSubscriptionViewer />} />
           <Route path={'payments-import'} element={<ImportPayments />} />
+        </Route>
+        <Route path={'attendance'}>
+          <Route path={'dashboard'} element={<AttendanceDashboard />} />
+          <Route path={'management'} element={<AttendanceManager />} />
+          <Route path={'access-control'} element={<MembersAccessControl />} />
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard />} />

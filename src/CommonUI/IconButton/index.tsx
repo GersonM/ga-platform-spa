@@ -1,8 +1,9 @@
 import {Button, Tooltip} from 'antd';
+import type {ReactNode} from "react";
 import './styles.less';
 
 interface IconButtonProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   danger?: boolean;
   loading?: boolean;
   small?: boolean;

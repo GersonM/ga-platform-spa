@@ -136,23 +136,23 @@ const ProfilesManagement = () => {
         return (
           <Space wrap>
             <Tooltip title={'Editar'}>
-              <IconButton icon={<TbPencil size={20} />} onClick={() => navigate(`/profiles/${uuid}`)} />
+              <IconButton icon={<TbPencil />} onClick={() => navigate(`/profiles/${uuid}`)} />
             </Tooltip>
             <Tooltip title={'Cambiar contraseña'}>
-              <IconButton icon={<TbLockCog size={20} />} />
+              <IconButton icon={<TbLockCog />} />
             </Tooltip>
             <Tooltip title={'Editar roles'}>
-              <IconButton icon={<TbUserShield size={20} />} />
+              <IconButton icon={<TbUserShield />} />
             </Tooltip>
             <Tooltip title={'Bloquear usuario'}>
-              <IconButton icon={<TbUserOff size={20} />} danger />
+              <IconButton icon={<TbUserOff />} danger />
             </Tooltip>
             <Tooltip title={'Eliminar usuario'}>
               <Popconfirm
                 title={'¿Quieres eliminar este usuario?'}
                 description={'Toda la información relacionada será eliminada también'}
                 onConfirm={() => setReload(!reload)}>
-                <IconButton icon={<TbTrash size={20} />} danger />
+                <IconButton icon={<TbTrash />} danger />
               </Popconfirm>
             </Tooltip>
           </Space>

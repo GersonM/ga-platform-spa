@@ -50,10 +50,8 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
 
   useEffect(() => {
     setSelectedFiles([]);
-  }, [containerUuid]);
-
-  useEffect(() => {
     setSearchValue(undefined);
+    setContainerContent(undefined);
   }, [containerUuid]);
 
   useEffect(() => {
@@ -95,7 +93,6 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
       'https://' + import.meta.env.VITE_WEB + '/' + tenant + `/storage/file-management/files/${file.uuid}/download`;
     const element = document.getElementById('my_iframe');
     if (element) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       element.src = link;
     }
@@ -125,6 +122,10 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
         ErrorHandler.showNotification(error);
       });
   };
+
+  if(!containerContent) {
+    return <LoadingIndicator  visible={true} message={'Listando contenido...'} />;
+  }
 
   return (
     <div {...getRootProps()} className={'content-viewer-wrapper'}>

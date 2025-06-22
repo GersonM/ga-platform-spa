@@ -1,12 +1,12 @@
-
 import {PiFile} from 'react-icons/pi';
+import type {ReactNode} from "react";
 
 interface IconItemProps {
   size?: number;
   name: string;
   caption?: string;
   selected?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   image?: string;
   onClick?: (selected: boolean, evt: any) => void;
   onDoubleClick?: () => void;

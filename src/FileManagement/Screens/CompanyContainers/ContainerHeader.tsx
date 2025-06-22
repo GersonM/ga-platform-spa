@@ -1,14 +1,12 @@
 import {useEffect, useState} from 'react';
 import {Button, Input, Popover, Segmented, Select, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
-import {CloudArrowUpIcon} from '@heroicons/react/24/solid';
-import {PiArrowUp, PiFolderSimplePlus, PiMagnifyingGlass} from 'react-icons/pi';
-import {InformationCircleIcon} from '@heroicons/react/24/outline';
+import {TbFolderPlus} from "react-icons/tb";
+import {PiInfo, PiMagnifyingGlass, PiUpload} from 'react-icons/pi';
 
 import ContainerForm from '../../Components/ContainerForm';
 import type {Container} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface ContainerHeaderProps {
   container: Container;
@@ -73,19 +71,17 @@ const ContainerHeader = ({
       tools={
         <>
           {allowUpload && (
-            <PrimaryButton onClick={onOpenUpload} icon={<CloudArrowUpIcon/>}>
+            <Button type={'text'} onClick={onOpenUpload} icon={<PiUpload size={20}/>}>
               Cargar archivos
-            </PrimaryButton>
+            </Button>
           )}
           <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
             <Button
-              type={informationEnabled ? 'primary' : 'default'}
+              type={"primary"}
+              ghost={!informationEnabled}
               onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<InformationCircleIcon/>}
+              icon={<PiInfo size={22}/>}
             />
-          </Tooltip>
-          <Tooltip title={'Subir un nivel'}>
-            <Button type={'text'} onClick={upLevel} icon={<PiArrowUp size={18}/>}/>
           </Tooltip>
           <Tooltip title={'Buscar'}>
             <Popover
@@ -111,7 +107,7 @@ const ContainerHeader = ({
               placement={'bottomRight'}
               content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange}/>}
               trigger={'click'}>
-              <Button type={'text'} icon={<PiFolderSimplePlus size={18}/>}/>
+              <Button type={'text'} icon={<TbFolderPlus size={20}/>}/>
             </Popover>
           </Tooltip>
           <Select

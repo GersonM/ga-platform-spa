@@ -92,8 +92,10 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
       .delete(`hr-management/profiles/${profile?.uuid}`)
       .then(response => {
         if (response) {
-          navigate('/accounts');
-          onCompleted && onCompleted();
+          navigate('/profiles');
+          if (onCompleted) {
+            onCompleted();
+          }
           setLoading(false);
         }
       })

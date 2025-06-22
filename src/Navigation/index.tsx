@@ -42,7 +42,6 @@ import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@he
 import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbListCheck, TbPackage, TbStack} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
-import {GoTasklist} from 'react-icons/go';
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 import Cookies from 'js-cookie';
 
@@ -152,6 +151,13 @@ const Navigation = () => {
             {config?.modules.includes('files') && (
               <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
             )}
+            {config?.modules.includes('attendance') && (
+              <NavItem label={'Asistencia'} icon={<PiClockUser />}>
+                <NavItem label={'Reportes'} icon={<PiPresentationChart />} path={'/attendance/dashboard'} />
+                <NavItem label={'Asistencia'} icon={<PiUsersThree />} path={'/attendance/management'} />
+                <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/attendance/access-control'} />
+              </NavItem>
+            )}
             {config?.modules.includes('real-estate') && (
               <NavItem label={'Constructora'} icon={<PiBulldozerLight />}>
                 <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/real-estate/dashboard'} />
@@ -216,9 +222,6 @@ const Navigation = () => {
             )}
             {config?.modules.includes('club') && (
               <NavItem label={'Club'} icon={<PiUsers />}>
-                <NavItem label={'Dashboard'} icon={<PiPresentationChart />} path={'/club/dashboard'} />
-                <NavItem label={'Asistencia'} icon={<PiUsersThree />} path={'/club/attendance'} />
-                <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/club/access-control'} />
                 <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
                 <NavItem label={'Importar pagos'} icon={<PiMoney />} path={'/club/payments-import'} />
               </NavItem>
@@ -232,10 +235,6 @@ const Navigation = () => {
                 <NavItem label={'Estudiantes'} icon={<PiStudent />} path={'/lms/students'} />
                 <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
               </NavItem>
-            )}
-
-            {config?.modules.includes('attendance') && (
-              <NavItem label={'Asistencia'} icon={<PiClockUser />} path={'/attendance'} />
             )}
             {config?.modules.includes('inbox') && (
               <NavItem label={'E-mail'} icon={<PiMailboxDuotone />} path={'/inbox-management'} />

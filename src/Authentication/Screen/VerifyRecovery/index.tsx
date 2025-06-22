@@ -29,7 +29,7 @@ const VerifyRecovery = () => {
         Cookies.remove('recovery_token');
         Cookies.set('session_token', data.token);
         axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
-        document.location.href = '/accounts';
+        document.location.href = '/my-account';
       })
       .catch(error => {
         ErrorHandler.showNotification(error);

@@ -75,7 +75,9 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
       .post(`file-management/files/${files[0]?.uuid}/generate-thumbnail`)
       .then(() => {
         setReload(!reload);
-        onChange && onChange();
+        if (onChange) {
+          onChange();
+        }
       })
       .catch(error => {
         ErrorHandler.showNotification(error);

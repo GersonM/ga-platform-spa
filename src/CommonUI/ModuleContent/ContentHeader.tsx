@@ -1,10 +1,14 @@
 import {type ReactNode, useEffect} from 'react';
 import {Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
-import {PlusIcon, ArrowPathIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
 import {PiPencilSimple} from 'react-icons/pi';
 
 import IconButton from '../IconButton';
+import {
+  TbArrowLeft,
+  TbPlus,
+  TbRefresh
+} from "react-icons/tb";
 
 interface ContentHeaderProps {
   title?: string | ReactNode;
@@ -83,33 +87,29 @@ const ContentHeader = ({
                   else navigate(-1);
                 }
               }}
-              icon={<ArrowUturnLeftIcon/>}
+              icon={<TbArrowLeft/>}
             />
           </Tooltip>
         )}
         <div>
           <h1>{title}</h1>
         </div>
-        {(tools || onAdd || onRefresh || onEdit) && (
-          <>
-            {onAdd && (
-              <Tooltip title={'Nuevo'}>
-                <IconButton icon={<PlusIcon/>} onClick={onAdd}/>
-              </Tooltip>
-            )}
-            {onRefresh && (
-              <Tooltip title={'Actualizar'}>
-                <IconButton icon={<ArrowPathIcon className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
-              </Tooltip>
-            )}
-            {onEdit && (
-              <Tooltip title={'Editar'}>
-                <IconButton icon={<PiPencilSimple size={18}/>} onClick={onEdit}/>
-              </Tooltip>
-            )}
-            {tools}
-          </>
+        {onAdd && (
+          <Tooltip title={'Nuevo'}>
+            <IconButton icon={<TbPlus />} onClick={onAdd}/>
+          </Tooltip>
         )}
+        {onRefresh && (
+          <Tooltip title={'Actualizar'}>
+            <IconButton icon={<TbRefresh className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
+          </Tooltip>
+        )}
+        {onEdit && (
+          <Tooltip title={'Editar'}>
+            <IconButton icon={<PiPencilSimple />} onClick={onEdit}/>
+          </Tooltip>
+        )}
+        {tools}
       </Space>
       {description && <div style={{marginTop: 10, fontSize: 12}}>{description}</div>}
       {children && <div className={'content-header-caption'}>{children}</div>}

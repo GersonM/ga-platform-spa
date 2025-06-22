@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {type ReactNode, useState} from 'react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {TbChevronRight, TbLayoutSidebarLeftCollapseFilled} from 'react-icons/tb';
 import {Tooltip} from 'antd';
@@ -8,10 +8,10 @@ import IconButton from '../IconButton';
 import './styles.less';
 
 interface ModuleSidebarProps {
-  children?: React.ReactNode;
-  actions?: React.ReactNode;
-  footer?: React.ReactNode;
-  header?: React.ReactNode;
+  children?: ReactNode;
+  actions?: ReactNode;
+  footer?: ReactNode;
+  header?: ReactNode;
   width?: number;
   title?: string;
   statusInfo?: string;
@@ -37,7 +37,7 @@ const ModuleSidebar = ({
       <div className={`module-sidebar-wrapper ${openMenu ? 'open' : ''}`} style={{width: width}}>
         {!openMenu && (
           <div className={'open-menu'} onClick={() => setOpenMenu(!openMenu)}>
-            <TbChevronRight height={20} />
+            <TbChevronRight />
           </div>
         )}
         {openMenu && (
@@ -52,7 +52,7 @@ const ModuleSidebar = ({
                     <Tooltip title={'Ocultar menu'}>
                       <IconButton
                         onClick={() => setOpenMenu(!openMenu)}
-                        icon={<TbLayoutSidebarLeftCollapseFilled fontSize={18} />}
+                        icon={<TbLayoutSidebarLeftCollapseFilled />}
                         small
                       />
                     </Tooltip>

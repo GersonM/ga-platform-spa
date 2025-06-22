@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import {NavLink} from 'react-router-dom';
-import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 import {FiHardDrive, FiTerminal} from 'react-icons/fi';
+import {PiDotsThreeVertical, PiGlobeHemisphereWestFill, PiLock} from "react-icons/pi";
 
 import type {Container} from '../../../Types/api';
 import ContainerDropdownActions from '../../Components/ContainerDropdownActions';
@@ -19,7 +19,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
   return (
     <>
       <NavLink to={`/file-management/${container.uuid}`}>
-        {container.is_locked ? <FiTerminal className={'icon'} /> : <FiHardDrive className={'icon'} />}
+        {container.is_locked ? <FiTerminal className={'icon'}/> : <FiHardDrive className={'icon'}/>}
         <span className="label">
           {container.name}
           {!container.is_locked && (
@@ -31,7 +31,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
       </NavLink>
       {(!container.is_locked || user?.roles?.includes('admin')) && (
         <>
-          <span className={`icon ${container.is_public ? 'icon-earth' : 'icon-lock'}`} />
+          {container.is_public ? <PiGlobeHemisphereWestFill/> : <PiLock/>}
           <ContainerDropdownActions
             container={container}
             trigger={['click']}
@@ -40,7 +40,7 @@ const ContainerNavItem = ({container, onChange}: ContainerNavItemProps) => {
                 onChange(container);
               }
             }}>
-            <IconButton icon={<EllipsisVerticalIcon />} />
+            <IconButton icon={<PiDotsThreeVertical size={20}/>}/>
           </ContainerDropdownActions>
         </>
       )}

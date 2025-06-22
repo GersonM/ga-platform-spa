@@ -1,9 +1,8 @@
-
 import dayjs from 'dayjs';
 
-import type {ApiFile} from '../../../Types/api';
 import IconItem from './IconItem';
 import FileIcon from '../FileIcon';
+import type {ApiFile} from '../../../Types/api';
 import FileDropdownActions from '../FileDropdownActions';
 
 interface FileItemProps {

@@ -87,6 +87,13 @@ code {
   monospace;
 }
 
+.grid-layout-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
 .button-icon {
   font-size: 17px;
   line-height: 17px;
@@ -205,6 +212,6 @@ body.dark-mode {
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(-360deg);
   }
 }
