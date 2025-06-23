@@ -114,7 +114,7 @@ const CompanyContainers = () => {
           )}
         </ul>
       </ModuleSidebar>
-      <UploadInformation />
+
       <ModuleContent withSidebar>
         {currentContainer ? (
           <ContainerContentViewer

@@ -133,7 +133,7 @@ const Navigation = () => {
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
           <div className="logo-square">
-            <img src={navLogo || logo} alt="Logo" />
+            <img src={navLogo || logo} alt={config?.config?.name} />
             <PiCaretUpDown />
           </div>
         </Dropdown>

@@ -67,6 +67,7 @@ const ProfilesManagement = () => {
     {
       title: 'Login',
       dataIndex: 'user',
+      align: 'center',
       width: 80,
       render: (user: User, profile: Profile) => {
         return (

@@ -9,6 +9,7 @@ interface UploadContextDefaults {
   isUploading: boolean;
   addFile: (file: File, containerUuid?: string) => string;
   lastFileCompleted?: UploadQueueFile;
+  progress: any;
 }
 
 interface UploadContextProp {
@@ -19,6 +20,7 @@ const UploadContext = createContext<UploadContextDefaults>({
   addFile(): string {
     return '';
   },
+  progress: {},
   isUploading: false,
 });
 
@@ -30,6 +32,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
   const [isUploading, setIsUploading] = useState(false);
   const [currentFile, setCurrentFile] = useState<UploadQueueFile>();
   const [lastFileCompleted, setLastFileCompleted] = useState<UploadQueueFile>();
+  const [progress, setProgress] = useState<any>();
 
   useEffect(() => {
     if (!isUploading) {
@@ -42,8 +45,10 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       if (!currentFile) return;
 
       const totalChunks = Math.ceil(currentFile.file.size / chunkSize);
+      const isLastChunk = currentChunkIndex === totalChunks - 1;
+      const fileProgress = currentChunkIndex / totalChunks;
 
-      let formData = new FormData();
+      const formData = new FormData();
       formData.append('file', data, `chunk-${currentChunkIndex}`);
       formData.set('name', currentFile.file.name);
       formData.set('hash', currentFile.hash);
@@ -53,29 +58,28 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
         formData.set('container_uuid', currentFile.containerUuid);
       }
 
-      let chunkProgress = 0;
       const config = {
         onUploadProgress: (r: AxiosProgressEvent) => {
           if (r.progress) {
-            chunkProgress = r.progress * 100;
-            setFileList(copy => {
+            setProgress({
+              timestamp: new Date().getTime(),
+              percent: fileProgress + (r.progress / totalChunks),
+              hash: currentFile.hash,
+            });
+            /*setFileList(copy => {
               if (copy) {
                 const i = copy.findIndex(f => f.id === currentFile.id);
                 copy[i].progress = chunkProgress;
                 return copy;
               }
-            });
+            });*/
           }
         },
         baseURL: import.meta.env.VITE_API_UPLOAD,
         body: data,
       };
       const response = await axios.post('file-management/chunked-files', formData, config);
-      const isLastChunk = currentChunkIndex === Math.ceil(currentFile.file.size / chunkSize) - 1;
-      const fileProgress =
-              totalChunks === 1 ? chunkProgress : Math.round(((currentChunkIndex + 1) / totalChunks) * 100);
 
-      console.log('progress: ', fileProgress);
       setFileList(copy => {
         if (copy && currentFile) {
           const i = copy.findIndex(f => f.id === currentFile.id);
@@ -111,7 +115,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
       if (!currentFile) return;
       const from = currentChunkIndex * chunkSize;
       const to =
-              (currentChunkIndex + 1) * chunkSize >= currentFile.file.size ? currentFile.file.size : from + chunkSize;
+        (currentChunkIndex + 1) * chunkSize >= currentFile.file.size ? currentFile.file.size : from + chunkSize;
 
       const blob = currentFile.file.slice(from, to);
       uploadChunk(blob).then();
@@ -146,15 +150,16 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
   };
 
   return (
-          <UploadContext.Provider
-                  value={{
-                    fileList,
-                    addFile,
-                    isUploading,
-                    lastFileCompleted,
-                  }}>
-            {children}
-          </UploadContext.Provider>
+    <UploadContext.Provider
+      value={{
+        fileList,
+        addFile,
+        isUploading,
+        lastFileCompleted,
+        progress
+      }}>
+      {children}
+    </UploadContext.Provider>
   );
 };
 

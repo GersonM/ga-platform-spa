@@ -1,12 +1,12 @@
-import {useState} from 'react';
+import {type ReactNode, useState} from 'react';
 import {NavLink} from 'react-router-dom';
-import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import {Badge} from 'antd';
+import {TbChevronDown} from "react-icons/tb";
 
 interface NavItemProps {
   label: string;
-  icon: React.ReactNode;
-  children?: React.ReactNode[];
+  icon: ReactNode;
+  children?: ReactNode[];
   path?: string;
   notifications?: number;
 }
@@ -35,7 +35,7 @@ const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => 
             {content}
             {children && (
               <div className={`open-button ${isOpen ? 'open' : ''}`}>
-                <ChevronDownIcon />
+                <TbChevronDown />
               </div>
             )}
           </a>

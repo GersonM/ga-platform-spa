@@ -1,7 +1,7 @@
 @iconSize: 20px;
 
 .navigation-wrapper {
-  background: linear-gradient(var(--primary-color-darker), var(--primary-color));
+  background: linear-gradient(var(--primary-color), var(--primary-color-darker));
   min-width: calc(var(--main-nav-width) - 10px);
   max-width: calc(var(--main-nav-width) - 10px);
   transition: all 0.3s;
@@ -213,13 +213,13 @@
 
             &:before {
               content: '';
-              width: 5px;
-              height: 5px;
-              transform: rotate(45deg);
-              background: rgba(255, 255, 255, 0.3);
+              width: 3px;
+              height: 15px;
+              background: #ffffff;
               position: absolute;
-              left: -2px;
-              transition: all 0.3s;
+              left: -3px;
+              border-radius: 4px;
+              transition: all 0.3s cubic-bezier(0.01, 1.15, 0.8, 0.99);
             }
 
             &:active {
@@ -229,12 +229,7 @@
               background: rgba(0, 0, 0, 0.3);
 
               &:before {
-                transform: rotate(0deg);
                 left: 8px;
-                height: 12px;
-                width: 3px;
-                background: rgba(255, 255, 255, 1);
-                border-radius: 4px;
               }
             }
 

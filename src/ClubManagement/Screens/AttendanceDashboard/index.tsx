@@ -90,7 +90,7 @@ const AttendanceDashboard = () => {
     setLoading(true);
 
     axios
-      .get(`club/attendance-dashboard?year=${selectedYear}`, config)
+      .get(`attendances/report?year=${selectedYear}`, config)
       .then(response => {
         if (response) {
           setDashboardData(response.data);

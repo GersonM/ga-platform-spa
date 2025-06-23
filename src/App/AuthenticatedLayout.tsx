@@ -3,6 +3,7 @@ import {Outlet} from 'react-router-dom';
 import Navigation from '../Navigation';
 import AuthContext from '../Context/AuthContext';
 import LoadingIndicator from '../CommonUI/LoadingIndicator';
+import UploadInformation from "../FileManagement/Components/UploadInformation";
 
 const AuthenticatedLayout = () => {
   const {user, sessionToken} = useContext(AuthContext);
@@ -22,6 +23,7 @@ const AuthenticatedLayout = () => {
         <Suspense fallback={<LoadingIndicator />}>
           <Outlet />
         </Suspense>
+        <UploadInformation />
       </div>
       {openMenu && (
         <div

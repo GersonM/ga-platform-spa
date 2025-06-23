@@ -137,7 +137,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
               <span className={'label'}>
                 {files[0].name}
                 <small>
-                  <Tag color={'magenta'} style={{marginRight: 5}}>
+                  <Tag color={'magenta'} bordered={false} style={{marginRight: 5}}>
                     <FileSize size={files[0].size} />
                   </Tag>
                   {dayjs(files[0].created_at).format(' D/MM/YYYY [a las] H:mm')}

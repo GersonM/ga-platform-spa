@@ -29,7 +29,7 @@ const EstateProviding = () => {
   const [stageFilter, setStageFilter] = useState<string>();
   const [blockFilter, setBlockFilter] = useState<string>();
   const [providedFilter, setProvidedFilter] = useState<string>();
-  const _navigate = useNavigate();
+  const navigate = useNavigate();
   const lastSearchText = useDebounce(searchText, 300);
   const lastSearchBlock = useDebounce(blockFilter, 300);
   const [paymentFilter, setPaymentFilter] = useState<string>();
@@ -109,7 +109,7 @@ const EstateProviding = () => {
       });
   };
 
-  const _deleteClient = (uuid: string) => {
+  const deleteClient = (uuid: string) => {
     axios
       .delete(`commercial/clients/${uuid}`)
       .then(() => {
@@ -124,33 +124,33 @@ const EstateProviding = () => {
       align: 'center',
       dataIndex: 'items',
       width: 50,
-      render: (items: any[]) => items.find(i => i.description == 'Etapa').value,
+      render: (items: any[]) => items.find(i => i.description == 'Etapa')?.value,
     },
     {
       title: 'Mz.',
       align: 'center',
       dataIndex: 'items',
       width: 45,
-      render: (items: any[]) => items.find(i => i.description == 'Manzana').value,
+      render: (items: any[]) => items.find(i => i.description == 'Manzana')?.value,
     },
     {
       title: 'Lote',
       align: 'center',
       dataIndex: 'items',
       width: 40,
-      render: (items: any[]) => items.find(i => i.description == 'Lote').value,
+      render: (items: any[]) => items.find(i => i.description == 'Lote')?.value,
     },
     {
       title: 'Modalidad',
       dataIndex: 'items',
       width: 120,
-      render: (items: any[]) => items.find(i => i.description == 'Modalidad').value,
+      render: (items: any[]) => items.find(i => i.description == 'Modalidad')?.value,
     },
     {
       title: 'Vendedor',
       dataIndex: 'items',
       width: 120,
-      render: (items: any[]) => items.find(i => i.description == 'Vendedor').value,
+      render: (items: any[]) => items.find(i => i.description == 'Vendedor')?.value,
     },
     {
       title: 'Nombre',

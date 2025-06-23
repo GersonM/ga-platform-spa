@@ -74,6 +74,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
           },
           Button: {
             fontWeight: 600,
+            primaryShadow: 'none'
           },
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
