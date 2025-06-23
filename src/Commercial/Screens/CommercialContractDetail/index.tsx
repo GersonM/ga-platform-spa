@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, Modal, Row, Tabs, Tag} from 'antd';
+import {Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, List, Modal, Row, Tabs, Tag} from 'antd';
 import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -149,7 +149,7 @@ const CommercialContractDetail = () => {
         )}
       </ContentHeader>
       <Row gutter={[20, 20]}>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={8} style={{position: "sticky", top: 20}}>
           <p>
             {!contract?.provided_at ? (
               <PrimaryButton
@@ -186,17 +186,23 @@ const CommercialContractDetail = () => {
           }
           <Divider>Contrato</Divider>
           <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
-          <Divider>Incidencias</Divider>
-          <EntityActivityManager refresh={reload} uuid={params.contract} type={'commercial-contract'}/>
+          <Divider>Actividad</Divider>
+          <List
+            dataSource={['Precio actualizado por Gerson', 'Actualizado por Gerson', 'Registro creado por Gerson']}
+            renderItem={(item) => (
+              <List.Item>{item}</List.Item>
+            )}
+          />
         </Col>
         <Col xs={24} md={16}>
           <Card variant={'borderless'}>
-            <Tabs style={{marginTop:-20}} centered items={ [
+            <Tabs style={{marginTop: -20}} centered items={[
               {
                 key: 'finances',
                 label: 'Finanzas',
                 children: <>
-                  {contract && <InvoicesTable customer={contract.client?.entity} entityUuid={contract?.uuid} type={'contract'}/>}
+                  {contract &&
+                    <InvoicesTable customer={contract.client?.entity} entityUuid={contract?.uuid} type={'contract'}/>}
                 </>
               },
               {
@@ -229,10 +235,17 @@ const CommercialContractDetail = () => {
                 key: 'documents',
                 label: 'Documentos',
                 children: <>
-                  {contract && <ProcessDetail profile={contract.client?.entity} entityUuid={contract?.client?.entity.uuid} type={'contract'}/>}
+                  {contract &&
+                    <ProcessDetail profile={contract.client?.entity} entityUuid={contract?.client?.entity.uuid}
+                                   type={'contract'}/>}
                 </>
               },
-            ]} />
+              {
+                key: 'crm',
+                label: 'CRM',
+                children: <EntityActivityManager refresh={reload} uuid={params.contract} type={'commercial-contract'}/>
+              }
+            ]}/>
           </Card>
         </Col>
       </Row>

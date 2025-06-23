@@ -17,59 +17,80 @@ interface ProcessDetailProps {
 }
 
 const list = [
+  {name: 'FICHA DEL COMPRADOR', status: 'Aprobado', description: 'FICHA DEL COMPRADOR'},
+  {name: 'DNI DEL TITULAR', status: 'Aprobado', description: 'DNI DEL TITULAR'},
+  {name: 'DNI DE LA CARGA FAMILIAR', status: 'Aprobado', description: 'DNI DE LA CARGA FAMILIAR'},
+  {name: 'BOLETAS', status: 'Aprobado', description: 'BOLETAS'},
+  {name: 'VOUCHER', status: 'Aprobado', description: 'VOUCHER'},
   {
-    name: `Acta de conformidad`,
+    name: 'CONTRATO DE PROMESA DE COMPRAVENTA DE BIEN FUTURO',
     status: 'Aprobado',
-    description: 'Documento de conformidad',
+    description: 'CONTRATO DE PROMESA DE COMPRAVENTA DE BIEN FUTURO'
+  },
+  {name: 'RECIBO DE AGUA O LUZ', status: 'Pendiente', description: 'RECIBO DE AGUA O LUZ'},
+  {
+    name: 'FORMULARIO DE INSCRIPCIÓN DE TECHO PROPIO',
+    status: 'Pendiente',
+    description: 'FORMULARIO DE INSCRIPCIÓN DE TECHO PROPIO'
   },
   {
-    name: `Acta de entrega`,
+    name: 'SOLICITUD DE ASIGNACIÓN DE BONO FAMILIAR HABITACIONAL',
     status: 'Pendiente',
-    description: 'Documento de conformidad',
+    description: 'SOLICITUD DE ASIGNACIÓN DE BONO FAMILIAR HABITACIONAL'
+  },
+  {name: 'ANEXO 1 ESPECIFICACIONES GENERALES', status: 'Pendiente', description: 'ANEXO 1 ESPECIFICACIONES GENERALES'},
+  {name: 'ANEXO 2 ESPECIFICACIONES TÉCNICAS', status: 'Pendiente', description: 'ANEXO 2 ESPECIFICACIONES TÉCNICAS'},
+  {
+    name: 'MINUTA DE COMPRAVENTA DEL BIEN FUTURO',
+    status: 'Pendiente',
+    description: 'MINUTA DE COMPRAVENTA DEL BIEN FUTURO'
+  },
+  {name: 'CARTA DE ACREDITACIÓN DE AHORROS', status: 'Pendiente', description: 'CARTA DE ACREDITACIÓN DE AHORROS'},
+  {name: 'FORMULARIO 007', status: 'Pendiente', description: 'FORMULARIO 007'},
+  {
+    name: 'CONSTANCIA DE DESEMBOLSO DE LA COOPERTATIVA(opcional)',
+    status: 'Pendiente',
+    description: 'CONSTANCIA DE DESEMBOLSO DE LA COOPERTATIVA(opcional)'
   },
   {
-    name: `Acta de entrega de terreno`,
-    status: 'Pendiente',
-    description: 'Documento de conformidad',
-  },
-  {
-    name: `Bono primera adenda minuta con múdlo`,
-    status: 'Pendiente',
-    description: 'Documento de conformidad',
-  },
-  {
-    name: `Acta de conformidad`,
-    status: 'Pendiente',
-    description: 'Documento de conformidad',
-  },
-  {
-    name: `Terreno compra y venta independización`,
-    status: 'Pendiente',
-    description: 'Documento de conformidad',
-  },
-  {
-    name: `Terreno compra y venta independización crédito`,
-    status: 'Pendiente',
-    description: 'Documento de conformidad',
+    name: 'CONTRATO EXTRA JUDICIAL (POR EL FINACIAMIENTO CON LA COOPERATIVA)',
+    status: 'Aprobado',
+    description: 'CONTRATO EXTRA JUDICIAL (POR EL FINACIAMIENTO CON LA COOPERATIVA)'
   },
 ];
 
+
 const listProvision = [
+  {name: 'FICHA DEL COMPRADOR', status: 'Aprobado', description: 'FICHA DEL COMPRADOR'},
+  {name: 'DNI DEL TITULAR', status: 'Aprobado', description: 'DNI DEL TITULAR'},
   {
-    name: `Acta de entrega`,
-    status: 'Pendiente',
-    description: 'Documento de entrega',
-  },
-  {
-    name: `Acta de garantía`,
+    name: 'DNI (DE LA PAREJA EN EL CASO ESTE CASAD@)',
     status: 'Aprobado',
-    description: '',
+    description: 'DNI (DE LA PAREJA EN EL CASO ESTE CASAD@)'
+  },
+  {name: 'BOLETAS', status: 'Aprobado', description: 'BOLETAS'},
+  {name: 'VOUCHER', status: 'Aprobado', description: 'VOUCHER'},
+  {
+    name: 'CONTRATO DE PROMESA DE OPCIÓN DE COMPRAVENTA DE BIEN FUTURO',
+    status: 'Aprobado',
+    description: 'CONTRATO DE PROMESA DE OPCIÓN DE COMPRAVENTA DE BIEN FUTURO'
+  },
+  {name: 'RECIBO DE AGUA O LUZ', status: 'Aprobado', description: 'RECIBO DE AGUA O LUZ'},
+  {
+    name: 'ANEXO DE ESPECIFICACIONES GENERALES y MINUTA',
+    status: 'Aprobado',
+    description: 'ANEXO DE ESPECIFICACIONES GENERALES y MINUTA'
   },
   {
-    name: `Memoria descriptiva`,
-    status: 'Pendiente',
-    description: '',
-  }
+    name: 'CONSTANCIA DE DESEMBOLSO DE LA COOPERTATIVA (OPCIONAL)',
+    status: 'Aprobado',
+    description: 'CONSTANCIA DE DESEMBOLSO DE LA COOPERTATIVA (OPCIONAL)'
+  },
+  {
+    name: 'CONTRATO EXTRA JUDICIAL (POR EL FINACIAMIENTO CON LA COOPERATIVA)',
+    status: 'Aprobado',
+    description: 'CONTRATO EXTRA JUDICIAL (POR EL FINACIAMIENTO CON LA COOPERATIVA)'
+  },
 ];
 
 const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
@@ -144,17 +165,17 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
         <Col xs={12}>
           <PrimaryButton
             block
-            icon={<TbPrinter />}
+            icon={<TbPrinter/>}
             label={'Imprimir documentos'} onClick={generateDocuments}/>
         </Col>
         <Col xs={12}>
           <PrimaryButton
             block
-            icon={<TbFileExport />}
+            icon={<TbFileExport/>}
             label={'Exportar documentos'} onClick={generateDocuments}/>
         </Col>
       </Row>
-      <Divider>Área legal</Divider>
+      <Divider>Techo Propio o al contado</Divider>
       <List
         dataSource={list}
         renderItem={(item) => (
@@ -163,7 +184,7 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
               <FileUploader/>,
               item
                 .status == 'Aprobado' ?
-                <Button size={"small"}>Cancelar</Button> :
+                <Button size={"small"}>Marca como pendiente</Button> :
                 <Button type={"primary"} ghost size={"small"}>Aprobar</Button>,
             ]}
           >
@@ -174,13 +195,15 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
                   <TbCircleCheckFilled color={'green'} size={30}/> :
                   <TbClockFilled color={'orange'} size={30}/>
               }
-              title={item.name} description={
-              <>{item.description} <br/><Tag bordered={false}>{item.status}</Tag></>
-            }/>
+              title={item.name}
+              description={
+                <>{item.description} <br/>{item.status == 'Aprobado' ? <Tag color={'green'}>Aprobado por Gerson</Tag> :<Tag>Pendiente</Tag>}</>
+              }
+            />
           </List.Item>
         )}
       />
-      <Divider>Entrega</Divider>
+      <Divider>Terreno vacío (Sin módulo)</Divider>
       <List
         dataSource={listProvision}
         renderItem={(item) => (
@@ -216,7 +239,7 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
           setOpenPrint(false);
           setTempURL(undefined);
         }}>
-        <LoadingIndicator visible={downloading} />
+        <LoadingIndicator visible={downloading}/>
         {tempURL && <iframe src={tempURL} height={600} width={'100%'} frameBorder="0"></iframe>}
       </Modal>
     </div>
