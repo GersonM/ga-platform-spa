@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip, Button, Row, Col, message} from 'antd';
-import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
+import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip, Button, Row, Col, message, Spin} from 'antd';
+import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield, TbSearch} from 'react-icons/tb';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -26,6 +26,7 @@ const CompaniesManagement = () => {
   const [search, setSearch] = useState<string>();
   const [editForm] = Form.useForm();
   const [createForm] = Form.useForm();
+  const [rucLoading, setRucLoading] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -48,6 +49,40 @@ const CompaniesManagement = () => {
 
     return cancelTokenSource.cancel;
   }, [reload, currentPage, pageSize, search]);
+
+  const consultarRUC = async (ruc: string, form: any) => {
+    if (!ruc || ruc.length < 8) return;
+
+    setRucLoading(true);
+    try {
+      const response = await axios.get(`hr-management/companies/lookup-ruc/${ruc}`);
+
+      if (response.data && response.data.success) {
+        const data = response.data.data;
+        form.setFieldsValue({
+          legal_name: data.razon_social,
+          legal_address: data.direccion,
+          name: data.razon_social || form.getFieldValue('name'),
+        });
+        message.success('Datos encontrados y cargados automáticamente');
+      } else {
+        message.warning('No se encontraron datos para este RUC');
+      }
+    } catch (error) {
+      console.error('Error consultando RUC:', error);
+      message.error('Error al consultar el RUC');
+    } finally {
+      setRucLoading(false);
+    }
+  };
+
+  const handleRucChange = (value: string, form: any) => {
+    const cleanRuc = value.replace(/[^0-9]/g, '');
+    form.setFieldValue('legal_uid', cleanRuc);
+    if (cleanRuc.length === 11) {
+      consultarRUC(cleanRuc, form);
+    }
+  };
 
   const handleDelete = async (uuid: string) => {
     try {
@@ -204,6 +239,15 @@ const CompaniesManagement = () => {
     },
   ];
 
+  const RucInput = ({ form, placeholder }: { form: any, placeholder: string }) => (
+    <Input
+      placeholder={placeholder}
+      onChange={(e) => handleRucChange(e.target.value, form)}
+      suffix={rucLoading ? <Spin size="small" /> : <TbSearch />}
+      maxLength={11}
+    />
+  );
+
   return (
     <div>
       <ModuleContent withSidebar>
@@ -275,7 +319,7 @@ const CompaniesManagement = () => {
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
-                  label="Nombre de la Empresa"
+                  label="Nombre Comercial"
                   name="name"
                   rules={[{ required: true, message: 'El nombre es requerido' }]}
                 >
@@ -304,10 +348,15 @@ const CompaniesManagement = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="RUC/RUT/Documento Legal"
+                  label={
+                    <span>
+                      RUC/RUT/Documento Legal
+                      {rucLoading && <span style={{ color: '#1890ff', marginLeft: 8 }}>Consultando...</span>}
+                    </span>
+                  }
                   name="legal_uid"
                 >
-                  <Input placeholder="Número de documento legal" />
+                  <RucInput form={createForm} placeholder="Ingresa el RUC para autocompletar" />
                 </Form.Item>
               </Col>
             </Row>
@@ -315,6 +364,7 @@ const CompaniesManagement = () => {
             <Form.Item
               label="Razón Social"
               name="legal_name"
+              extra="Se completará automáticamente al ingresar el RUC"
             >
               <Input placeholder="Razón social de la empresa" />
             </Form.Item>
@@ -322,6 +372,7 @@ const CompaniesManagement = () => {
             <Form.Item
               label="Dirección Legal"
               name="legal_address"
+              extra="Se completará automáticamente al ingresar el RUC"
             >
               <Input.TextArea
                 rows={3}
@@ -358,7 +409,7 @@ const CompaniesManagement = () => {
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
-                  label="Nombre de la Empresa"
+                  label="Nombre Comercial"
                   name="name"
                   rules={[{ required: true, message: 'El nombre es requerido' }]}
                 >
@@ -387,10 +438,15 @@ const CompaniesManagement = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="RUC/RUT/Documento Legal"
+                  label={
+                    <span>
+                      RUC/RUT/Documento Legal
+                      {rucLoading && <span style={{ color: '#1890ff', marginLeft: 8 }}>Consultando...</span>}
+                    </span>
+                  }
                   name="legal_uid"
                 >
-                  <Input placeholder="Número de documento legal" />
+                  <RucInput form={editForm} placeholder="Ingresa el RUC para autocompletar" />
                 </Form.Item>
               </Col>
             </Row>
