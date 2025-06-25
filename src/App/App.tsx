@@ -8,6 +8,7 @@ import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import GuestLayout from './GuestLayout';
+import CompaniesManagement from "../HRManagement/Screens/CompaniesManagement";
 
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
@@ -190,6 +191,8 @@ const App = () => {
           <Route path={'dashboard'} element={<RealEstateDashboard />} />
         </Route>
         {user && <Route path={'my-account'} element={<MyAccount />} />}
+        <Route path={'companies'} element={<CompaniesManagement />} />
+        {/*<Route path={'companies/:uuid'} element={<CompanyDetails/>}/>*/}
         <Route
           path={'*'}
           element={
