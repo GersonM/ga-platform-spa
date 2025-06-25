@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip, Button, Row, Col} from 'antd';
+import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip, Button, Row, Col, message} from 'antd';
 import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
 import axios from 'axios';
 
@@ -25,6 +25,7 @@ const CompaniesManagement = () => {
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState<string>();
   const [editForm] = Form.useForm();
+  const [createForm] = Form.useForm();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -52,11 +53,13 @@ const CompaniesManagement = () => {
     try {
       setLoading(true);
       await axios.delete(`hr-management/companies/${uuid}`);
+      message.success('Empresa eliminada exitosamente');
       setReload(!reload);
       setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error('Error deleting company:', error);
+      message.error('Error al eliminar la empresa');
     }
   };
 
@@ -79,6 +82,7 @@ const CompaniesManagement = () => {
     try {
       setLoading(true);
       await axios.put(`hr-management/companies/${editingCompany.uuid}`, values);
+      message.success('Empresa actualizada exitosamente');
       setReload(!reload);
       setOpenEditCompany(false);
       setEditingCompany(null);
@@ -87,6 +91,7 @@ const CompaniesManagement = () => {
     } catch (error) {
       setLoading(false);
       console.error('Error updating company:', error);
+      message.error('Error al actualizar la empresa');
     }
   };
 
@@ -94,6 +99,27 @@ const CompaniesManagement = () => {
     setOpenEditCompany(false);
     setEditingCompany(null);
     editForm.resetFields();
+  };
+
+  const handleCreate = async (values: any) => {
+    try {
+      setLoading(true);
+      await axios.post('hr-management/companies', values);
+      message.success('Empresa creada exitosamente');
+      setReload(!reload);
+      setOpenCreateCompany(false);
+      createForm.resetFields();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error('Error creating company:', error);
+      message.error('Error al crear la empresa');
+    }
+  };
+
+  const handleCancelCreate = () => {
+    setOpenCreateCompany(false);
+    createForm.resetFields();
   };
 
   const columns = [
@@ -179,7 +205,7 @@ const CompaniesManagement = () => {
   ];
 
   return (
-    <div className="companies-management">
+    <div>
       <ModuleContent withSidebar>
         <ContentHeader
           loading={loading}
@@ -207,7 +233,6 @@ const CompaniesManagement = () => {
           loading={loading}
           pagination={false}
           rowKey="uuid"
-          size="small"
           style={{ width: '100%' }}
         />
         <Pagination
@@ -223,7 +248,89 @@ const CompaniesManagement = () => {
           style={{ width: '100%' }}
         />
 
-        {/* Modal para editar empresa */}
+        <Modal
+          title="Nueva Empresa"
+          open={openCreateCompany}
+          onCancel={handleCancelCreate}
+          width={800}
+          footer={[
+            <Button key="cancel" onClick={handleCancelCreate}>
+              Cancelar
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              loading={loading}
+              onClick={() => createForm.submit()}
+            >
+              Crear Empresa
+            </Button>,
+          ]}
+        >
+          <Form
+            form={createForm}
+            layout="vertical"
+            onFinish={handleCreate}
+          >
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Nombre de la Empresa"
+                  name="name"
+                  rules={[{ required: true, message: 'El nombre es requerido' }]}
+                >
+                  <Input placeholder="Nombre de la empresa" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[{ type: 'email', message: 'Email no válido' }]}
+                >
+                  <Input placeholder="Email de contacto" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Teléfono"
+                  name="phone"
+                >
+                  <Input placeholder="Teléfono de contacto" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="RUC/RUT/Documento Legal"
+                  name="legal_uid"
+                >
+                  <Input placeholder="Número de documento legal" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Form.Item
+              label="Razón Social"
+              name="legal_name"
+            >
+              <Input placeholder="Razón social de la empresa" />
+            </Form.Item>
+
+            <Form.Item
+              label="Dirección Legal"
+              name="legal_address"
+            >
+              <Input.TextArea
+                rows={3}
+                placeholder="Dirección legal completa"
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+
         <Modal
           title={`Editar Empresa: ${editingCompany?.name}`}
           open={openEditCompany}
@@ -306,16 +413,6 @@ const CompaniesManagement = () => {
             </Form.Item>
           </Form>
         </Modal>
-
-        {/* Modal para crear empresa - comentado por ahora */}
-        {/*<Modal open={openCreateCompany} destroyOnHidden footer={false} onCancel={() => setOpenCreateCompany(false)}>
-          <CreateCompany
-            onCompleted={() => {
-              setReload(!reload);
-              setOpenCreateCompany(false);
-            }}
-          />
-        </Modal>*/}
       </ModuleContent>
     </div>
   );
