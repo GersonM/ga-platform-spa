@@ -46,7 +46,7 @@ const ProductUnitTypesSelector = ({placeholder, ...props}: ProductUnitTypesSelec
     <AutoComplete
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige o ingresar el tipo de unidad'}
+      placeholder={placeholder || 'Unidad'}
       showSearch={true}
       style={{minWidth: 120}}
       optionFilterProp={'label'}

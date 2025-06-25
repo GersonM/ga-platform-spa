@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Button, Form, Input} from 'antd';
+import {Button, Divider, Form, Input} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import axios from 'axios';
 
@@ -35,14 +35,17 @@ const CreateUser = ({containerUuid, onCompleted}: CreateUserProps) => {
   };
 
   return (
-    <div style={{width: 240, padding: 5}}>
+    <div>
+      <h2>Registrar persona</h2>
       <Form form={form} onFinish={submitForm} layout={'vertical'} initialValues={{visibility: 'public'}}>
-        <Form.Item name={'name'} label={'Nombre'}>
+        <Form.Item name={'name'} label={'Nombre'} rules={[{required:true}]}>
           <Input placeholder={'Nombre'} />
         </Form.Item>
-        <Form.Item name={'last_name'} label={'Apellidos'}>
+        <Form.Item name={'last_name'} label={'Apellidos'} rules={[{required:true}]}>
           <Input placeholder={'Nombre'} />
         </Form.Item>
+        <Divider>Crear cuenta</Divider>
+        <p>Estos datos on opcionales, si especificas una contraseña esta persona podrá iniciar sesión en el sistema</p>
         <Form.Item name={'email'} label={'E-mail'}>
           <Input placeholder={'E-mail'} />
         </Form.Item>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbTrash} from "react-icons/tb";
-import {Form, Modal, Popover, Select, Space, Tag, Tooltip} from "antd";
+import {Divider, Form, Modal, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import axios from "axios";
 
 import type {StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
@@ -48,7 +48,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     return cancelTokenSource.cancel;
   }, [reload, stockState]);
 
-  const columns = [
+  const columns: any[] = [
     {
       title: 'SKU',
       dataIndex: 'sku',
@@ -115,28 +115,24 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     <div>
       <h2>Existencias para {product.name} <Tag color={'blue'} bordered={false}>{product.code}</Tag></h2>
       <p>{product.description}</p>
-      <p>
+      <Space split={<Divider type={"vertical"}/>}>
+        <Select
+          placeholder={'Filtrar por estado'}
+          style={{width: 200}}
+          onChange={value => {
+            setStockState(value);
+          }} options={[
+          {label: 'Vendidos', value: 'sold'},
+          {label: 'Disponible', value: 'available'},
+          {label: 'Reservados', value: 'reserved'},
+          {label: 'Merma', value: 'wasted'},
+        ]}/>
         <PrimaryButton icon={<TbPlus/>} ghost label={'Agregar stock'} onClick={() => {
           setOpenStockForm(true);
           setSelectedStock(undefined);
         }}/>
-      </p>
-      <FilterForm>
-        <Form.Item>
-          <Select
-            placeholder={'Estado'}
-            style={{width: 120}}
-            onChange={value => {
-              setStockState(value);
-            }} options={[
-            {label: 'Vendidos', value: 'sold'},
-            {label: 'Disponible', value: 'available'},
-            {label: 'Reservados', value: 'reserved'},
-            {label: 'Merma', value: 'wasted'},
-          ]}/>
-        </Form.Item>
-      </FilterForm>
-      <TableList loading={loading} columns={columns} dataSource={productStock}/>
+      </Space>
+      <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading} columns={columns} dataSource={productStock}/>
       <Modal footer={null} open={openStockForm} onCancel={() => {
         setOpenStockForm(false);
         setSelectedStock(undefined);

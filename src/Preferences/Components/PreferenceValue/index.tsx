@@ -8,6 +8,7 @@ import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileUploader from '../../../FileManagement/Components/FileUploader';
 import './styles.less';
+import {TbCheck, TbTrash} from "react-icons/tb";
 
 interface PreferenceValueProps {
   preference: SettingValue;
@@ -72,7 +73,10 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
         if (preference.key.includes('color') || preference.key.includes('logo')) {
           location.reload();
         }
-        onUpdated && onUpdated();
+        setIsModified(false);
+        if (onUpdated) {
+          onUpdated();
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -86,7 +90,9 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
       .delete('/workspaces/settings/' + preference.key)
       .then(() => {
         setLoading(false);
-        onUpdated && onUpdated();
+        if (onUpdated) {
+          onUpdated();
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -106,8 +112,8 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
         </Col>
         <Col md={2} xs={2}>
           <Space>
-            <IconButton small disabled={!isModified} loading={loading} icon={<CheckIcon />} onClick={saveValue} />
-            <IconButton small danger loading={loading} icon={<TrashIcon />} onClick={deleteValue} />
+            <IconButton disabled={!isModified} loading={loading} icon={<TbCheck />} onClick={saveValue} />
+            <IconButton danger loading={loading} icon={<TbTrash />} onClick={deleteValue} />
           </Space>
         </Col>
       </Row>
