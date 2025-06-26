@@ -258,8 +258,7 @@ const CompaniesManagement = () => {
           tools={`${pagination?.total || 0} compañías encontradas`}
           onAdd={() => setOpenCreateCompany(true)}
         >
-          <FilterForm>
-            <Form.Item label={'Buscar'}>
+            <Form.Item style={{ width: '30%' }}  label={'Buscar'}>
               <Input.Search
                 allowClear
                 placeholder={'Buscar por nombre, email o RUC'}
@@ -269,7 +268,6 @@ const CompaniesManagement = () => {
                 }}
               />
             </Form.Item>
-          </FilterForm>
         </ContentHeader>
         <Table
           columns={columns}
