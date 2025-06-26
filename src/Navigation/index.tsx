@@ -39,7 +39,15 @@ import {
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
-import {TbBuildingEstate, TbBuildingWarehouse, TbForklift, TbListCheck, TbPackage, TbStack} from 'react-icons/tb';
+import {
+  TbBuilding,
+  TbBuildingEstate,
+  TbBuildingWarehouse,
+  TbForklift,
+  TbListCheck,
+  TbPackage,
+  TbStack
+} from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
@@ -120,10 +128,9 @@ const Navigation = () => {
     }
   };
 
-  const navLogo = darkMode ? config?.dark_logo : config?.dark_logo;
   const tenantItems = user?.tenants?.map(t => ({
     label: t.config.name,
-    icon: <img alt={t.config.name} style={{width: 80}} src={t.white_logo} />,
+    icon: t.favicon ? <img alt="Icono" style={{width: 25}} src={t.favicon} /> : <TbBuilding size={25} />,
     key: t.config.id,
   }));
 
@@ -133,7 +140,7 @@ const Navigation = () => {
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
           <div className="logo-square">
-            <img src={navLogo || logo} alt={config?.config?.name} />
+            <img src={config?.dark_logo || logo} alt={config?.config?.name} />
             <PiCaretUpDown />
           </div>
         </Dropdown>

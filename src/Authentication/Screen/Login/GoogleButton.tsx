@@ -7,7 +7,11 @@ interface GoogleButtonProps {
 
 const GoogleButton = ({onClick, loading}: GoogleButtonProps) => {
   return (
-    <Button shape={'round'} block loading={loading} onClick={onClick}>
+    <Button
+      shape="round"
+      color={"default"}
+      variant="filled"
+      block loading={loading} onClick={onClick}>
       <svg width="18" height="18" viewBox="0 0 24 24">
         <path
           fill="#4285F4"

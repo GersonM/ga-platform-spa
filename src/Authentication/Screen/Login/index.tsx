@@ -3,9 +3,7 @@ import {Button, Divider, Form, Input, Modal} from 'antd';
 import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {type AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
-import {AtSymbolIcon} from '@heroicons/react/24/solid';
-import {ChevronRightIcon} from '@heroicons/react/16/solid';
-import {TbKey} from 'react-icons/tb';
+import {TbAt, TbChevronRight, TbKey} from 'react-icons/tb';
 import GoogleButton from './GoogleButton';
 
 const Login = () => {
@@ -85,30 +83,29 @@ const Login = () => {
       <Form onFinish={login}>
         <div className={'input-large'}>
           <div className="icon">
-            <AtSymbolIcon width={17} />
+            <TbAt size={20} />
           </div>
           <Form.Item name={'email'} noStyle>
-            <Input size={'large'} variant={'borderless'} placeholder={'E-mail'} inputMode={'email'} />
+            <Input variant={'borderless'} placeholder={'E-mail'} inputMode={'email'} />
           </Form.Item>
         </div>
         <div className={'input-large'}>
           <div className="icon">
-            <TbKey width={17} />
+            <TbKey size={18} />
           </div>
           <Form.Item name={'password'} noStyle>
-            <Input.Password size={'large'} variant={'borderless'} placeholder={'Contraseña'} />
+            <Input.Password variant={'borderless'} placeholder={'Contraseña'} />
           </Form.Item>
         </div>
         <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
-          Ingresar <ChevronRightIcon style={{marginTop: 1}} />
+          Ingresar <TbChevronRight />
         </Button>
       </Form>
-
       <Divider>o</Divider>
       <GoogleButton onClick={handleGoogleLogin} />
       <Divider />
       <NavLink to={'/auth/recover'}>
-        <Button block type={'text'}>
+        <Button block variant="filled" color="default">
           Recuperar contraseña
         </Button>
       </NavLink>
