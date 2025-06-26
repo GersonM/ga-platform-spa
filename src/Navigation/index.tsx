@@ -65,24 +65,24 @@ import './styles.less';
 const menuItems: ItemType[] = [
   {
     label: 'Mi cuenta',
-    icon: <PiUserCircleCheck size={18} />,
+    icon: <PiUserCircleCheck size={18}/>,
     key: 'my-account',
   },
   {
     label: 'Favoritos',
-    icon: <PiStar size={18} />,
+    icon: <PiStar size={18}/>,
     key: 'favorites',
   },
   {
     label: 'Cerrar sesión',
-    icon: <PiSignOut size={18} />,
+    icon: <PiSignOut size={18}/>,
     key: 'logout',
     danger: true,
   },
 ];
 
 const Navigation = () => {
-  const {uploadProgress, user, logout, config, darkMode, setOpenMenu, openMenu, activityCount} =
+  const {uploadProgress, user, logout, config, setOpenMenu, openMenu, activityCount} =
     useContext(AuthContext);
   const {pathname} = useLocation();
   const navigate = useNavigate();
@@ -130,7 +130,7 @@ const Navigation = () => {
 
   const tenantItems = user?.tenants?.map(t => ({
     label: t.config.name,
-    icon: t.favicon ? <img alt="Icono" style={{width: 25}} src={t.favicon} /> : <TbBuilding size={25} />,
+    icon: t.favicon ? <img alt="Icono" style={{width: 25}} src={t.favicon}/> : <TbBuilding size={25}/>,
     key: t.config.id,
   }));
 
@@ -140,120 +140,121 @@ const Navigation = () => {
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
           <div className="logo-square">
-            <img src={config?.dark_logo || logo} alt={config?.config?.name} />
-            <PiCaretUpDown />
+            <img src={config?.dark_logo || logo} alt={config?.config?.name}/>
+            <PiCaretUpDown/>
           </div>
         </Dropdown>
       </div>
-      <OverlayScrollbarsComponent style={{flex:1}} className={'scroll-content'} defer options={{scrollbars: {autoHide: 'scroll'}}}>
+      <OverlayScrollbarsComponent style={{flex: 1}} className={'scroll-content'} defer
+                                  options={{scrollbars: {autoHide: 'scroll'}}}>
         <nav>
           <ul className="navigation-list">
-            <NavItem label={'Dashboard'} icon={<PiSquaresFour />} path={'/'} />
+            <NavItem label={'Dashboard'} icon={<PiSquaresFour/>} path={'/'}/>
             <NavItem
               label={'Mis tareas'}
-              icon={<TbListCheck />}
+              icon={<TbListCheck/>}
               path={'/my-tasks'}
               notifications={activityCount?.pending}
             />
             {config?.modules.includes('files') && (
-              <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
+              <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives/>} path={'/file-management'}/>
             )}
             {config?.modules.includes('attendance') && (
-              <NavItem label={'Asistencia'} icon={<PiClockUser />}>
-                <NavItem label={'Reportes'} icon={<PiPresentationChart />} path={'/attendance/dashboard'} />
-                <NavItem label={'Asistencia'} icon={<PiUsersThree />} path={'/attendance/management'} />
-                <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/attendance/access-control'} />
+              <NavItem label={'Asistencia'} icon={<PiClockUser/>}>
+                <NavItem label={'Reportes'} icon={<PiPresentationChart/>} path={'/attendance/dashboard'}/>
+                <NavItem label={'Asistencia'} icon={<PiUsersThree/>} path={'/attendance/management'}/>
+                <NavItem label={'Control de acceso'} icon={<PiUserFocus/>} path={'/attendance/access-control'}/>
               </NavItem>
             )}
             {config?.modules.includes('real-estate') && (
-              <NavItem label={'Constructora'} icon={<PiBulldozerLight />}>
-                <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/real-estate/dashboard'} />
-                <NavItem icon={<PiBuildingsLight />} label={'Propiedades'} path={'/real-estate/estates'} />
-                <NavItem icon={<PiVectorThreeLight />} label={'Proyectos'} path={'/real-estate/projects'} />
-                <NavItem icon={<PiDoorOpenLight />} label={'Entregas'} path={'/real-estate/providing'} />
+              <NavItem label={'Constructora'} icon={<PiBulldozerLight/>}>
+                <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/real-estate/dashboard'}/>
+                <NavItem icon={<PiBuildingsLight/>} label={'Propiedades'} path={'/real-estate/estates'}/>
+                <NavItem icon={<PiVectorThreeLight/>} label={'Proyectos'} path={'/real-estate/projects'}/>
+                <NavItem icon={<PiDoorOpenLight/>} label={'Entregas'} path={'/real-estate/providing'}/>
               </NavItem>
             )}
             {config?.modules.includes('commercial') && (
-              <NavItem label={'Comercial'} icon={<PiHandshake />}>
-                <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/commercial/dashboard'} />
-                <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
-                <NavItem icon={<PiUserFocus />} label={'Leads'} path={'/commercial/leads'} />
+              <NavItem label={'Comercial'} icon={<PiHandshake/>}>
+                <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/commercial/dashboard'}/>
+                <NavItem icon={<PiWarningDiamond/>} label={'Incidencias'} path={'/commercial/incidents'}/>
+                <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/commercial/leads'}/>
                 {(user?.roles?.includes('admin') || user?.roles?.includes('Ventas')) && (
                   <>
-                    <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
-                    <NavItem icon={<PiInvoiceDuotone />} label={'Pagos'} path={'/commercial/payments'} />
-                    <NavItem icon={<PiBoxArrowUp />} label={'Productos'} path={'/commercial/products'} />
-                    <NavItem icon={<PiCashRegister />} label={'Ventas'} path={'/commercial/sales'} />
+                    <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
+                    <NavItem icon={<PiInvoiceDuotone/>} label={'Pagos'} path={'/commercial/payments'}/>
+                    <NavItem icon={<PiBoxArrowUp/>} label={'Productos'} path={'/commercial/products'}/>
+                    <NavItem icon={<PiCashRegister/>} label={'Ventas'} path={'/commercial/sales'}/>
                   </>
                 )}
               </NavItem>
             )}
-            <NavItem label={'Inventario'} icon={<TbBuildingWarehouse />}>
-              <NavItem icon={<TbForklift />} label={'Movimientos'} path={'/warehouse/actividad'} />
-              <NavItem icon={<TbPackage />} label={'Productos'} path={'/warehouse/products'} />
-              <NavItem icon={<TbStack />} label={'Stock'} path={'/warehouse/stock'} />
+            <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>
+              <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/actividad'}/>
+              <NavItem icon={<TbPackage/>} label={'Productos'} path={'/warehouse/products'}/>
+              <NavItem icon={<TbStack/>} label={'Stock'} path={'/warehouse/stock'}/>
             </NavItem>
             {config?.modules.includes('move') && (
-              <NavItem icon={<PiCarProfile />} label={'Transporte'}>
-                <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/move/reservation'} />
-                <NavItem icon={<QueueListIcon />} label={'Mis reservas'} path={'/move/trips'} />
+              <NavItem icon={<PiCarProfile/>} label={'Transporte'}>
+                <NavItem icon={<TicketIcon/>} label={'Nueva reserva'} path={'/move/reservation'}/>
+                <NavItem icon={<QueueListIcon/>} label={'Mis reservas'} path={'/move/trips'}/>
                 {user?.roles?.includes('admin') && (
                   <>
                     <NavItem
-                      icon={<PiCarLight className={'icon'} />}
+                      icon={<PiCarLight className={'icon'}/>}
                       label={'Vehículos & conductores'}
                       path={'/move/vehicles'}
                     />
-                    <NavItem icon={<MapPinIcon />} label={'Rutas & lugares'} path={'/move/routes'} />
+                    <NavItem icon={<MapPinIcon/>} label={'Rutas & lugares'} path={'/move/routes'}/>
                   </>
                 )}
-                <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
+                <NavItem icon={<CalendarIcon/>} label={'Calendario'} path={'/move/schedule'}/>
               </NavItem>
             )}
             {config?.modules.includes('reservations') && (
-              <NavItem icon={<PiCalendarCheckLight />} label={'Reservas'}>
-                <NavItem icon={<TicketIcon />} label={'Nueva reserva'} path={'/reservations/create'} />
-                <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/manager'} />
+              <NavItem icon={<PiCalendarCheckLight/>} label={'Reservas'}>
+                <NavItem icon={<TicketIcon/>} label={'Nueva reserva'} path={'/reservations/create'}/>
+                <NavItem icon={<QueueListIcon/>} label={'Reservas'} path={'/reservations/manager'}/>
                 {user?.roles?.includes('admin') && (
                   <>
                     <NavItem
-                      icon={<TbBuildingEstate className={'icon'} />}
+                      icon={<TbBuildingEstate className={'icon'}/>}
                       label={'Espacios'}
                       path={'/reservations/vehicles'}
                     />
-                    <NavItem icon={<MapPinIcon />} label={'Servicios'} path={'/reservations/routes'} />
+                    <NavItem icon={<MapPinIcon/>} label={'Servicios'} path={'/reservations/routes'}/>
                   </>
                 )}
-                <NavItem icon={<CalendarIcon />} label={'Calendario'} path={'/move/schedule'} />
+                <NavItem icon={<CalendarIcon/>} label={'Calendario'} path={'/move/schedule'}/>
               </NavItem>
             )}
             {config?.modules.includes('club') && (
-              <NavItem label={'Club'} icon={<PiUsers />}>
-                <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
-                <NavItem label={'Importar pagos'} icon={<PiMoney />} path={'/club/payments-import'} />
+              <NavItem label={'Club'} icon={<PiUsers/>}>
+                <NavItem label={'Socios'} icon={<PiPerson/>} path={'/club/subscriptions'}/>
+                <NavItem label={'Importar pagos'} icon={<PiMoney/>} path={'/club/payments-import'}/>
               </NavItem>
             )}
 
-            {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
+            {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree/>} path={'/hr'}/>}
 
             {config?.modules.includes('lms') && (
-              <NavItem label={'LMS'} icon={<PiGraduationCap />}>
-                <NavItem label={'Cursos'} icon={<PiBooksLight />} path={'/lms/courses'} />
-                <NavItem label={'Estudiantes'} icon={<PiStudent />} path={'/lms/students'} />
-                <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
+              <NavItem label={'LMS'} icon={<PiGraduationCap/>}>
+                <NavItem label={'Cursos'} icon={<PiBooksLight/>} path={'/lms/courses'}/>
+                <NavItem label={'Estudiantes'} icon={<PiStudent/>} path={'/lms/students'}/>
+                <NavItem label={'Profesores'} icon={<FaChalkboardTeacher/>} path={'/lms/teachers'}/>
               </NavItem>
             )}
             {config?.modules.includes('inbox') && (
-              <NavItem label={'E-mail'} icon={<PiMailboxDuotone />} path={'/inbox-management'} />
+              <NavItem label={'E-mail'} icon={<PiMailboxDuotone/>} path={'/inbox-management'}/>
             )}
             {config?.modules.includes('payments') && (
-              <NavItem label={'Pagos'} icon={<PiCashRegister />} path={'/invoices'} />
+              <NavItem label={'Pagos'} icon={<PiCashRegister/>} path={'/invoices'}/>
             )}
             {user?.roles?.includes('admin') && (
               <>
-                <NavItem label={'Usuarios'} icon={<PiFingerprint />} path={'/profiles'} />
-                <NavItem label={'Empresas'} icon={<PiBuilding />} path={'/companies'} />
-                <NavItem label={'Administración'} icon={<PiGear />} path={'/config'} />
+                <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/profiles'}/>
+                <NavItem label={'Empresas'} icon={<PiBuilding/>} path={'/companies'}/>
+                <NavItem label={'Administración'} icon={<PiGear/>} path={'/config'}/>
               </>
             )}
           </ul>
@@ -266,24 +267,24 @@ const Navigation = () => {
             content={
               <>
                 <h3>Cargas</h3>
-                <UploadInformation />
+                <UploadInformation/>
               </>
             }>
             <Progress type={'circle'} size={30} percent={100} style={{marginBottom: '10px'}}>
-              <UploadOutlined />
+              <UploadOutlined/>
             </Progress>
           </Popover>
         )}
         <Space>
           <Badge count={0}>
             <div className={'user-tool'} onClick={() => {
-              api.success({message:'Hola'});
+              api.success({message: 'Hola'});
               console.log('alert');
             }}>
-              <BellIcon />
+              <BellIcon/>
             </div>
           </Badge>
-          <ScreenModeSelector />
+          <ScreenModeSelector/>
         </Space>
         <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: handleUserMenuClick}}>
           <div className={'user-menu'}>
@@ -294,7 +295,7 @@ const Navigation = () => {
               {user?.profile.name}
               <small>{user?.profile.email}</small>
             </div>
-            <PiDotsThreeVerticalBold size={20} />
+            <PiDotsThreeVerticalBold size={20}/>
           </div>
         </Dropdown>
       </div>

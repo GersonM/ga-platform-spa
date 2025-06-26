@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbTrash} from "react-icons/tb";
-import {Divider, Form, Modal, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
+import {Divider, Modal, Popover, Select, Space, Table, Tag} from "antd";
+import {PiWarning} from "react-icons/pi";
 import axios from "axios";
 
 import type {StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
-import TableList from "../../../CommonUI/TableList";
 import MoneyString from "../../../CommonUI/MoneyString";
-import FilterForm from "../../../CommonUI/FilterForm";
 import ProductStockForm from "../ProductStockForm";
 import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
-import {PiWarning} from "react-icons/pi";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
