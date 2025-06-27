@@ -1,16 +1,17 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip, Button, Row, Col, message, Spin} from 'antd';
-import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield, TbSearch} from 'react-icons/tb';
+import {Form, Input, Modal, Pagination, Popconfirm, Space, Tooltip, Button, Row, Col, message, Spin} from 'antd';
+import {TbPencil, TbTrash, TbSearch} from 'react-icons/tb';
 import axios from 'axios';
+import dayjs from "dayjs";
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import IconButton from '../../../CommonUI/IconButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-
 import FilterForm from '../../../CommonUI/FilterForm';
+import TableList from "../../../CommonUI/TableList";
 import './styles.less';
-import dayjs from "dayjs";
+import CompanyForm from "../../Components/CompanyForm";
 
 const CompaniesManagement = () => {
   const navigate = useNavigate();
@@ -136,21 +137,7 @@ const CompaniesManagement = () => {
     editForm.resetFields();
   };
 
-  const handleCreate = async (values: any) => {
-    try {
-      setLoading(true);
-      await axios.post('hr-management/companies', values);
-      message.success('Empresa creada exitosamente');
-      setReload(!reload);
-      setOpenCreateCompany(false);
-      createForm.resetFields();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error('Error creating company:', error);
-      message.error('Error al crear la empresa');
-    }
-  };
+
 
   const handleCancelCreate = () => {
     setOpenCreateCompany(false);
@@ -159,9 +146,15 @@ const CompaniesManagement = () => {
 
   const columns = [
     {
+      title: 'RUC / UID',
+      dataIndex: 'legal_uid',
+      width: 180,
+      render: (legal_uid: string) => legal_uid || <span style={{ color: '#999' }}>No especificado</span>
+    },
+    {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 280,
+      width: 200,
       render: (name: string, row: any) => (
         <a onClick={() => handleEdit(row)} style={{ cursor: 'pointer' }}>
           {name}
@@ -171,50 +164,31 @@ const CompaniesManagement = () => {
     {
       title: 'Email',
       dataIndex: 'email',
-      render: (email: string) => email || <span style={{ color: '#999' }}>Sin email</span>
     },
     {
       title: 'Teléfono',
       dataIndex: 'phone',
-      render: (phone: string) => phone || <span style={{ color: '#999' }}>Sin teléfono</span>
     },
     {
       title: 'Nombre Legal',
       dataIndex: 'legal_name',
-      width: 220,
-      render: (legal_name: string) => legal_name || <span style={{ color: '#999' }}>No especificado</span>
-    },
-    {
-      title: 'RUC / UID',
-      dataIndex: 'legal_uid',
-      width: 180,
-      render: (legal_uid: string) => legal_uid || <span style={{ color: '#999' }}>No especificado</span>
     },
     {
       title: 'Dirección Legal',
       dataIndex: 'legal_address',
-      width: 220,
-      render: (legal_address: string) => legal_address || <span style={{ color: '#999' }}>No especificada</span>
     },
     {
       title: 'Creado en',
       dataIndex: 'created_at',
       width: 160,
       render: (created_at: string) => {
-        return <Tooltip title={dayjs(created_at).format('DD/MM/YYYY HH:mm')}>{dayjs(created_at).fromNow()}</Tooltip>;
-      },
-    },
-    {
-      title: 'Actualizado en',
-      dataIndex: 'updated_at',
-      width: 160,
-      render: (updated_at: string) => {
-        return <Tooltip title={dayjs(updated_at).format('DD/MM/YYYY HH:mm')}>{dayjs(updated_at).fromNow()}</Tooltip>;
+        return <Tooltip title={dayjs(created_at).format('DD/MM/YYYY HH:mm a')}>{dayjs(created_at).fromNow()}</Tooltip>;
       },
     },
     {
       title: 'Acciones',
       dataIndex: 'uuid',
+      width: 100,
       render: (uuid: string, record: any) => (
         <Space wrap>
           <Tooltip title={'Editar'}>
@@ -239,45 +213,36 @@ const CompaniesManagement = () => {
     },
   ];
 
-  const RucInput = ({ form, placeholder }: { form: any, placeholder: string }) => (
-    <Input
-      placeholder={placeholder}
-      onChange={(e) => handleRucChange(e.target.value, form)}
-      suffix={rucLoading ? <Spin size="small" /> : <TbSearch />}
-      maxLength={11}
-    />
-  );
-
   return (
-    <div>
-      <ModuleContent withSidebar>
+    <>
+      <ModuleContent>
         <ContentHeader
           loading={loading}
           onRefresh={() => setReload(!reload)}
           title={'Compañías'}
           tools={`${pagination?.total || 0} compañías encontradas`}
           onAdd={() => setOpenCreateCompany(true)}
-        >
-            <Form.Item style={{ width: '30%' }}  label={'Buscar'}>
-              <Input.Search
-                allowClear
-                placeholder={'Buscar por nombre, email o RUC'}
-                onSearch={(value) => {
-                  setSearch(value);
-                  setCurrentPage(1);
-                }}
-              />
-            </Form.Item>
-        </ContentHeader>
-        <Table
+        />
+        <FilterForm>
+          <Form.Item label={'Buscar'}>
+            <Input.Search
+              allowClear
+              placeholder={'Buscar por nombre, email o RUC'}
+              onSearch={(value) => {
+                setSearch(value);
+                setCurrentPage(1);
+              }}
+            />
+          </Form.Item>
+        </FilterForm>
+        <TableList
           columns={columns}
           dataSource={companies}
           loading={loading}
           pagination={false}
-          rowKey="uuid"
-          style={{ width: '100%' }}
         />
         <Pagination
+          style={{marginTop: 10}}
           align={'center'}
           showSizeChanger={false}
           total={pagination?.total}
@@ -287,188 +252,18 @@ const CompaniesManagement = () => {
             setCurrentPage(page);
             setPageSize(size);
           }}
-          style={{ width: '100%' }}
         />
 
         <Modal
           title="Nueva Empresa"
           open={openCreateCompany}
           onCancel={handleCancelCreate}
-          width={800}
-          footer={[
-            <Button key="cancel" onClick={handleCancelCreate}>
-              Cancelar
-            </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              loading={loading}
-              onClick={() => createForm.submit()}
-            >
-              Crear Empresa
-            </Button>,
-          ]}
+          footer={false}
         >
-          <Form
-            form={createForm}
-            layout="vertical"
-            onFinish={handleCreate}
-          >
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="Nombre Comercial"
-                  name="name"
-                  rules={[{ required: true, message: 'El nombre es requerido' }]}
-                >
-                  <Input placeholder="Nombre de la empresa" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[{ type: 'email', message: 'Email no válido' }]}
-                >
-                  <Input placeholder="Email de contacto" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="Teléfono"
-                  name="phone"
-                >
-                  <Input placeholder="Teléfono de contacto" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label={
-                    <span>
-                      RUC/RUT/Documento Legal
-                      {rucLoading && <span style={{ color: '#1890ff', marginLeft: 8 }}>Consultando...</span>}
-                    </span>
-                  }
-                  name="legal_uid"
-                >
-                  <RucInput form={createForm} placeholder="Ingresa el RUC para autocompletar" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Form.Item
-              label="Razón Social"
-              name="legal_name"
-              extra="Se completará automáticamente al ingresar el RUC"
-            >
-              <Input placeholder="Razón social de la empresa" />
-            </Form.Item>
-
-            <Form.Item
-              label="Dirección Legal"
-              name="legal_address"
-              extra="Se completará automáticamente al ingresar el RUC"
-            >
-              <Input.TextArea
-                rows={3}
-                placeholder="Dirección legal completa"
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
-
-        <Modal
-          title={`Editar Empresa: ${editingCompany?.name}`}
-          open={openEditCompany}
-          onCancel={handleCancelEdit}
-          width={800}
-          footer={[
-            <Button key="cancel" onClick={handleCancelEdit}>
-              Cancelar
-            </Button>,
-            <Button
-              key="submit"
-              type="primary"
-              loading={loading}
-              onClick={() => editForm.submit()}
-            >
-              Actualizar
-            </Button>,
-          ]}
-        >
-          <Form
-            form={editForm}
-            layout="vertical"
-            onFinish={handleUpdate}
-          >
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="Nombre Comercial"
-                  name="name"
-                  rules={[{ required: true, message: 'El nombre es requerido' }]}
-                >
-                  <Input placeholder="Nombre de la empresa" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[{ type: 'email', message: 'Email no válido' }]}
-                >
-                  <Input placeholder="Email de contacto" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="Teléfono"
-                  name="phone"
-                >
-                  <Input placeholder="Teléfono de contacto" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label={
-                    <span>
-                      RUC/RUT/Documento Legal
-                      {rucLoading && <span style={{ color: '#1890ff', marginLeft: 8 }}>Consultando...</span>}
-                    </span>
-                  }
-                  name="legal_uid"
-                >
-                  <RucInput form={editForm} placeholder="Ingresa el RUC para autocompletar" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Form.Item
-              label="Razón Social"
-              name="legal_name"
-            >
-              <Input placeholder="Razón social de la empresa" />
-            </Form.Item>
-
-            <Form.Item
-              label="Dirección Legal"
-              name="legal_address"
-            >
-              <Input.TextArea
-                rows={3}
-                placeholder="Dirección legal completa"
-              />
-            </Form.Item>
-          </Form>
+          <CompanyForm />
         </Modal>
       </ModuleContent>
-    </div>
+    </>
   );
 };
 
