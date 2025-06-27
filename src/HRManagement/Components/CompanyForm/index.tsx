@@ -1,115 +1,142 @@
 import React, {useState} from 'react';
-import {Button, Col, Form, Input, message, Modal, Row, Spin} from "antd";
+import {Button, Col, Form, Input, message, notification, Row} from "antd";
 import axios from "axios";
 import {TbSearch} from "react-icons/tb";
 
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import type {Company} from "../../../Types/api.tsx";
+
 interface CompanyFormProps {
   onComplete?: () => void;
+  company?: Company;
 }
 
-const RucInput = ({ form, placeholder }: { form: any, placeholder: string }) => (
-  <Input
-    placeholder={placeholder}
-    onChange={(e) => handleRucChange(e.target.value, form)}
-    suffix={rucLoading ? <Spin size="small" /> : <TbSearch />}
-    maxLength={11}
-  />
-);
+const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
+    const [loading, setLoading] = useState(false);
+    const [loadingSearch, setLoadingSearch] = useState(false);
+    const [companyIDSearch, setCompanyIDSearch] = useState<string>();
+    const [form] = Form.useForm();
 
-const CompanyForm = ({onComplete}: CompanyFormProps) => {
-  const [loading, setLoading] = useState(false);
-  const [reload, setReload] = useState(false);
-  const [form] = Form.useForm();
-
-  const handleCreate = async (values: any) => {
-    try {
+    const handleCreate = (values: any) => {
       setLoading(true);
-      await axios.post('hr-management/companies', values);
-      message.success('Empresa creada exitosamente');
-      setReload(!reload);
-      setOpenCreateCompany(false);
-      form.resetFields();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error('Error creating company:', error);
-      message.error('Error al crear la empresa');
-    }
-  };
+      axios
+        .request({
+          url: company ? `hr-management/companies/${company.uuid}` : 'hr-management/companies',
+          method: company ? 'PUT':'POST',
+          data: values
+        })
+        .then(() => {
+          setLoading(false);
+          if (onComplete) {
+            onComplete();
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          ErrorHandler.showNotification(error);
+        });
+    };
 
-  return (
-    <div>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleCreate}
-      >
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              label="Nombre Comercial"
-              name="name"
-              rules={[{ required: true, message: 'El nombre es requerido' }]}
-            >
-              <Input placeholder="Nombre de la empresa" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ type: 'email', message: 'Email no válido' }]}
-            >
-              <Input placeholder="Email de contacto" />
-            </Form.Item>
-          </Col>
-        </Row>
+    const searchCompany = () => {
+      if (!companyIDSearch || companyIDSearch.length < 8) {
+        notification.error({message: 'Ingresa los 11 digitos el ruc para buscar'})
+        return;
+      }
+      setLoadingSearch(true);
+      axios.get(`hr-management/companies/lookup-ruc/${companyIDSearch}`)
+        .then((response) => {
+          setLoadingSearch(false);
+          const data = response.data.data;
+          form.setFieldsValue({
+            legal_name: data.razon_social,
+            legal_address: data.direccion,
+            name: data.razon_social || form.getFieldValue('name'),
+          });
+          message.success('Datos encontrados y cargados automáticamente');
+        })
+        .catch((error) => {
+          ErrorHandler.showNotification(error);
+        });
+    };
 
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              label="Teléfono"
-              name="phone"
-            >
-              <Input placeholder="Teléfono de contacto" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label={
-                <span>
-                      RUC/RUT/Documento Legal
-                  {rucLoading && <span style={{ color: '#1890ff', marginLeft: 8 }}>Consultando...</span>}
-                    </span>
-              }
-              name="legal_uid"
-            >
-              <RucInput form={createForm} placeholder="Ingresa el RUC para autocompletar" />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Form.Item
-          label="Razón Social"
-          name="legal_name"
-          extra="Se completará automáticamente al ingresar el RUC"
+    return (
+      <div>
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={company}
+          onFinish={handleCreate}
         >
-          <Input placeholder="Razón social de la empresa" />
-        </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label={'RUC/RUT/Documento Legal'}
+                name="legal_uid"
+              >
+                <Input
+                  addonAfter={<Button type={'link'} loading={loadingSearch} onClick={searchCompany}>Buscar</Button>}
+                  placeholder={'Buscar RUC'}
+                  onChange={evt => setCompanyIDSearch(evt.target.value)}
+                  prefix={<TbSearch/>}
+                  maxLength={11}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Nombre Comercial"
+                name="name"
+                rules={[{required: true, message: 'El nombre es requerido'}]}
+              >
+                <Input placeholder="Nombre de la empresa"/>
+              </Form.Item>
+            </Col>
+          </Row>
 
-        <Form.Item
-          label="Dirección Legal"
-          name="legal_address"
-          extra="Se completará automáticamente al ingresar el RUC"
-        >
-          <Input.TextArea
-            rows={3}
-            placeholder="Dirección legal completa"
-          />
-        </Form.Item>
-      </Form>
-    </div>
-  );
-};
+
+          <Form.Item
+            label="Razón Social"
+            name="legal_name"
+            extra="Se completará automáticamente al ingresar el RUC"
+          >
+            <Input placeholder="Razón social de la empresa"/>
+          </Form.Item>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Teléfono"
+                name="phone"
+              >
+                <Input placeholder="Teléfono de contacto"/>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[{type: 'email', message: 'Email no válido'}]}
+              >
+                <Input placeholder="Email de contacto"/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item
+            label="Dirección Legal"
+            name="legal_address"
+            extra="Se completará automáticamente al ingresar el RUC"
+          >
+            <Input.TextArea
+              rows={3}
+              placeholder="Dirección legal completa"
+            />
+          </Form.Item>
+          <PrimaryButton label={'Guardar'} loading={loading} htmlType="submit"/>
+        </Form>
+      </div>
+    );
+  }
+;
 
 export default CompanyForm;
