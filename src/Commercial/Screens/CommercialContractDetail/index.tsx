@@ -21,6 +21,8 @@ import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 import ProcessDetail from "../../../ProcessesManagement/Components/ProcessDetail";
+import ModalView from "../../../CommonUI/ModalView";
+import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -149,50 +151,46 @@ const CommercialContractDetail = () => {
         )}
       </ContentHeader>
       <Row gutter={[20, 20]}>
-        <Col xs={24} md={8} style={{position: "sticky", top: 20}}>
-          <p>
-            {!contract?.provided_at ? (
+        <Col xs={24} md={8}>
+          <div style={{position: "sticky", top: 62}}>
+            <p>
+              {!contract?.provided_at ? (
+                <PrimaryButton
+                  block
+                  disabled={!!contract?.cancelled_at}
+                  icon={<PiHandshake size={17}/>}
+                  label={'Registrar entrega'}
+                  onClick={() => setOpenContractProvideForm(true)}
+                />
+              ) : (
+                <PrimaryButton
+                  block
+                  disabled={!!contract?.cancelled_at && !contract?.provided_at}
+                  icon={<PiProhibitInset size={17}/>}
+                  label={'Revertir entrega'}
+                  onClick={() => setOpenProvisionRevert(true)}
+                />
+              )}
+            </p>
+            <p>
               <PrimaryButton
+                danger
                 block
+                icon={<PiReceiptXBold/>}
                 disabled={!!contract?.cancelled_at}
-                icon={<PiHandshake size={17}/>}
-                label={'Registrar entrega'}
-                onClick={() => setOpenContractProvideForm(true)}
+                label={'Anular contrato'}
+                onClick={() => setOpenCancelContract(true)}
               />
-            ) : (
-              <PrimaryButton
-                block
-                disabled={!!contract?.cancelled_at && !contract?.provided_at}
-                icon={<PiProhibitInset size={17}/>}
-                label={'Revertir entrega'}
-                onClick={() => setOpenProvisionRevert(true)}
-              />
-            )}
-          </p>
-          <p>
-            <PrimaryButton
-              danger
-              block
-              icon={<PiReceiptXBold/>}
-              disabled={!!contract?.cancelled_at}
-              label={'Anular contrato'}
-              onClick={() => setOpenCancelContract(true)}
-            />
-          </p>
-          <Divider>Datos del cliente:</Divider>
-          {contract?.client?.type.includes('Profile') ?
-            <Descriptions layout={'horizontal'} size={"small"} items={clientDetails}/> :
-            contract?.client?.entity?.uuid
-          }
-          <Divider>Contrato</Divider>
-          <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
-          <Divider>Actividad</Divider>
-          <List
-            dataSource={['Precio actualizado por Gerson', 'Actualizado por Gerson', 'Registro creado por Gerson']}
-            renderItem={(item) => (
-              <List.Item>{item}</List.Item>
-            )}
-          />
+            </p>
+            <Divider>Datos del cliente:</Divider>
+            {contract?.client?.type.includes('Profile') ?
+              <Descriptions layout={'horizontal'} size={"small"} items={clientDetails}/> :
+              contract?.client?.entity?.uuid
+            }
+            <Divider>Contrato</Divider>
+            <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
+            <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>
+          </div>
         </Col>
         <Col xs={24} md={16}>
           <Card variant={'borderless'}>
@@ -218,9 +216,9 @@ const CommercialContractDetail = () => {
                   {contract?.created_by && (
                     <>
                       <h3>Vendedor:</h3>
-                      <p>
+                      <div>
                         <ProfileChip profile={contract?.created_by}/>
-                      </p>
+                      </div>
                     </>
                   )}
                   {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
@@ -249,7 +247,7 @@ const CommercialContractDetail = () => {
           </Card>
         </Col>
       </Row>
-      <Modal open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)} destroyOnHidden footer={null}>
+      <ModalView open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)}>
         <h2>Revertir entrega</h2>
         <p>Especifique el motivo de la reversión de la entrega</p>
         <Form onFinish={submitProvisionRevert}>
@@ -258,12 +256,10 @@ const CommercialContractDetail = () => {
           </Form.Item>
           <PrimaryButton block label={'Enviar'} htmlType={'submit'}/>
         </Form>
-      </Modal>
-      <Modal
+      </ModalView>
+      <ModalView
         open={openContractProvideForm}
         onCancel={() => setOpenContractProvideForm(false)}
-        destroyOnHidden
-        footer={null}
         title={'Registrar entrega'}>
         <ContractProvideForm
           contract={contract}
@@ -272,7 +268,7 @@ const CommercialContractDetail = () => {
             setOpenContractProvideForm(false);
           }}
         />
-      </Modal>
+      </ModalView>
       <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnHidden footer={null}>
         {contract && (
           <CancelContract

@@ -117,7 +117,7 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Button block shape={'round'} loading={loading} type={'primary'} htmlType={'submit'}>
+      <Button block loading={loading} type={'primary'} htmlType={'submit'}>
         Registrar perfil
       </Button>
     </Form>

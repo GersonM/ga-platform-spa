@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {TbPencil, TbPlus, TbTrash} from "react-icons/tb";
-import {Divider, Modal, Popover, Select, Space, Table, Tag} from "antd";
+import React, {useContext, useEffect, useState} from 'react';
+import {TbPencil, TbPlus, TbRecycleOff, TbShredder, TbTrash} from "react-icons/tb";
+import {Divider, Modal, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import {PiWarning} from "react-icons/pi";
 import axios from "axios";
 
@@ -9,6 +9,8 @@ import MoneyString from "../../../CommonUI/MoneyString";
 import ProductStockForm from "../ProductStockForm";
 import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import AuthContext from "../../../Context/AuthContext.tsx";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -21,6 +23,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
   const [stockState, setStockState] = useState<string>();
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [openStockForm, setOpenStockForm] = useState(false)
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -46,6 +49,16 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     return cancelTokenSource.cancel;
   }, [reload, stockState]);
 
+  const deleteStock = (uuid: string, force: boolean = false) => {
+    axios.delete(`warehouses/stock/${uuid}`, {params: {force: force ? 1 : 0}})
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch((error) => {
+        ErrorHandler.showNotification(error);
+      });
+  }
+
   const columns: any[] = [
     {
       title: 'SKU',
@@ -59,16 +72,17 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     {
       title: 'Almacén',
       dataIndex: 'warehouse',
-      responsive:['md'],
+      responsive: ['md'],
       render: (warehouse: StorageWarehouse) => <>
         {warehouse.name} <br/>
         <small>{warehouse.address}</small>
       </>
     },
     {
-      title: 'Consumible',
+      title: 'Cantidad',
       dataIndex: 'is_consumable',
-      render: (is_consumable: boolean) => is_consumable ? 'SI' : 'No'
+      render: (is_consumable: boolean, row: StorageStock) =>
+        is_consumable ? row.quantity + ' ' + (row.product?.unit_type || 'unidades') : 'Ilimitado'
     },
     {
       title: 'Venta',
@@ -103,7 +117,14 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
             setSelectedStock(stock);
             setOpenStockForm(true);
           }}/>
-          <IconButton small icon={<TbTrash/>} danger/>
+          {user?.roles?.includes('admin') &&
+            <Tooltip title={'Destruir registro'}>
+              <IconButton small icon={<TbShredder/>} danger onClick={() => deleteStock(uuid, true)}/>
+            </Tooltip>
+          }
+          <Tooltip title={'Registrar como dañado'}>
+            <IconButton small icon={<TbRecycleOff/>} danger onClick={() => deleteStock(uuid)}/>
+          </Tooltip>
         </Space>;
       }
     }
@@ -130,7 +151,8 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
           setSelectedStock(undefined);
         }}/>
       </Space>
-      <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading} columns={columns} dataSource={productStock}/>
+      <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
+             columns={columns} dataSource={productStock}/>
       <Modal footer={null} open={openStockForm} onCancel={() => {
         setOpenStockForm(false);
         setSelectedStock(undefined);

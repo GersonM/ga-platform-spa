@@ -46,7 +46,6 @@ import {
   TbForklift,
   TbListCheck,
   TbPackage,
-  TbStack
 } from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
@@ -192,7 +191,6 @@ const Navigation = () => {
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>
               <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/actividad'}/>
               <NavItem icon={<TbPackage/>} label={'Productos'} path={'/warehouse/products'}/>
-              <NavItem icon={<TbStack/>} label={'Stock'} path={'/warehouse/stock'}/>
             </NavItem>
             {config?.modules.includes('move') && (
               <NavItem icon={<PiCarProfile/>} label={'Transporte'}>

@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import {Select} from 'antd';
+import {Select, Tag} from 'antd';
 
 import type {StorageStock} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -39,13 +39,14 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
         setLoading(false);
         if (response) {
           setStock(
-            response.data.data.map((item: any) => {
+            response.data.data.map((item: StorageStock) => {
+              const units = item.is_consumable ? item.quantity +' '+ item.product?.unit_type : 'Ilimitado';
               return {
                 value: item.uuid,
                 entity: item,
                 label: (
                   <>
-                    {item.sku} - <MoneyString value={item.sale_price} />
+                    {item.sku} - <MoneyString value={item.sale_price} /> <Tag bordered={false} color={item.is_consumable ? 'orange':'purple'}>{units}</Tag>
                   </>
                 ),
               };

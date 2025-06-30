@@ -60,7 +60,7 @@ const WarehouseProductsManager = () => {
     {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 190,
+      width: 200,
       render: (name: string, product: StorageProduct) => (
         <span>{name} <br/> <small>{product.code}</small></span>
       )
@@ -81,9 +81,18 @@ const WarehouseProductsManager = () => {
       dataIndex: 'manufacturer',
     },
     {
-      title: 'Stock',
+      title: 'Variaciones',
+      width: 50,
+      dataIndex: 'available_variations',
+    },
+    {
+      title: 'Existencias',
       width: 50,
       dataIndex: 'available_stock',
+    },
+    {
+      title: 'Tipo de unidad',
+      dataIndex: 'unit_type',
     },
     {
       title: '',

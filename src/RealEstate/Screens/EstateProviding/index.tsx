@@ -16,6 +16,7 @@ import type {Client, Invoice, Profile, ResponsePagination} from '../../../Types/
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
 import './styles.less';
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 
 const EstateProviding = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -153,15 +154,21 @@ const EstateProviding = () => {
       render: (items: any[]) => items.find(i => i.description == 'Vendedor')?.value,
     },
     {
+      title: 'Vendedor',
+      dataIndex: 'created_by',
+      width: 210,
+      render: (created_by: Profile) => <ProfileChip profile={created_by}/>,
+    },
+    {
       title: 'Nombre',
       dataIndex: 'client',
       width: 280,
       render: (client: Client) => {
         return (
           <>
-            {client.entity.name} {client.entity.last_name} <br />
+            {client.entity?.name} {client.entity?.last_name} <br/>
             <small>
-              <ProfileDocument profile={client.entity} />
+              <ProfileDocument profile={client.entity}/>
             </small>
           </>
         );
@@ -170,15 +177,17 @@ const EstateProviding = () => {
     {
       title: 'Monto',
       dataIndex: 'amount',
-      render: (amount: number) => <MoneyString value={amount} />,
+      render: (amount: number) => <MoneyString value={amount}/>,
     },
     {
       title: 'Fecha de compra',
+      width: 110,
       dataIndex: 'date_start',
       render: (date_start: string) => dayjs(date_start).format('DD-MM-YYYY'),
     },
     {
       title: 'Fecha de entrega',
+      width: 110,
       dataIndex: 'provided_at',
       render: (provided_at: string) => (provided_at ? dayjs(provided_at).format('DD-MM-YYYY') : ''),
     },
@@ -191,16 +200,16 @@ const EstateProviding = () => {
             <Tooltip
               title={
                 <>
-                  Total <MoneyString value={i.amount} />
+                  Total <MoneyString value={i.amount}/>
                   {i.pending_payment && (
                     <>
-                      Pendiente por pagar: <MoneyString value={i.pending_payment} />
+                      Pendiente por pagar: <MoneyString value={i.pending_payment}/>
                     </>
                   )}
                 </>
               }>
               <Tag color={i.paid_at ? 'green' : 'red'}>
-                {i.concept}: <MoneyString value={i.pending_payment} />
+                {i.concept}: <MoneyString value={i.pending_payment}/>
               </Tag>
             </Tooltip>
           );
@@ -220,7 +229,7 @@ const EstateProviding = () => {
             Total: {pagination?.total}
             <Tooltip title={'Exportar listado actual en formato excel'}>
               <PrimaryButton
-                icon={<RiFileExcel2Fill size={18} />}
+                icon={<RiFileExcel2Fill size={18}/>}
                 onClick={exportSelection}
                 size={'small'}
                 loading={downloading}
@@ -246,7 +255,7 @@ const EstateProviding = () => {
             setBlockFilter(values?.block);
           }}>
           <Form.Item name={'search'} label={'Buscar'}>
-            <Input allowClear placeholder={'Buscar por nombre, dni o correo'} />
+            <Input allowClear placeholder={'Buscar por nombre, dni o correo'}/>
           </Form.Item>
           <Form.Item name={'stage'} label={'Etapa'}>
             <Select
@@ -263,7 +272,7 @@ const EstateProviding = () => {
             />
           </Form.Item>
           <Form.Item name={'block'} label={'Manzana'}>
-            <Input placeholder={'Todas'} allowClear style={{width: 75}} />
+            <Input placeholder={'Todas'} allowClear style={{width: 75}}/>
           </Form.Item>
           <Form.Item name={'provided'} label={'Entregado'}>
             <Select
@@ -298,12 +307,12 @@ const EstateProviding = () => {
               size={40}
               percent={Math.round((commercialStats?.contracts.provided * 100) / commercialStats.contracts.total)}
             />
-            <Statistic title={'Entregados'} value={commercialStats.contracts.provided} />
-            <Statistic title={'Vendidas'} value={commercialStats.contracts.total} />
+            <Statistic title={'Entregados'} value={commercialStats.contracts.provided}/>
+            <Statistic title={'Vendidas'} value={commercialStats.contracts.total}/>
           </>
         )}
       </Space>
-      <TableList loading={loading} columns={columns} dataSource={clients} pagination={false} />
+      <TableList loading={loading} columns={columns} dataSource={clients} pagination={false}/>
       {pagination && (
         <Pagination
           size="small"

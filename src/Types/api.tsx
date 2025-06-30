@@ -624,6 +624,7 @@ export type StorageProduct = {
   model?: string;
   name: string;
   type?: string;
+  unit_type?: string;
   updated_at: string;
 };
 export type StorageStock = {
@@ -631,6 +632,8 @@ export type StorageStock = {
   currency?: string;
   cost_price?: number;
   sale_price?: number;
+  quantity?: number;
+  is_consumable?: boolean;
   created_at: string;
   fk_product_uuid: string;
   fk_warehouse_uuid: string;

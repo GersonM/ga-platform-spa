@@ -22,6 +22,7 @@ import InvoiceItemForm from '../InvoiceItemForm';
 import {PiPencilSimple, PiPlus, PiTrash} from 'react-icons/pi';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import dayjs, {type Dayjs} from "dayjs";
+import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 
 interface InvoiceTableDetailsProps {
   invoice?: Invoice;
@@ -110,6 +111,7 @@ const InvoiceTableDetails = ({
     <div>
       <Descriptions layout={"vertical"} size={"small"} items={invoicesItems}/>
       <TableList small columns={columns} dataSource={invoice?.items} pagination={false}/>
+      <ActivityLogViewer entity={'invoice'} id={invoice?.uuid}/>
       <PrimaryButton
         size={'small'}
         icon={<PiPlus size={16}/>}

@@ -22,7 +22,7 @@ const MoneyInput = ({value, currency = 'PEN', onChange, onCurrencyChange, ...pro
           onChange(value ? value * 100 : undefined);
         }
       }}
-      prefix={currencies[currency]}
+      addonBefore={currencies[currency]}
       value={value ? value / 100 : null}
       {...props}
     />
