@@ -6,6 +6,7 @@ interface PrimaryButtonProps {
   label?: string;
   className?: string;
   href?: string;
+  shape?: 'circle' | 'default' | 'round';
   htmlType?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   children?: ReactNode;

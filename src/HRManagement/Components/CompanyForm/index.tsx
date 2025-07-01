@@ -8,7 +8,7 @@ import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {Company} from "../../../Types/api.tsx";
 
 interface CompanyFormProps {
-  onComplete?: () => void;
+  onComplete?: (company: Company) => void;
   company?: Company;
 }
 
@@ -26,10 +26,10 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
           method: company ? 'PUT':'POST',
           data: values
         })
-        .then(() => {
+        .then((response) => {
           setLoading(false);
           if (onComplete) {
-            onComplete();
+            onComplete(response.data);
           }
         })
         .catch((error) => {
@@ -75,10 +75,9 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
                 name="legal_uid"
               >
                 <Input
-                  addonAfter={<Button type={'link'} loading={loadingSearch} onClick={searchCompany}>Buscar</Button>}
+                  addonAfter={<Button type={'link'} loading={loadingSearch} icon={<TbSearch/>} onClick={searchCompany}>Buscar</Button>}
                   placeholder={'Buscar RUC'}
                   onChange={evt => setCompanyIDSearch(evt.target.value)}
-                  prefix={<TbSearch/>}
                   maxLength={11}
                 />
               </Form.Item>

@@ -5,6 +5,7 @@ import {PiPlusBold} from 'react-icons/pi';
 import SearchProfile from '../SearchProfile';
 import PrimaryButton from '../PrimaryButton';
 import CreateProfile from '../../AccountManagement/Components/CreateProfile';
+import type {Profile} from "../../Types/api.tsx";
 
 interface ProfileSelectorProps {
   placeholder?: string;
@@ -21,21 +22,18 @@ interface ProfileSelectorProps {
 }
 
 const ProfileSelector = ({
-  placeholder,
-  mode,
-  exclude,
-  filter,
-  value,
   onChange,
   allowCreate = true
 }: ProfileSelectorProps) => {
   const [openCreateProfile, setOpenCreateProfile] = useState(false);
+  const [createdProfile, setCreatedProfile] = useState<Profile>();
 
   return (
     <div>
       <div style={{display: 'flex'}}>
         <SearchProfile
           style={{flex: 1}}
+          placeholder={createdProfile?.name}
           onChange={(values, item) => {
             //setSelectedProfile(item);
             if (onChange) {
@@ -60,6 +58,7 @@ const ProfileSelector = ({
         <CreateProfile
           onCompleted={profile => {
             //setSelectedProfile(profile);
+            setCreatedProfile(profile);
             setOpenCreateProfile(false);
             if (onChange) {
               onChange(profile.uuid, profile);

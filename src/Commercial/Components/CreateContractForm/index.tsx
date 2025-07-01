@@ -12,6 +12,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import StockViewerState from '../StockViewerState';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import MoneyInput from "../../../CommonUI/MoneyInput";
+import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 
 interface CreateContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -21,6 +22,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
   const {user} = useContext(AuthContext);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
+  const [clientType, setClientType] = useState<'company' | 'profile'>()
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
 
   useEffect(() => {
@@ -72,14 +74,33 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Producto'} name={'stock_uuid'}>
-              <StockSelector onChange={uuid => setSelectedStockUUID(uuid)} />
+              <StockSelector onChange={uuid => setSelectedStockUUID(uuid)}/>
             </Form.Item>
-            <Form.Item label={'Cliente'} name={'fk_profile_uuid'}>
-              <ProfileSelector />
+            <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
+              <Select
+                showSearch
+                onChange={value => setClientType(value)}
+                placeholder={'Seleccione modalidad'}
+                options={[
+                  {value: 'company', label: 'Empresa'},
+                  {value: 'profile', label: 'Persona'},
+                ]}
+              />
             </Form.Item>
+            {clientType == 'company' && (
+              <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
+                <CompanySelector onChange={value => {
+                  console.log(value);
+                }}/>
+              </Form.Item>
+            )}
+            {clientType == 'profile' && (
+              <Form.Item label={'Persona'} name={'fk_profile_uuid'}>
+                <ProfileSelector/>
+              </Form.Item>
+            )}
             <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
               <Select
-                variant={'filled'}
                 showSearch
                 placeholder={'Seleccione modalidad'}
                 options={[
@@ -105,12 +126,12 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
               />
             </Form.Item>
             <Form.Item label={'Precio de venta'} name={'sale_price'}>
-              <MoneyInput placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''} />
+              <MoneyInput placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
             </Form.Item>
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-              <Input.TextArea />
+              <Input.TextArea/>
             </Form.Item>
-            <PrimaryButton loading={loading} block htmlType={'submit'} label={'Registrar contrato'} />
+            <PrimaryButton loading={loading} block htmlType={'submit'} label={'Registrar contrato'}/>
           </Col>
           <Col span={12}>
             <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
@@ -119,18 +140,18 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
                 <strong>{selectedStock.product?.name}</strong>
                 <p>{selectedStock.product?.description}</p>
                 {selectedStock.product?.type == 'property' &&
-                <StockViewerState stock={selectedStock} />
+                  <StockViewerState stock={selectedStock}/>
                 }
-                <Divider />
+                <Divider/>
                 <p>
                   <strong>Precio de venta: </strong>
                   <span>
-                    <MoneyString value={selectedStock?.sale_price} />
+                    <MoneyString value={selectedStock?.sale_price}/>
                   </span>
                 </p>
               </>
             ) : (
-              <EmptyMessage message={'Elige un producto para ver los detalles'} />
+              <EmptyMessage message={'Elige un producto para ver los detalles'}/>
             )}
             <p>
               <strong>Vendedor: </strong>

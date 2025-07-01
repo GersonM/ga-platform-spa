@@ -1,7 +1,21 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, List, Modal, Row, Tabs, Tag} from 'antd';
-import {PiHandshake, PiProhibitInset, PiReceiptXBold} from 'react-icons/pi';
+import {
+  Card,
+  Col,
+  Descriptions,
+  type DescriptionsProps,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Steps,
+  Tabs,
+  Tag
+} from 'antd';
+import {PiReceiptXBold} from 'react-icons/pi';
+import {TbCancel, TbCheck} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -89,7 +103,7 @@ const CommercialContractDetail = () => {
       });
   };
 
-  if (!params.contract) {
+  if (!contract) {
     return null;
   }
 
@@ -112,8 +126,19 @@ const CommercialContractDetail = () => {
         <Tag color={'orange'}>Pendiente de entrega</Tag>
       )
     },
-    {key: '2', span: 3, label: 'Monto', children: <MoneyString value={contract?.amount}/>},
+    {
+      key: '2',
+      span: 3,
+      label: 'Monto',
+      children: <MoneyString currency={contract?.contractable.currency} value={contract?.amount}/>
+    },
     {key: 'product', span: 3, label: 'Producto', children: contract?.contractable.sku},
+    {
+      key: '3',
+      span: 3,
+      label: 'Aprobación',
+      children: contract?.approved_at ? dayjs(contract?.approved_at).format('DD/MM/YYYY HH:mm a') : 'Sin aprobación'
+    },
     {
       key: '3',
       span: 3,
@@ -126,14 +151,32 @@ const CommercialContractDetail = () => {
       label: 'Fecha de inicio',
       children: dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm a')
     },
-    {key: '5', span: 3, label: 'Observaciones', children: contract?.observations},
     {
       key: '6',
       span: 3,
       label: 'Vendedor',
       children: <>{contract?.created_by?.name} {contract?.created_by?.last_name}</>
     },
+    {key: '5', span: 3, label: 'Observaciones', children: contract?.observations},
   ];
+
+  let stepNumber = 1;
+  let status = 'proposal';
+
+  if (contract?.approved_at) {
+    stepNumber = 1;
+    status = 'approved';
+  }
+
+  if (contract?.signed_at) {
+    stepNumber = 2;
+    status = 'provisioning';
+  }
+
+  if (contract?.provided_at || contract?.cancelled_at) {
+    stepNumber = 4;
+    status = contract?.cancelled_at ? 'canceled' : 'provided';
+  }
 
   return (
     <ModuleContent>
@@ -141,37 +184,79 @@ const CommercialContractDetail = () => {
         loading={loading}
         onRefresh={() => setReload(!reload)}
         showBack
+        tools={<Tag>{status}</Tag>}
         title={
           <>
-            {contract?.contractable.sku} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}{' '}
+            {contract?.contractable.sku} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
           </>
         }>
         {contract?.cancelled_at && (
           <AlertMessage message={'Este contrato fué anulado'} caption={contract?.cancellation_reason} type={'error'}/>
         )}
       </ContentHeader>
+      <Steps
+        type="navigation"
+        size={"small"}
+        style={{marginBottom: 20}}
+        current={stepNumber}
+        items={[
+          {
+            title: 'Propuesta',
+            description: <small>{dayjs(contract?.created_at).format('DD/MM/YYYY')}</small>,
+          },
+          {
+            title: 'Aprobado',
+            subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
+            description: !contract?.approved_at && (
+              <PrimaryButton
+                size={"small"}
+                icon={<TbCheck/>}
+                disabled={!!contract?.cancelled_at}
+                label={'Registrar aprobación'}
+                onClick={() => setOpenContractProvideForm(true)}
+              />
+            ),
+          },
+          {
+            title: 'Inicio',
+            description: <small>{dayjs(contract?.signed_at).format('DD/MM/YYYY')}</small>,
+          },
+          {
+            title: 'Documentación',
+            status: 'wait',
+            description: <small>{contract?.items?.length} items</small>,
+          },
+          contract?.cancelled_at ? {
+              title: 'Anulado',
+              status: 'error',
+              description: <small>{dayjs(contract?.cancelled_at).format('DD/MM/YYYY')}</small>,
+            } :
+            {
+              title: 'Entrega',
+              description:
+                !contract?.provided_at ? (
+                  <PrimaryButton
+                    size={'small'}
+                    icon={<TbCheck/>}
+                    disabled={!!contract?.cancelled_at}
+                    label={'Registrar entrega'}
+                    onClick={() => setOpenContractProvideForm(true)}
+                  />
+                ) : (
+                  <PrimaryButton
+                    size={'small'}
+                    disabled={!!contract?.cancelled_at && !contract?.provided_at}
+                    icon={<TbCancel/>}
+                    label={'Revertir entrega'}
+                    onClick={() => setOpenProvisionRevert(true)}
+                  />
+                ),
+            },
+        ]}
+      />
       <Row gutter={[20, 20]}>
         <Col xs={24} md={8}>
           <div style={{position: "sticky", top: 62}}>
-            <p>
-              {!contract?.provided_at ? (
-                <PrimaryButton
-                  block
-                  disabled={!!contract?.cancelled_at}
-                  icon={<PiHandshake size={17}/>}
-                  label={'Registrar entrega'}
-                  onClick={() => setOpenContractProvideForm(true)}
-                />
-              ) : (
-                <PrimaryButton
-                  block
-                  disabled={!!contract?.cancelled_at && !contract?.provided_at}
-                  icon={<PiProhibitInset size={17}/>}
-                  label={'Revertir entrega'}
-                  onClick={() => setOpenProvisionRevert(true)}
-                />
-              )}
-            </p>
             <p>
               <PrimaryButton
                 danger
@@ -189,7 +274,7 @@ const CommercialContractDetail = () => {
             }
             <Divider>Contrato</Divider>
             <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
-            <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>
+            {contract && <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>}
           </div>
         </Col>
         <Col xs={24} md={16}>
@@ -241,7 +326,7 @@ const CommercialContractDetail = () => {
               {
                 key: 'crm',
                 label: 'CRM',
-                children: <EntityActivityManager refresh={reload} uuid={params.contract} type={'commercial-contract'}/>
+                children: <EntityActivityManager refresh={reload} uuid={contract.uuid} type={'commercial-contract'}/>
               }
             ]}/>
           </Card>

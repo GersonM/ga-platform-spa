@@ -1,5 +1,3 @@
-
-
 interface MoneyStringProps {
   value?: number;
   currency?: string;
