@@ -136,9 +136,10 @@ const CompaniesManagement = () => {
         <ContentHeader
           loading={loading}
           onRefresh={() => setReload(!reload)}
-          title={'Compañías'}
+          title={'Empresas'}
           tools={`${pagination?.total || 0} compañías encontradas`}
           onAdd={() => setOpenCreateCompany(true)}
+          description={'Directorio de empresas con las que trabajas'}
         />
         <FilterForm>
           <Form.Item label={'Buscar'}>
@@ -183,6 +184,7 @@ const CompaniesManagement = () => {
         >
           <CompanyForm company={selectedCompany} onComplete={() => {
             setOpenCreateCompany(false);
+            setSelectedCompany(undefined);
             setReload(!reload);
           }}/>
         </Modal>
