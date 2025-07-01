@@ -52,6 +52,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
   }, [selectedStockUUID]);
 
   const submitForm = (data: any) => {
+    console.log(data);
     setLoading(true);
     axios
       .post('commercial/contracts', data)
@@ -87,16 +88,16 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
                 ]}
               />
             </Form.Item>
-            {clientType == 'company' && (
-              <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
-                <CompanySelector onChange={value => {
-                  console.log(value);
-                }}/>
-              </Form.Item>
-            )}
             {clientType == 'profile' && (
               <Form.Item label={'Persona'} name={'fk_profile_uuid'}>
                 <ProfileSelector/>
+              </Form.Item>
+            )}
+            {clientType == 'company' && (
+              <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
+                <CompanySelector onChange={value => {
+                  console.log('company', value);
+                }}/>
               </Form.Item>
             )}
             <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>

@@ -79,6 +79,7 @@ const CompanySelector = (
           filterOption={false}
           loading={loading}
           options={companies}
+          onChange={onChange}
           mode={mode || undefined}
           onSearch={value => setSearchCompany(value)}
           optionRender={(option: any) => {
@@ -108,7 +109,7 @@ const CompanySelector = (
         open={openCreateCompany}
         onCancel={() => setOpenCreateCompany(false)}>
         <CompanyForm
-          onCompleted={(company: Company) => {
+          onComplete={(company: Company) => {
             setCreatedCompany(company);
             setOpenCreateCompany(false);
             if (onChange) {
