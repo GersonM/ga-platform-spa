@@ -73,7 +73,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item label="Fabricante/Proveedor" name={'manufacturer'}>
+      <Form.Item label="Fabricante" name={'manufacturer'}>
         <ProductManufacturerSelector/>
       </Form.Item>
       <Divider>Avanzado</Divider>

@@ -10,6 +10,7 @@ import ProductSelector from "../ProductSelector";
 import WarehouseSelector from "../WarehouseSelector";
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
+import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -100,6 +101,9 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
       </Row>
+      <Form.Item label="Proveedor" name={'fk_provider_uuid'}>
+        <CompanySelector filter={'providers'} />
+      </Form.Item>
       <Row gutter={15}>
         <Col md={6}>
           <Form.Item label="Moneda" name={'currency'}>
@@ -112,7 +116,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
         <Col md={9}>
-          <Form.Item label="Venta" name={'sale_price'}>
+          <Form.Item label="Venta" name={'sale_price'} tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
             <MoneyInput currency={currentCurrency || stock?.currency}/>
           </Form.Item>
         </Col>

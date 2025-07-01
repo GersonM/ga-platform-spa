@@ -95,9 +95,7 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
             )}
             {clientType == 'company' && (
               <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
-                <CompanySelector onChange={value => {
-                  console.log('company', value);
-                }}/>
+                <CompanySelector />
               </Form.Item>
             )}
             <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>

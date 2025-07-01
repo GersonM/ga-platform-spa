@@ -4,8 +4,6 @@ import {PiPlusBold} from 'react-icons/pi';
 import type {Company, Profile} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import CompanyForm from "../CompanyForm";
-import SearchProfile from "../../../CommonUI/SearchProfile";
-import ProfileDocument from "../../../CommonUI/ProfileTools/ProfileDocument.tsx";
 import axios from "axios";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import {useDebounce} from "@uidotdev/usehooks";
@@ -30,8 +28,9 @@ const CompanySelector = (
     onChange,
     placeholder,
     mode,
-    allowCreate = true
-    , ...props
+    filter,
+    allowCreate = true,
+    ...props
   }: CompanySelectorProps) => {
   const [openCreateCompany, setOpenCreateCompany] = useState(false);
   const [createdCompany, setCreatedCompany] = useState<Company>();
@@ -44,7 +43,7 @@ const CompanySelector = (
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {search: lastSearchText, page:1},
+      params: {search: lastSearchText, page: 1, filter},
     };
 
     setLoading(true);
