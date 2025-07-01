@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Form, Input, Modal, Pagination, Popconfirm, Space, Tooltip, message, Spin} from 'antd';
-import {TbPencil, TbTrash, TbSearch} from 'react-icons/tb';
+import {TbPencil, TbTrash, TbSearch, TbUsersGroup} from 'react-icons/tb';
 import axios from 'axios';
 import dayjs from "dayjs";
 
@@ -71,12 +71,11 @@ const CompaniesManagement = () => {
     {
       title: 'RUC / UID',
       dataIndex: 'legal_uid',
-      width: 180,
+      width: 110,
     },
     {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 200,
     },
     {
       title: 'Email',
@@ -95,22 +94,22 @@ const CompaniesManagement = () => {
       dataIndex: 'legal_address',
     },
     {
-      title: 'Creado en',
-      dataIndex: 'created_at',
-      width: 160,
-      render: (created_at: string) => {
-        return <Tooltip title={dayjs(created_at).format('DD/MM/YYYY HH:mm a')}>{dayjs(created_at).fromNow()}</Tooltip>;
-      },
-    },
-    {
       title: 'Acciones',
       dataIndex: 'uuid',
-      width: 100,
+      width: 120,
       render: (uuid: string, record: any) => (
-        <Space wrap>
+        <Space wrap size={"small"}>
           <Tooltip title={'Editar'}>
             <IconButton
+              small
               icon={<TbPencil/>}
+              onClick={() => handleEdit(record)}
+            />
+          </Tooltip>
+          <Tooltip title={'Empleados'}>
+            <IconButton
+              small
+              icon={<TbUsersGroup/>}
               onClick={() => handleEdit(record)}
             />
           </Tooltip>
@@ -122,7 +121,7 @@ const CompaniesManagement = () => {
               okText="Sí, eliminar"
               cancelText="Cancelar"
             >
-              <IconButton icon={<TbTrash/>} danger/>
+              <IconButton icon={<TbTrash/>} small danger/>
             </Popconfirm>
           </Tooltip>
         </Space>
