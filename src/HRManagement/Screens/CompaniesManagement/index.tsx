@@ -3,7 +3,6 @@ import {useNavigate} from 'react-router-dom';
 import {Form, Input, Modal, Pagination, Popconfirm, Space, Tooltip, message, Spin} from 'antd';
 import {TbPencil, TbTrash, TbSearch, TbUsersGroup} from 'react-icons/tb';
 import axios from 'axios';
-import dayjs from "dayjs";
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import IconButton from '../../../CommonUI/IconButton';
@@ -24,7 +23,6 @@ const CompaniesManagement = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState<string>();
-  const [selectedCompany, setSelectedCompany] = useState<Company>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -60,11 +58,6 @@ const CompaniesManagement = () => {
       console.error('Error deleting company:', error);
       message.error('Error al eliminar la empresa');
     }
-  };
-
-  const handleEdit = (company: any) => {
-    setSelectedCompany(company);
-    setOpenCreateCompany(true);
   };
 
   const columns = [
@@ -103,14 +96,14 @@ const CompaniesManagement = () => {
             <IconButton
               small
               icon={<TbPencil/>}
-              onClick={() => handleEdit(record)}
+              onClick={() => navigate(`/companies/${uuid}/info`)}
             />
           </Tooltip>
           <Tooltip title={'Empleados'}>
             <IconButton
               small
               icon={<TbUsersGroup/>}
-              onClick={() => handleEdit(record)}
+              onClick={() => navigate(`/companies/${uuid}/employees`)}
             />
           </Tooltip>
           <Tooltip title={'Eliminar'}>
@@ -176,14 +169,12 @@ const CompaniesManagement = () => {
           open={openCreateCompany}
           onCancel={() => {
             setOpenCreateCompany(false);
-            setSelectedCompany(undefined);
           }}
           destroyOnHidden
           footer={false}
         >
-          <CompanyForm company={selectedCompany} onComplete={() => {
+          <CompanyForm onComplete={() => {
             setOpenCreateCompany(false);
-            setSelectedCompany(undefined);
             setReload(!reload);
           }}/>
         </Modal>
