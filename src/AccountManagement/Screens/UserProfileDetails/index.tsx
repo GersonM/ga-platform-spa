@@ -3,7 +3,7 @@ import {Tabs} from 'antd';
 import ProfileEditor from '../../Components/ProfileEditor';
 import UserSessionsManager from '../../Components/UserSessionsManager';
 import PersonSubscription from '../../../PaymentManagement/Components/PersonSubscription';
-import ProfilePayments from '../../../PaymentManagement/Components/ProfilePayments';
+import ProfilePayments from '../../../PaymentManagement/Components/ProfileFinanceManagement';
 import ProfileActivity from '../../../EntityActivity/Components/ProfileActivity';
 import FileActivityProfile from '../../../FileManagement/Components/FileActivityProfile';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -26,7 +26,7 @@ const UserProfileDetails = () => {
             }}
             className={'users-tab-bar'}
             type={'card'}
-            destroyInactiveTabPane
+            destroyOnHidden
             activeKey={params.tab}
             items={[
               {
