@@ -77,7 +77,7 @@ const WarehouseProductsManager = () => {
       width: 120,
     },
     {
-      title: 'Fabricante / Proveedor',
+      title: 'Empresa',
       dataIndex: 'manufacturer',
     },
     {

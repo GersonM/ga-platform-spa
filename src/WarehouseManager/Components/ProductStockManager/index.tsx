@@ -63,7 +63,15 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     {
       title: 'SKU',
       dataIndex: 'sku',
-      width: 80,
+      width: 120,
+      render: (sku: string, row: StorageStock) => {
+        return <>
+          {sku} <br/>
+          <small>
+            {row.provider ? row.provider.company.name : 'Sin proveedor'}
+          </small>
+        </>;
+      }
     },
     {
       title: 'Estado',

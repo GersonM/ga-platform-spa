@@ -11,6 +11,7 @@ import WarehouseSelector from "../WarehouseSelector";
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
+import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -91,7 +92,8 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
         <Col md={7} xs={12}>
-          <Form.Item label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'} rules={[{required: true}]}>
+          <Form.Item label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
+                     rules={[{required: true}]}>
             <WarehouseSelector/>
           </Form.Item>
         </Col>
@@ -102,7 +104,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         </Col>
       </Row>
       <Form.Item label="Proveedor" name={'fk_provider_uuid'}>
-        <CompanySelector filter={'providers'} />
+        <CompanySelector filter={'providers'}/>
       </Form.Item>
       <Row gutter={15}>
         <Col md={6}>
@@ -116,7 +118,8 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
         <Col md={9}>
-          <Form.Item label="Venta" name={'sale_price'} tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
+          <Form.Item label="Venta" name={'sale_price'}
+                     tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
             <MoneyInput currency={currentCurrency || stock?.currency}/>
           </Form.Item>
         </Col>
@@ -129,7 +132,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           <Form.Item
             name={'is_consumable'}
             valuePropName={'checked'}
-            help={isConsumable ? 'Solo puede ser vendido según la cantidad':'Puede ser vendido multiples veces'}>
+            help={isConsumable ? 'Solo puede ser vendido según la cantidad' : 'Puede ser vendido multiples veces'}>
             <Checkbox onChange={(value) => setIsConsumable(value.target.checked)}>
               Tiene stock limitado
             </Checkbox>
@@ -144,6 +147,9 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         </Col>
       </Row>
       <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
+      {stock &&
+        <ActivityLogViewer id={stock?.uuid} entity={'storage_stock'}/>
+      }
     </Form>
   );
 };

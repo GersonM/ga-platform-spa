@@ -644,6 +644,7 @@ export type StorageStock = {
   updated_at: string;
   product?: StorageProduct;
   warehouse?: StorageWarehouse;
+  provider?: any;
 };
 export type StorageWarehouse = {
   uuid: string;
