@@ -37,6 +37,7 @@ import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 import ProcessDetail from "../../../ProcessesManagement/Components/ProcessDetail";
 import ModalView from "../../../CommonUI/ModalView";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
+import ContractItemsManager from "../../Components/ContractItemsManager";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -107,7 +108,7 @@ const CommercialContractDetail = () => {
     return null;
   }
 
-  const clientDetails: DescriptionsProps['items'] = [
+  const clientProfile: DescriptionsProps['items'] = [
     {
       key: '1',
       span: 3,
@@ -115,6 +116,17 @@ const CommercialContractDetail = () => {
       children: contract?.client?.entity.name + ' ' + contract?.client?.entity.last_name
     },
     {key: '2', span: 3, label: 'DNI', children: contract?.client?.entity.doc_number},
+    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity.phone},
+  ];
+
+  const clientCompany: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      span: 3,
+      label: 'Nombre',
+      children: contract?.client?.entity.name
+    },
+    {key: '2', span: 3, label: 'RUC', children: contract?.client?.entity.legal_uid},
     {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity.phone},
   ];
 
@@ -255,7 +267,7 @@ const CommercialContractDetail = () => {
         ]}
       />
       <Row gutter={[20, 20]}>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={7}>
           <div style={{position: "sticky", top: 62}}>
             <p>
               <PrimaryButton
@@ -268,16 +280,15 @@ const CommercialContractDetail = () => {
               />
             </p>
             <Divider>Datos del cliente:</Divider>
-            {contract?.client?.type.includes('Profile') ?
-              <Descriptions layout={'horizontal'} size={"small"} items={clientDetails}/> :
-              contract?.client?.entity?.uuid
-            }
+            <Descriptions
+              layout={'horizontal'} size={"small"}
+              items={contract?.client?.type.includes('Profile') ? clientProfile : clientCompany}/>
             <Divider>Contrato</Divider>
             <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
             {contract && <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>}
           </div>
         </Col>
-        <Col xs={24} md={16}>
+        <Col xs={24} md={17}>
           <Card variant={'borderless'}>
             <Tabs style={{marginTop: -20}} centered items={[
               {
@@ -317,11 +328,7 @@ const CommercialContractDetail = () => {
               {
                 key: 'documents',
                 label: 'Documentos',
-                children: <>
-                  {contract &&
-                    <ProcessDetail profile={contract.client?.entity} entityUuid={contract?.client?.entity.uuid}
-                                   type={'contract'}/>}
-                </>
+                children: <ContractItemsManager contract={contract} group={'documents'}/>
               },
               {
                 key: 'crm',
@@ -354,7 +361,7 @@ const CommercialContractDetail = () => {
           }}
         />
       </ModalView>
-      <Modal open={openCancelContract} onCancel={() => setOpenCancelContract(false)} destroyOnHidden footer={null}>
+      <ModalView open={openCancelContract} onCancel={() => setOpenCancelContract(false)}>
         {contract && (
           <CancelContract
             contract={contract}
@@ -364,7 +371,7 @@ const CommercialContractDetail = () => {
             }}
           />
         )}
-      </Modal>
+      </ModalView>
     </ModuleContent>
   );
 };

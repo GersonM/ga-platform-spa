@@ -1,6 +1,6 @@
 .file-uploader-wrapper {
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   background: var(--background-color);
   cursor: pointer;
   position: relative;
@@ -51,6 +51,21 @@
     &:hover {
       background: var(--background-color);
       border-color: var(--primary-color);
+    }
+  }
+
+  &.small {
+    padding: 0;
+    border: none;
+    min-height: 20px;
+    border-radius: 4px;
+    background: none;
+
+    .content-label {
+      border-radius: 10px;
+      padding: 8px 20px;
+      display: flex;
+      flex-direction: row;
     }
   }
 

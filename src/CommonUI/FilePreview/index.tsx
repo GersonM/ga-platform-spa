@@ -1,52 +1,74 @@
+import {useEffect, useState} from "react";
 import {Image, Popover} from 'antd';
-import {EyeIcon, TrashIcon} from '@heroicons/react/16/solid';
+import {TrashIcon} from '@heroicons/react/16/solid';
+import axios from 'axios';
 
 import IconButton from '../IconButton';
+import type {ApiFile} from "../../Types/api.tsx";
+import LoadingIndicator from "../LoadingIndicator";
+import FileIcon from "../../FileManagement/Components/FileIcon";
 import './styles.less';
 
 interface FilePreviewProps {
-  file: string;
-  type?: string;
-  name: string;
+  fileUuid: string;
   onDelete?: () => void;
 }
 
-const FilePreview = ({file, type, name, onDelete}: FilePreviewProps) => {
+const FilePreview = ({fileUuid, onDelete}: FilePreviewProps) => {
+  const [file, setFile] = useState<ApiFile>();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+    };
+
+    setLoading(true);
+
+    axios
+      .get(`file-management/files/${fileUuid}`, config)
+      .then(response => {
+        if (response) {
+          setFile(response.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+
+    return cancelTokenSource.cancel;
+  }, []);
+
+
   return (
     <div className={'file-preview-container'}>
-      <div>{name}</div>
-      <div className={'actions'}>
+      <LoadingIndicator overlay={true} visible={loading}/>
         <Popover
           content={
-            type?.includes('image') ? (
-              <Image
-                placeholder={'Loading...'}
-                loading={'lazy'}
-                src={file}
-                width={200}
-              />
-            ) : (
-              <a
-                href={file}
-                target={'_blank'}>
-                Open file
-              </a>
-            )
+            <>
+              <p>{file?.name}</p>
+            {file?.thumbnail &&
+              <Image loading={'lazy'} src={file?.thumbnail} width={200}/>}
+            </>
           }>
-          <IconButton
-            icon={<EyeIcon />}
-            small
-          />
+          {file &&
+            <IconButton
+              href={file?.source}
+              target={'_blank'}
+              icon={<FileIcon file={file} size={22}/>}
+            />
+          }
         </Popover>
         {onDelete && (
           <IconButton
             danger
             small
             onClick={onDelete}
-            icon={<TrashIcon />}
+            icon={<TrashIcon/>}
           />
         )}
-      </div>
     </div>
   );
 };

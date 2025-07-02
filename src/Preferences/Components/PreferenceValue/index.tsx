@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {Col, ColorPicker, Input, InputNumber, Row, Select, Space, Switch} from 'antd';
-import {CheckIcon, TrashIcon} from '@heroicons/react/24/outline';
 import axios from 'axios';
 
 import type {SettingValue} from '../../../Types/api';

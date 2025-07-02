@@ -114,6 +114,10 @@ export type ContractItem = {
   group: string;
   value: string;
   type: string;
+  additional_details?: string;
+  is_required?: boolean;
+  approved_at?: string;
+  approved_by?: Profile;
 };
 export type Employee = {
   uuid: string;
