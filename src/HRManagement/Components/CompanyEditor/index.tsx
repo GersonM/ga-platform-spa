@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Col, Form, Input, Row} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
+import {useNavigate} from 'react-router-dom';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
@@ -30,6 +31,7 @@ const CompanyEditor = ({companyUuid, onCompleted}: CompanyEditorProps) => {
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [form] = useForm();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -67,8 +69,10 @@ const CompanyEditor = ({companyUuid, onCompleted}: CompanyEditorProps) => {
       .put(`hr-management/companies/${companyUuid}`, values)
       .then(response => {
         if (response) {
-          setReload(!reload);
+          setLoading(false);
           onCompleted && onCompleted();
+          // Redirigir automáticamente a la lista de empresas
+          navigate('/companies');
         }
       })
       .catch(e => {
@@ -76,7 +80,6 @@ const CompanyEditor = ({companyUuid, onCompleted}: CompanyEditorProps) => {
         ErrorHandler.showNotification(e);
       });
   };
-
 
   if (!company) return null;
 
