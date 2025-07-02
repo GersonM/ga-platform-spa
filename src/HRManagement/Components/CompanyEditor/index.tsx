@@ -77,55 +77,6 @@ const CompanyEditor = ({companyUuid, onCompleted}: CompanyEditorProps) => {
       });
   };
 
-  const terminateCompany = () => {
-    setLoading(true);
-    axios
-      .delete(`hr-management/companies/${company?.uuid}`)
-      .then(response => {
-        if (response) {
-          if (onCompleted) {
-            onCompleted();
-          }
-          setLoading(false);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const disableCompany = () => {
-    setLoading(true);
-    axios
-      .post(`hr-management/companies/${company?.uuid}/disable`)
-      .then(response => {
-        if (response) {
-          setLoading(false);
-          setReload(!reload);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const enableCompany = () => {
-    setLoading(true);
-    axios
-      .post(`hr-management/companies/${company?.uuid}/enable`)
-      .then(response => {
-        if (response) {
-          setLoading(false);
-          setReload(!reload);
-        }
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
 
   if (!company) return null;
 
