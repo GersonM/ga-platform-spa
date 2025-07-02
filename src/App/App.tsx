@@ -61,6 +61,7 @@ const WarehouseProductsManager = lazy(() => import('../WarehouseManager/Screens/
 const AttendanceManager = lazy(() => import('../ClubManagement/Screens/AttendanceManagement'));
 const GoogleCallback = lazy(() => import('../Authentication/Screen/GoogleCallback'));
 const WorkspaceManagement = lazy(() => import('../Workspaces/Screens/WorkspaceManagement'));
+const CompanyDetails = lazy(() => import('../HRManagement/Screens/CompanyDetails'));
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -192,7 +193,9 @@ const App = () => {
         </Route>
         {user && <Route path={'my-account'} element={<MyAccount />} />}
         <Route path={'companies'} element={<CompaniesManagement />} />
-        {/*<Route path={'companies/:uuid'} element={<CompanyDetails/>}/>*/}
+        <Route path={'companies/:uuid'} element={<CompanyDetails />}>
+          <Route path={':tab'} />
+        </Route>
         <Route
           path={'*'}
           element={
