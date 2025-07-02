@@ -40,7 +40,15 @@ const CompanyDetails = () => {
                   </div>
                 ),
               },
-              
+              {
+                label: 'Empleados',
+                key: 'employees',
+                children: (
+                  <div className={'companies-tab-content'}>
+                    <CompanyEmployees companyUuid={params.uuid} />
+                  </div>
+                ),
+              },
 
             ]}
           />
