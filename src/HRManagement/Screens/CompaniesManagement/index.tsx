@@ -79,7 +79,7 @@ const CompaniesManagement = () => {
       dataIndex: 'phone',
     },
     {
-      title: 'Nombre Legal',
+      title: 'Razón social',
       dataIndex: 'legal_name',
     },
     {

@@ -50,6 +50,7 @@ const EstatesManager = lazy(() => import('../RealEstate/Screens/EstatesManager')
 const RealEstateDashboard = lazy(() => import('../RealEstate/Screens/RealEstateDashboard'));
 const EstateDetailView = lazy(() => import('../RealEstate/Screens/EstateDetailView'));
 const CommercialDashboard = lazy(() => import('../Commercial/Screens/CommercialDashboard'));
+const CommercialSales = lazy(() => import('../Commercial/Screens/CommercialSales'));
 const EstateProviding = lazy(() => import('../RealEstate/Screens/EstateProviding'));
 const MyAccount = lazy(() => import('../AccountTools/Screens/MyAccount'));
 const MembersAccessControl = lazy(() => import('../ClubManagement/Screens/MembersAccessControl'));
@@ -175,9 +176,8 @@ const App = () => {
           <Route path={'incidents'} element={<CommercialIncidents />} />
           <Route path={'leads/:campaign?'} element={<CommercialLeads />} />
           <Route path={'clients'} element={<CommercialClients />} />
+          <Route path={'sales'} element={<CommercialSales />} />
           <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
-          <Route path={'payments'} element={<CommercialClients />} />
-          <Route path={'sales'} element={<EstateProviding />} />
         </Route>
         <Route path={'warehouse'}>
           <Route path={'products'} element={<WarehouseProductsManager />} />

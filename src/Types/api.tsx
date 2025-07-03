@@ -633,6 +633,8 @@ export type StorageProduct = {
 };
 export type StorageStock = {
   uuid: string;
+  sku: string;
+  variation_name: string;
   currency?: string;
   cost_price?: number;
   sale_price?: number;
@@ -643,7 +645,6 @@ export type StorageStock = {
   fk_warehouse_uuid: string;
   metadata?: any;
   observations?: string;
-  sku: string;
   status: string;
   updated_at: string;
   product?: StorageProduct;

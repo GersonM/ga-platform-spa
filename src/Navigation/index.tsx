@@ -181,8 +181,6 @@ const Navigation = () => {
                 {(user?.roles?.includes('admin') || user?.roles?.includes('Ventas')) && (
                   <>
                     <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
-                    <NavItem icon={<PiInvoiceDuotone/>} label={'Pagos'} path={'/commercial/payments'}/>
-                    <NavItem icon={<PiBoxArrowUp/>} label={'Productos'} path={'/commercial/products'}/>
                     <NavItem icon={<PiCashRegister/>} label={'Ventas'} path={'/commercial/sales'}/>
                   </>
                 )}
