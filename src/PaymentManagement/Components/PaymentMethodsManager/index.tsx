@@ -17,7 +17,6 @@ import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ModalView from "../../../CommonUI/ModalView";
 import PaymentMethodForm from "../PaymentMethodForm";
 import IconButton from "../../../CommonUI/IconButton";
-import PayuWidget from "../PayuWidget";
 
 interface PaymentMethodsManagerProps {
   profileUuid: string;
@@ -119,7 +118,6 @@ const PaymentMethodsManager = ({profileUuid}: PaymentMethodsManagerProps) => {
     <div>
       <TableList columns={columns} dataSource={methods} loading={loading}/>
       <PrimaryButton label={'Agregar nuevo método de pago'} onClick={() => setOpenMethodsForm(true)}/>
-      <PayuWidget key={'asdf'} amount={'3452345'} />
       <ModalView onCancel={() => {
         setOpenMethodsForm(false);
         setSelectedMethod(undefined);
