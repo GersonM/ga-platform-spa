@@ -61,7 +61,7 @@ const CompanyDetails = () => {
               label: 'Información general',
               key: 'info',
               children: (
-                <CompanyForm company={company} onComplete={() => setReload(!reload)}/>
+                company && <CompanyForm company={company} onComplete={() => setReload(!reload)}/>
               ),
             },
             {

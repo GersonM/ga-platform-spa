@@ -22,18 +22,19 @@ interface TableListProps {
   pagination?: false | TablePaginationConfig;
 }
 
-const TableList = ({
-                     small,
-                     loading,
-                     columns,
-                     customStyle = true,
-                     dataSource,
-                     expandable,
-                     onClick,
-                     size,
-                     rowKey = 'uuid',
-                     ...props
-                   }: TableListProps) => {
+const TableList = (
+  {
+    small,
+    loading,
+    columns,
+    customStyle = true,
+    dataSource,
+    expandable,
+    onClick,
+    size,
+    rowKey = 'uuid',
+    ...props
+  }: TableListProps) => {
   return (
     <Table
       onRow={(record, rowIndex) => {

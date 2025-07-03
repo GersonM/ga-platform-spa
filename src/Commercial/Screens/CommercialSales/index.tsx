@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
+import {TbBuilding, TbPencil, TbUser} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -10,15 +11,13 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import FilterForm from '../../../CommonUI/FilterForm';
 import type {Client, Contract, Invoice, Profile, ResponsePagination, StorageStock} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
-import './styles.less';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
-import {TbPencil} from "react-icons/tb";
 import IconButton from "../../../CommonUI/IconButton";
+import './styles.less';
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -112,15 +111,6 @@ const CommercialSales = () => {
       });
   };
 
-  const deleteClient = (uuid: string) => {
-    axios
-      .delete(`commercial/clients/${uuid}`)
-      .then(() => {
-        setReload(true);
-      })
-      .catch(error => ErrorHandler.showNotification(error));
-  };
-
   const columns = [
     {
       title: 'Producto',
@@ -136,14 +126,25 @@ const CommercialSales = () => {
     {
       title: 'Cliente',
       dataIndex: 'client',
-      width: 350,
+      width: 300,
       render: (client: Client) => {
+        const isCompany = client.type.includes('Company');
+        const e = client.entity;
+        if (!e) return 'Sin cliente';
         return (
           <>
-            {client.entity?.name} {client.entity?.last_name} <br/>
-            <small>
-              <ProfileDocument profile={client.entity}/>
-            </small>
+            <Space>
+              {isCompany ? <TbBuilding size={25}/> : <TbUser size={25}/>}
+              <div>
+                {isCompany ? (e.name || e.legal_name) : (e.name + ' ' + e.last_name)}
+                <small>
+                  {isCompany ?
+                    `RUC: ${e.legal_uid}` :
+                    `${e.doc_type}: ${e.doc_number}`
+                  }
+                </small>
+              </div>
+            </Space>
           </>
         );
       },
@@ -171,13 +172,18 @@ const CommercialSales = () => {
     },
     {
       title: 'Fecha de compra',
-      width: 110,
+      width: 140,
       dataIndex: 'date_start',
-      render: (date_start: string) => dayjs(date_start).format('DD-MM-YYYY'),
+      render: (date_start: string) => {
+        return <>
+          {dayjs(date_start).fromNow()}
+          <small>{dayjs(date_start).format('DD/MM/YYYY HH:MM')}</small>
+        </>
+      },
     },
     {
       title: 'Fecha de entrega',
-      width: 110,
+      width: 140,
       dataIndex: 'provided_at',
       render: (provided_at: string) => (provided_at ? dayjs(provided_at).format('DD-MM-YYYY') : ''),
     },
@@ -308,10 +314,11 @@ const CommercialSales = () => {
           </>
         )}
       </Space>
-      <TableList loading={loading} columns={columns} dataSource={clients} pagination={false}/>
+      <TableList scroll={{x: 1100}} customStyle={false} loading={loading} columns={columns} dataSource={clients}/>
       {pagination && (
         <Pagination
-          size="small"
+          style={{marginTop: 10}}
+          align={'center'}
           onChange={(page, size) => {
             setCurrentPage(page);
             setPageSize(size);
