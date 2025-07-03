@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Input, Pagination, Popconfirm, Space, Tooltip, message, Tag} from 'antd';
 import axios from 'axios';
-import {TbPlus, TbReload, TbUserCancel} from 'react-icons/tb';
+import {TbPlus, TbReload, TbTrash, TbUserCancel} from 'react-icons/tb';
 import type {ColumnsType} from "antd/es/table";
 import {TrashIcon} from "@heroicons/react/16/solid";
 import dayjs from "dayjs";
@@ -151,7 +151,8 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
     {
       title: 'Acciones',
       width: 80,
-      render: (_uuid: string, record) => (
+      dataIndex:'uuid',
+      render: (uuid: string, record) => (
         <Space>
           {!record.termination_date && (
             <Tooltip title="Terminar empleado">
@@ -175,12 +176,12 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
               description="¿Estás seguro de que deseas eliminar este empleado permanentemente?"
               okText="Eliminar"
               cancelText="Cancelar"
-              onConfirm={() => removeEmployee(record.uuid)}
+              onConfirm={() => removeEmployee(uuid)}
             >
               <IconButton
                 small
                 danger
-                icon={<TrashIcon className="h-3 w-3"/>}
+                icon={<TbTrash/>}
               />
             </Popconfirm>
           </Tooltip>
