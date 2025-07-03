@@ -47,7 +47,7 @@ const CompanyDetails = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title={'Información de la empresa'} onBack={() => navigate('/companies')}/>
+      <ContentHeader title={'Información de ' + company?.name} onBack={() => navigate('/companies')}/>
       {params.uuid && (
         <Tabs
           onChange={tab => {

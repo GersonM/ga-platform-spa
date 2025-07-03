@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Input, Pagination, Popconfirm, Space, Tooltip, message, Tag} from 'antd';
 import axios from 'axios';
-import {TbUserCancel} from 'react-icons/tb';
+import {TbPlus, TbReload, TbUserCancel} from 'react-icons/tb';
 import type {ColumnsType} from "antd/es/table";
 import {TrashIcon} from "@heroicons/react/16/solid";
 import dayjs from "dayjs";
@@ -13,6 +13,7 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import CreateEmployeeModal from '../CreateEmployeeModal'; // Importar el nuevo modal
 import type {Employee, Profile} from "../../../Types/api.tsx";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
 
 interface CompanyEmployeesProps {
   companyUuid: string;
@@ -186,23 +187,20 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
 
   return (
     <>
-      <ContentHeader
-        loading={loading}
-        onRefresh={() => setReload(!reload)}
-        title={'Empleados'}
-        tools={`${pagination?.total || 0} empleados encontrados`}
-        onAdd={handleAddEmployee}
-      />
-
-      <Input.Search
-        allowClear
-        placeholder={'Buscar por código, cargo, nombre o email...'}
-        onSearch={(value) => {
-          setSearch(value);
-          setCurrentPage(1);
-        }}
-        style={{maxWidth: 450}}
-      />
+      <Space>
+        <Input.Search
+          allowClear
+          placeholder={'Buscar por código, cargo, nombre o email...'}
+          onSearch={(value) => {
+            setSearch(value);
+            setCurrentPage(1);
+          }}
+          style={{maxWidth: 450}}
+        />
+        <PrimaryButton icon={<TbPlus />} label={'Nuevo empleado'} onClick={handleAddEmployee}/>
+        <IconButton icon={<TbReload/>} onClick={() => setReload(!reload)}/>
+      </Space>
+      <p>{pagination?.total || 0} empleados encontrados</p>
 
       <TableList
         columns={columns}

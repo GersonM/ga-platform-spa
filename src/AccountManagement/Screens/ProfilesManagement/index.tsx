@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
-import {TbLockCog, TbPencil, TbTrash, TbUserOff, TbUserShield} from 'react-icons/tb';
+import {TbIdBadge2, TbLockCog, TbPencil, TbTrash, TbUser, TbUserOff, TbUserShield} from 'react-icons/tb';
 import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -72,7 +72,7 @@ const ProfilesManagement = () => {
       render: (user: User, profile: Profile) => {
         return (
           <Space>
-            {user ? <PiIdentificationCard size={25} color={user.disabled_at ? 'red' : ''} /> : <PiUser />}
+            {user ? <TbIdBadge2 size={20} color={user.disabled_at ? 'red' : ''} /> : <TbUser size={18} />}
             {profile.login_method === 'none' && <NoSymbolIcon width={15} />}
           </Space>
         );
@@ -94,8 +94,8 @@ const ProfilesManagement = () => {
         if (user?.roles?.length > 0) {
           return user.roles.map((role: any, index: number) => {
             return (
-              <Tag key={index} color={'#006bd1'}>
-                {role._name}
+              <Tag key={index} color={'blue-inverse'}>
+                {role.name}
               </Tag>
             );
           });
