@@ -131,7 +131,7 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
               placeholder="Dirección legal completa"
             />
           </Form.Item>
-          <PrimaryButton label={'Guardar'} loading={loading} htmlType="submit"/>
+          <PrimaryButton block label={'Guardar'} loading={loading} htmlType="submit"/>
         </Form>
       </div>
     );

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Form, Input, Button, Divider, message} from 'antd';
+import {Form, Input, Button, Divider, message, Row, Col} from 'antd';
 import {UserAddOutlined} from '@ant-design/icons';
 import axios from 'axios';
 
@@ -7,6 +7,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import ModalView from "../../../CommonUI/ModalView";
 import ProfileSelector from "../../../CommonUI/ProfileSelector";
 import MoneyInput from "../../../CommonUI/MoneyInput";
+import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface CreateEmployeeModalProps {
   visible: boolean;
@@ -62,33 +63,28 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = (
         </Form.Item>
 
         <Divider>Información de empleado</Divider>
-        <Form.Item label="Cargo/Posición" name="position">
+        <Form.Item label="Fecha de inicio" name="joining_at">
           <Input placeholder="Ej: Desarrollador, Gerente, etc."/>
         </Form.Item>
-        <Form.Item label="Area / Departamento" name="working_department">
-          <Input placeholder="Ej: Administración, Marketing, etc."/>
-        </Form.Item>
-        <Form.Item label="Salario mensual" name="monthly_salary">
+        <Row gutter={15}>
+          <Col span={12}>
+            <Form.Item label="Area / Departamento" name="working_department">
+              <Input placeholder="Ej: Administración, Marketing, etc."/>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Cargo/Posición" name="position">
+              <Input placeholder="Ej: Desarrollador, Gerente, etc."/>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item label="Salario mensual (opcional)" name="monthly_salary">
           <MoneyInput/>
         </Form.Item>
         <Form.Item label="Centro de Costo" name="cost_center">
           <Input placeholder="Código del centro de costo"/>
         </Form.Item>
-
-        <div className="flex justify-end gap-2 mt-6">
-          <Button onClick={onCancel} disabled={loading}>
-            Cancelar
-          </Button>
-          <Button
-            style={{marginLeft: '10px'}}
-            type="primary"
-            htmlType="submit"
-            loading={loading}
-            icon={<UserAddOutlined/>}
-          >
-            {creationMode === 'existing' ? 'Crear Empleado' : 'Crear Perfil y Empleado'}
-          </Button>
-        </div>
+        <PrimaryButton loading={loading} htmlType="submit" label={'Guardar'} block/>
       </Form>
     </ModalView>
   );

@@ -18,7 +18,7 @@ const ProfileChip = ({profile, caption}: IProfileCardProps) => {
       {profile && (
         <>
           <Avatar src={profile.avatar?.thumbnail} className={'avatar'}>
-            <TbUserSquareRounded size={22} />
+            <TbUserSquareRounded size={22} style={{marginTop: 6}} />
           </Avatar>
           <div>
             {profile.name} {profile.last_name}
