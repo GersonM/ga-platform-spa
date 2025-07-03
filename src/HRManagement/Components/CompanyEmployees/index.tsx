@@ -6,12 +6,11 @@ import type {ColumnsType} from "antd/es/table";
 import {TrashIcon} from "@heroicons/react/16/solid";
 import dayjs from "dayjs";
 
+import type {Employee, Profile} from "../../../Types/api.tsx";
 import IconButton from '../../../CommonUI/IconButton';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from "../../../CommonUI/TableList";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import CreateEmployeeModal from '../CreateEmployeeModal'; // Importar el nuevo modal
-import type {Employee, Profile} from "../../../Types/api.tsx";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 
@@ -111,17 +110,22 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
     {
       title: 'Cargo',
       dataIndex: 'position',
-      render: (position) => <span style={{fontSize: '12px'}}>{position || '-'}</span>,
     },
     {
       title: 'Departamento',
       dataIndex: 'working_department',
-      render: (department) => <span style={{fontSize: '12px'}}>{department || '-'}</span>,
     },
     {
       title: 'F. Ingreso',
-      dataIndex: 'created_at',
-      render: (created_at: string) => created_at ? dayjs(created_at).fromNow() : 'No',
+      dataIndex: 'joining_date',
+      render: (created_at: string) => {
+        return <>
+          {created_at && dayjs(created_at).fromNow()}
+          <small>
+            {created_at && dayjs(created_at).format('DD/MM/YYYY')}
+          </small>
+        </>
+      },
       sorter: (a, b) => {
         //@ts-ignore
         return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
@@ -130,7 +134,7 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
     {
       title: 'F. Terminación',
       dataIndex: 'termination_date',
-      render: (termination_date: string) => termination_date ? dayjs(termination_date).format('DD/MM/YYYY') : '-',
+      render: (termination_date: string) => termination_date && dayjs(termination_date).format('DD/MM/YYYY'),
     },
     {
       title: 'Estado',

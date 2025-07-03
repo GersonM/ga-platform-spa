@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Form, Input, Button, Divider, message, Row, Col} from 'antd';
-import {UserAddOutlined} from '@ant-design/icons';
+import {Form, Input, Divider, message, Row, Col, DatePicker} from 'antd';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -25,7 +24,6 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = (
   }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [creationMode, setCreationMode] = useState<'existing' | 'new'>('existing');
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
@@ -63,8 +61,8 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = (
         </Form.Item>
 
         <Divider>Información de empleado</Divider>
-        <Form.Item label="Fecha de inicio" name="joining_at">
-          <Input placeholder="Ej: Desarrollador, Gerente, etc."/>
+        <Form.Item label="Fecha de inicio" name="joining_date">
+          <DatePicker />
         </Form.Item>
         <Row gutter={15}>
           <Col span={12}>

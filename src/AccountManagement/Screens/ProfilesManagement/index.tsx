@@ -14,7 +14,6 @@ import IconButton from '../../../CommonUI/IconButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
-import {PiIdentificationCard, PiUser} from 'react-icons/pi';
 import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import './styles.less';
