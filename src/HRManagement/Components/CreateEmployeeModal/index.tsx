@@ -133,6 +133,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
             Seleccionar Perfil Existente
           </Button>
           <Button
+            style={{marginLeft: '10px'}}
             type={creationMode === 'new' ? 'primary' : 'default'}
             onClick={() => handleModeChange('new')}
             icon={<PlusOutlined />}
@@ -151,6 +152,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
         {creationMode === 'existing' ? (
           <>
             <Form.Item
+              style={{marginTop: '20px'}}
               label="Seleccionar Perfil"
               name="profile_uuid"
               rules={[{ required: true, message: 'Por favor selecciona un perfil' }]}
@@ -251,6 +253,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = ({
             Cancelar
           </Button>
           <Button
+            style={{marginLeft:'10px'}}
             type="primary"
             htmlType="submit"
             loading={loading}

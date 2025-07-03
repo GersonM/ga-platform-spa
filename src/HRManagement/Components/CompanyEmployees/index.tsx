@@ -234,7 +234,7 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
               >
                 <IconButton
                   small
-                  icon={<TbUserCancel style={{ fontSize: '12px' }} />}
+                  icon={<TbUserCancel style={{ fontSize: '22px' }} />}
                 />
               </Popconfirm>
             </Tooltip>
