@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select} from "antd";
+import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Button, Divider} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 import type {StorageProduct, StorageStock} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
@@ -19,10 +20,17 @@ interface ProductStockFormProps {
   onComplete?: () => void;
 }
 
+interface MetadataField {
+  key: string;
+  value: string;
+  id: string;
+}
+
 const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) => {
   const [form] = useForm();
   const [currentCurrency, setCurrentCurrency] = useState<string>();
   const [isConsumable, setIsConsumable] = useState(stock?.is_consumable);
+  const [metadataFields, setMetadataFields] = useState<MetadataField[]>([]);
 
   useEffect(() => {
     if (form) {
@@ -30,13 +38,67 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
     }
   }, [stock, form]);
 
+  useEffect(() => {
+    if (stock?.metadata) {
+      try {
+        const parsedMetadata = typeof stock.metadata === 'string'
+          ? JSON.parse(stock.metadata)
+          : stock.metadata;
+
+        const fields = Object.entries(parsedMetadata || {}).map(([key, value], index) => ({
+          key,
+          value: String(value),
+          id: `field_${index}`
+        }));
+
+        setMetadataFields(fields.length > 0 ? fields : [{ key: '', value: '', id: 'field_0' }]);
+      } catch (error) {
+        console.error('Error parsing metadata:', error);
+        setMetadataFields([{ key: '', value: '', id: 'field_0' }]);
+      }
+    } else {
+      setMetadataFields([{ key: '', value: '', id: 'field_0' }]);
+    }
+  }, [stock]);
+
+  const addField = () => {
+    const newId = `field_${Date.now()}`;
+    setMetadataFields([...metadataFields, { key: '', value: '', id: newId }]);
+  };
+
+  const removeField = (id: string) => {
+    if (metadataFields.length > 1) {
+      setMetadataFields(metadataFields.filter(field => field.id !== id));
+    }
+  };
+
+  const updateField = (id: string, type: 'key' | 'value', newValue: string) => {
+    setMetadataFields(metadataFields.map(field =>
+      field.id === id ? { ...field, [type]: newValue } : field
+    ));
+  };
+
+  const buildMetadataObject = () => {
+    const metadata: Record<string, string> = {};
+    metadataFields.forEach(field => {
+      if (field.key.trim() && field.value.trim()) {
+        metadata[field.key.trim()] = field.value.trim();
+      }
+    });
+    return metadata;
+  };
+
   const submit = (values: any) => {
+    const metadata = buildMetadataObject();
+
     const data = {
       ...values,
       product_uuid: product ? product.uuid : values.product_uuid,
       cost_price: values.cost_price,
       sale_price: values.sale_price,
+      metadata: JSON.stringify(metadata),
     }
+
     axios
       .request({
         url: stock ? `warehouses/stock/${stock.uuid}` : "warehouses/stock",
@@ -146,6 +208,57 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           }
         </Col>
       </Row>
+
+      <Divider>Avanzado</Divider>
+
+      <Form.Item label="Metadata (Información adicional del stock)">
+        <div style={{ marginBottom: '16px' }}>
+          {metadataFields.map((field, index) => (
+            <Row key={field.id} gutter={8} style={{ marginBottom: '8px' }}>
+              <Col span={10}>
+                <Input
+                  placeholder="Campo (ej: ubicacion)"
+                  value={field.key}
+                  onChange={(e) => updateField(field.id, 'key', e.target.value)}
+                />
+              </Col>
+              <Col span={12}>
+                <Input
+                  placeholder="Valor (ej: A1-B2)"
+                  value={field.value}
+                  onChange={(e) => updateField(field.id, 'value', e.target.value)}
+                />
+              </Col>
+              <Col span={2}>
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => removeField(field.id)}
+                  disabled={metadataFields.length === 1}
+                  style={{ height: '32px' }}
+                />
+              </Col>
+            </Row>
+          ))}
+
+          <Button
+            type="dashed"
+            onClick={addField}
+            icon={<PlusOutlined />}
+            style={{ width: '100%', marginTop: '8px' }}
+          >
+            Agregar campo
+          </Button>
+        </div>
+
+        <small style={{ color: '#a6a6a6', display: 'block', lineHeight: '1.4' }}>
+          <strong>Agrega información adicional específica de este stock.</strong>
+          <br />
+          Campos sugeridos: ubicacion, lote, proveedor ref, test realizado, condicion, vencimiento proximo.
+        </small>
+      </Form.Item>
+
       <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
       {stock &&
         <ActivityLogViewer id={stock?.uuid} entity={'storage_stock'}/>
