@@ -10,11 +10,10 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import FilterForm from '../../../CommonUI/FilterForm';
 import TableList from "../../../CommonUI/TableList";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import CreateEmployeeModal from '../CreateEmployeeModal'; // Importar el nuevo modal
 import type {ColumnsType} from "antd/es/table";
 import {UserIcon} from "@heroicons/react/24/solid";
 import {TrashIcon} from "@heroicons/react/16/solid";
-
-
 
 interface Employee {
   uuid: string;
@@ -38,7 +37,6 @@ interface Employee {
   working_department?: string;
   created_at: string;
   updated_at: string;
-
 
   // campos relacionados del perfil
   profile?: {
@@ -137,6 +135,11 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
 
   const handleAddEmployee = () => {
     setShowAddModal(true);
+  };
+
+  const handleEmployeeCreated = () => {
+    setReload(!reload);
+    setShowAddModal(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -256,10 +259,8 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
     },
   ];
 
-
   return (
     <>
-
       <ModuleContent>
         <ContentHeader
           loading={loading}
@@ -304,30 +305,17 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
             setCurrentPage(page);
             setPageSize(size);
           }}
-
         />
-
-
       </ModuleContent>
 
-      <Modal
-        title="Agregar Nuevo Empleado"
-        open={showAddModal}
+      <CreateEmployeeModal
+        visible={showAddModal}
         onCancel={() => setShowAddModal(false)}
-        footer={null}
-        width={600}
-      >
-        <div className="text-center py-8">
-          <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">
-            Aquí se implementará el formulario para agregar un nuevo empleado
-          </p>
-          <p className="text-sm text-gray-400 mt-2">
-            Empresa: {companyUuid}
-          </p>
-        </div>
-      </Modal>
+        onSuccess={handleEmployeeCreated}
+        companyUuid={companyUuid}
+      />
     </>
   );
 };
+
 export default CompanyEmployees;
