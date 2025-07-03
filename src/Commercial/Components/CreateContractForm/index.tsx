@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Col, Divider, Form, Input, InputNumber, Row, Select} from 'antd';
+import {Col, Divider, Form, Input, Row, Select} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';

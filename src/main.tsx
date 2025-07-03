@@ -14,6 +14,7 @@ import {UploadContextProvider} from './Context/UploadContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
+import {EditorProvider} from "react-simple-wysiwyg";
 
 dayjs.locale('es');
 dayjs.extend(relativeTime);
@@ -41,7 +42,9 @@ axios
         <TenantAppConfig tenant={response.data}>
           <UploadContextProvider>
             <BrowserRouter future={{v7_relativeSplatPath:true, v7_startTransition:false}}>
-              <App />
+              <EditorProvider>
+                <App />
+              </EditorProvider>
             </BrowserRouter>
           </UploadContextProvider>
         </TenantAppConfig>

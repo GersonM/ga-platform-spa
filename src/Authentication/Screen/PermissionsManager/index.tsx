@@ -11,6 +11,8 @@ import RolePermissionSwitch from './RolePermissionSwitch';
 import AuthRoleForm from '../../Components/AuthRoleForm';
 
 import './styles.less';
+import ModalView from "../../../CommonUI/ModalView";
+import {TbPencil, TbTrash} from "react-icons/tb";
 
 const PermissionsManager = () => {
   const [roles, setRoles] = useState<Role[]>();
@@ -83,7 +85,8 @@ const PermissionsManager = () => {
   const deleteRole = (role: Role) => {
     axios
       .delete(`authentication/roles/${role.id}`)
-      .then(() => {})
+      .then(() => {
+      })
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
@@ -95,7 +98,7 @@ const PermissionsManager = () => {
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenRoleForm(true)}
         title={'Roles y permisos'}
-        tools={<PrimaryButton loading={syncing} label={'Sincronizar permisos'} onClick={syncPermissions} />}
+        tools={<PrimaryButton loading={syncing} label={'Sincronizar permisos'} onClick={syncPermissions}/>}
       />
       <p>Los roles permiten agrupar múltiples permisos para asignarlos fácilmente a un usuario</p>
       <Tabs
@@ -105,25 +108,22 @@ const PermissionsManager = () => {
           label: (
             <div className={'tab-name'}>
               <span className={'name'}>{role.name}</span>
-              <small>{role.permissions.length} permisos</small>
+              <small>{role.name == 'admin' ? 'Todos' : `${role.permissions.length} permisos`}</small>
             </div>
           ),
           children: (
             <>
-              <h3>Permisos para {role.name}</h3>
-              <Space>
-                <PrimaryButton icon={<PencilIcon />} ghost label={'Editar rol'} />
-                <Popconfirm
-                  onConfirm={() => deleteRole(role)}
-                  title={
-                    <>
-                      Al eliminar el rol se elimina todas las relaciones hechas, <br /> ¿Quieres continuar?
-                    </>
-                  }>
-                  <PrimaryButton icon={<TrashIcon />} ghost danger label={'Eliminar rol'} />
-                </Popconfirm>
-              </Space>
-              <br />
+              <p>Permisos para {role.name}</p>
+              {role.name != 'admin' &&
+                <Space>
+                  <PrimaryButton icon={<TbPencil/>} ghost label={'Editar rol'}/>
+                  <Popconfirm
+                    onConfirm={() => deleteRole(role)}
+                    title={'¿Quieres eliminar este rol?'}>
+                    <PrimaryButton icon={<TbTrash/>} ghost danger label={'Eliminar rol'}/>
+                  </Popconfirm>
+                </Space>
+              }
               {permissions &&
                 Object.keys(permissions).map(p => {
                   return (
@@ -133,7 +133,7 @@ const PermissionsManager = () => {
                       </Divider>
                       <div className={'role-permissions-list'}>
                         {permissions[p].map((permission: Permission, index: number) => (
-                          <RolePermissionSwitch key={index} permission={permission} role={role} />
+                          <RolePermissionSwitch key={index} permission={permission} role={role}/>
                         ))}
                       </div>
                     </div>
@@ -144,19 +144,18 @@ const PermissionsManager = () => {
         }))}
       />
 
-      <Modal
+      <ModalView
         title={'Crear role'}
         onCancel={() => setOpenRoleForm(false)}
-        footer={null}
         open={openRoleForm}
-        destroyOnHidden>
+      >
         <AuthRoleForm
           onComplete={() => {
             setOpenRoleForm(false);
             setReload(!reload);
           }}
         />
-      </Modal>
+      </ModalView>
     </>
   );
 };

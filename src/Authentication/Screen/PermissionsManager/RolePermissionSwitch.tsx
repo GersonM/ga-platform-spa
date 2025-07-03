@@ -54,8 +54,9 @@ const RolePermissionSwitch = ({permission, role}: IRolePermissionSwitchProps) =>
         <small>{permission.name}</small>
       </span>
       <Switch
-        defaultChecked={!!role.permissions.find(p => p.id == permission.id)}
+        defaultChecked={role.name == 'admin' || (!!role.permissions.find(p => p.id == permission.id))}
         loading={loading}
+        disabled={role.name == 'admin'}
         onChange={updatePermission}
       />
     </div>

@@ -90,10 +90,10 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       title: 'Cantidad',
       dataIndex: 'is_consumable',
       render: (is_consumable: boolean, row: StorageStock) =>
-        is_consumable ? row.quantity + ' ' + (row.product?.unit_type || 'unidades') : 'Ilimitado'
+        is_consumable ? row.quantity + ' ' + (row.product?.unit_type || 'unidades') : 'Sin límite'
     },
     {
-      title: 'Venta',
+      title: 'Precios',
       dataIndex: 'sale_price',
       render: (sale_price: number, row: StorageStock) => {
         const earn = (row.sale_price || 0) - (row.cost_price || 0);
@@ -104,9 +104,11 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
           </>}>
             <Space>
               <div>
-                <MoneyString value={sale_price} currency={row.currency}/> <br/>
+                {sale_price != null ?
+                <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
+                }
                 <small>
-                  Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
+                  Costo: {row.cost_price != null ? <MoneyString value={row.cost_price} currency={row.currency}/> : '-'}
                 </small>
               </div>
               {earn < 0 && <PiWarning size={18} color="red"/>}
@@ -141,7 +143,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
   return (
     <div>
       <h2>Existencias para {product.name} <Tag color={'blue'} bordered={false}>{product.code}</Tag></h2>
-      <p>{product.description}</p>
+      <p>{product.excerpt}</p>
       <Space split={<Divider type={"vertical"}/>}>
         <Select
           placeholder={'Filtrar por estado'}

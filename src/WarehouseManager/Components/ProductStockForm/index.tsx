@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Button, Divider} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 
-import type {StorageProduct, StorageStock} from "../../../Types/api.tsx";
+import type {MetadataField, StorageProduct, StorageStock} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler";
 import ProductSelector from "../ProductSelector";
@@ -18,12 +18,6 @@ interface ProductStockFormProps {
   stock?: StorageStock;
   product?: StorageProduct;
   onComplete?: () => void;
-}
-
-interface MetadataField {
-  key: string;
-  value: string;
-  id: string;
 }
 
 const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) => {
@@ -51,19 +45,19 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           id: `field_${index}`
         }));
 
-        setMetadataFields(fields.length > 0 ? fields : [{ key: '', value: '', id: 'field_0' }]);
+        setMetadataFields(fields.length > 0 ? fields : [{key: '', value: '', id: 'field_0'}]);
       } catch (error) {
         console.error('Error parsing metadata:', error);
-        setMetadataFields([{ key: '', value: '', id: 'field_0' }]);
+        setMetadataFields([{key: '', value: '', id: 'field_0'}]);
       }
     } else {
-      setMetadataFields([{ key: '', value: '', id: 'field_0' }]);
+      setMetadataFields([{key: '', value: '', id: 'field_0'}]);
     }
   }, [stock]);
 
   const addField = () => {
     const newId = `field_${Date.now()}`;
-    setMetadataFields([...metadataFields, { key: '', value: '', id: newId }]);
+    setMetadataFields([...metadataFields, {key: '', value: '', id: newId}]);
   };
 
   const removeField = (id: string) => {
@@ -74,7 +68,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
 
   const updateField = (id: string, type: 'key' | 'value', newValue: string) => {
     setMetadataFields(metadataFields.map(field =>
-      field.id === id ? { ...field, [type]: newValue } : field
+      field.id === id ? {...field, [type]: newValue} : field
     ));
   };
 
@@ -210,11 +204,10 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
       </Row>
 
       <Divider>Avanzado</Divider>
-
       <Form.Item label="Metadata (Información adicional del stock)">
-        <div style={{ marginBottom: '16px' }}>
+        <div style={{marginBottom: '16px'}}>
           {metadataFields.map((field, index) => (
-            <Row key={field.id} gutter={8} style={{ marginBottom: '8px' }}>
+            <Row key={index} gutter={8} style={{marginBottom: '8px'}}>
               <Col span={10}>
                 <Input
                   placeholder="Campo (ej: ubicacion)"
@@ -233,10 +226,10 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
                 <Button
                   type="text"
                   danger
-                  icon={<DeleteOutlined />}
+                  icon={<DeleteOutlined/>}
                   onClick={() => removeField(field.id)}
                   disabled={metadataFields.length === 1}
-                  style={{ height: '32px' }}
+                  style={{height: '32px'}}
                 />
               </Col>
             </Row>
@@ -245,16 +238,16 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           <Button
             type="dashed"
             onClick={addField}
-            icon={<PlusOutlined />}
-            style={{ width: '100%', marginTop: '8px' }}
+            icon={<PlusOutlined/>}
+            style={{width: '100%', marginTop: '8px'}}
           >
             Agregar campo
           </Button>
         </div>
 
-        <small style={{ color: '#a6a6a6', display: 'block', lineHeight: '1.4' }}>
+        <small style={{color: '#a6a6a6', display: 'block', lineHeight: '1.4'}}>
           <strong>Agrega información adicional específica de este stock.</strong>
-          <br />
+          <br/>
           Campos sugeridos: ubicacion, lote, proveedor ref, test realizado, condicion, vencimiento proximo.
         </small>
       </Form.Item>

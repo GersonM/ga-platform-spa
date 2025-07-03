@@ -16,7 +16,9 @@ const AuthRoleForm = ({role, onComplete}: AuthRoleFormProps) => {
     axios
       .post('authentication/roles', values)
       .then(() => {
-        onComplete && onComplete();
+        if (onComplete) {
+          onComplete();
+        }
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -26,9 +28,9 @@ const AuthRoleForm = ({role, onComplete}: AuthRoleFormProps) => {
   return (
     <Form initialValues={role} layout="vertical" onFinish={submitForm}>
       <Form.Item label={'Nombre'} name={'name'}>
-        <Input autoFocus={true} />
+        <Input autoFocus={true} placeholder={'Eje. Ventas, Administrador, Vigilancia, Jefatura, etc'} />
       </Form.Item>
-      <PrimaryButton icon={<PlusIcon />} label={'Guardar'} block />
+      <PrimaryButton icon={<PlusIcon />} label={'Guardar'} block htmlType={'submit'} />
     </Form>
   );
 };

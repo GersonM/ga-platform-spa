@@ -622,6 +622,7 @@ export type StorageProduct = {
   code: string;
   created_at: string;
   description: string;
+  excerpt?: string;
   manufacturer: string;
   available_stock?: number;
   metadata?: any;
@@ -651,6 +652,11 @@ export type StorageStock = {
   warehouse?: StorageWarehouse;
   provider?: any;
 };
+export type MetadataField = {
+  key: string;
+  value: string;
+  id: string;
+}
 export type StorageWarehouse = {
   uuid: string;
   name: string;

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Form, Input, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
+import {Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {TbBuilding, TbPencil, TbUser} from "react-icons/tb";
@@ -18,6 +18,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import IconButton from "../../../CommonUI/IconButton";
 import './styles.less';
+import CreateContractForm from "../../Components/CreateContractForm";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -36,6 +37,7 @@ const CommercialSales = () => {
   const lastSearchBlock = useDebounce(blockFilter, 300);
   const [paymentFilter, setPaymentFilter] = useState<string>();
   const [downloading, setDownloading] = useState(false);
+  const [openContractForm, setOpenContractForm] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -222,9 +224,7 @@ const CommercialSales = () => {
   return (
     <ModuleContent>
       <ContentHeader
-        onAdd={() => {
-          console.log('onAdd');
-        }}
+        onAdd={() => setOpenContractForm(true)}
         title={'Ventas'}
         tools={
           <>
@@ -328,6 +328,14 @@ const CommercialSales = () => {
           pageSize={pagination.per_page}
         />
       )}
+      <Modal
+        destroyOnHidden
+        width={800}
+        open={openContractForm}
+        onCancel={() => setOpenContractForm(false)}
+        footer={false}>
+        <CreateContractForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)} />
+      </Modal>
     </ModuleContent>
   );
 };

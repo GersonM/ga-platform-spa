@@ -130,15 +130,6 @@ const CommercialClients = () => {
       });
   };
 
-  const deleteClient = (uuid: string) => {
-    axios
-      .delete(`commercial/clients/${uuid}`)
-      .then(() => {
-        setReload(true);
-      })
-      .catch(error => ErrorHandler.showNotification(error));
-  };
-
   const columns = [
     {
       title: 'Nombre',

@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import {Col, Divider, Form, Input, Row, message, Button, Space} from "antd";
+import React, {useState, useEffect} from 'react';
+import {Col, Divider, Form, Input, Row, Button} from "antd";
+import {DefaultEditor} from "react-simple-wysiwyg";
 import axios from "axios";
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
-import type {StorageProduct} from "../../../Types/api.tsx";
+import type {MetadataField, StorageProduct} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import ProductBrandSelector from "../ProductBrandSelector";
 import ProductManufacturerSelector from "../ProductManufacturerSelector";
 import ProductGroupsSelector from "../ProductGroupsSelector";
 import ProductUnitTypesSelector from "../ProductUnitTypesSelector";
+import IconButton from "../../../CommonUI/IconButton";
+import {TbPlus, TbTrash} from "react-icons/tb";
 
 interface ProductFormProps {
   product?: StorageProduct;
   onComplete?: () => void;
-}
-
-interface MetadataField {
-  key: string;
-  value: string;
-  id: string;
 }
 
 const ProductForm = ({product, onComplete}: ProductFormProps) => {
@@ -39,19 +35,19 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
           id: `field_${index}`
         }));
 
-        setMetadataFields(fields.length > 0 ? fields : [{ key: '', value: '', id: 'field_0' }]);
+        setMetadataFields(fields.length > 0 ? fields : [{key: '', value: '', id: 'field_0'}]);
       } catch (error) {
         console.error('Error parsing metadata:', error);
-        setMetadataFields([{ key: '', value: '', id: 'field_0' }]);
+        setMetadataFields([{key: '', value: '', id: 'field_0'}]);
       }
     } else {
-      setMetadataFields([{ key: '', value: '', id: 'field_0' }]);
+      setMetadataFields([{key: '', value: '', id: 'field_0'}]);
     }
   }, [product]);
 
   const addField = () => {
     const newId = `field_${Date.now()}`;
-    setMetadataFields([...metadataFields, { key: '', value: '', id: newId }]);
+    setMetadataFields([...metadataFields, {key: '', value: '', id: newId}]);
   };
 
   const removeField = (id: string) => {
@@ -62,7 +58,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
 
   const updateField = (id: string, type: 'key' | 'value', newValue: string) => {
     setMetadataFields(metadataFields.map(field =>
-      field.id === id ? { ...field, [type]: newValue } : field
+      field.id === id ? {...field, [type]: newValue} : field
     ));
   };
 
@@ -108,96 +104,101 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       onFinish={submit}
     >
       <h2>{product ? 'Editar producto' : 'Crear Producto'}</h2>
-      <Form.Item label="Nombre" name={'name'}>
-        <Input/>
-      </Form.Item>
-      <Form.Item label="Descripción" name={'description'}>
-        <Input.TextArea/>
-      </Form.Item>
-      <Row gutter={[15, 15]}>
-        <Col md={12}>
-          <Form.Item label="Tipo de unidad" name={'unit_type'}>
-            <ProductUnitTypesSelector/>
-          </Form.Item>
-        </Col>
-        <Col md={12}>
-          <Form.Item label="Código" name={'code'}>
+      <Row gutter={[25, 25]}>
+        <Col span={12}>
+          <Divider>Descripción del producto</Divider>
+          <Form.Item label="Nombre" name={'name'}>
             <Input/>
           </Form.Item>
+          <Form.Item label="Descripción corta" name={'excerpt'}>
+            <Input.TextArea/>
+          </Form.Item>
+          <Form.Item label="Descripción comercial" name={'description'}>
+            <DefaultEditor/>
+          </Form.Item>
+          <Row gutter={[15, 15]}>
+            <Col md={12}>
+              <Form.Item label="Tipo de unidad" name={'unit_type'}>
+                <ProductUnitTypesSelector/>
+              </Form.Item>
+            </Col>
+            <Col md={12}>
+              <Form.Item label="Código" name={'code'}>
+                <Input/>
+              </Form.Item>
+            </Col>
+            <Col md={12}>
+              <Form.Item label="Grupo" name={'group'}>
+                <ProductGroupsSelector/>
+              </Form.Item>
+            </Col>
+          </Row>
         </Col>
-        <Col md={12}>
-          <Form.Item label="Grupo" name={'group'}>
-            <ProductGroupsSelector/>
+        <Col span={12}>
+          <Divider>Información adicional</Divider>
+          <Row gutter={[15, 15]}>
+            <Col md={12}>
+              <Form.Item label="Marca" name={'brand'}>
+                <ProductBrandSelector/>
+              </Form.Item>
+            </Col>
+            <Col md={12}>
+              <Form.Item label="Modelo" name={'model'}>
+                <Input/>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item label="Fabricante" name={'manufacturer'}>
+            <ProductManufacturerSelector/>
+          </Form.Item>
+          <Divider>Avanzado</Divider>
+
+          <Form.Item label="Metadata (Información técnica adicional)">
+            <div style={{marginBottom: '16px'}}>
+              {metadataFields.map((field, index) => (
+                <Row key={index} gutter={8} style={{marginBottom: '8px'}}>
+                  <Col span={10}>
+                    <Input
+                      placeholder="Campo (ej: categoria)"
+                      value={field.key}
+                      onChange={(e) => updateField(field.id, 'key', e.target.value)}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <Input
+                      placeholder="Valor (ej: informatica)"
+                      value={field.value}
+                      onChange={(e) => updateField(field.id, 'value', e.target.value)}
+                    />
+                  </Col>
+                  <Col span={2}>
+                    <IconButton
+                      danger
+                      icon={<TbTrash/>}
+                      onClick={() => removeField(field.id)}
+                      disabled={metadataFields.length === 1}
+                    />
+                  </Col>
+                </Row>
+              ))}
+              <Button
+                type="dashed"
+                onClick={addField}
+                icon={<TbPlus/>}
+                style={{width: '100%', marginTop: '8px'}}
+              >
+                Agregar campo
+              </Button>
+            </div>
+
+            <small style={{color: '#a6a6a6', display: 'block', lineHeight: '1.4'}}>
+              <strong>Agrega información técnica adicional del producto.</strong>
+              <br/>
+              Campos sugeridos: categoria, peso, dimensiones, color, material, garantia, especificaciones tecnicas.
+            </small>
           </Form.Item>
         </Col>
       </Row>
-      <Divider>Información adicional</Divider>
-      <Row gutter={[15, 15]}>
-        <Col md={12}>
-          <Form.Item label="Marca" name={'brand'}>
-            <ProductBrandSelector/>
-          </Form.Item>
-        </Col>
-        <Col md={12}>
-          <Form.Item label="Modelo" name={'model'}>
-            <Input/>
-          </Form.Item>
-        </Col>
-      </Row>
-      <Form.Item label="Fabricante" name={'manufacturer'}>
-        <ProductManufacturerSelector/>
-      </Form.Item>
-
-      <Divider>Avanzado</Divider>
-
-      <Form.Item label="Metadata (Información técnica adicional)">
-        <div style={{ marginBottom: '16px' }}>
-          {metadataFields.map((field, index) => (
-            <Row key={field.id} gutter={8} style={{ marginBottom: '8px' }}>
-              <Col span={10}>
-                <Input
-                  placeholder="Campo (ej: categoria)"
-                  value={field.key}
-                  onChange={(e) => updateField(field.id, 'key', e.target.value)}
-                />
-              </Col>
-              <Col span={12}>
-                <Input
-                  placeholder="Valor (ej: informatica)"
-                  value={field.value}
-                  onChange={(e) => updateField(field.id, 'value', e.target.value)}
-                />
-              </Col>
-              <Col span={2}>
-                <Button
-                  type="text"
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={() => removeField(field.id)}
-                  disabled={metadataFields.length === 1}
-                  style={{ height: '32px' }}
-                />
-              </Col>
-            </Row>
-          ))}
-
-          <Button
-            type="dashed"
-            onClick={addField}
-            icon={<PlusOutlined />}
-            style={{ width: '100%', marginTop: '8px' }}
-          >
-            Agregar campo
-          </Button>
-        </div>
-
-        <small style={{ color: '#a6a6a6', display: 'block', lineHeight: '1.4' }}>
-          <strong>Agrega información técnica adicional del producto.</strong>
-          <br />
-          Campos sugeridos: categoria, peso, dimensiones, color, material, garantia, especificaciones tecnicas.
-        </small>
-      </Form.Item>
-
       <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
     </Form>
   );

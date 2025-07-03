@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Form, Input, Modal, Pagination, Space, Tooltip} from 'antd';
-import {TbContainer, TbPencil, TbStack2, TbTrash} from "react-icons/tb";
+import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import axios from "axios";
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -16,6 +16,7 @@ import ProductManufacturerSelector from "../../Components/ProductManufacturerSel
 import ProductStockManager from "../../Components/ProductStockManager";
 import {PiShippingContainer} from "react-icons/pi";
 import WarehouseManager from "../../Components/WarehouseManager";
+import ModalView from "../../../CommonUI/ModalView";
 
 const WarehouseProductsManager = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,6 @@ const WarehouseProductsManager = () => {
   const [reload, setReload] = useState(false);
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number>();
   const [openAddProduct, setOpenAddProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StorageProduct>();
   const [openStockManager, setOpenStockManager] = useState(false);
@@ -31,11 +31,10 @@ const WarehouseProductsManager = () => {
   const [openWarehouseManager, setOpenWarehouseManager] = useState(false);
 
   useEffect(() => {
-    console.log('init component');
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {page: currentPage, page_size: pageSize, with_stock: 1, ...filters},
+      params: {page: currentPage, with_stock: 1, ...filters},
     };
 
     setLoading(true);
@@ -54,7 +53,7 @@ const WarehouseProductsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, currentPage, pageSize, filters]);
+  }, [reload, currentPage, filters]);
 
   const columns = [
     {
@@ -68,7 +67,7 @@ const WarehouseProductsManager = () => {
     {
       title: 'Descripción',
       responsive: ['md'],
-      dataIndex: 'description',
+      dataIndex: 'excerpt',
     },
     {
       title: 'Marca',
@@ -123,15 +122,12 @@ const WarehouseProductsManager = () => {
         onRefresh={() => setReload(!reload)}
         tools={<Space>
           <Tooltip title={'Gestionar almacenes'}>
-            <IconButton icon={<PiShippingContainer />} onClick={() => setOpenWarehouseManager(true)} />
+            <IconButton icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
           </Tooltip>
         </Space>}
         onAdd={() => setOpenAddProduct(true)}/>
       <FilterForm
-        onInitialValues={values => {
-          console.log(values);
-          setFilters(values)
-        }}
+        onInitialValues={values => setFilters(values)}
         onSubmit={values => setFilters(values)}
       >
         <Form.Item name={'search'} label={'Buscar'}>
@@ -155,24 +151,27 @@ const WarehouseProductsManager = () => {
         <Pagination
           showSizeChanger={false}
           style={{marginTop: 10}}
-          onChange={(page, pageSize) => {
+          onChange={(page) => {
             setCurrentPage(page);
           }}
           size={"small"} total={pagination.total}
-          showTotal={(total, range) => `${total} productos en total`}
+          showTotal={(total) => `${total} productos en total`}
           pageSize={pagination.per_page}
           current={pagination.current_page}/>
       )}
-      <Modal destroyOnHidden open={openAddProduct} footer={null} onCancel={() => {
-        setOpenAddProduct(false);
-        setSelectedProduct(undefined);
-      }}>
+      <ModalView
+        width={900}
+        open={openAddProduct}
+        onCancel={() => {
+          setOpenAddProduct(false);
+          setSelectedProduct(undefined);
+        }}>
         <ProductForm product={selectedProduct} onComplete={() => {
           setReload(!reload);
           setOpenAddProduct(false);
           setSelectedProduct(undefined);
         }}/>
-      </Modal>
+      </ModalView>
       <Modal width={700} destroyOnHidden open={openStockManager} footer={null} onCancel={() => {
         setOpenStockManager(false);
         setSelectedProduct(undefined);
@@ -183,7 +182,7 @@ const WarehouseProductsManager = () => {
         setOpenWarehouseManager(false);
         setSelectedProduct(undefined);
       }}>
-        <WarehouseManager />
+        <WarehouseManager/>
       </Modal>
     </ModuleContent>
   );
