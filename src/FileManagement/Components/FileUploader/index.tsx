@@ -4,7 +4,6 @@ import {ArrowUpTrayIcon} from '@heroicons/react/24/outline';
 import {useDropzone} from 'react-dropzone';
 
 import UploadContext from '../../../Context/UploadContext';
-import FileSize from '../../../CommonUI/FileSize';
 import './styles.less';
 
 interface FileUploaderProps {
@@ -13,17 +12,20 @@ interface FileUploaderProps {
   imagePath?: string;
   fileUuid?: string;
   height?: number;
+  small?: boolean;
   multiple?: boolean;
   onChange?: (uuid: string) => void;
 }
 
-const FileUploader = ({
-                        height,
-                        onChange,
-                        multiple = false,
-                        imagePath,
-                        showPreview = false,
-                      }: FileUploaderProps) => {
+const FileUploader = (
+  {
+    height,
+    onChange,
+    multiple = false,
+    small = false,
+    imagePath,
+    showPreview = false,
+  }: FileUploaderProps) => {
 
   const [uploadedFile, setUploadedFile] = useState<any>();
   const [ownedFiles, setOwnedFiles] = useState<string[]>([]);
@@ -58,19 +60,19 @@ const FileUploader = ({
 
   return (
     <>
-      <div {...getRootProps()} className={`file-uploader-wrapper`} style={{height}}>
+      <div {...getRootProps()} className={`file-uploader-wrapper ${small ? 'small' : ''}`} style={{height}}>
         <input {...getInputProps()} />
         {ownedFilesFilter?.map((item, index) => (
-            <li key={index}>
-              {item.file.name} - <FileSize size={item.file.size}/>
-              <Progress percent={item.progress} size={'small'}/>
-            </li>
-          ))}
+          <div key={index}>
+            {item.file.name}
+            <Progress percent={item.progress} size={'small'} strokeWidth={small ? 3 : undefined}/>
+          </div>
+        ))}
 
         {(isDragActive || ownedFilesFilter.length == 0) && (
           <div className={'content-label'}>
-            <ArrowUpTrayIcon width={25}/>
-            {isDragActive ? <>Suelta tus archivos aquí</> : <>Arrastra archivos aquí</>}
+            <ArrowUpTrayIcon width={small ? 18 : 24} style={{marginRight: 10}}/>
+            {isDragActive ? 'Suelta tus archivos aquí' : 'Arrastra archivos aquí'}
           </div>
         )}
         {showPreview && uploadedFile && (

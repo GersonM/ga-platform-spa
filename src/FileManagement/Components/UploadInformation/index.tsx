@@ -1,7 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
-import {Button, Progress, Space, Spin} from 'antd';
+import {Progress} from 'antd';
 import {PiCheckCircleFill, PiXCircle} from 'react-icons/pi';
-import type {AxiosProgressEvent} from 'axios';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
@@ -21,8 +20,6 @@ const UploadInformation = () => {
   const total = fileList.length;
   const completed = fileList.filter(f => f.progress == 100).length;
   const percent = (completed / total) * 100;
-
-  console.log({progress}, progress?.percent)
 
   return (
     <div className={'upload-information-wrapper'}>

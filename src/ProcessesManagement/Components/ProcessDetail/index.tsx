@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
-import './styles.less';
-import {Avatar, Button, Col, Divider, List, Modal, Row, Tag} from "antd";
-import FileUploader from "../../../FileManagement/Components/FileUploader";
-import {TbCheck, TbCircleCheck, TbCircleCheckFilled, TbClockFilled, TbFileExport, TbPrinter} from "react-icons/tb";
-import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import {Button, Col, Divider, List, Modal, Row, Tag} from "antd";
+import {TbCircleCheckFilled, TbClockFilled, TbFileExport, TbPrinter} from "react-icons/tb";
 import axios from "axios";
-import dayjs from "dayjs";
-import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+
 import type {Profile, SubscriptionMember} from "../../../Types/api.tsx";
+import FileUploader from "../../../FileManagement/Components/FileUploader";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import './styles.less';
 
 interface ProcessDetailProps {
   entityUuid: string;
@@ -58,8 +58,6 @@ const list = [
     description: 'CONTRATO EXTRA JUDICIAL (POR EL FINACIAMIENTO CON LA COOPERATIVA)'
   },
 ];
-
-
 const listProvision = [
   {name: 'FICHA DEL COMPRADOR', status: 'Aprobado', description: 'FICHA DEL COMPRADOR'},
   {name: 'DNI DEL TITULAR', status: 'Aprobado', description: 'DNI DEL TITULAR'},
@@ -98,7 +96,6 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
   const [openPrint, setOpenPrint] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
 
-
   const generateDocuments = (subscription: SubscriptionMember) => {
     setOpenPrint(true);
     setDownloading(true);
@@ -123,44 +120,8 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
       });
   };
 
-  const generateDocumentsss = () => {
-    const config = {
-      responseType: 'blob',
-      params: {
-        profile_uuid: entityUuid,
-      },
-    };
-
-    setDownloading(true);
-    axios({
-      url: 'document-generator/contract/provision',
-      params: config.params,
-      method: 'GET',
-      responseType: 'blob', // important
-    })
-      .then(response => {
-        setDownloading(false);
-        if (response) {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'contratos_' + profile.doc_number + '_' + dayjs().format('D-M-YYYY') + '.pdf';
-          document.body.appendChild(link);
-
-          link.click();
-
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        }
-      })
-      .catch(e => {
-        setDownloading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
-
   return (
-    <div>
+    <>
       <Row gutter={20}>
         <Col xs={12}>
           <PrimaryButton
@@ -242,7 +203,7 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
         <LoadingIndicator visible={downloading}/>
         {tempURL && <iframe src={tempURL} height={600} width={'100%'} frameBorder="0"></iframe>}
       </Modal>
-    </div>
+    </>
   );
 };
 

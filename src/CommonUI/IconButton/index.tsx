@@ -6,6 +6,9 @@ interface IconButtonProps {
   icon: ReactNode;
   danger?: boolean;
   loading?: boolean;
+  href?: string;
+  target?: string;
+  ghost?: boolean;
   small?: boolean;
   title?: string;
   disabled?: boolean;

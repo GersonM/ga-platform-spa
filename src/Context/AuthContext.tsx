@@ -126,7 +126,9 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
                 backgroundColor: 'rgba(255,255,255,0.6)',
                 borderRadius: '5px',
               }}>
-              <li>Corrección de error al agregar un invoice para un cliente</li>
+              <li>Asignar una empresa como proveedor de un stock</li>
+              <li>Realizar ventas a empresas</li>
+              <li>Gestión de items de un contrato</li>
             </ul>
           ),
           duration: 0,

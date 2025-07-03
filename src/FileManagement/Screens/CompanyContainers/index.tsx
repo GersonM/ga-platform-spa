@@ -17,7 +17,6 @@ import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
 import AuthContext from '../../../Context/AuthContext';
-import UploadInformation from '../../Components/UploadInformation';
 import './styles.less';
 
 const CompanyContainers = () => {

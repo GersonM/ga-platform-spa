@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react';
-import {Pagination} from 'antd';
+import {Divider, Pagination} from 'antd';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {InvoicePayment, PaymentMethod} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
+import PaymentMethodsManager from "../PaymentMethodsManager";
 
 interface ProfilePaymentsProps {
   profileUuid: string;
@@ -61,8 +62,8 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
             const expiryTimeMillis = dayjs(parseInt(data.expiryTimeMillis));
             return (
               <div>
-                Inicio: {startTimeMillis.format('DD-MM-YYYY HH:mm a')} <br />
-                Fin: {expiryTimeMillis.format('DD-MM-YYYY HH:mm a')} <br />
+                Inicio: {startTimeMillis.format('DD-MM-YYYY HH:mm a')} <br/>
+                Fin: {expiryTimeMillis.format('DD-MM-YYYY HH:mm a')} <br/>
               </div>
             );
           } catch (err) {
@@ -84,7 +85,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
             const expiryTimeMillis = dayjs(parseInt(data.expiryTimeMillis));
             return (
               <div>
-                Precio: {data.priceAmountMicros / 1000000} {data.priceCurrencyCode} <br />
+                Precio: {data.priceAmountMicros / 1000000} {data.priceCurrencyCode} <br/>
                 Vence: {expiryTimeMillis.from(startTimeMillis)}
               </div>
             );
@@ -116,7 +117,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
 
   return (
     <div>
-      <TableList columns={columns} dataSource={payments} loading={loading} />
+      <TableList columns={columns} dataSource={payments} loading={loading}/>
       <Pagination
         showSizeChanger={false}
         size={'small'}
@@ -127,6 +128,8 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
           setCurrentPage(page);
         }}
       />
+      <Divider>Métodos de pago</Divider>
+      <PaymentMethodsManager profileUuid={profileUuid}/>
     </div>
   );
 };

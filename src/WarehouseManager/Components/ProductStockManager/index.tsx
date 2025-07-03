@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TbPencil, TbPlus, TbRecycleOff, TbShredder, TbTrash} from "react-icons/tb";
+import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {Divider, Modal, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import {PiWarning} from "react-icons/pi";
 import axios from "axios";
