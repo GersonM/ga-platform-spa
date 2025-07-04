@@ -14,6 +14,7 @@ import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
 import InvoiceTablePayments from '../InvoiceTablePayments';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import ModalView from "../../../CommonUI/ModalView";
 
 interface InvoicesProps {
   entityUuid: string;
@@ -78,6 +79,9 @@ const InvoicesTable = ({entityUuid, type, customer}: InvoicesProps) => {
     {
       title: 'Monto',
       dataIndex: 'amount_string',
+      render: (amount_string:string, row:Invoice) => {
+        return <>{amount_string} <small>Pendiente: <MoneyString value={row.pending_payment} /></small></>;
+      }
     },
     {
       title: 'Creado',
@@ -168,7 +172,10 @@ const InvoicesTable = ({entityUuid, type, customer}: InvoicesProps) => {
           />
         }
       </div>
-      <Modal open={!!selectedInvoice} destroyOnHidden footer={false} onCancel={() => setSelectedInvoice(undefined)}>
+      <ModalView
+        width={800}
+        open={!!selectedInvoice}
+        onCancel={() => setSelectedInvoice(undefined)}>
         {selectedInvoice && (
           <>
             <h3>
@@ -181,11 +188,12 @@ const InvoicesTable = ({entityUuid, type, customer}: InvoicesProps) => {
             <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
           </>
         )}
-      </Modal>
+      </ModalView>
       <Modal
         open={openNewInvoice}
         destroyOnHidden
         footer={false}
+        width={700}
         title={'Agregar factura'}
         onCancel={() => setOpenNewInvoice(false)}>
         {customer &&

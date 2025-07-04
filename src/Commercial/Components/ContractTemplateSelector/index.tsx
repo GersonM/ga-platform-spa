@@ -58,6 +58,7 @@ const ContractTemplateSelector = ({placeholder, mode, refresh, ...props}: Contra
     <Select
       {...props}
       allowClear
+      popupMatchSelectWidth={false}
       placeholder={placeholder || 'Elige una plantilla'}
       showSearch={true}
       optionFilterProp={'label'}

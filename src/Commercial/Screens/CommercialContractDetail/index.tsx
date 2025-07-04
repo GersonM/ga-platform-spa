@@ -211,7 +211,7 @@ const CommercialContractDetail = () => {
         type="navigation"
         size={"small"}
         style={{marginBottom: 20}}
-        current={stepNumber}
+        current={3}
         items={[
           {
             title: 'Propuesta',
@@ -220,19 +220,13 @@ const CommercialContractDetail = () => {
           {
             title: 'Aprobado',
             subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
-            description: !contract?.approved_at && (
-              <PrimaryButton
-                size={"small"}
-                icon={<TbCheck/>}
-                disabled={!!contract?.cancelled_at}
-                label={'Registrar aprobación'}
-                onClick={() => setOpenContractProvideForm(true)}
-              />
-            ),
+            description:
+              <small>{contract.approved_at ? dayjs(contract?.approved_at).format('DD/MM/YYYY') : 'Sin aprobar'}</small>,
           },
           {
             title: 'Inicio',
-            description: <small>{dayjs(contract?.signed_at).format('DD/MM/YYYY')}</small>,
+            description:
+              <small>{contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY') : 'Sin firma'}</small>,
           },
           {
             title: 'Documentación',

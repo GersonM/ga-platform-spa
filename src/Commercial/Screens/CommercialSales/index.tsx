@@ -179,11 +179,11 @@ const CommercialSales = () => {
     {
       title: 'Fecha de compra',
       width: 140,
-      dataIndex: 'date_start',
-      render: (date_start: string) => {
+      dataIndex: 'created_at',
+      render: (created_at: string) => {
         return <>
-          {dayjs(date_start).fromNow()}
-          <small>{dayjs(date_start).format('DD/MM/YYYY HH:MM')}</small>
+          {dayjs(created_at).fromNow()}
+          <small>{dayjs(created_at).format('DD/MM/YYYY HH:MM')}</small>
         </>
       },
     },

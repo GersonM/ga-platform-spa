@@ -89,11 +89,13 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
   };
 
   const updateTemplate = (templateUuid:string) => {
+    setLoading(true);
     axios.post(`commercial/contracts/${contract.uuid}/template`, {template_uuid: templateUuid})
       .then(() => {
         setReload(!reload);
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       })
   }
@@ -138,9 +140,10 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       <div className={'title-container'}>
         <div>
           {totalFilled} de {totalRequired} completados | {totalFilled - totalCompleted} por aprobar
-          <Progress percent={percentFilled} success={{percent}} showInfo={true} style={{marginRight: 10}}/>
+          <Progress percent={percentFilled} success={{percent}} showInfo={true} strokeWidth={4} style={{marginRight: 10}}/>
         </div>
         <Space size={"small"}>
+          <LoadingIndicator visible={loading} />
           <ContractTemplateSelector defaultValue={contract.fk_template_uuid} placeholder={'Cargar plantilla'} onChange={(value) => updateTemplate(value)}/>
           <IconButton
             title={'Imprimir documentos'}

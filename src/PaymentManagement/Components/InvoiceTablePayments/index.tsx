@@ -10,6 +10,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
 import IconButton from '../../../CommonUI/IconButton';
+import dayjs from "dayjs";
 
 interface InvoiceTablePayments {
   invoice: Invoice;
@@ -21,7 +22,9 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
 
   const deletePayment = (uuid: string) => {
     axios.delete('payment-management/payments/' + uuid).then(() => {
-      onChange && onChange();
+      if (onChange) {
+        onChange();
+      }
     });
   };
 
@@ -48,8 +51,18 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
     {
       title: 'N° Voucher',
       dataIndex: 'voucher_code',
-      width: 110,
+      width: 150,
     },
+    {
+      title: 'Creado',
+      width: 110,
+      dataIndex: 'created_at',
+      render: (created_at: string) => {
+        return created_at && <>
+          {dayjs(created_at).format('DD/MM/YYYY')}
+          <small>{dayjs(created_at).format('HH:MM a')}</small>
+        </>
+      }},
     {
       title: 'Doc.',
       dataIndex: 'attachments',
@@ -95,7 +108,9 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
           invoice={invoice}
           onCompleted={() => {
             setOpenInvoiceForm(false);
-            onChange && onChange();
+            if (onChange) {
+              onChange();
+            }
           }}
         />
       </Modal>
