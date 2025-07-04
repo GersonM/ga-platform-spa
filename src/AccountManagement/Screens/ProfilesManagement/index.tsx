@@ -60,7 +60,7 @@ const ProfilesManagement = () => {
       dataIndex: '_name',
       width: 280,
       render: (_name: string, row: Profile) => {
-        return <ProfileChip profile={row} />;
+        return <ProfileChip profile={row}/>;
       },
     },
     {
@@ -71,8 +71,8 @@ const ProfilesManagement = () => {
       render: (user: User, profile: Profile) => {
         return (
           <Space>
-            {user ? <TbIdBadge2 size={20} color={user.disabled_at ? 'red' : ''} /> : <TbUser size={18} />}
-            {profile.login_method === 'none' && <NoSymbolIcon width={15} />}
+            {user ? <TbIdBadge2 size={20} color={user.disabled_at ? 'red' : ''}/> : <TbUser size={18}/>}
+            {profile.login_method === 'none' && <NoSymbolIcon width={15}/>}
           </Space>
         );
       },
@@ -83,7 +83,7 @@ const ProfilesManagement = () => {
       dataIndex: 'uuid',
       width: 160,
       render: (_uuid: string, profile: Profile) => {
-        return <ProfileDocument profile={profile} />;
+        return <ProfileDocument profile={profile}/>;
       },
     },
     {
@@ -136,23 +136,23 @@ const ProfilesManagement = () => {
         return (
           <Space wrap>
             <Tooltip title={'Editar'}>
-              <IconButton icon={<TbPencil />} onClick={() => navigate(`/profiles/${uuid}`)} />
+              <IconButton icon={<TbPencil/>} onClick={() => navigate(`/profiles/${uuid}`)}/>
             </Tooltip>
             <Tooltip title={'Cambiar contraseña'}>
-              <IconButton icon={<TbLockCog />} />
+              <IconButton icon={<TbLockCog/>} disabled/>
             </Tooltip>
             <Tooltip title={'Editar roles'}>
-              <IconButton icon={<TbUserShield />} />
+              <IconButton icon={<TbUserShield/>} disabled/>
             </Tooltip>
             <Tooltip title={'Bloquear usuario'}>
-              <IconButton icon={<TbUserOff />} danger />
+              <IconButton icon={<TbUserOff/>} danger disabled/>
             </Tooltip>
             <Tooltip title={'Eliminar usuario'}>
               <Popconfirm
                 title={'¿Quieres eliminar este usuario?'}
                 description={'Toda la información relacionada será eliminada también'}
                 onConfirm={() => setReload(!reload)}>
-                <IconButton icon={<TbTrash />} danger />
+                <IconButton icon={<TbTrash/>} danger disabled/>
               </Popconfirm>
             </Tooltip>
           </Space>
@@ -199,7 +199,7 @@ const ProfilesManagement = () => {
             </Form.Item>
           </FilterForm>
         </ContentHeader>
-        <TableList columns={columns} dataSource={profiles} />
+        <TableList columns={columns} dataSource={profiles}/>
         <Pagination
           align={'center'}
           showSizeChanger={false}
