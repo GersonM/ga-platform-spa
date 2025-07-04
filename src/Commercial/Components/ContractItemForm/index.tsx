@@ -1,10 +1,12 @@
-import React from 'react';
 import {Checkbox, Col, Form, Input, Row, Select} from "antd";
 import type {Contract, ContractItem} from "../../../Types/api.tsx";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
+import voca from 'voca';
+
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ContractItemsPropertySelector from "../ContractItemsPropertySelector";
 
 interface ContractItemFormProps {
   contract: Contract;
@@ -13,7 +15,6 @@ interface ContractItemFormProps {
 }
 
 const ContractItemForm = ({contract, contractItem, onComplete}: ContractItemFormProps) => {
-
   const [form] = useForm();
 
   const submitForm = (values: any) => {
@@ -38,14 +39,17 @@ const ContractItemForm = ({contract, contractItem, onComplete}: ContractItemForm
         <Form.Item name={'type'} label={'Tipo'}>
           <Select options={[
             {label: "Texto", value: "text"},
-            {label: "Número", value: "number"},
             {label: "Archivo", value: "file"},
+            {label: "Número", value: "number"},
+            {label: "Checkbox", value: "boolean"},
           ]}/>
         </Form.Item>
         <Row gutter={15}>
           <Col span={12}>
             <Form.Item name={'description'} label={'Nombre'}>
-              <Input/>
+              <Input onChange={(evt) => {
+                form.setFieldValue('code', voca.kebabCase(evt.target.value));
+              }}/>
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -58,7 +62,7 @@ const ContractItemForm = ({contract, contractItem, onComplete}: ContractItemForm
           <Input/>
         </Form.Item>
         <Form.Item name={'group'} label={'Grupo'}>
-          <Input/>
+          <ContractItemsPropertySelector property={'group'} placeholder={'Elige un grupo'} />
         </Form.Item>
         <Form.Item name={'additional_details'} label={'Información adicional (opcional)'}>
           <Input.TextArea/>

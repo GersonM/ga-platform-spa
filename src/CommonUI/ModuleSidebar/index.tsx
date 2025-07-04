@@ -1,6 +1,6 @@
 import {type ReactNode, useState} from 'react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {TbChevronRight, TbLayoutSidebarLeftCollapseFilled} from 'react-icons/tb';
+import {TbChevronLeft, TbChevronRight} from 'react-icons/tb';
 import {Tooltip} from 'antd';
 
 import LoadingIndicator from '../LoadingIndicator';
@@ -52,7 +52,7 @@ const ModuleSidebar = ({
                     <Tooltip title={'Ocultar menu'}>
                       <IconButton
                         onClick={() => setOpenMenu(!openMenu)}
-                        icon={<TbLayoutSidebarLeftCollapseFilled />}
+                        icon={<TbChevronLeft />}
                         small
                       />
                     </Tooltip>

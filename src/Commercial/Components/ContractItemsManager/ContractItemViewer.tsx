@@ -8,7 +8,7 @@ import {
   TbPencil,
   TbTrash
 } from "react-icons/tb";
-import {Divider, Input, Popover, Space} from "antd";
+import {Divider, Input, Popover, Space, Switch} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -25,6 +25,8 @@ interface ContractItemViewerProps {
   editMode?: boolean;
 }
 
+const itemTypes: any = {boolean: 'Checkbox', file: 'Archivo', text: 'Texto', number: 'Número'};
+
 const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: ContractItemViewerProps) => {
   const [value, setValue] = useState<string>();
   const [isModified, setIsModified] = useState(false);
@@ -34,6 +36,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       .post(`commercial/contract-items/${contractItem.uuid}/value`, {value})
       .then(() => {
         if (onChange) onChange();
+        setIsModified(false);
       })
       .catch(err => {
         ErrorHandler.showNotification(err);
@@ -60,6 +63,43 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       .catch(err => {
         ErrorHandler.showNotification(err);
       });
+  }
+
+  const getValueViewer = (type: string) => {
+    switch (type) {
+      case 'boolean':
+        return <Switch
+          checkedChildren={'Si'}
+          unCheckedChildren={'No'}
+          defaultValue={contractItem.value=='1'}
+          disabled
+          />;
+      case 'file':
+        return <FilePreview fileUuid={contractItem.value}/>;
+      default:
+        return contractItem.value;
+    }
+  }
+
+  const getValueInput = (type: string) => {
+    switch (type) {
+      case 'file':
+        return <>
+          <FileUploader small onChange={v => updateValue(v)}/>
+          <FilePreview fileUuid={contractItem.value}/>
+        </>;
+      case 'boolean':
+        return <Switch
+          checkedChildren={'Si'}
+          unCheckedChildren={'No'}
+          defaultValue={contractItem.value=='1'}
+          onChange={value => updateValue(value ? '1' : '0')}/>;
+      default:
+        return <Input
+          placeholder={contractItem.description} defaultValue={contractItem.value}
+          onChange={(e) => updateValue(e.target.value)}
+        />
+    }
   }
 
   const updateValue = (value?: string) => {
@@ -89,30 +129,18 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       <div>
         <Space split={<Divider type={'vertical'}/>}>
           {editMode ? (<>
+            {itemTypes[contractItem.type]}
             <IconButton icon={<TbPencil/>} onClick={onEdit}/>
             <IconButton icon={<TbTrash/>} danger/>
           </>) : <>
             {contractItem.approved_at ?
               <>
-                <div>
-                  {contractItem.type == 'file' ?
-                    <FilePreview fileUuid={contractItem.value}/> :
-                    contractItem.value
-                  }
-                </div>
+                {getValueViewer(contractItem.type)}
                 <IconButton icon={<TbCancel/>} danger title={'Quitar aprobación'} onClick={removeApproveItem}/>
               </>
               :
               <>
-                {contractItem.type == 'file' && <>
-                  <FileUploader small onChange={v => updateValue(v)}/>
-                  <FilePreview fileUuid={contractItem.value}/>
-                </>}
-                {contractItem.type != 'file' &&
-                  <Input
-                    placeholder={contractItem.description} defaultValue={contractItem.value}
-                    onChange={(e) => updateValue(e.target.value)}/>
-                }
+                {getValueInput(contractItem.type)}
                 <IconButton
                   icon={<TbDeviceFloppy size={22}/>}
                   title={'Guardar'}

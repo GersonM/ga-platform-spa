@@ -42,10 +42,10 @@ import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@he
 import {
   TbBuilding,
   TbBuildingEstate,
-  TbBuildingWarehouse,
+  TbBuildingWarehouse, TbContract,
   TbForklift,
   TbListCheck,
-  TbPackage,
+  TbPackage, TbShoppingCart,
 } from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
@@ -179,7 +179,8 @@ const Navigation = () => {
                 <NavItem icon={<PiWarningDiamond/>} label={'Incidencias'} path={'/commercial/incidents'}/>
                 <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/commercial/leads'}/>
                 <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
-                <NavItem icon={<PiCashRegister/>} label={'Ventas'} path={'/commercial/sales'}/>
+                <NavItem icon={<TbShoppingCart/>} label={'Ventas'} path={'/commercial/sales'}/>
+                <NavItem icon={<TbContract/>} label={'Plantillas'} path={'/commercial/contract-templates'}/>
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>

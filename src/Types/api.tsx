@@ -106,6 +106,12 @@ export type Contract = {
   contractable?: any;
   invoices?: Invoice[];
   items?: ContractItem[];
+  title: string;
+  is_template?: boolean;
+  template?: Contract;
+  fk_template_uuid?: string;
+  track_id?: number;
+  document_progress?:number;
 };
 export type ContractItem = {
   uuid: string;

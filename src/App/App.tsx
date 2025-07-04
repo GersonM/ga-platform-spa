@@ -63,6 +63,7 @@ const AttendanceManager = lazy(() => import('../ClubManagement/Screens/Attendanc
 const GoogleCallback = lazy(() => import('../Authentication/Screen/GoogleCallback'));
 const WorkspaceManagement = lazy(() => import('../Workspaces/Screens/WorkspaceManagement'));
 const CompanyDetails = lazy(() => import('../HRManagement/Screens/CompanyDetails'));
+const TemplateContractsManager = lazy(() => import('../Commercial/Screens/TemplateContractsManager'));
 
 const App = () => {
   const {user} = useContext(AuthContext);
@@ -178,6 +179,7 @@ const App = () => {
           <Route path={'clients'} element={<CommercialClients />} />
           <Route path={'sales'} element={<CommercialSales />} />
           <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
+          <Route path={'contract-templates/:contract_template?'} element={<TemplateContractsManager />} />
         </Route>
         <Route path={'warehouse'}>
           <Route path={'products'} element={<WarehouseProductsManager />} />

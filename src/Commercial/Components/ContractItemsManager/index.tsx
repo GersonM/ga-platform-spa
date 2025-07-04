@@ -1,21 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Dropdown, type MenuProps, Modal, Progress, Space} from "antd";
+import {Dropdown, type MenuProps, Progress, Space} from "antd";
 import axios from "axios";
 
-import type {Contract, ContractItem, SubscriptionMember} from "../../../Types/api.tsx";
+import type {Contract, ContractItem} from "../../../Types/api.tsx";
 import ContractItemForm from "../ContractItemForm";
 import ModalView from "../../../CommonUI/ModalView";
 import ContractItemViewer from "./ContractItemViewer.tsx";
 import './styles.less';
-import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import {
   TbDeviceFloppy,
-  TbDotsVertical, TbEdit,
-  TbMenu, TbMenu2,
-  TbMenu3,
-  TbMenu4, TbPencil,
+  TbMenu2,
+  TbPencil,
   TbPlus, TbPrinter,
-  TbRecycle,
   TbReload,
   TbRepeat
 } from "react-icons/tb";
@@ -25,16 +21,17 @@ import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 
 interface ContractItemManagerProps {
   contract: Contract;
+  forceToEdit?: boolean;
   group?: string;
 }
 
-const ContractItemsManager = ({contract, group}: ContractItemManagerProps) => {
+const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractItemManagerProps) => {
   const [openItemForm, setOpenItemForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ContractItem>();
   const [contractItems, setContractItems] = useState<ContractItem[]>();
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(forceToEdit);
   const [downloading, setDownloading] = useState(false);
   const [openPrint, setOpenPrint] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
@@ -64,7 +61,7 @@ const ContractItemsManager = ({contract, group}: ContractItemManagerProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload]);
+  }, [reload, contract]);
 
   const generateDocuments = () => {
     setOpenPrint(true);

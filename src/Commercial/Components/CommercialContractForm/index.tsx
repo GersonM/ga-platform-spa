@@ -2,28 +2,34 @@ import {useContext, useEffect, useState} from 'react';
 import {Col, Divider, Form, Input, Row, Select} from 'antd';
 import axios from 'axios';
 
+import type {Contract, StorageStock} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import type {Contract, StorageStock} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import StockViewerState from '../StockViewerState';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
+import ContractTemplateSelector from "../ContractTemplateSelector";
+import IconButton from "../../../CommonUI/IconButton";
+import {TbPencil} from "react-icons/tb";
 
-interface CreateContractFormProps {
+interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
+  contract?: Contract;
+  isTemplate?: boolean;
 }
 
-const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
+const CommercialContractForm = ({onComplete, contract, isTemplate = false}: CommercialContractFormProps) => {
   const {user} = useContext(AuthContext);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
   const [clientType, setClientType] = useState<'company' | 'profile'>()
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
+  const [chooseSeller, setChooseSeller] = useState(false);
 
   useEffect(() => {
     if (!selectedStockUUID) {
@@ -52,10 +58,9 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
   }, [selectedStockUUID]);
 
   const submitForm = (data: any) => {
-    console.log(data);
     setLoading(true);
     axios
-      .post('commercial/contracts', data)
+      .post('commercial/contracts', {...data, is_template: isTemplate})
       .then(response => {
         setLoading(false);
         if (onComplete) {
@@ -74,30 +79,41 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
       <Form layout="vertical" onFinish={submitForm}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
-            <Form.Item label={'Producto'} name={'stock_uuid'}>
-              <StockSelector onChange={uuid => setSelectedStockUUID(uuid)}/>
-            </Form.Item>
-            <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
-              <Select
-                showSearch
-                onChange={value => setClientType(value)}
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: 'company', label: 'Empresa'},
-                  {value: 'profile', label: 'Persona'},
-                ]}
-              />
-            </Form.Item>
-            {clientType == 'profile' && (
-              <Form.Item label={'Persona'} name={'fk_profile_uuid'}>
-                <ProfileSelector/>
-              </Form.Item>
-            )}
-            {clientType == 'company' && (
-              <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
-                <CompanySelector />
-              </Form.Item>
-            )}
+            {isTemplate ? (
+                <Form.Item label={'Nombre de la plantilla'} name={'title'}>
+                  <Input/>
+                </Form.Item>
+              ) :
+              <>
+                <Form.Item label={'Producto'} name={'stock_uuid'}>
+                  <StockSelector onChange={uuid => setSelectedStockUUID(uuid)}/>
+                </Form.Item>
+                <Form.Item label={'Plantilla'} name={'fk_template_uuid'}>
+                  <ContractTemplateSelector/>
+                </Form.Item>
+                <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
+                  <Select
+                    showSearch
+                    onChange={value => setClientType(value)}
+                    placeholder={'Seleccione modalidad'}
+                    options={[
+                      {value: 'company', label: 'Empresa'},
+                      {value: 'profile', label: 'Persona'},
+                    ]}
+                  />
+                </Form.Item>
+                {clientType == 'profile' && (
+                  <Form.Item label={'Persona'} name={'fk_profile_uuid'}>
+                    <ProfileSelector/>
+                  </Form.Item>
+                )}
+                {clientType == 'company' && (
+                  <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
+                    <CompanySelector/>
+                  </Form.Item>
+                )}
+              </>
+            }
             <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
               <Select
                 showSearch
@@ -137,7 +153,9 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
             {selectedStock ? (
               <>
                 <strong>{selectedStock.product?.name}</strong>
-                <p>{selectedStock.product?.description}</p>
+                {selectedStock.product?.description &&
+                  <div dangerouslySetInnerHTML={{__html: selectedStock.product?.description}}></div>
+                }
                 {selectedStock.product?.type == 'property' &&
                   <StockViewerState stock={selectedStock}/>
                 }
@@ -152,12 +170,19 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
             ) : (
               <EmptyMessage message={'Elige un producto para ver los detalles'}/>
             )}
-            <p>
-              <strong>Vendedor: </strong>
-              <span>
-                {user?.profile.name} {user?.profile.last_name}
+            {chooseSeller ? (
+                <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
+                  <ProfileSelector/>
+                </Form.Item>) :
+              <p>
+                <strong>Vendedor: </strong>
+                <span>
+                {user?.profile.name} {user?.profile.last_name} <IconButton icon={<TbPencil/>}
+                                                                           onClick={() => setChooseSeller(!chooseSeller)}/>
               </span>
-            </p>
+              </p>
+            }
+
           </Col>
         </Row>
       </Form>
@@ -165,4 +190,4 @@ const CreateContractForm = ({onComplete}: CreateContractFormProps) => {
   );
 };
 
-export default CreateContractForm;
+export default CommercialContractForm;

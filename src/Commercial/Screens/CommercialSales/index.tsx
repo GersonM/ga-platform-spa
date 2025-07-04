@@ -18,7 +18,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import IconButton from "../../../CommonUI/IconButton";
 import './styles.less';
-import CreateContractForm from "../../Components/CreateContractForm";
+import CreateContractForm from "../../Components/CommercialContractForm";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -115,6 +115,16 @@ const CommercialSales = () => {
 
   const columns = [
     {
+      title: 'N°',
+      dataIndex: 'tracking_id',
+      width: 100,
+      render: (tracking_id:number, row:Contract) => {
+        return <>{dayjs(row.created_at).format('YYYYMM') + tracking_id}
+          {row.document_progress && <Progress size={'small'} strokeWidth={3} percent={row.document_progress} />}
+        </>;
+      }
+    },
+    {
       title: 'Producto',
       dataIndex: 'contractable',
       width: 180,
@@ -130,8 +140,8 @@ const CommercialSales = () => {
       dataIndex: 'client',
       width: 300,
       render: (client: Client) => {
-        const isCompany = client.type.includes('Company');
-        const e = client.entity;
+        const isCompany = client?.type.includes('Company');
+        const e = client?.entity;
         if (!e) return 'Sin cliente';
         return (
           <>
@@ -150,12 +160,6 @@ const CommercialSales = () => {
           </>
         );
       },
-    },
-    {
-      title: 'Modalidad',
-      dataIndex: 'items',
-      width: 120,
-      render: (items: any[]) => items.find(i => i.description == 'Modalidad')?.value,
     },
     {
       title: 'Vendedor',
