@@ -129,20 +129,24 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 ]}
               />
             </Form.Item>*/}
-            <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
-              <Select
-                showSearch
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: 'first_30', label: 'Inicial de 30%'},
-                  {value: '1_pago', label: '1 Solo pago'},
-                  {value: '0', label: 'Ninguno'},
-                ]}
-              />
-            </Form.Item>
-            <Form.Item label={'Precio de venta'} name={'sale_price'}>
-              <MoneyInput placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
-            </Form.Item>
+            {!isTemplate && (
+              <>
+                <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
+                  <Select
+                    showSearch
+                    placeholder={'Seleccione modalidad'}
+                    options={[
+                      {value: 'first_30', label: 'Inicial de 30%'},
+                      {value: '1_pago', label: '1 Solo pago'},
+                      {value: '0', label: 'Ninguno'},
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item label={'Precio de venta'} name={'sale_price'}>
+                  <MoneyInput placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
+                </Form.Item>
+              </>
+            )}
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
