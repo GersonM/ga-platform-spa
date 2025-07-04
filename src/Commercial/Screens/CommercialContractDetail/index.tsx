@@ -38,6 +38,7 @@ import ProcessDetail from "../../../ProcessesManagement/Components/ProcessDetail
 import ModalView from "../../../CommonUI/ModalView";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 import ContractItemsManager from "../../Components/ContractItemsManager";
+import ContractTemplateSelector from "../../Components/ContractTemplateSelector";
 
 const CommercialContractDetail = () => {
   const params = useParams();

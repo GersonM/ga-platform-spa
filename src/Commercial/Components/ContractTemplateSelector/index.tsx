@@ -12,6 +12,7 @@ interface ContractTemplateSelectorProps {
   disabled?: boolean;
   refresh?: boolean;
   style?: any;
+  defaultValue?: string;
   value?: any;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;

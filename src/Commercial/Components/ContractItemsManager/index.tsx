@@ -18,6 +18,7 @@ import {
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import ContractTemplateSelector from '../ContractTemplateSelector/index.tsx';
 
 interface ContractItemManagerProps {
   contract: Contract;
@@ -87,6 +88,16 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       });
   };
 
+  const updateTemplate = (templateUuid:string) => {
+    axios.post(`commercial/contracts/${contract.uuid}/template`, {template_uuid: templateUuid})
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      })
+  }
+
   const onMenuClick: MenuProps['onClick'] = (e) => {
     console.log('click', e);
     switch (e.key) {
@@ -100,7 +111,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
     {
       key: 'edit',
       icon: <TbPencil size={20}/>,
-      label: editMode?'Terminar de edición':'Editar lista',
+      label: editMode ? 'Terminar de edición' : 'Editar lista',
     },
     {
       key: 'save',
@@ -126,10 +137,11 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
     <div>
       <div className={'title-container'}>
         <div>
-          {totalFilled} de {totalRequired} completados | {totalFilled-totalCompleted} por aprobar
+          {totalFilled} de {totalRequired} completados | {totalFilled - totalCompleted} por aprobar
           <Progress percent={percentFilled} success={{percent}} showInfo={true} style={{marginRight: 10}}/>
         </div>
         <Space size={"small"}>
+          <ContractTemplateSelector defaultValue={contract.fk_template_uuid} placeholder={'Cargar plantilla'} onChange={(value) => updateTemplate(value)}/>
           <IconButton
             title={'Imprimir documentos'}
             icon={<TbPrinter/>}
