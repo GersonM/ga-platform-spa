@@ -114,7 +114,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 )}
               </>
             }
-            <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
+            {/* <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
               <Select
                 showSearch
                 placeholder={'Seleccione modalidad'}
@@ -128,7 +128,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                   {value: 'PROREVI', label: 'PROREVI'},
                 ]}
               />
-            </Form.Item>
+            </Form.Item>*/}
             <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
               <Select
                 showSearch
