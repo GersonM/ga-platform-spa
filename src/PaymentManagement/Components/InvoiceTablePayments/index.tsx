@@ -11,6 +11,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
 import IconButton from '../../../CommonUI/IconButton';
+import FilePreview from "../../../CommonUI/FilePreview";
 
 interface InvoiceTablePayments {
   invoice: Invoice;
@@ -70,9 +71,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       render: (attachments: ApiFile[]) => {
         if (attachments && attachments.length > 0) {
           return (
-            <a href={attachments[0].source} target={'_blank'}>
-              <DocumentIcon width={16} color={'#000'} />
-            </a>
+            <FilePreview fileUuid={attachments[0].uuid} />
           );
         }
       },
