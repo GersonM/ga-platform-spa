@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {Modal, Popconfirm, Space} from 'antd';
 import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
 import {PiPlusBold} from 'react-icons/pi';
+import dayjs from "dayjs";
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
@@ -10,7 +11,6 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
 import IconButton from '../../../CommonUI/IconButton';
-import dayjs from "dayjs";
 
 interface InvoiceTablePayments {
   invoice: Invoice;

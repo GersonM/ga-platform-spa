@@ -6,7 +6,7 @@ import {
   TbDeviceFloppy,
   TbInfoSmall,
   TbPencil,
-  TbTrash
+  TbTrash, TbTrashX
 } from "react-icons/tb";
 import {Divider, Input, Popover, Space, Switch} from "antd";
 import axios from "axios";
@@ -34,6 +34,19 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
   const saveValue = () => {
     axios
       .post(`commercial/contract-items/${contractItem.uuid}/value`, {value})
+      .then(() => {
+        if (onChange) onChange();
+        setIsModified(false);
+        setValue(undefined);
+      })
+      .catch(err => {
+        ErrorHandler.showNotification(err);
+      });
+  }
+
+  const removeValue = () => {
+    axios
+      .post(`commercial/contract-items/${contractItem.uuid}/value`, {value: null})
       .then(() => {
         if (onChange) onChange();
         setIsModified(false);
@@ -71,9 +84,9 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
         return <Switch
           checkedChildren={'Si'}
           unCheckedChildren={'No'}
-          defaultValue={contractItem.value=='1'}
+          defaultValue={contractItem.value == '1'}
           disabled
-          />;
+        />;
       case 'file':
         return <FilePreview fileUuid={contractItem.value}/>;
       default:
@@ -86,13 +99,13 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       case 'file':
         return <>
           <FileUploader small onChange={v => updateValue(v)}/>
-          <FilePreview fileUuid={contractItem.value}/>
+          {contractItem.value && <FilePreview fileUuid={contractItem.value}/>}
         </>;
       case 'boolean':
         return <Switch
           checkedChildren={'Si'}
           unCheckedChildren={'No'}
-          defaultValue={contractItem.value=='1'}
+          defaultValue={contractItem.value == '1'}
           onChange={value => updateValue(value ? '1' : '0')}/>;
       default:
         return <Input
@@ -141,11 +154,17 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
               :
               <>
                 {getValueInput(contractItem.type)}
-                <IconButton
-                  icon={<TbDeviceFloppy size={22}/>}
-                  title={'Guardar'}
-                  disabled={!isModified}
-                  onClick={saveValue}/>
+                {contractItem.value ?
+                  <IconButton
+                    icon={<TbTrashX size={22}/>}
+                    title={'Borrar valor'}
+                    onClick={removeValue}/>:
+                  <IconButton
+                    icon={<TbDeviceFloppy size={22}/>}
+                    title={'Guardar'}
+                    disabled={!isModified}
+                    onClick={saveValue}/>
+                }
                 <IconButton
                   icon={<TbCheck color={contractItem.value ? 'green' : undefined}/>}
                   title={'Aprobar'}
