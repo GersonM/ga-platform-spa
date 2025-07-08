@@ -12,8 +12,8 @@ interface AntConfigProps {
   tenant: TenantConfig;
 }
 
-const defaultColor = '#0082ca';
-const defaultColorLight = '#52b5ff';
+const defaultColor = '#009987';
+const defaultColorLight = '#00675b';
 
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
   const {darkMode, preferredMode, setDarkMode} = useContext(AuthContext);

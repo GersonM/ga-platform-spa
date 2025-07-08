@@ -5,7 +5,6 @@ import {UploadOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {
   PiBooksLight,
-  PiBoxArrowUp,
   PiBuilding,
   PiBuildingsLight,
   PiBulldozerLight,
@@ -22,7 +21,6 @@ import {
   PiGraduationCap,
   PiHandshake,
   PiHardDrives,
-  PiInvoiceDuotone,
   PiMailboxDuotone,
   PiMoney,
   PiPerson,
@@ -53,7 +51,7 @@ import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 import Cookies from 'js-cookie';
 
 import ScreenModeSelector from './ScreenModeSelector';
-import logo from '../Assets/logo_square.png';
+import logo from '../Assets/ga_logo_white.webp';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
@@ -184,8 +182,8 @@ const Navigation = () => {
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>
-              <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/actividad'}/>
               <NavItem icon={<TbPackage/>} label={'Productos'} path={'/warehouse/products'}/>
+              <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/actividad'}/>
             </NavItem>
             {config?.modules.includes('move') && (
               <NavItem icon={<PiCarProfile/>} label={'Transporte'}>

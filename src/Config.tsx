@@ -1,5 +1,5 @@
 //const domain = 'https://api-portalweb.bsginstitute.com/';
-const domain = 'http://192.168.3.2:8000/';
+const domain = 'http://192.168.3.112:8000/';
 //const domain = 'http://192.168.0.6:8000/';
 
 const Config = {

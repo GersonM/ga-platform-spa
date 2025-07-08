@@ -6,18 +6,18 @@
 
   .nav-list-item {
     border-bottom: 1px solid var(--border-color);
+    padding: 3px 0;
     display: flex;
     align-items: center;
-    padding: 0 15px;
 
     a {
       flex: 1;
-      margin: 0 -15px;
-      padding: 8px 15px;
+      padding: 10px 8px;
       display: flex;
       align-items: center;
-      color: #666;
+      color: var(--color-text);
       transition: all 0.3s;
+      border-radius: 7px;
 
       .avatar {
         display: inline-block;
@@ -33,35 +33,31 @@
       }
 
       &.active {
-        background: var(--background-color-higlight);
-        color: var(--primary-color);
+        background: var(--primary-color);
+        color: #ffffff;
 
         &:after {
           content: '';
           display: block;
           position: absolute;
-          right: 0;
+          right: 5px;
           width: 4px;
-          height: 30px;
-          background: var(--primary-color);
-          border-radius: 4px 0 0 4px;
+          height: 20px;
+          background:#ffffff;
+          border-radius: 4px;
         }
       }
 
       span.icon {
-        display: inline-block;
         margin-right: 10px;
-        vertical-align: middle;
-        width: 20px;
+        font-size: 22px;
 
         & > * {
           vertical-align: middle;
-          font-size: 25px;
-          line-height: 25px;
         }
       }
 
-      span.label {
+      .label {
         display: flex;
         flex-direction: column;
         font-weight: 500;

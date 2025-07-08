@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Modal, Popconfirm, Space} from 'antd';
-import {DocumentIcon, TrashIcon} from '@heroicons/react/24/outline';
+import {TrashIcon} from '@heroicons/react/24/outline';
 import {PiPlusBold} from 'react-icons/pi';
 import dayjs from "dayjs";
 import axios from 'axios';

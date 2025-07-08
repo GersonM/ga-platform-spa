@@ -8,13 +8,14 @@ import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import '@ant-design/v5-patch-for-react-19';
+import {EditorProvider} from "react-simple-wysiwyg";
+import logo from './Assets/ga_logo.webp';
 
 import {AuthContextProvider} from './Context/AuthContext';
 import {UploadContextProvider} from './Context/UploadContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import './index.less';
-import {EditorProvider} from "react-simple-wysiwyg";
 
 dayjs.locale('es');
 dayjs.extend(relativeTime);
@@ -55,6 +56,6 @@ axios
     const el = document.getElementById('root');
     if (el) {
       el.innerHTML =
-        '<div class="error-name">La cuenta no se encuentra activa<br/> <span>Revisa tu correo para saber el estado de tu cuenta</span></div>';
+        `<div class="error-name"><img src=${logo} alt={"Logo"}/>La cuenta no se encuentra activa<br/> <span>Revisa tu correo para saber el estado de tu cuenta</span></div>`;
     }
   });

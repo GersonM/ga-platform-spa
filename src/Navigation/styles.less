@@ -2,8 +2,8 @@
 
 .navigation-wrapper {
   background: linear-gradient(var(--primary-color), var(--primary-color-darker));
-  min-width: calc(var(--main-nav-width) - 10px);
-  max-width: calc(var(--main-nav-width) - 10px);
+  min-width: var(--main-nav-width);
+  max-width: var(--main-nav-width);
   transition: all 0.3s;
   display: flex;
   flex-direction: column;
@@ -249,7 +249,7 @@
     position: fixed;
     z-index: 5;
     top: 0;
-    transform: translateX(-110%);
+    transform: translateX(-100%);
     animation-name: none;
 
     &.open {

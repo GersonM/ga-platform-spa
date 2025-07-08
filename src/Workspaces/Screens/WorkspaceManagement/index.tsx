@@ -113,7 +113,7 @@ const WorkspaceManagement = () => {
     },
   ];
   return (
-    <div>
+    <>
       <ContentHeader
         loading={loading}
         title={'Configuración de workspaces'}
@@ -124,7 +124,7 @@ const WorkspaceManagement = () => {
           independiente, tienen su propio espacio de trabajo y la información no se comparte con ningún otro entorno
         </p>
       </ContentHeader>
-      <TableList rowKey={'id'} columns={columns} dataSource={workspaces} />
+      <TableList customStyle={false} scroll={{x:800}} rowKey={'id'} columns={columns} dataSource={workspaces} />
 
       <Modal
         title={'Crear nuevo workspace'}
@@ -139,7 +139,7 @@ const WorkspaceManagement = () => {
           }}
         />
       </Modal>
-    </div>
+    </>
   );
 };
 

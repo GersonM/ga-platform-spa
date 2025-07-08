@@ -1,11 +1,12 @@
 import {type ReactNode, useContext} from 'react';
-import {Bars3Icon} from '@heroicons/react/24/solid';
 
-import logo from '../../Assets/logo_square.png';
+import logoDark from '../../Assets/ga_logo_white.webp';
+import logo from '../../Assets/ga_logo.webp';
 import AuthContext from '../../Context/AuthContext';
 import IconButton from '../IconButton';
 
 import './styles.less';
+import {TbMenu2} from "react-icons/tb";
 
 interface ModuleContentProps {
   children?: ReactNode;
@@ -25,9 +26,9 @@ const ModuleContent = ({children, opaque, withSidebar = false}: ModuleContentPro
           onClick={() => {
             setOpenMenu(!openMenu);
           }}>
-          <img src={navLogo || logo} alt="Logo" />
+          <img src={navLogo || (darkMode ? logoDark : logo)} alt="Logo" />
         </div>
-        <IconButton icon={<Bars3Icon />} onClick={() => setOpenMenu(!openMenu)} />
+        <IconButton icon={<TbMenu2 />} onClick={() => setOpenMenu(!openMenu)} />
       </div>
       <div className={`module-content-wrapper ${opaque ? ' opaque' : ''} ${withSidebar ? ' with-sidebar' : ''}`}>
         {children}

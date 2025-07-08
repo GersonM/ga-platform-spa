@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Col, Divider, Form, Input, Row, Select} from 'antd';
+import {Checkbox, Col, Divider, Form, Input, Row, Select} from 'antd';
 import axios from 'axios';
 
 import type {Contract, StorageStock} from '../../../Types/api';
@@ -16,6 +16,7 @@ import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import {TbPencil} from "react-icons/tb";
+import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -88,7 +89,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 <Form.Item label={'Producto'} name={'stock_uuid'}>
                   <StockSelector onChange={uuid => setSelectedStockUUID(uuid)}/>
                 </Form.Item>
-                <Form.Item label={'Plantilla'} name={'fk_template_uuid'}>
+                <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
                   <ContractTemplateSelector/>
                 </Form.Item>
                 <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
@@ -142,9 +143,19 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                     ]}
                   />
                 </Form.Item>
-                <Form.Item label={'Precio de venta'} name={'sale_price'}>
-                  <MoneyInput placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
-                </Form.Item>
+                <Row gutter={[15, 15]}>
+                  <Col xs={10}>
+                    <Form.Item label={'Moneda'} name={'currency'}>
+                      <CurrencySelector placeholder={selectedStock?.currency}/>
+                    </Form.Item>
+                  </Col>
+                  <Col xs={14}>
+                    <Form.Item label={'Precio de venta'} name={'sale_price'}>
+                      <MoneyInput currency={selectedStock?.currency}
+                                  placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
+                    </Form.Item>
+                  </Col>
+                </Row>
               </>
             )}
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
@@ -153,6 +164,43 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <PrimaryButton loading={loading} block htmlType={'submit'} label={'Registrar contrato'}/>
           </Col>
           <Col span={12}>
+            <Form.Item label={'Duración'} name={'period'}>
+              <Select
+                showSearch
+                placeholder={'Único'}
+                options={[
+                  {value: 'unique', label: 'Único'},
+                  {value: 'monthly', label: 'Mensual'},
+                  {value: 'annual', label: 'Anual'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
+              <Select
+                showSearch
+                options={[
+                  {value: 'credit', label: 'Tarjeta Crédito / Débido'},
+                  {value: 'cash', label: 'Efectivo'},
+                  {value: 'other', label: 'Otro'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={'is_renewable'} valuePropName={'checked'}>
+              <Checkbox>Renovar automáticamente</Checkbox>
+            </Form.Item>
+            <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
+              {chooseSeller ? (
+                  <ProfileSelector/>
+                ) :
+                <div>
+                  {user?.profile.name} {user?.profile.last_name}
+                  <IconButton
+                    icon={<TbPencil/>}
+                    onClick={() => setChooseSeller(!chooseSeller)}
+                  />
+                </div>
+              }
+            </Form.Item>
             <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
             {selectedStock ? (
               <>
@@ -167,26 +215,13 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 <p>
                   <strong>Precio de venta: </strong>
                   <span>
-                    <MoneyString value={selectedStock?.sale_price}/>
+                    <MoneyString currency={selectedStock.currency} value={selectedStock?.sale_price}/>
                   </span>
                 </p>
               </>
             ) : (
               <EmptyMessage message={'Elige un producto para ver los detalles'}/>
             )}
-            {chooseSeller ? (
-                <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
-                  <ProfileSelector/>
-                </Form.Item>) :
-              <p>
-                <strong>Vendedor: </strong>
-                <span>
-                {user?.profile.name} {user?.profile.last_name} <IconButton icon={<TbPencil/>}
-                                                                           onClick={() => setChooseSeller(!chooseSeller)}/>
-              </span>
-              </p>
-            }
-
           </Col>
         </Row>
       </Form>

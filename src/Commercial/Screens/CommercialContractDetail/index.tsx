@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {
+  Button,
   Card,
   Col,
   Descriptions,
@@ -8,7 +9,6 @@ import {
   Divider,
   Form,
   Input,
-  Modal,
   Row,
   Steps,
   Tabs,
@@ -28,24 +28,18 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import ContractDetails from '../../Components/ContractDetails';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContractProvideForm from '../../Components/ContractProvideForm';
-import StockViewerState from '../../Components/StockViewerState';
 import CancelContract from '../../Components/CancelContract';
 import AlertMessage from '../../../CommonUI/AlertMessage';
-import StockSelector from '../../../WarehouseManager/Components/StockSelector';
-import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
-import ProcessDetail from "../../../ProcessesManagement/Components/ProcessDetail";
 import ModalView from "../../../CommonUI/ModalView";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 import ContractItemsManager from "../../Components/ContractItemsManager";
-import ContractTemplateSelector from "../../Components/ContractTemplateSelector";
 
 const CommercialContractDetail = () => {
   const params = useParams();
   const [reload, setReload] = useState(false);
   const [contract, setContract] = useState<Contract>();
   const [loading, setLoading] = useState(false);
-  const [changeStockUuid, setChangeStockUuid] = useState<string>();
   const [openContractProvideForm, setOpenContractProvideForm] = useState(false);
   const [openProvisionRevert, setOpenProvisionRevert] = useState(false);
   const [openCancelContract, setOpenCancelContract] = useState(false);
@@ -79,21 +73,6 @@ const CommercialContractDetail = () => {
     setLoading(true);
     axios
       .post(`commercial/contracts/${contract?.uuid}/revert-provision`, values)
-      .then(() => {
-        setLoading(false);
-        setOpenProvisionRevert(false);
-        setReload(!reload);
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
-
-  const updateStock = () => {
-    setLoading(true);
-    axios
-      .post(`commercial/contracts/${contract?.uuid}/update-stock`, {stock_uuid: changeStockUuid})
       .then(() => {
         setLoading(false);
         setOpenProvisionRevert(false);
@@ -211,17 +190,22 @@ const CommercialContractDetail = () => {
         type="navigation"
         size={"small"}
         style={{marginBottom: 20}}
-        current={3}
+        current={-1}
         items={[
           {
             title: 'Propuesta',
+            status: 'finish',
+            icon: <TbCheck />,
             description: <small>{dayjs(contract?.created_at).format('DD/MM/YYYY')}</small>,
           },
           {
             title: 'Aprobado',
             subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
             description:
-              <small>{contract.approved_at ? dayjs(contract?.approved_at).format('DD/MM/YYYY') : 'Sin aprobar'}</small>,
+              contract.approved_at ? <small>{dayjs(contract?.approved_at).format('DD/MM/YYYY')}</small> :
+                <Button size={"small"} icon={<TbCheck />} shape={"round"} variant="outlined" type={"primary"} color={'blue'}>
+                  Aprobar
+                </Button>,
           },
           {
             title: 'Inicio',
@@ -298,25 +282,6 @@ const CommercialContractDetail = () => {
                 key: 'info',
                 label: 'Detalle del contrato',
                 children: <>
-                  <div style={{marginBottom: 15}}>
-                    <StockSelector onChange={value => setChangeStockUuid(value)} style={{width: '100%'}}/>
-                    {changeStockUuid && (
-                      <PrimaryButton style={{marginTop: 10}} block label={'Cambiar lote'} onClick={updateStock}/>
-                    )}
-                  </div>
-                  {contract?.created_by && (
-                    <>
-                      <h3>Vendedor:</h3>
-                      <div>
-                        <ProfileChip profile={contract?.created_by}/>
-                      </div>
-                    </>
-                  )}
-                  {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
-                  <p>
-                    <strong>Observaciones: </strong> <br/>
-                    {contract?.observations}
-                  </p>
                   {contract && <ContractDetails contract={contract}/>}
                 </>
               },

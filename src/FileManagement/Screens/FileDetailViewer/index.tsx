@@ -11,7 +11,7 @@ import type {ApiFile} from '../../../Types/api';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
-import logo from '../../../Assets/logo_full.png';
+import logo from '../../../Assets/ga_logo.webp';
 
 import './styles.less';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';

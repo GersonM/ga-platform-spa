@@ -25,21 +25,23 @@ interface ContentHeaderProps {
   bordered?: boolean;
 }
 
-const ContentHeader = ({
-                         title,
-                         children,
-                         tools,
-                         backLocation,
-                         description,
-                         onRefresh,
-                         onEdit,
-                         onBack,
-                         onAdd,
-                         loading,
-                         showBack,
-                         bordered = false,
-                       }: ContentHeaderProps) => {
+const ContentHeader = (
+  {
+    title,
+    children,
+    tools,
+    backLocation,
+    description,
+    onRefresh,
+    onEdit,
+    onBack,
+    onAdd,
+    loading,
+    showBack,
+    bordered = false,
+  }: ContentHeaderProps) => {
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const shortcutHandler = (e: KeyboardEvent) => {
@@ -96,7 +98,7 @@ const ContentHeader = ({
         </div>
         {onAdd && (
           <Tooltip title={'Nuevo'}>
-            <IconButton icon={<TbPlus />} onClick={onAdd}/>
+            <IconButton icon={<TbPlus/>} onClick={onAdd}/>
           </Tooltip>
         )}
         {onRefresh && (
@@ -106,7 +108,7 @@ const ContentHeader = ({
         )}
         {onEdit && (
           <Tooltip title={'Editar'}>
-            <IconButton icon={<PiPencilSimple />} onClick={onEdit}/>
+            <IconButton icon={<PiPencilSimple/>} onClick={onEdit}/>
           </Tooltip>
         )}
         {tools}

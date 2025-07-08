@@ -76,15 +76,17 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   return (
     <div className={'filter-form-container'}>
       {open && (
-        <Form
-          form={form}
-          onFieldsChange={onFieldsChange}
-          initialValues={initialValues}
-          onFinish={onSubmitHandler}
-          layout={'inline'}>
-          {children}
-          <PrimaryButton loading={loading} icon={<TbFilter/>} label={'Filtrar'} htmlType={'submit'}/>
-        </Form>
+        <div className={'form-wrapper'}>
+          <Form
+            form={form}
+            onFieldsChange={onFieldsChange}
+            initialValues={initialValues}
+            onFinish={onSubmitHandler}
+            layout={'inline'}>
+            {children}
+            <PrimaryButton className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'} htmlType={'submit'}/>
+          </Form>
+        </div>
       )}
       <Button className={'filter-toggle'} size={'small'} block type={'text'} onClick={() => setOpen(!open)}>
         {open ? 'Ocultar filtros' : 'Mostrar filtros'}

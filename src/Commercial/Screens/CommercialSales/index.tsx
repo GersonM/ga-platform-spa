@@ -174,7 +174,7 @@ const CommercialSales = () => {
     {
       title: 'Monto',
       dataIndex: 'amount',
-      render: (amount: number) => <MoneyString value={amount}/>,
+      render: (amount: number, row: Contract) => <MoneyString currency={row.contractable?.currency} value={amount}/>,
     },
     {
       title: 'Fecha de compra',

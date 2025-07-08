@@ -46,7 +46,7 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
                 entity: item,
                 label: (
                   <>
-                    {item.sku} - <MoneyString value={item.sale_price} /> <Tag bordered={false} color={item.is_consumable ? 'orange':'purple'}>{units}</Tag>
+                    {item.sku} - <MoneyString currency={item.currency} value={item.sale_price} /> <Tag bordered={false} color={item.is_consumable ? 'orange':'purple'}>{units}</Tag>
                   </>
                 ),
               };

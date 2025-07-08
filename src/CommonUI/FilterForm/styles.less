@@ -10,10 +10,12 @@
   .ant-form-item-label {
     padding-bottom: 0 !important;
   }
+
   .ant-form-item {
     border-right: 1px solid var(--border-color);
     padding-right: 10px;
   }
+
   .primary-button, .clear-button {
   }
 
@@ -24,11 +26,22 @@
 
 @media screen and (max-width: 768px) {
   .filter-form-container {
-    padding: 15px;
+    padding: 5px;
+
+    .form-wrapper {
+      padding: 10px;
+
+      .primary-button {
+        width: 100%;
+        margin: 0 0 10px 0;
+      }
+    }
+
     .ant-form-item-label {
       padding-bottom: 0 !important;
       width: 20%;
     }
+
     .ant-form-item {
       width: 100%;
       border-right: none;
@@ -36,10 +49,6 @@
       margin: 0;
     }
 
-    .primary-button {
-      width: 100%;
-      margin: 0 0 10px 0;
-    }
 
     .filter-toggle {
       display: flex;
