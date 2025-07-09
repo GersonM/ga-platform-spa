@@ -22,6 +22,8 @@ interface AuthContextDefaults {
   updateActivityCount?: () => void;
   uploadProgress?: any;
   setOpenMenu: (value: boolean) => void;
+  setSecureMode: (value: boolean) => void;
+  secureMode: boolean;
 }
 
 interface AuthContextProp {
@@ -39,6 +41,8 @@ const AuthContext = createContext<AuthContextDefaults>({
   user: null,
   openMenu: false,
   setOpenMenu(): void {},
+  setSecureMode(): void {},
+  secureMode: false,
 });
 const token = Cookies.get('session_token');
 
@@ -50,6 +54,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [uploadProgress, _setUploadProgress] = useState<any>();
   const [activityCount, setActivityCount] = useState<any>();
   const [reloadActivity, setReloadActivity] = useState(false);
+  const [secureMode, setSecureMode] = useState(true);
 
   useEffect(() => {
     if (darkMode) {
@@ -166,6 +171,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         activityCount,
         updateActivityCount,
         sessionToken: token,
+        setSecureMode,
+        secureMode,
       }}>
       {children}
     </AuthContext.Provider>

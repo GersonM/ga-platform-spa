@@ -15,7 +15,7 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
-import {TbPencil} from "react-icons/tb";
+import {TbCheck, TbPencil} from "react-icons/tb";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 
 interface CommercialContractFormProps {
@@ -161,33 +161,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
-            <PrimaryButton loading={loading} block htmlType={'submit'} label={'Registrar contrato'}/>
-          </Col>
-          <Col span={12}>
-            <Form.Item label={'Duración'} name={'period'}>
-              <Select
-                showSearch
-                placeholder={'Único'}
-                options={[
-                  {value: 'unique', label: 'Único'},
-                  {value: 'monthly', label: 'Mensual'},
-                  {value: 'annual', label: 'Anual'},
-                ]}
-              />
-            </Form.Item>
-            <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
-              <Select
-                showSearch
-                options={[
-                  {value: 'credit', label: 'Tarjeta Crédito / Débido'},
-                  {value: 'cash', label: 'Efectivo'},
-                  {value: 'other', label: 'Otro'},
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={'is_renewable'} valuePropName={'checked'}>
-              <Checkbox>Renovar automáticamente</Checkbox>
-            </Form.Item>
             <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
               {chooseSeller ? (
                   <ProfileSelector/>
@@ -201,6 +174,39 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 </div>
               }
             </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label={'Duración'} name={'period'}>
+              <Select
+                showSearch
+                placeholder={'Único'}
+                options={[
+                  {value: 'unique', label: 'Único'},
+                  {value: 'monthly', label: 'Mensual'},
+                  {value: 'annual', label: 'Anual'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name={'is_renewable'} valuePropName={'checked'}>
+              <Checkbox>Renovar automáticamente</Checkbox>
+            </Form.Item>
+            <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
+              <Select
+                showSearch
+                options={[
+                  {value: 'credit', label: 'Tarjeta Crédito / Débido'},
+                  {value: 'cash', label: 'Efectivo'},
+                  {value: 'other', label: 'Otro'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
+              <Input.TextArea/>
+            </Form.Item>
+            <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
+              <Input.TextArea/>
+            </Form.Item>
+
             <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
             {selectedStock ? (
               <>
@@ -211,7 +217,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 {selectedStock.product?.type == 'property' &&
                   <StockViewerState stock={selectedStock}/>
                 }
-                <Divider/>
                 <p>
                   <strong>Precio de venta: </strong>
                   <span>
@@ -224,6 +229,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             )}
           </Col>
         </Row>
+        <PrimaryButton icon={<TbCheck />} loading={loading} block htmlType={'submit'} label={'Registrar contrato'}/>
       </Form>
     </div>
   );

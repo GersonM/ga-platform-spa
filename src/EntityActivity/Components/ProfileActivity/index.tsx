@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
-import {Empty, Image, Tooltip} from 'antd';
+import {Divider, Empty, Image, Space, Tooltip} from 'antd';
 import axios from 'axios';
 
 import type {ApiFile} from '../../../Types/api';
@@ -45,46 +45,50 @@ const ProfileActivity = ({profileUuid}: ProfileActivityProps) => {
 
   return (
     <div>
-      <LoadingIndicator visible={loading} message={'Cargando actividad'} />
-      {!activity?.length && (<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay actividad registrada'}/> )}
+      <LoadingIndicator visible={loading} message={'Cargando actividad'}/>
+      {!activity?.length && (<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay actividad registrada'}/>)}
       {activity?.map(a => {
         return (
           <div key={a.uuid} className={`activity-item ${a.type}`}>
-            <div className={'author'}>
-              <EntityActivityIcon type={a.type} size={25} />
-              <br />
-              {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
-            </div>
-            <div className={'message'}>
-              <p>{a.comment}</p>
-              <small>
-                {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
-              </small>
-              <Image.PreviewGroup>
-                {a.attachments?.map((at: ApiFile) => (
-                  <>
-                    {at.type.includes('ima') ? (
-                      <Image
-                        key={at.uuid}
-                        preview={{
-                          destroyOnClose: true,
-                          src: at.source,
-                        }}
-                        loading={'lazy'}
-                        src={at.thumbnail}
-                        width={30}
-                      />
-                    ) : (
-                      <Tooltip title={at.name}>
-                        <a href={at.source} target={'_blank'}>
-                          <FileIcon file={at} size={25} />
-                        </a>
-                      </Tooltip>
-                    )}
-                  </>
-                ))}
-              </Image.PreviewGroup>
-            </div>
+            <Space>
+              <div className={'author'}>
+                <EntityActivityIcon type={a.type} size={25}/>
+                <br/>
+                {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
+              </div>
+              <div className={'message'}>
+                {a.comment}
+                <small>
+                  {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
+                </small>
+                <Image.PreviewGroup>
+                  {a.attachments?.map((at: ApiFile) => (
+                    <>
+                      {at.type.includes('ima') ? (
+                        <Image
+                          key={at.uuid}
+                          preview={{
+                            destroyOnClose: true,
+                            src: at.source,
+                          }}
+                          loading={'lazy'}
+                          src={at.thumbnail}
+                          width={30}
+                        />
+                      ) : (
+                        <Tooltip title={at.name}>
+                          <a href={at.source} target={'_blank'}>
+                            <FileIcon file={at} size={25}/>
+                          </a>
+                        </Tooltip>
+                      )}
+                    </>
+                  ))}
+                </Image.PreviewGroup>
+              </div>
+            </Space>
+
+            <Divider/>
           </div>
         );
       })}

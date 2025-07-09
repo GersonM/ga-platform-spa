@@ -3,8 +3,9 @@ import {Button, Col, Divider, Form, Image, Input, InputNumber, message, Row, Sel
 import {useForm} from 'antd/lib/form/Form';
 import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {PiDownload, PiEye, PiImage} from 'react-icons/pi';
+import {PiDownload, PiEye} from 'react-icons/pi';
 import dayjs from 'dayjs';
+import {TbCheck, TbRefreshDot, TbReload} from "react-icons/tb";
 import axios from 'axios';
 
 import type {Container, ApiFile, FileActivity} from '../../../Types/api';
@@ -95,7 +96,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
   const getViewer = (f: ApiFile) => {
     switch (true) {
       case f.type.includes('pdf'):
-        return <iframe className={'iframe-viewer'} src={f.source} height={200} />;
+        return <iframe className={'iframe-viewer'} src={f.source} height={200}/>;
       case f.type.includes('image'):
         return (
           <Image
@@ -119,8 +120,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
         return (
           <div className={'file-preview-item'}>
             <p>Vista previa no disponible para este tipo de archivos</p>
-            <FileIcon width={50} size={50} file={f} />
-            <pre style={{textWrap: 'wrap'}}>{f.type}</pre>
+            <pre style={{textWrap: 'wrap'}}><FileIcon file={f}/>{f.type}</pre>
           </div>
         );
     }
@@ -138,7 +138,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                 {files[0].name}
                 <small>
                   <Tag color={'magenta'} bordered={false} style={{marginRight: 5}}>
-                    <FileSize size={files[0].size} />
+                    <FileSize size={files[0].size}/>
                   </Tag>
                   {dayjs(files[0].created_at).format(' D/MM/YYYY [a las] H:mm')}
                 </small>
@@ -150,50 +150,32 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
               }}
               trigger={['click']}
               file={files[0]}>
-              <IconButton icon={<BsThreeDotsVertical />} />
+              <IconButton icon={<BsThreeDotsVertical/>}/>
             </FileDropdownActions>
           </div>
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
             <div className="information-content">
               {getViewer(files[0])}
-              <Row gutter={[10, 10]}>
-                <Col md={12}>
-                  <Button
-                    size={'small'}
-                    ghost
-                    block
-                    href={detailImageLink}
-                    type={'primary'}
-                    target="_blank"
-                    icon={<PiEye size={18} style={{marginTop: 1}} />}>
-                    Ver
-                  </Button>
-                </Col>
-                <Col md={12}>
-                  <Button
-                    ghost
-                    size={'small'}
-                    block
-                    type={'primary'}
-                    href={files[0].download}
-                    target="_blank"
-                    icon={<PiDownload size={18} style={{marginTop: 1}} />}>
-                    Descargar
-                  </Button>
-                </Col>
-                <Col md={24}>
-                  <Button
-                    ghost
-                    size={'small'}
-                    onClick={generateThumbnail}
-                    block
-                    type={'primary'}
-                    variant={'text'}
-                    icon={<PiImage size={18} style={{marginTop: 1}} />}>
-                    Regenerar thumbnail
-                  </Button>
-                </Col>
-              </Row>
+              <Space>
+                <IconButton
+                  ghost
+                  href={detailImageLink}
+                  type={'primary'}
+                  target="_blank"
+                  icon={<PiEye/>}/>
+                <IconButton
+                  ghost
+                  type={'primary'}
+                  href={files[0].download}
+                  target="_blank"
+                  icon={<PiDownload/>}/>
+                <IconButton
+                  onClick={generateThumbnail}
+                  ghost
+                  title={'Generate Thumbnail'}
+                  type={'primary'}
+                  icon={<TbRefreshDot/>}/>
+              </Space>
               <div className={'links-container'}>
                 <span className="label">
                   Información de archivo:{' '}
@@ -220,27 +202,32 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                   </>
                 )}
                 <pre>{files[0].source}</pre>
-                <span className="label">
-                  URL miniatura:{' '}
-                  <Button size={'small'} type={'link'} onClick={() => copyText(files[0].thumbnail)}>
-                    Copiar
-                  </Button>
-                </span>
-                <pre>{files[0].thumbnail}</pre>
+                {files[0].thumbnail && <>
+                  <div className="label">
+                    URL miniatura:{' '}
+                    <Button size={'small'} type={'link'} onClick={() => copyText(files[0].thumbnail)}>
+                      Copiar
+                    </Button>
+                  </div>
+                  <pre>{files[0].thumbnail}</pre>
+                </>
+                }
               </div>
-              <Divider>Anotaciones</Divider>
+              <Divider size={"small"}>Anotaciones <IconButton small icon={<TbReload/>}
+                                                              onClick={() => setReload(!reload)}/></Divider>
               <div className={'activities-wrapper'}>
-                <LoadingIndicator visible={loading} message={'Cargando actividad'} />
+                <LoadingIndicator visible={loading} message={'Cargando actividad'}/>
                 {fileActivity &&
                   fileActivity.map(a => (
                     <div key={a.uuid} className={`activity ${a.action}`}>
-                      <span className={'message'}>{a.comment}</span>
+                      {a.comment} {a.time}{a.verified_at && <TbCheck color={'green'} />}
                       <small>
-                        {a.action} por {a.user?.profile?.name}
+                        {a.action} por {a.user?.profile?.name} - <span
+                        className={'date'}>{dayjs(a.created_at).format(' D/MM/YYYY H:mm a')}</span>
                       </small>
-                      <span className={'date'}>{dayjs(a.created_at).format(' D/MM/YYYY [a las] H:mm')}</span>
                     </div>
-                  ))}
+                  ))
+                }
                 <Form form={commentForm} onFinish={sendComment} size={'small'}>
                   <Row gutter={[10, 10]}>
                     <Col md={24}>
@@ -252,7 +239,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                       <>
                         <Col md={24}>
                           <Form.Item name={'time'} noStyle>
-                            <InputNumber placeholder="Tiempo" addonAfter={'segundos'} />
+                            <InputNumber placeholder="Tiempo" addonAfter={'segundos'}/>
                           </Form.Item>
                         </Col>
                       </>
@@ -289,25 +276,25 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
             <div className="information-content">
               {files.map(f => (
                 <div key={f.uuid} className={'selected-file-item'} onClick={() => onChange && onChange()}>
-                  <FileIcon size={19} file={f} />
+                  <FileIcon size={19} file={f}/>
                   <div className={'file-info'}>
                     <span className={'name'}>{f.name}</span>
                     <span className={'size'}>
-                      <FileSize size={f.size} />
+                      <FileSize size={f.size}/>
                     </span>
                   </div>
                 </div>
               ))}
-              <br />
+              <br/>
               <Space>
-                <PrimaryButton disabled label={'Descargar'} href={files[0].download} block size={'small'} />
-                <PrimaryButton disabled label={'Borrar ' + files.length + ' archivos'} danger block size={'small'} />
+                <PrimaryButton disabled label={'Descargar'} href={files[0].download} block size={'small'}/>
+                <PrimaryButton disabled label={'Borrar ' + files.length + ' archivos'} danger block size={'small'}/>
               </Space>
             </div>
           </OverlayScrollbarsComponent>
         </>
       )}
-      {files?.length == 0 && <EmptyMessage message={'Seleccionar un archivo para ver su información'} />}
+      {files?.length == 0 && <EmptyMessage message={'Seleccionar un archivo para ver su información'}/>}
     </div>
   );
 };

@@ -53,13 +53,13 @@ const ModuleSidebar = (
             </div>
           )}
           <div className={'module-nav-content'}>{children}</div>
+          {(footer || statusInfo) && (
+            <div className={'module-nav-footer'}>
+              {footer}
+              {statusInfo && <div className={'status-info'}>{statusInfo}</div>}
+            </div>
+          )}
         </OverlayScrollbarsComponent>
-        {(footer || statusInfo) && (
-          <div className={'module-nav-footer'}>
-            {footer}
-            {statusInfo && <div className={'status-info'}>{statusInfo}</div>}
-          </div>
-        )}
       </div>
     </>
   );

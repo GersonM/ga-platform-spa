@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import AuthContext from '../Context/AuthContext';
-import {MoonIcon, SunIcon} from '@heroicons/react/24/outline';
+import {TbMoon, TbSun} from "react-icons/tb";
 
 const ScreenModeSelector = () => {
   const {darkMode, setPreferredMode} = useContext(AuthContext);
@@ -19,7 +19,7 @@ const ScreenModeSelector = () => {
       onClick={() => {
         setPreferredMode(nextMode);
       }}>
-      {darkMode ? <SunIcon /> : <MoonIcon />}
+      {darkMode ? <TbSun /> : <TbMoon />}
     </div>
   );
 };

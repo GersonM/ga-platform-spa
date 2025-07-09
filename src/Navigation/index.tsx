@@ -1,7 +1,6 @@
 import {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Avatar, Badge, Dropdown, notification, Popover, Progress, Space} from 'antd';
-import {UploadOutlined} from '@ant-design/icons';
+import {Avatar, Badge, Dropdown, notification, Popover, Space, Tag} from 'antd';
 import axios from 'axios';
 import {
   PiBooksLight,
@@ -36,14 +35,14 @@ import {
   PiVectorThreeLight,
   PiWarningDiamond,
 } from 'react-icons/pi';
-import {BellIcon, CalendarIcon, MapPinIcon, QueueListIcon, TicketIcon} from '@heroicons/react/24/outline';
+import {MapPinIcon, QueueListIcon} from '@heroicons/react/24/outline';
 import {
   TbBuilding,
   TbBuildingEstate,
-  TbBuildingWarehouse, TbContract,
+  TbBuildingWarehouse, TbCalendar, TbContract,
   TbForklift,
-  TbListCheck,
-  TbPackage, TbShoppingCart,
+  TbListCheck, TbMapPinBolt, TbMessageUser,
+  TbPackage, TbShieldCheck, TbShieldOff, TbShoppingCart, TbTicket,
 } from 'react-icons/tb';
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
@@ -55,7 +54,6 @@ import logo from '../Assets/ga_logo_white.webp';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
-import UploadInformation from '../FileManagement/Components/UploadInformation';
 import NavItem from './NavItem';
 import './styles.less';
 
@@ -79,8 +77,7 @@ const menuItems: ItemType[] = [
 ];
 
 const Navigation = () => {
-  const {uploadProgress, user, logout, config, setOpenMenu, openMenu, activityCount} =
-    useContext(AuthContext);
+  const {setSecureMode, secureMode, user, logout, config, setOpenMenu, openMenu, activityCount} = useContext(AuthContext);
   const {pathname} = useLocation();
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
@@ -187,7 +184,7 @@ const Navigation = () => {
             </NavItem>
             {config?.modules.includes('move') && (
               <NavItem icon={<PiCarProfile/>} label={'Transporte'}>
-                <NavItem icon={<TicketIcon/>} label={'Nueva reserva'} path={'/move/reservation'}/>
+                <NavItem icon={<TbTicket/>} label={'Nueva reserva'} path={'/move/reservation'}/>
                 <NavItem icon={<QueueListIcon/>} label={'Mis reservas'} path={'/move/trips'}/>
                 {user?.roles?.includes('admin') && (
                   <>
@@ -199,12 +196,12 @@ const Navigation = () => {
                     <NavItem icon={<MapPinIcon/>} label={'Rutas & lugares'} path={'/move/routes'}/>
                   </>
                 )}
-                <NavItem icon={<CalendarIcon/>} label={'Calendario'} path={'/move/schedule'}/>
+                <NavItem icon={<TbCalendar/>} label={'Calendario'} path={'/move/schedule'}/>
               </NavItem>
             )}
             {config?.modules.includes('reservations') && (
               <NavItem icon={<PiCalendarCheckLight/>} label={'Reservas'}>
-                <NavItem icon={<TicketIcon/>} label={'Nueva reserva'} path={'/reservations/create'}/>
+                <NavItem icon={<TbTicket/>} label={'Nueva reserva'} path={'/reservations/create'}/>
                 <NavItem icon={<QueueListIcon/>} label={'Reservas'} path={'/reservations/manager'}/>
                 {user?.roles?.includes('admin') && (
                   <>
@@ -213,10 +210,10 @@ const Navigation = () => {
                       label={'Espacios'}
                       path={'/reservations/vehicles'}
                     />
-                    <NavItem icon={<MapPinIcon/>} label={'Servicios'} path={'/reservations/routes'}/>
+                    <NavItem icon={<TbMapPinBolt/>} label={'Servicios'} path={'/reservations/routes'}/>
                   </>
                 )}
-                <NavItem icon={<CalendarIcon/>} label={'Calendario'} path={'/move/schedule'}/>
+                <NavItem icon={<TbCalendar/>} label={'Calendario'} path={'/move/schedule'}/>
               </NavItem>
             )}
             {config?.modules.includes('club') && (
@@ -252,27 +249,24 @@ const Navigation = () => {
         </nav>
       </OverlayScrollbarsComponent>
       <div className="bottom-nav">
-        {uploadProgress && (
-          <Popover
-            placement={'right'}
-            content={
-              <>
-                <h3>Cargas</h3>
-                <UploadInformation/>
-              </>
-            }>
-            <Progress type={'circle'} size={30} percent={100} style={{marginBottom: '10px'}}>
-              <UploadOutlined/>
-            </Progress>
-          </Popover>
-        )}
         <Space>
+          <div className={`user-tool ${secureMode ? '':'danger'}`} onClick={() => setSecureMode(!secureMode)}>
+            <Popover
+              title={<>Modo seguro {secureMode ? <Tag color={'green'}>Activo</Tag> : <Tag color={'red'}>Desactivado</Tag>}</>}
+              content={
+                <>
+                  Muestra u oculta información que podría ser sensible <br/>{' '}
+                </>
+              }>
+              {secureMode ? <TbShieldCheck/> : <TbShieldOff color={'red'}/>}
+            </Popover>
+          </div>
           <Badge count={0}>
             <div className={'user-tool'} onClick={() => {
               api.success({message: 'Hola'});
               console.log('alert');
             }}>
-              <BellIcon/>
+              <TbMessageUser/>
             </div>
           </Badge>
           <ScreenModeSelector/>

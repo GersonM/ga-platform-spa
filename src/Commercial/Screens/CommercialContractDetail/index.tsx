@@ -141,7 +141,19 @@ const CommercialContractDetail = () => {
       key: '4',
       span: 3,
       label: 'Fecha de inicio',
-      children: dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm a')
+      children: contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm a') : 'No iniciado'
+    },
+    {
+      key: 'period',
+      span: 3,
+      label: 'Periodo',
+      children: contract?.period
+    },
+    {
+      key: 'payment_type',
+      span: 3,
+      label: 'Método de pago',
+      children: contract?.payment_type
     },
     {
       key: '6',
@@ -275,7 +287,12 @@ const CommercialContractDetail = () => {
                 label: 'Finanzas',
                 children: <>
                   {contract &&
-                    <InvoicesTable customer={contract.client?.entity} entityUuid={contract?.uuid} type={'contract'}/>}
+                    <InvoicesTable
+                      customerType={contract.client?.type.includes('profile') ? 'profile':'company'}
+                      customer={contract.client?.entity}
+                      entityUuid={contract?.uuid}
+                      type={'contract'}/>
+                  }
                 </>
               },
               {

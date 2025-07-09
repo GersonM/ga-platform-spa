@@ -1,9 +1,13 @@
+import {useContext} from "react";
+import AuthContext from "../../Context/AuthContext.tsx";
+
 interface MoneyStringProps {
   value?: number;
   currency?: string;
 }
 
 const MoneyString = ({value, currency = 'PEN'}: MoneyStringProps) => {
+  const {secureMode} = useContext(AuthContext);
   if (value === undefined) return null;
   const amount = value !== 0 ? value / 100 : value;
   const string = new Intl.NumberFormat('es-PE', {style: 'currency', currency}).format(amount);
@@ -13,7 +17,7 @@ const MoneyString = ({value, currency = 'PEN'}: MoneyStringProps) => {
       style={{
         color: amount < 0 ? 'red' : '',
       }}>
-      {string}
+      {secureMode ? (currency + '****') : string}
     </span>
   );
 };

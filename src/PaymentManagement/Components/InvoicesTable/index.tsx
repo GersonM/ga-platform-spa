@@ -20,9 +20,10 @@ interface InvoicesProps {
   entityUuid: string;
   type: string;
   customer?: Profile | Company;
+  customerType?: string;
 }
 
-const InvoicesTable = ({entityUuid, type, customer}: InvoicesProps) => {
+const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -205,7 +206,7 @@ const InvoicesTable = ({entityUuid, type, customer}: InvoicesProps) => {
               setReload(!reload);
             }}
             invoiceOwnerUuid={customer?.uuid}
-            invoiceOwnerType={'profile'}
+            invoiceOwnerType={customerType}
           />
         }
       </Modal>
