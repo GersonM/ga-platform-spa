@@ -7,10 +7,9 @@ import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
 import type {Contract} from "../../../Types/api.tsx";
 import ModuleSidebar from "../../../CommonUI/ModuleSidebar";
 import NavList, {NavListItem} from "../../../CommonUI/NavList";
-import NavItem from "../../../Navigation/NavItem.tsx";
 import {useParams} from "react-router-dom";
 import IconButton from "../../../CommonUI/IconButton";
-import {Empty, Space} from "antd";
+import {Space} from "antd";
 import EmptyMessage from "../../../CommonUI/EmptyMessage";
 import ContractItemsManager from "../../Components/ContractItemsManager";
 import ModalView from "../../../CommonUI/ModalView";
@@ -77,7 +76,10 @@ const TemplateContractsManager = () => {
     <>
       <ModuleSidebar title={'Plantillas de contrato'} actions={
         <Space>
-          <IconButton icon={<TbPlus />} onClick={() => setOpenNewTemplate(true)} />
+          <IconButton icon={<TbPlus />} onClick={() => {
+            setSelectedContract(undefined);
+            setOpenNewTemplate(true);
+          }} />
           <IconButton icon={<TbReload />} onClick={() => setReload(!reload)} />
         </Space>
       }>
