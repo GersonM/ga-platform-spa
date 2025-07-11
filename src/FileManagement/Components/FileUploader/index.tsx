@@ -38,6 +38,7 @@ const FileUploader = (
   useEffect(() => {
     if (lastFileCompleted && lastFileCompleted.fileData) {
       if (ownedFiles.includes(lastFileCompleted.id)) {
+        console.log('lastFileCompleted', lastFileCompleted);
         setUploadedFile(lastFileCompleted.fileData);
         if (onChange) {
           onChange(lastFileCompleted.fileData?.uuid);
@@ -76,7 +77,9 @@ const FileUploader = (
           </div>
         )}
         {showPreview && uploadedFile && (
-          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}}/>
+          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.thumbnail + ')'}}>
+            {uploadedFile.thumbnail}
+          </div>
         )}
         {showPreview && imagePath && (
           <>

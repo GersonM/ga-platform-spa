@@ -75,7 +75,7 @@ const TemplateContractsManager = () => {
 
   return (
     <>
-      <ModuleSidebar title={'Plantillas'} actions={
+      <ModuleSidebar title={'Plantillas de contrato'} actions={
         <Space>
           <IconButton icon={<TbPlus />} onClick={() => setOpenNewTemplate(true)} />
           <IconButton icon={<TbReload />} onClick={() => setReload(!reload)} />

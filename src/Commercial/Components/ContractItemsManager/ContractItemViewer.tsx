@@ -28,7 +28,7 @@ interface ContractItemViewerProps {
 const itemTypes: any = {boolean: 'Checkbox', file: 'Archivo', text: 'Texto', number: 'Número'};
 
 const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: ContractItemViewerProps) => {
-  const [value, setValue] = useState<string|undefined|null>(contractItem.value);
+  const [value, setValue] = useState<string|undefined>(contractItem.value);
   const [isModified, setIsModified] = useState(false);
 
   const saveValue = () => {
@@ -98,7 +98,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
     switch (type) {
       case 'file':
         return <>
-          <FileUploader small onChange={v => updateValue(v)}/>
+          <FileUploader showPreview small onChange={v => updateValue(v)}/>
           {contractItem.value && <FilePreview fileUuid={contractItem.value}/>}
         </>;
       case 'boolean':

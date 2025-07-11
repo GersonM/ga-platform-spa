@@ -24,7 +24,7 @@ const UploadContext = createContext<UploadContextDefaults>({
   isUploading: false,
 });
 
-const chunkSize = 2 * 1024 * 1024; // 5MB (adjust based on your requirements)
+const chunkSize = 10 * 1024 * 1024; // 5MB (adjust based on your requirements)
 
 const UploadContextProvider = ({children}: UploadContextProp) => {
   const [fileList, setFileList] = useState<UploadQueueFile[]>();
@@ -66,13 +66,6 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
               percent: fileProgress + (r.progress / totalChunks),
               hash: currentFile.hash,
             });
-            /*setFileList(copy => {
-              if (copy) {
-                const i = copy.findIndex(f => f.id === currentFile.id);
-                copy[i].progress = chunkProgress;
-                return copy;
-              }
-            });*/
           }
         },
         baseURL: import.meta.env.VITE_API_UPLOAD,

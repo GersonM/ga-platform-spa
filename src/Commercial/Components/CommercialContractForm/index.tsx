@@ -62,7 +62,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
     setLoading(true);
     axios
       .request({
-        url: contract ? `commercial/contracts/${contract.uuid}`: 'commercial/contracts',
+        url: contract ? `commercial/contracts/${contract.uuid}` : 'commercial/contracts',
         method: contract ? 'PUT' : 'POST',
         data: {...data, is_template: isTemplate}
       })
@@ -80,7 +80,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
 
   return (
     <div>
-      <h2>Registrar nueva venta</h2>
+      <h2>{isTemplate ? 'Crear plantilla' : 'Registrar nueva venta'}</h2>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
@@ -165,19 +165,21 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
-            <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
-              {chooseSeller ? (
-                  <ProfileSelector/>
-                ) :
-                <div>
-                  {user?.profile.name} {user?.profile.last_name}
-                  <IconButton
-                    icon={<TbPencil/>}
-                    onClick={() => setChooseSeller(!chooseSeller)}
-                  />
-                </div>
-              }
-            </Form.Item>
+            {!isTemplate && (
+              <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
+                {chooseSeller ? (
+                    <ProfileSelector/>
+                  ) :
+                  <div>
+                    {user?.profile.name} {user?.profile.last_name}
+                    <IconButton
+                      icon={<TbPencil/>}
+                      onClick={() => setChooseSeller(!chooseSeller)}
+                    />
+                  </div>
+                }
+              </Form.Item>
+            )}
           </Col>
           <Col span={12}>
             <Form.Item label={'Duración'} name={'period'}>
@@ -211,9 +213,9 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <Input.TextArea/>
             </Form.Item>
 
-            <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
             {selectedStock ? (
               <>
+                <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
                 <strong>{selectedStock.product?.name}</strong>
                 {selectedStock.product?.description &&
                   <div dangerouslySetInnerHTML={{__html: selectedStock.product?.description}}></div>
@@ -229,11 +231,13 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 </p>
               </>
             ) : (
-              <EmptyMessage message={'Elige un producto para ver los detalles'}/>
+              isTemplate ? '' : <EmptyMessage message={'Elige un producto para ver los detalles'}/>
             )}
           </Col>
         </Row>
-        <PrimaryButton icon={<TbCheck />} loading={loading} block htmlType={'submit'} label={'Registrar contrato'}/>
+        <PrimaryButton
+          icon={<TbCheck/>} loading={loading} block htmlType={'submit'}
+          label={isTemplate ? 'Guardar' : 'Registrar contrato'}/>
       </Form>
     </div>
   );

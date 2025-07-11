@@ -175,7 +175,7 @@ const Navigation = () => {
                 <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/commercial/leads'}/>
                 <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
                 <NavItem icon={<TbShoppingCart/>} label={'Ventas'} path={'/commercial/sales'}/>
-                <NavItem icon={<TbContract/>} label={'Plantillas'} path={'/commercial/contract-templates'}/>
+                <NavItem icon={<TbContract/>} label={'Plantillas de contrato'} path={'/commercial/contract-templates'}/>
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>
