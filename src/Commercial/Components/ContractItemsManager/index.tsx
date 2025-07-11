@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dropdown, type MenuProps, Progress, Space} from "antd";
-import axios from "axios";
-
-import type {Contract, ContractItem} from "../../../Types/api.tsx";
-import ContractItemForm from "../ContractItemForm";
-import ModalView from "../../../CommonUI/ModalView";
-import ContractItemViewer from "./ContractItemViewer.tsx";
-import './styles.less';
+import {Collapse, Dropdown, type MenuProps, Progress, Space} from "antd";
 import {
   TbDeviceFloppy,
   TbMenu2,
@@ -15,10 +8,17 @@ import {
   TbReload,
   TbRepeat
 } from "react-icons/tb";
+import axios from "axios";
+
+import type {Contract, ContractItem} from "../../../Types/api.tsx";
+import ContractItemForm from "../ContractItemForm";
+import ModalView from "../../../CommonUI/ModalView";
+import ContractItemViewer from "./ContractItemViewer.tsx";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import ContractTemplateSelector from '../ContractTemplateSelector/index.tsx';
+import './styles.less';
 
 interface ContractItemManagerProps {
   contract: Contract;
@@ -32,6 +32,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
   const [reload, setReload] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ContractItem>();
   const [contractItems, setContractItems] = useState<ContractItem[]>();
+  const [contractItemsGroups, setContractItemsGroups] = useState<any>();
   const [editMode, setEditMode] = useState(forceToEdit);
   const [downloading, setDownloading] = useState(false);
   const [openPrint, setOpenPrint] = useState(false);
@@ -53,6 +54,14 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       .get(`commercial/contract-items`, config)
       .then(response => {
         if (response) {
+          const groups: any = {};
+          response.data.forEach((item: ContractItem) => {
+            if (!groups[item.group]) {
+              groups[item.group] = [];
+            }
+            groups[item.group].push(item);
+          });
+          setContractItemsGroups(groups);
           setContractItems(response.data);
         }
         setLoading(false);
@@ -161,17 +170,29 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
           </Dropdown>
         </Space>
       </div>
-      {contractItems?.map((item, index) => {
-        return <ContractItemViewer
-          contractItem={item}
-          editMode={editMode}
-          key={index}
-          onEdit={() => {
-            setSelectedItem(item);
-            setOpenItemForm(true);
-          }}
-          onChange={() => setReload(!reload)}/>;
-      })}
+      {contractItemsGroups &&
+        <Collapse bordered={false} destroyOnHidden items={
+          Object.keys(contractItemsGroups).map(label => {
+            console.log(contractItemsGroups[label]);
+            return {
+              label: label,
+              children: <>
+                {contractItemsGroups[label].map((item: any, index: number) => {
+                  return <ContractItemViewer
+                    contractItem={item}
+                    editMode={editMode}
+                    key={index}
+                    onEdit={() => {
+                      setSelectedItem(item);
+                      setOpenItemForm(true);
+                    }}
+                    onChange={() => setReload(!reload)}/>;
+                })}
+              </>
+            };
+          })}>
+        </Collapse>
+      }
       <ModalView
         title={'Contratos'}
         width={'80%'}

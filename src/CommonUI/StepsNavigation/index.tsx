@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
+import {TbAlertCircle, TbCheck, TbChevronRight, TbClock} from "react-icons/tb";
 import './styles.less';
-import {TbAlertCircle, TbCheck, TbChevronCompactRight, TbClock} from "react-icons/tb";
 
 interface StepNavigationProps {
   items: any[];
@@ -10,10 +10,10 @@ interface StepNavigationProps {
 
 const StepNavigation = ({items, current, style}: StepNavigationProps) => {
   return (
-    <div className={'step-navigation-container'}>
+    <div className={'step-navigation-container'} style={style}>
       {items.map((item: any, index: number) => {
         return <Fragment key={index}>
-          <div className={`step-navigation-item ${item.status}`}>
+          <div className={`step-navigation-item ${item.status} ${current === index ? 'active' : ''}`}>
             <div className="icon">
               {item.status ? <>
                 {item.status === 'finish' && <TbCheck size={20}/>}
@@ -25,9 +25,9 @@ const StepNavigation = ({items, current, style}: StepNavigationProps) => {
             </div>
             <div className={'content'}>
               {item.title}
-              <div>{item.description}</div>
+              <div className={'description'}>{item.description}</div>
             </div>
-            {index < (items.length - 1) && <div style={{marginRight: 10}}><TbChevronCompactRight size={20}/></div>}
+            {index < (items.length - 1) && <div style={{marginRight: 10}}><TbChevronRight size={20} style={{opacity:0.6}}/></div>}
           </div>
         </Fragment>
       })}

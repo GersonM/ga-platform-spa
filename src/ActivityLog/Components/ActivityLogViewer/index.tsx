@@ -5,8 +5,8 @@ import {Button, Divider, Flex, Pagination, Popover, Space} from "antd";
 import dayjs from "dayjs";
 
 import type {ResponsePagination} from "../../../Types/api.tsx";
-import IconButton from "../../../CommonUI/IconButton";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import IconButton from "../../../CommonUI/IconButton";
 import Config from "../../../Config.tsx";
 import './styles.less';
 
@@ -115,7 +115,6 @@ const ActivityLogViewer = ({entity, id}: ActivityLogViewerProps) => {
             current={pagination.current_page}/>
         }
       </>}
-
     </div>
   );
 };

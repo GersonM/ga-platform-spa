@@ -28,7 +28,7 @@ interface ContractItemViewerProps {
 const itemTypes: any = {boolean: 'Checkbox', file: 'Archivo', text: 'Texto', number: 'Número'};
 
 const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: ContractItemViewerProps) => {
-  const [value, setValue] = useState<string>();
+  const [value, setValue] = useState<string|undefined|null>(contractItem.value);
   const [isModified, setIsModified] = useState(false);
 
   const saveValue = () => {
@@ -37,7 +37,6 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       .then(() => {
         if (onChange) onChange();
         setIsModified(false);
-        setValue(undefined);
       })
       .catch(err => {
         ErrorHandler.showNotification(err);
@@ -50,6 +49,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       .then(() => {
         if (onChange) onChange();
         setIsModified(false);
+        setValue(undefined);
       })
       .catch(err => {
         ErrorHandler.showNotification(err);
@@ -109,7 +109,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           onChange={value => updateValue(value ? '1' : '0')}/>;
       default:
         return <Input
-          placeholder={contractItem.description} defaultValue={contractItem.value}
+          placeholder={contractItem.description} value={value}
           onChange={(e) => updateValue(e.target.value)}
         />
     }
@@ -118,6 +118,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
   const updateValue = (value?: string) => {
     setValue(value);
     setIsModified(true);
+    console.log(value);
   };
 
   return (
@@ -136,7 +137,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           <TbInfoSmall size={27}/>
       }
       <div className={'label-container'}>
-        {contractItem.description}
+        {contractItem.description} - {contractItem.group}
         <small>{contractItem.additional_details}</small>
       </div>
       <div>
@@ -154,8 +155,9 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
               :
               <>
                 {getValueInput(contractItem.type)}
-                {contractItem.value ?
+                {(contractItem.value && !isModified) ?
                   <IconButton
+                    danger
                     icon={<TbTrashX size={22}/>}
                     title={'Borrar valor'}
                     onClick={removeValue}/>:
