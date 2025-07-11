@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {TbChevronDown, TbChevronUp, TbReload, TbTerminal2} from "react-icons/tb";
-import {Button, Divider, Flex, Pagination, Popover, Space, Tag} from "antd";
+import {TbChevronDown, TbChevronUp, TbReload} from "react-icons/tb";
+import {Button, Divider, Flex, Pagination, Popover, Space} from "antd";
 import dayjs from "dayjs";
 
 import type {ResponsePagination} from "../../../Types/api.tsx";

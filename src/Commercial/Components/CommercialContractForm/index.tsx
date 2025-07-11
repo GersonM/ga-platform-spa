@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Checkbox, Col, Divider, Form, Input, Row, Select} from 'antd';
+import {Checkbox, Col, Form, Input, Row, Select} from 'antd';
 import axios from 'axios';
 
 import type {Contract, StorageStock} from '../../../Types/api';
@@ -61,7 +61,11 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   const submitForm = (data: any) => {
     setLoading(true);
     axios
-      .post('commercial/contracts', {...data, is_template: isTemplate})
+      .request({
+        url: contract ? `commercial/contracts/${contract.uuid}`: 'commercial/contracts',
+        method: contract ? 'PUT' : 'POST',
+        data: {...data, is_template: isTemplate}
+      })
       .then(response => {
         setLoading(false);
         if (onComplete) {
@@ -77,7 +81,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   return (
     <div>
       <h2>Registrar nueva venta</h2>
-      <Form layout="vertical" onFinish={submitForm}>
+      <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
             {isTemplate ? (

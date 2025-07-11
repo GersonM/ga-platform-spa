@@ -1,0 +1,45 @@
+.step-navigation-container {
+  //display: grid;
+  //grid-template-rows: repeat(4, auto);
+  //grid-template-columns: repeat(auto-fill, 200px);
+  //grid-template-columns: repeat(5, auto) min(100px, 100px);
+
+  display: flex;
+  justify-items: auto;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  margin-bottom: 20px;
+
+  .step-navigation-item:not(:last-child):after {
+
+  }
+
+  .step-navigation-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-width: 175px;
+
+    &.finish .icon {
+      border: 1px solid #25ac25;
+      color: #25ac25;
+      background: #f1fff1;
+    }
+
+    .icon {
+      min-width: 35px;
+      max-width: 35px;
+      height: 35px;
+      background: var(--background-color);
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    .content {
+      flex: 1;
+    }
+  }
+}

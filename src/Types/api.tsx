@@ -112,6 +112,8 @@ export type Contract = {
   fk_template_uuid?: string;
   track_id?: number;
   document_progress?:number;
+  items_required?:number;
+  items_completed?:number;
 };
 export type ContractItem = {
   uuid: string;

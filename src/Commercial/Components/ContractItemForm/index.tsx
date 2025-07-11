@@ -1,4 +1,4 @@
-import {Checkbox, Col, Form, Input, Row, Select} from "antd";
+import {Checkbox, Col, Form, Input, InputNumber, Row, Select} from "antd";
 import type {Contract, ContractItem} from "../../../Types/api.tsx";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
@@ -58,14 +58,23 @@ const ContractItemForm = ({contract, contractItem, onComplete}: ContractItemForm
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'value'} label={'Valor'} help={'Puede ser llenado posteriormente'}>
-          <Input/>
-        </Form.Item>
-        <Form.Item name={'group'} label={'Grupo'}>
-          <ContractItemsPropertySelector property={'group'} placeholder={'Elige un grupo'} />
-        </Form.Item>
+        <Row gutter={15}>
+          <Col span={12}>
+            <Form.Item name={'group'} label={'Grupo'}>
+              <ContractItemsPropertySelector property={'group'} placeholder={'Elige un grupo'}/>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name={'order'} label={'Orden'}>
+              <InputNumber placeholder={'1'}/>
+            </Form.Item>
+          </Col>
+        </Row>
         <Form.Item name={'additional_details'} label={'Información adicional (opcional)'}>
           <Input.TextArea/>
+        </Form.Item>
+        <Form.Item name={'value'} label={'Valor (opcional)'} help={'Puede ser llenado posteriormente'}>
+          <Input/>
         </Form.Item>
         <Form.Item name={'is_required'} valuePropName={'checked'}>
           <Checkbox>Es requerido</Checkbox>

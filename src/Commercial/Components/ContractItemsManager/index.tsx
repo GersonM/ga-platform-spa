@@ -44,7 +44,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {contract_uuid: contract?.uuid}
+      params: {contract_uuid: contract?.uuid, group}
     };
 
     setLoading(true);
@@ -88,7 +88,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       });
   };
 
-  const updateTemplate = (templateUuid:string) => {
+  const updateTemplate = (templateUuid: string) => {
     setLoading(true);
     axios.post(`commercial/contracts/${contract.uuid}/template`, {template_uuid: templateUuid})
       .then(() => {
@@ -139,11 +139,13 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       <div className={'title-container'}>
         <div>
           {totalFilled} de {totalRequired} completados | {totalFilled - totalCompleted} por aprobar
-          <Progress percent={contract.document_progress} success={{percent}} showInfo={true} strokeWidth={4} style={{marginRight: 10}}/>
+          <Progress percent={contract.document_progress} success={{percent}} showInfo={true} strokeWidth={4}
+                    style={{marginRight: 10}}/>
         </div>
         <Space size={"small"}>
-          <LoadingIndicator visible={loading} />
-          <ContractTemplateSelector defaultValue={contract.fk_template_uuid} placeholder={'Cargar plantilla'} onChange={(value) => updateTemplate(value)}/>
+          <LoadingIndicator visible={loading}/>
+          <ContractTemplateSelector defaultValue={contract.fk_template_uuid} placeholder={'Cargar plantilla'}
+                                    onChange={(value) => updateTemplate(value)}/>
           <IconButton
             title={'Imprimir documentos'}
             icon={<TbPrinter/>}
@@ -182,7 +184,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
         {tempURL && <iframe src={tempURL} height={600} width={'100%'} frameBorder="0"></iframe>}
       </ModalView>
       <ModalView
-        title={'Editar item'}
+        title={selectedItem ? 'Editar item' : 'Agregar item'}
         onCancel={() => {
           setOpenItemForm(false);
         }} open={openItemForm}>

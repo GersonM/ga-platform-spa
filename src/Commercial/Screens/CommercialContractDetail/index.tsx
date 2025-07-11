@@ -1,19 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {
-  Button,
-  Card,
-  Col,
-  Descriptions,
-  type DescriptionsProps,
-  Divider,
-  Form,
-  Input,
-  Row,
-  Steps,
-  Tabs,
-  Tag
-} from 'antd';
+import {Button, Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, Row, Tabs, Tag} from 'antd';
 import {PiReceiptXBold} from 'react-icons/pi';
 import {TbCancel, TbCheck} from "react-icons/tb";
 import axios from 'axios';
@@ -34,6 +21,8 @@ import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
 import ModalView from "../../../CommonUI/ModalView";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 import ContractItemsManager from "../../Components/ContractItemsManager";
+import StepsNavigation from "../../../CommonUI/StepsNavigation";
+import CommercialContractForm from "../../Components/CommercialContractForm";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -43,6 +32,7 @@ const CommercialContractDetail = () => {
   const [openContractProvideForm, setOpenContractProvideForm] = useState(false);
   const [openProvisionRevert, setOpenProvisionRevert] = useState(false);
   const [openCancelContract, setOpenCancelContract] = useState(false);
+  const [openEditContract, setOpenEditContract] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -76,6 +66,34 @@ const CommercialContractDetail = () => {
       .then(() => {
         setLoading(false);
         setOpenProvisionRevert(false);
+        setReload(!reload);
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const submitApprove = () => {
+    setLoading(true);
+    axios
+      .post(`commercial/contracts/${contract?.uuid}/approve`)
+      .then(() => {
+        setLoading(false);
+        setReload(!reload);
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
+  const submitStart = () => {
+    setLoading(true);
+    axios
+      .post(`commercial/contracts/${contract?.uuid}/start`)
+      .then(() => {
+        setLoading(false);
         setReload(!reload);
       })
       .catch(e => {
@@ -164,21 +182,17 @@ const CommercialContractDetail = () => {
     {key: '5', span: 3, label: 'Observaciones', children: contract?.observations},
   ];
 
-  let stepNumber = 1;
   let status = 'proposal';
 
   if (contract?.approved_at) {
-    stepNumber = 1;
     status = 'approved';
   }
 
   if (contract?.signed_at) {
-    stepNumber = 2;
     status = 'provisioning';
   }
 
   if (contract?.provided_at || contract?.cancelled_at) {
-    stepNumber = 4;
     status = contract?.cancelled_at ? 'canceled' : 'provided';
   }
 
@@ -198,36 +212,47 @@ const CommercialContractDetail = () => {
           <AlertMessage message={'Este contrato fué anulado'} caption={contract?.cancellation_reason} type={'error'}/>
         )}
       </ContentHeader>
-      <Steps
-        type="navigation"
-        size={"small"}
+      <StepsNavigation
         style={{marginBottom: 20}}
         current={-1}
         items={[
           {
             title: 'Propuesta',
             status: 'finish',
-            icon: <TbCheck />,
+            icon: <TbCheck/>,
             description: <small>{dayjs(contract?.created_at).format('DD/MM/YYYY')}</small>,
           },
           {
             title: 'Aprobado',
+            status: contract?.approved_at ? 'finish' : 'wait',
             subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
             description:
               contract.approved_at ? <small>{dayjs(contract?.approved_at).format('DD/MM/YYYY')}</small> :
-                <Button size={"small"} icon={<TbCheck />} shape={"round"} variant="outlined" type={"primary"} color={'blue'}>
+                <Button
+                  onClick={submitApprove}
+                  size={"small"}
+                  icon={<TbCheck/>} shape={"round"} variant="outlined" type={"primary"}
+                  color={'blue'}>
                   Aprobar
                 </Button>,
           },
           {
             title: 'Inicio',
+            status: contract?.date_start ? 'finish' : 'wait',
             description:
-              <small>{contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY') : 'Sin firma'}</small>,
+              contract?.date_start ? <small>{dayjs(contract?.date_start).format('DD/MM/YYYY')}</small> :
+                <Button
+                  size={"small"}
+                  onClick={submitStart}
+                  icon={<TbCheck/>} shape={"round"} variant="outlined" type={"primary"}
+                  color={'blue'}>
+                  Iniciar
+                </Button>,
           },
           {
             title: 'Documentación',
-            status: 'wait',
-            description: <small>{contract?.items?.length} items</small>,
+            status: contract?.document_progress == 100 ? 'finish' : 'wait',
+            description: <small>{contract?.document_progress}%</small>,
           },
           contract?.cancelled_at ? {
               title: 'Anulado',
@@ -236,23 +261,29 @@ const CommercialContractDetail = () => {
             } :
             {
               title: 'Entrega',
+              status: contract?.provided_at ? 'finish' : 'wait',
               description:
                 !contract?.provided_at ? (
-                  <PrimaryButton
-                    size={'small'}
-                    icon={<TbCheck/>}
-                    disabled={!!contract?.cancelled_at}
-                    label={'Registrar entrega'}
+                  <Button
                     onClick={() => setOpenContractProvideForm(true)}
-                  />
+                    disabled={!!contract?.cancelled_at}
+                    size={"small"} icon={<TbCheck/>}
+                    shape={"round"}
+                    variant="outlined" type={"primary"}
+                    color={'blue'}>
+                    Registrar entrega
+                  </Button>
                 ) : (
-                  <PrimaryButton
+                  <Button
                     size={'small'}
                     disabled={!!contract?.cancelled_at && !contract?.provided_at}
                     icon={<TbCancel/>}
-                    label={'Revertir entrega'}
                     onClick={() => setOpenProvisionRevert(true)}
-                  />
+                    shape={"round"}
+                    variant="outlined" type={"primary"}
+                    color={'blue'}>
+                    Revertir entrega
+                  </Button>
                 ),
             },
         ]}
@@ -288,7 +319,7 @@ const CommercialContractDetail = () => {
                 children: <>
                   {contract &&
                     <InvoicesTable
-                      customerType={contract.client?.type.includes('profile') ? 'profile':'company'}
+                      customerType={contract.client?.type.includes('profile') ? 'profile' : 'company'}
                       customer={contract.client?.entity}
                       entityUuid={contract?.uuid}
                       type={'contract'}/>
@@ -337,6 +368,12 @@ const CommercialContractDetail = () => {
             setOpenContractProvideForm(false);
           }}
         />
+      </ModalView>
+      <ModalView onCancel={() => setOpenEditContract(false)} open={openEditContract}>
+        <CommercialContractForm contract={contract} onComplete={() => {
+          setOpenEditContract(false);
+          setReload(!reload);
+        }}  />
       </ModalView>
       <ModalView open={openCancelContract} onCancel={() => setOpenCancelContract(false)}>
         {contract && (
