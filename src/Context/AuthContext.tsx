@@ -45,6 +45,7 @@ const AuthContext = createContext<AuthContextDefaults>({
   secureMode: false,
 });
 const token = Cookies.get('session_token');
+const savedSecureMode = localStorage.getItem('secure_mode') == '1';
 
 const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [user, setUser] = useState<SessionUser | null>(null);
@@ -54,7 +55,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
   const [uploadProgress, _setUploadProgress] = useState<any>();
   const [activityCount, setActivityCount] = useState<any>();
   const [reloadActivity, setReloadActivity] = useState(false);
-  const [secureMode, setSecureMode] = useState(true);
+  const [secureMode, setSecureMode] = useState(savedSecureMode);
 
   useEffect(() => {
     if (darkMode) {
@@ -171,7 +172,10 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         activityCount,
         updateActivityCount,
         sessionToken: token,
-        setSecureMode,
+        setSecureMode: (value) => {
+          setSecureMode(value);
+          localStorage.setItem('secure_mode', value ? '1':'0');
+        },
         secureMode,
       }}>
       {children}

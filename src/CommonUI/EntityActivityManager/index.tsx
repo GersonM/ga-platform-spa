@@ -6,8 +6,8 @@ import {useDropzone} from 'react-dropzone';
 import {PiCaretDownBold} from 'react-icons/pi';
 import {IoAttach} from 'react-icons/io5';
 import dayjs, {Dayjs} from 'dayjs';
-import {CalendarDaysIcon, ChatBubbleLeftIcon, PaperClipIcon} from '@heroicons/react/24/outline';
-import {TbPencil, TbSend} from "react-icons/tb";
+import {CalendarDaysIcon, ChatBubbleLeftIcon} from '@heroicons/react/24/outline';
+import {TbPaperclip, TbPencil, TbSend} from "react-icons/tb";
 
 import ErrorHandler from '../../Utils/ErrorHandler';
 import PrimaryButton from '../PrimaryButton';
@@ -157,10 +157,10 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
             />
           </Form.Item>
 
-          <IconButton onClick={open} loading={loading} icon={<PaperClipIcon/>}/>
+          <IconButton onClick={open} loading={loading} icon={<TbPaperclip/>}/>
           <PrimaryButton
             disabled={files.length == 0 && !message}
-            icon={<TbSend size={16}/>}
+            icon={<TbSend/>}
             label={'Enviar'}
             htmlType={'submit'}
           />
@@ -222,6 +222,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
               <div>{a.comment}</div>
               <small>
                 {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
+                {a.assigned_to && <Tag bordered={false} color={'purple'}>Para {a.assigned_to.name}</Tag>}
               </small>
               <Image.PreviewGroup>
                 {a.attachments?.map((at: ApiFile) => (
@@ -248,7 +249,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                 ))}
               </Image.PreviewGroup>
             </div>
-            <IconButton type={'primary'} onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil />}/>
+            <IconButton type={'primary'} onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil/>}/>
           </div>
         );
       })}

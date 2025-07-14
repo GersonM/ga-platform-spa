@@ -1,16 +1,7 @@
 import {useState} from 'react';
-import {
-  Col,
-  DatePicker,
-  Descriptions,
-  type DescriptionsProps,
-  Divider,
-  Form,
-  Modal,
-  Popconfirm,
-  Row,
-  Space, Tag
-} from 'antd';
+import {DatePicker, Descriptions, type DescriptionsProps, Modal, Popconfirm, Space, Tag} from 'antd';
+import dayjs, {type Dayjs} from "dayjs";
+import {TbPlus} from "react-icons/tb";
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
@@ -19,9 +10,8 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import InvoiceItemForm from '../InvoiceItemForm';
-import {PiPencilSimple, PiPlus, PiTrash} from 'react-icons/pi';
+import {PiPencilSimple, PiTrash} from 'react-icons/pi';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import dayjs, {type Dayjs} from "dayjs";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 
 interface InvoiceTableDetailsProps {
@@ -33,14 +23,15 @@ interface InvoiceTableDetailsProps {
   onChange?: () => void;
 }
 
-const InvoiceTableDetails = ({
-                               invoice,
-                               onChange,
-                               invoiceableType,
-                               invoiceableUuid,
-                               invoiceOwnerUuid,
-                               invoiceOwnerType
-                             }: InvoiceTableDetailsProps) => {
+const InvoiceTableDetails = (
+  {
+    invoice,
+    onChange,
+    invoiceableType,
+    invoiceableUuid,
+    invoiceOwnerUuid,
+    invoiceOwnerType
+  }: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
   const [expirationDate, setExpirationDate] = useState<Dayjs>();
@@ -96,13 +87,18 @@ const InvoiceTableDetails = ({
   ];
 
   const invoicesItems: DescriptionsProps['items'] = [
-    {key: '1', label: 'Vencimiento', children: <DatePicker onChange={(d) => setExpirationDate(d)} value={expirationDate} defaultValue={dayjs(invoice?.expires_on)}/>},
+    {
+      key: '1',
+      label: 'Vencimiento',
+      children: <DatePicker onChange={(d) => setExpirationDate(d)} value={expirationDate}
+                            defaultValue={dayjs(invoice?.expires_on)}/>
+    },
     {key: 'total', label: 'Total', children: <MoneyString value={invoice?.amount}/>},
     {
       key: 'pending', label: 'Pendiente', children: <>
         {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
-          <Tag color={'orange'}><MoneyString value={invoice?.pending_payment}/></Tag> :
-          <Tag color={'green'}>Pagado</Tag>
+            <Tag color={'orange'}><MoneyString value={invoice?.pending_payment}/></Tag> :
+            <Tag color={'green'}>Pagado</Tag>
         )}
       </>
     },
@@ -110,17 +106,15 @@ const InvoiceTableDetails = ({
   return (
     <div>
       <Descriptions layout={"vertical"} size={"small"} items={invoicesItems}/>
-      <TableList small columns={columns} dataSource={invoice?.items} pagination={false}/>
-      <ActivityLogViewer entity={'invoice'} id={invoice?.uuid}/>
+      <TableList columns={columns} dataSource={invoice?.items}/>
       <PrimaryButton
-        size={'small'}
-        icon={<PiPlus size={16}/>}
+        icon={<TbPlus/>}
         style={{marginTop: '10px'}}
         label={'Agregar item'}
-        ghost
         block
         onClick={() => setOpenInvoiceItemForm(true)}
       />
+      <ActivityLogViewer entity={'invoice'} id={invoice?.uuid}/>
       <Modal
         open={openInvoiceItemForm}
         destroyOnHidden

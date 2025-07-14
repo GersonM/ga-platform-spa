@@ -19,6 +19,8 @@ import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import IconButton from "../../../CommonUI/IconButton";
 import './styles.less';
 import CreateContractForm from "../../Components/CommercialContractForm";
+import ProfileDocument from "../../../CommonUI/ProfileTools/ProfileDocument.tsx";
+import ContractStatus from "./ContractStatus.tsx";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -115,12 +117,18 @@ const CommercialSales = () => {
 
   const columns = [
     {
+      title: 'Estado',
+      dataIndex: 'provided_at',
+      align: 'center',
+      render: (_provided_at: string, row: Contract) => <ContractStatus contract={row} />,
+    },
+    {
       title: 'N°',
       dataIndex: 'tracking_id',
       width: 100,
       render: (tracking_id:number, row:Contract) => {
-        return <>{dayjs(row.created_at).format('YYYYMM') + tracking_id}
-          {row.document_progress && <Progress size={'small'} strokeWidth={3} percent={row.document_progress} />}
+        return <>{tracking_id}
+          {row.document_progress && <Progress size={{height:3}} percent={row.document_progress} />}
         </>;
       }
     },
@@ -152,7 +160,7 @@ const CommercialSales = () => {
                 <small>
                   {isCompany ?
                     `RUC: ${e.legal_uid}` :
-                    `${e.doc_type}: ${e.doc_number}`
+                    <ProfileDocument profile={e} />
                   }
                 </small>
               </div>
@@ -177,7 +185,7 @@ const CommercialSales = () => {
       render: (amount: number, row: Contract) => <MoneyString currency={row.contractable?.currency} value={amount}/>,
     },
     {
-      title: 'Fecha de compra',
+      title: 'F. compra',
       width: 140,
       dataIndex: 'created_at',
       render: (created_at: string) => {
@@ -188,13 +196,7 @@ const CommercialSales = () => {
       },
     },
     {
-      title: 'Fecha de entrega',
-      width: 140,
-      dataIndex: 'provided_at',
-      render: (provided_at: string) => (provided_at ? dayjs(provided_at).format('DD-MM-YYYY') : ''),
-    },
-    {
-      title: 'Requerimientos de pago',
+      title: 'Sol. de pago',
       dataIndex: 'invoices',
       render: (invoices: Invoice[]) => {
         return invoices?.map((i, _index) => {
@@ -211,7 +213,7 @@ const CommercialSales = () => {
                 </>
               }>
               <Tag color={i.paid_at ? 'green' : 'red'}>
-                {i.concept}: <MoneyString value={i.pending_payment}/>
+                {i.tracking_id}: <MoneyString value={i.pending_payment}/>
               </Tag>
             </Tooltip>
           );

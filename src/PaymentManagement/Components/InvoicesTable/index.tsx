@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Empty, Modal, Pagination, Popconfirm, Space, Tag, Tooltip} from 'antd';
+import {Col, Divider, Empty, Modal, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
 import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
-import {TbTrash} from 'react-icons/tb';
+import {TbReload, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -32,7 +32,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
-  const [openNewInvoice, setOpenNewInvoice] = useState(false);
+  const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -74,14 +74,19 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
 
   const columns = [
     {
+      title: 'N°',
+      width: 40,
+      dataIndex: 'tracking_id',
+    },
+    {
       title: 'Concepto',
       dataIndex: 'concept',
     },
     {
       title: 'Monto',
       dataIndex: 'amount_string',
-      render: (amount_string:string, row:Invoice) => {
-        return <>{amount_string} <small>Pendiente: <MoneyString value={row.pending_payment} /></small></>;
+      render: (amount_string: string, row: Invoice) => {
+        return <>{amount_string} <small>Pendiente: <MoneyString value={row.pending_payment}/></small></>;
       }
     },
     {
@@ -101,9 +106,9 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
         if (i.expires_on) {
           return (
             <Tooltip title={'Vence: ' + dayjs(i.expires_on).format('DD/MM/YYYY')}>
-            <Tag color={dayjs(i.expires_on).isAfter(new Date()) ? 'orange' : 'red'}>
-              Vence {dayjs(i.expires_on).fromNow()}
-            </Tag>
+              <Tag color={dayjs(i.expires_on).isAfter(new Date()) ? 'orange' : 'red'}>
+                Vence {dayjs(i.expires_on).fromNow()}
+              </Tag>
             </Tooltip>
           );
         }
@@ -126,7 +131,10 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
       width: 75,
       render: (uuid: string, row: Invoice) => (
         <Space>
-          <IconButton small icon={<PiPencilSimple size={18}/>} onClick={() => setSelectedInvoice(row)}/>
+          <IconButton small icon={<PiPencilSimple size={18}/>} onClick={() => {
+            setSelectedInvoice(row);
+            setOpenInvoiceForm(true);
+          }}/>
           <Popconfirm
             title={'¿Quiere eliminar esta factura?'}
             onConfirm={() => deleteInvoice(uuid)}
@@ -159,7 +167,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
                   setPageSize(size);
                 }}
               />
-              <IconButton icon={<ArrowPathIcon/>} onClick={() => setReload(!reload)}/>
+              <IconButton icon={<TbReload/>} onClick={() => setReload(!reload)}/>
             </Space>
           </>
         )}
@@ -167,49 +175,47 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
           <PrimaryButton
             size={'small'}
             ghost
-            label={'Agregar factura'}
-            onClick={() => setOpenNewInvoice(true)}
+            label={'Agregar solicitud de pago'}
+            onClick={() => setOpenInvoiceForm(true)}
             icon={<PiPlusBold/>}
           />
         }
       </div>
       <ModalView
-        width={800}
-        open={!!selectedInvoice}
-        onCancel={() => setSelectedInvoice(undefined)}>
-        {selectedInvoice && (
-          <>
-            <h3>
-              {selectedInvoice?.concept}
-            </h3>
-            <InvoiceTableDetails onChange={() => {
-              setReload(!reload);
-            }} invoice={selectedInvoice} invoiceOwnerUuid={entityUuid} invoiceOwnerType={type}/>
-            <Divider>Pagos</Divider>
-            <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
-          </>
-        )}
+        width={900}
+        title={'Nueva solicitud de pago'}
+        open={openInvoiceForm}
+        onCancel={() => {
+          setSelectedInvoice(undefined);
+          setOpenInvoiceForm(false)
+        }}>
+        <Row gutter={[20, 20]}>
+          <Col span={12}>
+            {customer &&
+              <InvoiceTableDetails
+                invoiceableUuid={entityUuid}
+                invoiceableType={type}
+                onChange={() => {
+                  setOpenInvoiceForm(false);
+                  setReload(!reload);
+                }}
+                invoice={selectedInvoice}
+                invoiceOwnerUuid={customer?.uuid}
+                invoiceOwnerType={customerType}
+              />
+            }
+          </Col>
+          {selectedInvoice && (
+            <>
+              <Col span={12}>
+                <h3>Pagos</h3>
+                <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
+              </Col>
+            </>
+          )}
+
+        </Row>
       </ModalView>
-      <Modal
-        open={openNewInvoice}
-        destroyOnHidden
-        footer={false}
-        width={700}
-        title={'Agregar factura'}
-        onCancel={() => setOpenNewInvoice(false)}>
-        {customer &&
-          <InvoiceTableDetails
-            invoiceableUuid={entityUuid}
-            invoiceableType={type}
-            onChange={() => {
-              setOpenNewInvoice(false);
-              setReload(!reload);
-            }}
-            invoiceOwnerUuid={customer?.uuid}
-            invoiceOwnerType={customerType}
-          />
-        }
-      </Modal>
     </>
   );
 };

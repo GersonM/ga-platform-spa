@@ -137,7 +137,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           <TbInfoSmall size={27}/>
       }
       <div className={'label-container'}>
-        {contractItem.description} - {contractItem.group}
+        {contractItem.description}
         <small>{contractItem.additional_details}</small>
       </div>
       <div>

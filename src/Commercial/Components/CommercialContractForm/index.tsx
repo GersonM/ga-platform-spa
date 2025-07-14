@@ -1,5 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
 import {Checkbox, Col, Form, Input, Row, Select} from 'antd';
+import {TbCheck, TbPencil} from "react-icons/tb";
 import axios from 'axios';
 
 import type {Contract, StorageStock} from '../../../Types/api';
@@ -15,7 +16,6 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
-import {TbCheck, TbPencil} from "react-icons/tb";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 
 interface CommercialContractFormProps {
@@ -119,21 +119,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 )}
               </>
             }
-            {/* <Form.Item label={'Modalidad de compra'} name={'sale_mode'} rules={[{required: true}]}>
-              <Select
-                showSearch
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: '0', label: 'Ninguno'},
-                  {value: 'reservation', label: 'Reserva'},
-                  {value: 'Techo Propio', label: 'Techo Propio'},
-                  {value: 'Terreno', label: 'Terreno'},
-                  {value: 'Mi Vivienda', label: 'Mi Vivienda'},
-                  {value: 'Contado', label: 'Contado'},
-                  {value: 'PROREVI', label: 'PROREVI'},
-                ]}
-              />
-            </Form.Item>*/}
             {!isTemplate && (
               <>
                 <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>

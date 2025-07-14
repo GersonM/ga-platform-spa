@@ -23,6 +23,7 @@ import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer
 import ContractItemsManager from "../../Components/ContractItemsManager";
 import StepsNavigation from "../../../CommonUI/StepsNavigation";
 import CommercialContractForm from "../../Components/CommercialContractForm";
+import ContractStatus from "../CommercialSales/ContractStatus.tsx";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -130,11 +131,7 @@ const CommercialContractDetail = () => {
 
   const contractDetails: DescriptionsProps['items'] = [
     {
-      key: '1', span: 3, label: 'Entrega', children: contract?.provided_at ? (
-        <Tag color={'green'}>Entregado el {dayjs(contract.provided_at).format('DD/MM/YYYY [a las ] hh:m a')}</Tag>
-      ) : (
-        <Tag color={'orange'}>Pendiente de entrega</Tag>
-      )
+      key: '1', span: 3, label: 'ID', children: contract.tracking_id
     },
     {
       key: '2',
@@ -182,30 +179,16 @@ const CommercialContractDetail = () => {
     {key: '5', span: 3, label: 'Observaciones', children: contract?.observations},
   ];
 
-  let status = 'proposal';
-
-  if (contract?.approved_at) {
-    status = 'approved';
-  }
-
-  if (contract?.signed_at) {
-    status = 'provisioning';
-  }
-
-  if (contract?.provided_at || contract?.cancelled_at) {
-    status = contract?.cancelled_at ? 'canceled' : 'provided';
-  }
-
   return (
     <ModuleContent>
       <ContentHeader
         loading={loading}
         onRefresh={() => setReload(!reload)}
         showBack
-        tools={<Tag>{status}</Tag>}
+        tools={<ContractStatus contract={contract} showDate={false} />}
         title={
           <>
-            {contract?.contractable.sku} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
+          {contract?.contractable.sku} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
           </>
         }>
         {contract?.cancelled_at && (
@@ -244,6 +227,7 @@ const CommercialContractDetail = () => {
                 <Button
                   size={"small"}
                   onClick={submitStart}
+                  disabled={!contract.approved_at}
                   icon={<TbCheck/>} shape={"round"} variant="outlined" type={"primary"}
                   color={'blue'}>
                   Iniciar
@@ -266,7 +250,7 @@ const CommercialContractDetail = () => {
                 !contract?.provided_at ? (
                   <Button
                     onClick={() => setOpenContractProvideForm(true)}
-                    disabled={!!contract?.cancelled_at}
+                    disabled={!!contract?.cancelled_at || !contract.date_start}
                     size={"small"} icon={<TbCheck/>}
                     shape={"round"}
                     variant="outlined" type={"primary"}
@@ -291,7 +275,7 @@ const CommercialContractDetail = () => {
       <Row gutter={[20, 20]}>
         <Col xs={24} md={7}>
           <div style={{position: "sticky", top: 62}}>
-            <p>
+            {!contract.provided_at &&
               <PrimaryButton
                 danger
                 block
@@ -300,7 +284,7 @@ const CommercialContractDetail = () => {
                 label={'Anular contrato'}
                 onClick={() => setOpenCancelContract(true)}
               />
-            </p>
+            }
             <Divider>Datos del cliente:</Divider>
             <Descriptions
               layout={'horizontal'} size={"small"}
@@ -319,7 +303,7 @@ const CommercialContractDetail = () => {
                 children: <>
                   {contract &&
                     <InvoicesTable
-                      customerType={contract.client?.type.includes('profile') ? 'profile' : 'company'}
+                      customerType={contract.client?.type.toLowerCase().includes('profile') ? 'profile' : 'company'}
                       customer={contract.client?.entity}
                       entityUuid={contract?.uuid}
                       type={'contract'}/>
@@ -373,7 +357,7 @@ const CommercialContractDetail = () => {
         <CommercialContractForm contract={contract} onComplete={() => {
           setOpenEditContract(false);
           setReload(!reload);
-        }}  />
+        }}/>
       </ModalView>
       <ModalView open={openCancelContract} onCancel={() => setOpenCancelContract(false)}>
         {contract && (

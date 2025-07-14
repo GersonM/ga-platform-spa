@@ -1,4 +1,3 @@
-
 import type {EntityActivity} from '../../Types/api';
 import {PiCalendarDots, PiInfo, PiWarningDiamond} from 'react-icons/pi';
 

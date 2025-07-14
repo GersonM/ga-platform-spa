@@ -80,6 +80,7 @@ export type Campaign = {
 };
 export type Contract = {
   uuid: string;
+  status: string;
   amount: number;
   client?: Client;
   amount_string?: string;
@@ -110,7 +111,7 @@ export type Contract = {
   is_template?: boolean;
   template?: Contract;
   fk_template_uuid?: string;
-  track_id?: number;
+  tracking_id?: number;
   document_progress?:number;
   items_required?:number;
   items_completed?:number;
@@ -415,6 +416,7 @@ export type Invoice = {
   uuid: string;
   amount: number;
   amount_string: string;
+  tracking_id: string;
   concept: string;
   pending_payment?: number;
   created_at: string;
