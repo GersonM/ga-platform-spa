@@ -42,7 +42,7 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = (
 
   return (
     <ModalView
-      title={'Agregar Nuevo Empleado'}
+      title={'Agregar nuevo empleado'}
       open={visible}
       onCancel={onCancel}
     >
@@ -76,6 +76,9 @@ const CreateEmployeeModal: React.FC<CreateEmployeeModalProps> = (
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label="Correo (opcional)" name="email">
+          <Input />
+        </Form.Item>
         <Form.Item label="Salario mensual (opcional)" name="monthly_salary">
           <MoneyInput/>
         </Form.Item>

@@ -131,6 +131,7 @@ export type ContractItem = {
 export type Employee = {
   uuid: string;
   bank_account?: string;
+  email?: string;
   bank_name?: string;
   children_number?: number;
   cost_center?: string;

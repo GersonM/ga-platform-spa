@@ -103,8 +103,8 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
     {
       title: 'Empleado',
       dataIndex: 'profile',
-      render: (profile: Profile) => {
-        return <ProfileChip profile={profile}/>;
+      render: (profile: Profile, employee) => {
+        return <ProfileChip profile={profile} caption={employee.email}/>;
       },
     },
     {
