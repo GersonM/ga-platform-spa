@@ -31,6 +31,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   const [clientType, setClientType] = useState<'company' | 'profile'>()
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
   const [chooseSeller, setChooseSeller] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState<string>();
 
   useEffect(() => {
     if (!selectedStockUUID) {
@@ -135,12 +136,13 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 <Row gutter={[15, 15]}>
                   <Col xs={10}>
                     <Form.Item label={'Moneda'} name={'currency'}>
-                      <CurrencySelector placeholder={selectedStock?.currency}/>
+                      <CurrencySelector placeholder={selectedStock?.currency}
+                                        onChange={(value: string) => setSelectedCurrency(value)}/>
                     </Form.Item>
                   </Col>
                   <Col xs={14}>
                     <Form.Item label={'Precio de venta'} name={'sale_price'}>
-                      <MoneyInput currency={selectedStock?.currency}
+                      <MoneyInput currency={selectedCurrency || selectedStock?.currency}
                                   placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
                     </Form.Item>
                   </Col>

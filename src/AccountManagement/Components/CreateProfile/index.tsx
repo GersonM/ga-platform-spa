@@ -6,6 +6,7 @@ import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {Profile} from '../../../Types/api';
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 
 interface CreateUserProps {
   onCompleted?: (profile: Profile) => void;
@@ -102,18 +103,10 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
       <Form.Item name={'phone'} label={'Teléfono'}>
         <Input/>
       </Form.Item>
-      <Form.Item name={'cost_center'} label={'Centro de costo'}>
-        <Input/>
-      </Form.Item>
       <Row gutter={15}>
         <Col md={12}>
-          <Form.Item name={'company_name'} label={'Empresa'}>
-            <Input/>
-          </Form.Item>
-        </Col>
-        <Col md={12}>
-          <Form.Item name={'company_group'} label={'Área de la empresa'}>
-            <Input/>
+          <Form.Item name={'company_uuid'} label={'Empresa (opcional)'}>
+            <CompanySelector />
           </Form.Item>
         </Col>
       </Row>

@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react';
 import {Modal, Select} from 'antd';
 import {PiPlusBold} from 'react-icons/pi';
+import {useDebounce} from "@uidotdev/usehooks";
+import axios from "axios";
+
 import type {Company, Profile} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import CompanyForm from "../CompanyForm";
-import axios from "axios";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import {useDebounce} from "@uidotdev/usehooks";
 
 
 interface CompanySelectorProps {
@@ -78,6 +79,7 @@ const CompanySelector = (
           filterOption={false}
           loading={loading}
           options={companies}
+          popupMatchSelectWidth={false}
           onChange={onChange}
           mode={mode || undefined}
           onSearch={value => setSearchCompany(value)}
