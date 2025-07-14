@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {Modal} from 'antd';
 import {PiPlusBold} from 'react-icons/pi';
 
 import SearchProfile from '../SearchProfile';
 import PrimaryButton from '../PrimaryButton';
 import CreateProfile from '../../AccountManagement/Components/CreateProfile';
 import type {Profile} from "../../Types/api.tsx";
+import ModalView from "../ModalView";
 
 interface ProfileSelectorProps {
   placeholder?: string;
@@ -50,9 +50,8 @@ const ProfileSelector = ({
           />
         )}
       </div>
-      <Modal
+      <ModalView
         title={'Registrar nueva persona'}
-        footer={false}
         open={openCreateProfile}
         onCancel={() => setOpenCreateProfile(false)}>
         <CreateProfile
@@ -65,7 +64,7 @@ const ProfileSelector = ({
             }
           }}
         />
-      </Modal>
+      </ModalView>
     </div>
   );
 };

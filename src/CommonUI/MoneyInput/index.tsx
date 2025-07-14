@@ -4,6 +4,7 @@ interface MoneyStringProps {
   value?: number;
   currency?: string;
   placeholder?: string;
+  defaultValue?: number;
   onChange?: (value?: number) => void;
   onCurrencyChange?: (value?: string) => void;
 }

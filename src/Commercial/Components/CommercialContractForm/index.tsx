@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Checkbox, Col, Form, Input, Row, Select} from 'antd';
+import {Checkbox, Col, Form, Input, Row, Select, Space} from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
 import axios from 'axios';
 
@@ -17,6 +17,7 @@ import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -136,8 +137,9 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 <Row gutter={[15, 15]}>
                   <Col xs={10}>
                     <Form.Item label={'Moneda'} name={'currency'}>
-                      <CurrencySelector placeholder={selectedStock?.currency}
-                                        onChange={(value: string) => setSelectedCurrency(value)}/>
+                      <CurrencySelector
+                        placeholder={selectedStock?.currency}
+                        onChange={(value: string) => setSelectedCurrency(value)}/>
                     </Form.Item>
                   </Col>
                   <Col xs={14}>
@@ -157,13 +159,13 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 {chooseSeller ? (
                     <ProfileSelector/>
                   ) :
-                  <div>
-                    {user?.profile.name} {user?.profile.last_name}
+                  <Space>
+                    <ProfileChip profile={user?.profile}  />
                     <IconButton
                       icon={<TbPencil/>}
                       onClick={() => setChooseSeller(!chooseSeller)}
                     />
-                  </div>
+                  </Space>
                 }
               </Form.Item>
             )}

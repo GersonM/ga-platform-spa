@@ -149,38 +149,36 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
 
   return (
     <>
-      <div>
-        {invoices?.length === 0 ? (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'}/>
-        ) : (
-          <>
-            <TableList loading={loading} columns={columns} dataSource={invoices}/>
-            <Space>
-              <Pagination
-                showSizeChanger={false}
-                size={'small'}
-                total={pagination?.total}
-                pageSize={pagination?.per_page}
-                current={pagination?.current_page}
-                onChange={(page, size) => {
-                  setCurrentPage(page);
-                  setPageSize(size);
-                }}
-              />
-              <IconButton icon={<TbReload/>} onClick={() => setReload(!reload)}/>
-            </Space>
-          </>
-        )}
-        {customer &&
-          <PrimaryButton
-            size={'small'}
-            ghost
-            label={'Agregar solicitud de pago'}
-            onClick={() => setOpenInvoiceForm(true)}
-            icon={<PiPlusBold/>}
-          />
-        }
-      </div>
+      {invoices?.length === 0 ? (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'}/>
+      ) : (
+        <>
+          <TableList loading={loading} columns={columns} dataSource={invoices}/>
+          <Space>
+            <Pagination
+              showSizeChanger={false}
+              size={'small'}
+              total={pagination?.total}
+              pageSize={pagination?.per_page}
+              current={pagination?.current_page}
+              onChange={(page, size) => {
+                setCurrentPage(page);
+                setPageSize(size);
+              }}
+            />
+            <IconButton icon={<TbReload/>} onClick={() => setReload(!reload)}/>
+          </Space>
+        </>
+      )}
+      {customer &&
+        <PrimaryButton
+          size={'small'}
+          ghost
+          label={'Agregar solicitud de pago'}
+          onClick={() => setOpenInvoiceForm(true)}
+          icon={<PiPlusBold/>}
+        />
+      }
       <ModalView
         width={900}
         title={'Nueva solicitud de pago'}

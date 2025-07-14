@@ -196,7 +196,7 @@ const CommercialSales = () => {
       },
     },
     {
-      title: 'Sol. de pago',
+      title: 'Pagos vencidos',
       dataIndex: 'invoices',
       render: (invoices: Invoice[]) => {
         return invoices?.map((i, _index) => {

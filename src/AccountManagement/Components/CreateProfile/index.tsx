@@ -1,11 +1,11 @@
 import {useState} from 'react';
 import {Button, Col, Form, Input, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
+import {TbSearch} from "react-icons/tb";
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {Profile} from '../../../Types/api';
-import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 
 interface CreateUserProps {
@@ -81,35 +81,38 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
             <Input
               onChange={evt => setProfileDocument(evt.target.value)}
               addonAfter={
-                <PrimaryButton
+                <Button
                   loading={documentSearching}
+                  icon={<TbSearch/>}
                   disabled={!profileDocument}
                   onClick={searchExternal}
-                  label={'Buscar'}/>
+                  type="link"
+                >
+                  Buscar
+                </Button>
               }
             />
           </Form.Item>
         </Col>
       </Row>
       <Form.Item name={'name'} label={'Nombre'}>
-        <Input placeholder={'Nombre'}/>
+        <Input/>
       </Form.Item>
       <Form.Item name={'last_name'} label={'Apellidos'}>
         <Input/>
       </Form.Item>
       <Form.Item name={'email'} label={'E-mail'}>
-        <Input placeholder={'E-mail'}/>
+        <Input/>
       </Form.Item>
       <Form.Item name={'phone'} label={'Teléfono'}>
         <Input/>
       </Form.Item>
-      <Row gutter={15}>
-        <Col md={12}>
-          <Form.Item name={'company_uuid'} label={'Empresa (opcional)'}>
-            <CompanySelector />
-          </Form.Item>
-        </Col>
-      </Row>
+      <Form.Item
+        name={'company_uuid'} label={'Registrar como empleado (opcional)'}
+        help={'Registrará esta persona como empleados de la empresa seleccionada'}>
+        <CompanySelector/>
+      </Form.Item>
+      <br/>
       <Button block loading={loading} type={'primary'} htmlType={'submit'}>
         Registrar perfil
       </Button>

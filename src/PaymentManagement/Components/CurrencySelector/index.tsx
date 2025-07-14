@@ -9,6 +9,7 @@ const currencies = [
 const CurrencySelector = ({...props}) => {
   return (
     <Select
+      allowClear
       defaultActiveFirstOption={true}
       popupMatchSelectWidth={false}
       options={currencies}

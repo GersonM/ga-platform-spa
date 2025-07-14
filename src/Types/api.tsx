@@ -82,6 +82,7 @@ export type Contract = {
   uuid: string;
   status: string;
   amount: number;
+  currency?: string;
   client?: Client;
   amount_string?: string;
   approved_at?: string;

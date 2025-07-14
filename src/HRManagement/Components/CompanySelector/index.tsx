@@ -74,7 +74,7 @@ const CompanySelector = (
         <Select
           {...props}
           allowClear
-          placeholder={placeholder || 'Elige una empresa'}
+          placeholder={placeholder || 'Buscar empresa'}
           showSearch={true}
           filterOption={false}
           loading={loading}

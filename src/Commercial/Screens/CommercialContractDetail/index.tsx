@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Button, Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, Row, Tabs, Tag} from 'antd';
-import {PiReceiptXBold} from 'react-icons/pi';
+import {Button, Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, Row, Tabs} from 'antd';
+import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
 import {TbCancel, TbCheck} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -24,6 +24,7 @@ import ContractItemsManager from "../../Components/ContractItemsManager";
 import StepsNavigation from "../../../CommonUI/StepsNavigation";
 import CommercialContractForm from "../../Components/CommercialContractForm";
 import ContractStatus from "../CommercialSales/ContractStatus.tsx";
+import InstallmentPlanForm from "../../../PaymentManagement/Components/InstallmentPlanForm";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -34,6 +35,7 @@ const CommercialContractDetail = () => {
   const [openProvisionRevert, setOpenProvisionRevert] = useState(false);
   const [openCancelContract, setOpenCancelContract] = useState(false);
   const [openEditContract, setOpenEditContract] = useState(false);
+  const [openInstallmentFom, setOpenInstallmentFom] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -301,6 +303,12 @@ const CommercialContractDetail = () => {
                 key: 'finances',
                 label: 'Finanzas',
                 children: <>
+                  <PrimaryButton
+                    ghost
+                    label={'Asignar plan de pagos'}
+                    onClick={() => setOpenInstallmentFom(true)}
+                    icon={<PiPlusBold/>}
+                  />
                   {contract &&
                     <InvoicesTable
                       customerType={contract.client?.type.toLowerCase().includes('profile') ? 'profile' : 'company'}
@@ -331,6 +339,9 @@ const CommercialContractDetail = () => {
           </Card>
         </Col>
       </Row>
+      <ModalView onCancel={() => setOpenInstallmentFom(false)} open={openInstallmentFom}>
+        <InstallmentPlanForm contract={contract} />
+      </ModalView>
       <ModalView open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)}>
         <h2>Revertir entrega</h2>
         <p>Especifique el motivo de la reversión de la entrega</p>

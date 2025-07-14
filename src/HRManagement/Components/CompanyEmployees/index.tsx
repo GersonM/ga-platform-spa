@@ -3,7 +3,6 @@ import {Input, Pagination, Popconfirm, Space, Tooltip, message, Tag} from 'antd'
 import axios from 'axios';
 import {TbPlus, TbReload, TbTrash, TbUserCancel} from 'react-icons/tb';
 import type {ColumnsType} from "antd/es/table";
-import {TrashIcon} from "@heroicons/react/16/solid";
 import dayjs from "dayjs";
 
 import type {Employee, Profile} from "../../../Types/api.tsx";
