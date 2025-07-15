@@ -161,6 +161,12 @@ const CommercialContractDetail = () => {
       children: contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm a') : 'No iniciado'
     },
     {
+      key: '3',
+      span: 3,
+      label: 'Entrega',
+      children: contract?.provided_at ? dayjs(contract?.provided_at).format('DD/MM/YYYY HH:mm a') : 'No entregado'
+    },
+    {
       key: 'period',
       span: 3,
       label: 'Periodo',

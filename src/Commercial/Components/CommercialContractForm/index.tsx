@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Checkbox, Col, Form, Input, Row, Select, Space} from 'antd';
+import {Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
 import axios from 'axios';
 
@@ -197,6 +197,21 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 }
               </Col>
             </Row>
+            <Form.Item name={'is_approved'} valuePropName={'checked'}>
+              <Checkbox onChange={evt => setApproveOrder(evt.target.checked)}>Registrar como venta aprobada
+                <small>Se registrará con el estado en aprobado si tienes permisos</small>
+              </Checkbox>
+            </Form.Item>
+            {approveOrder && (
+              <>
+                <Form.Item label="Fecha de compra (opcional)" name="approved_at">
+                  <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+                </Form.Item>
+                <Form.Item label="Fecha de entrega (opcional)" name="provided_at">
+                  <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+                </Form.Item>
+              </>
+            )}
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <Select
                 showSearch
@@ -214,12 +229,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
               <Input.TextArea/>
             </Form.Item>
-            <Form.Item name={'is_approved'} valuePropName={'checked'}>
-              <Checkbox onChange={evt => setApproveOrder(evt.target.checked)}>Registrar como venta aprobada
-                <small>Se registrará con el estado en aprobado si tienes permisos</small>
-              </Checkbox>
-            </Form.Item>
-
             {selectedStock ? (
               <>
                 <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
