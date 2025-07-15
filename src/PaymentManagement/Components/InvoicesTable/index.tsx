@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Col, Divider, Empty, Modal, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
-import {ArrowPathIcon} from '@heroicons/react/24/outline';
+import {Col, Empty, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
 import {TbReload, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
@@ -180,7 +179,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
         />
       }
       <ModalView
-        width={900}
+        width={1000}
         title={'Nueva solicitud de pago'}
         open={openInvoiceForm}
         onCancel={() => {

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
-import {Divider, Modal, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
+import {Divider, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import {PiWarning} from "react-icons/pi";
 import axios from "axios";
 
@@ -12,6 +12,8 @@ import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
 import ModalView from "../../../CommonUI/ModalView";
+import StockStatus from "./StockStatus.tsx";
+import dayjs from "dayjs";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -64,7 +66,6 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     {
       title: 'SKU',
       dataIndex: 'sku',
-      width: 130,
       render: (sku: string, row: StorageStock) => {
         return <>
           {sku} <br/>
@@ -75,8 +76,19 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       }
     },
     {
+      title: 'Vence',
+      dataIndex: 'expiration_date',
+      render: (expiration_date:string) => {
+        return expiration_date ? dayjs(expiration_date).fromNow() : '';
+      }
+    },
+    {
       title: 'Estado',
       dataIndex: 'status',
+      width: 100,
+      render: (status:string) => {
+        return <StockStatus status={status} />;
+      }
     },
     {
       title: 'Almacén',
@@ -108,9 +120,9 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
                 {sale_price != null ?
                   <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
                 }
-                <small>
-                  Costo: {row.cost_price != null ? <MoneyString value={row.cost_price} currency={row.currency}/> : '-'}
-                </small>
+                {row.cost_price && <small>
+                  Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
+                </small>}
               </div>
               {earn < 0 && <PiWarning size={18} color="red"/>}
             </Space>

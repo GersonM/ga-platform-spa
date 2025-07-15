@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Modal, Pagination, Space, Tooltip} from 'antd';
+import {Form, Input, Pagination, Space, Tooltip} from 'antd';
 import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
+import {PiShippingContainer} from "react-icons/pi";
 import axios from "axios";
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -14,7 +15,6 @@ import ProductGroupsSelector from "../../Components/ProductGroupsSelector";
 import ProductBrandSelector from "../../Components/ProductBrandSelector";
 import ProductManufacturerSelector from "../../Components/ProductManufacturerSelector";
 import ProductStockManager from "../../Components/ProductStockManager";
-import {PiShippingContainer} from "react-icons/pi";
 import WarehouseManager from "../../Components/WarehouseManager";
 import ModalView from "../../../CommonUI/ModalView";
 
@@ -172,18 +172,18 @@ const WarehouseProductsManager = () => {
           setSelectedProduct(undefined);
         }}/>
       </ModalView>
-      <Modal width={700} destroyOnHidden open={openStockManager} footer={null} onCancel={() => {
+      <ModalView width={800} open={openStockManager} onCancel={() => {
         setOpenStockManager(false);
         setSelectedProduct(undefined);
       }}>
         {selectedProduct && <ProductStockManager product={selectedProduct}/>}
-      </Modal>
-      <Modal width={700} destroyOnHidden open={openWarehouseManager} footer={null} onCancel={() => {
+      </ModalView>
+      <ModalView width={700} open={openWarehouseManager} onCancel={() => {
         setOpenWarehouseManager(false);
         setSelectedProduct(undefined);
       }}>
         <WarehouseManager/>
-      </Modal>
+      </ModalView>
     </ModuleContent>
   );
 };

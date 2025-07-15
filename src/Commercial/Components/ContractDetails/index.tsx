@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react';
 import type {Contract, ContractItem} from '../../../Types/api';
 import {Statistic, Tag} from 'antd';
-import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import axios from "axios";
+
+import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
