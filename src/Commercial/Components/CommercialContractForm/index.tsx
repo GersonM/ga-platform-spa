@@ -33,6 +33,8 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
   const [chooseSeller, setChooseSeller] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
+  const [period, setPeriod] = useState<string>();
+  const [approveOrder, setApproveOrder] = useState(false);
 
   useEffect(() => {
     if (!selectedStockUUID) {
@@ -82,7 +84,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
 
   return (
     <div>
-      <h2>{isTemplate ? 'Crear plantilla' : 'Registrar nueva venta'}</h2>
+      <h2>{isTemplate ? 'Crear plantilla' : (approveOrder ? 'Nueva venta' : 'Nueva cotización')}</h2>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
@@ -160,7 +162,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                     <ProfileSelector/>
                   ) :
                   <Space>
-                    <ProfileChip profile={user?.profile}  />
+                    <ProfileChip profile={user?.profile}/>
                     <IconButton
                       icon={<TbPencil/>}
                       onClick={() => setChooseSeller(!chooseSeller)}
@@ -171,23 +173,34 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             )}
           </Col>
           <Col span={12}>
-            <Form.Item label={'Duración'} name={'period'}>
-              <Select
-                showSearch
-                placeholder={'Único'}
-                options={[
-                  {value: 'unique', label: 'Único'},
-                  {value: 'monthly', label: 'Mensual'},
-                  {value: 'annual', label: 'Anual'},
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name={'is_renewable'} valuePropName={'checked'}>
-              <Checkbox>Renovar automáticamente</Checkbox>
-            </Form.Item>
+            <Row gutter={[20, 20]}>
+              <Col span={9}>
+                <Form.Item label={'Duración'} name={'period'}>
+                  <Select
+                    showSearch
+                    allowClear
+                    onChange={value => setPeriod(value)}
+                    placeholder={'Único'}
+                    options={[
+                      {value: 'unique', label: 'Único'},
+                      {value: 'monthly', label: 'Mensual'},
+                      {value: 'annual', label: 'Anual'},
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={15}>
+                {(period && period != 'unique') &&
+                  <Form.Item label={' '} name={'is_renewable'} valuePropName={'checked'}>
+                    <Checkbox>Renovar automáticamente</Checkbox>
+                  </Form.Item>
+                }
+              </Col>
+            </Row>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <Select
                 showSearch
+                allowClear
                 options={[
                   {value: 'credit', label: 'Tarjeta Crédito / Débido'},
                   {value: 'cash', label: 'Efectivo'},
@@ -200,6 +213,11 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
               <Input.TextArea/>
+            </Form.Item>
+            <Form.Item name={'is_renewable'} valuePropName={'checked'}>
+              <Checkbox onChange={evt => setApproveOrder(evt.target.checked)}>Registrar como venta aprobada
+                <small>Se registrará con el estado en aprobado si tienes permisos</small>
+              </Checkbox>
             </Form.Item>
 
             {selectedStock ? (

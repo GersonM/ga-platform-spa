@@ -10,8 +10,8 @@ interface ContractStatusProps {
 
 const statuses: any = {
   provisioning: 'En proceso',
-  cancelled: 'Cancelado',
-  approved: 'Cancelado',
+  cancelled: 'Anulado',
+  approved: 'Aprobado',
   proposal: 'Propuesta',
   completed: 'Entregado',
 }

@@ -139,9 +139,9 @@ const CommercialContractDetail = () => {
       key: '2',
       span: 3,
       label: 'Monto',
-      children: <MoneyString currency={contract?.contractable.currency} value={contract?.amount}/>
+      children: <MoneyString currency={contract?.contractable?.currency} value={contract?.amount}/>
     },
-    {key: 'product', span: 3, label: 'Producto', children: contract?.contractable.sku},
+    {key: 'product', span: 3, label: 'Producto', children: contract?.contractable?.sku},
     {
       key: '3',
       span: 3,
@@ -190,7 +190,7 @@ const CommercialContractDetail = () => {
         tools={<ContractStatus contract={contract} showDate={false} />}
         title={
           <>
-          {contract?.contractable.sku} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
+          {contract?.contractable?.sku || contract.tracking_id} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
           </>
         }>
         {contract?.cancelled_at && (
