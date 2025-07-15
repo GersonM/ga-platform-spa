@@ -97,7 +97,7 @@ const MediaPlayer = ({media, startTime, onActivityChange, showControls = true}: 
           onReady={() => setPlayerReady(true)}
           autoPlay
           width={'100%'}
-          height={media.type.includes('aud') ? '50px' : 'auto'}
+          height={media.type.includes('aud') ? '70px' : 'auto'}
           controls={true}
           muted={muted}
           playing={playing}

@@ -1,10 +1,9 @@
-
-import {SpeakerWaveIcon, VideoCameraIcon} from '@heroicons/react/24/outline';
-import {PiFile, PiFileDoc, PiFilePdf, PiFilePpt, PiFileSqlLight, PiVectorThree} from 'react-icons/pi';
+import {VideoCameraIcon} from '@heroicons/react/24/outline';
+import {PiFileDoc, PiFilePdf, PiFilePpt, PiFileSql, PiFileTxt, PiFileZip, PiSpeakerHigh, PiVectorThree} from 'react-icons/pi';
 import {DiPhotoshop} from 'react-icons/di';
+import {TbFile, TbFileTypeXls, TbPhoto} from "react-icons/tb";
 
 import type {ApiFile} from '../../../Types/api';
-import {TbFileTypeXls, TbPhoto} from "react-icons/tb";
 
 interface FileIconProps {
   file: ApiFile;
@@ -21,29 +20,29 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
     case file.type.includes('adobe'):
       return <DiPhotoshop size={size} />;
     case file.name.includes('sql'):
-      return <PiFileSqlLight className={'icon'} size={size} />;
+      return <PiFileSql className={'icon'} size={size} />;
     case file.name.includes('csv') || file.name.includes('xlsx'):
       return <TbFileTypeXls className={'icon'} size={size} />;
     case file.type.includes('presentation') || file.name.includes('pptx'):
       return <PiFilePpt className={'icon'} size={size} />;
     case file.type.includes('document') || file.name.includes('docx'):
       return <PiFileDoc className={'icon'} size={size} />;
-    case file.name.includes('doc'):
+    case file.name.includes('.doc'):
       return <PiFileDoc className={'icon'} size={size} />;
     case file.type.includes('image'):
       return <TbPhoto className={'icon'} size={size}  />;
     case file.type.includes('zip') || file.name.includes('zip'):
-      return <span className="icon icon-file-zip"></span>;
+      return <PiFileZip className={'icon'} size={size} />;
     case file.type.includes('text'):
-      return <span className="icon icon-document"></span>;
+      return <PiFileTxt className={'icon'} size={size} />;
     case file.type.includes('video'):
       return <VideoCameraIcon height={size} width={width} />;
     case file.type.includes('message'):
       return <span className="icon icon-envelope-open"></span>;
     case file.type.includes('aud'):
-      return <SpeakerWaveIcon className={'icon'} height={size} width={width} />;
+      return <PiSpeakerHigh className={'icon'} size={size} />;
     default:
-      return <PiFile className={'icon'} size={size} />;
+      return <TbFile className={'icon'} size={size} />;
   }
 };
 

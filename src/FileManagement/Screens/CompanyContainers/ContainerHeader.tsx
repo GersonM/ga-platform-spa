@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {Button, Input, Popover, Segmented, Select, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
-import {TbFolderPlus} from "react-icons/tb";
-import {PiInfo, PiMagnifyingGlass, PiUpload} from 'react-icons/pi';
+import {TbFolderPlus, TbInfoCircle, TbSearch} from "react-icons/tb";
+import {PiUpload} from 'react-icons/pi';
 
 import ContainerForm from '../../Components/ContainerForm';
 import type {Container} from '../../../Types/api';
@@ -35,7 +35,7 @@ const ContainerHeader = ({
                          }: ContainerHeaderProps) => {
   const [viewMode, setViewMode] = useState<string | number>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('date_desc');
 
   useEffect(() => {
     if (window.innerWidth < 600) {
@@ -80,7 +80,7 @@ const ContainerHeader = ({
               type={"primary"}
               ghost={!informationEnabled}
               onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<PiInfo size={22}/>}
+              icon={<TbInfoCircle size={22}/>}
             />
           </Tooltip>
           <Tooltip title={'Buscar'}>
@@ -99,7 +99,7 @@ const ContainerHeader = ({
                 </>
               }
               trigger={'click'}>
-              <Button type={'text'} onClick={upLevel} icon={<PiMagnifyingGlass size={18}/>}/>
+              <Button type={'text'} onClick={upLevel} icon={<TbSearch size={18}/>}/>
             </Popover>
           </Tooltip>
           <Tooltip title={'Nuevo folder'}>
@@ -113,14 +113,15 @@ const ContainerHeader = ({
           <Select
             prefix={'Ordenar'}
             value={orderBy}
+            popupMatchSelectWidth={false}
             onChange={setOrderBy}
             placeholder={'Nombre'}
             options={[
+              {label: 'nuevos primero', value: 'date_desc'},
               {label: 'por nombre A-Z', value: 'name'},
-              {label: 'nuevos primero', value: 'date'},
-              {label: 'antiguos primero', value: 'date_desc'},
-              {label: 'pesados primero', value: 'size_asc'},
-              {label: 'ligeros primero', value: 'size_desc'},
+              {label: 'antiguos primero', value: 'date_asc'},
+              {label: 'pesados primero', value: 'size_desc'},
+              {label: 'ligeros primero', value: 'size_asc'},
             ]}
           />
           <Segmented

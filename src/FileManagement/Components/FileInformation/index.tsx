@@ -220,7 +220,9 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                 {fileActivity &&
                   fileActivity.map(a => (
                     <div key={a.uuid} className={`activity ${a.action}`}>
+                      {(a.comment || a.time) && <>
                       {a.comment} {a.time}{a.verified_at && <TbCheck color={'green'} />}
+                      </>}
                       <small>
                         {a.action} por {a.user?.profile?.name} - <span
                         className={'date'}>{dayjs(a.created_at).format(' D/MM/YYYY H:mm a')}</span>
