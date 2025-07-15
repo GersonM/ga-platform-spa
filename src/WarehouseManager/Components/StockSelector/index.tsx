@@ -45,10 +45,12 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
               return {
                 value: item.uuid,
                 entity: item,
+                disabled: item.status != 'available',
+                title: item.status,
                 label: (
                   <>
-                    {item.sku} - <MoneyString currency={item.currency} value={item.sale_price}/> <Tag bordered={false}
-                                                                                                      color={item.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
+                    {item.sku} - <MoneyString currency={item.currency} value={item.sale_price}/> <Tag bordered={false} color={item.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
+                    <small>{item.variation_name || item.product?.name}</small>
                   </>
                 ),
               };
@@ -75,13 +77,6 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
       options={stock}
       mode={mode || undefined}
       onSearch={value => setStockSearch(value)}
-      optionRender={item => {
-        return <>
-          {item.label} <br/>
-          {/* @ts-ignore */}
-          <small>{item.data.entity.variation_name || item.data.entity?.product?.name}</small>
-        </>
-      }}
     />
   );
 };
