@@ -14,6 +14,7 @@ import AuthContext from "../../../Context/AuthContext.tsx";
 import ModalView from "../../../CommonUI/ModalView";
 import StockStatus from "./StockStatus.tsx";
 import dayjs from "dayjs";
+import pluralize from "pluralize";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -103,7 +104,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       title: 'Cantidad',
       dataIndex: 'is_consumable',
       render: (is_consumable: boolean, row: StorageStock) =>
-        is_consumable ? row.quantity + ' ' + (row.product?.unit_type || 'unidades') : 'Sin límite'
+        is_consumable ? pluralize(row.product?.unit_type || 'unidad', row.quantity, true) : 'Sin límite'
     },
     {
       title: 'Precios',

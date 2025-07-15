@@ -214,7 +214,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
               <Input.TextArea/>
             </Form.Item>
-            <Form.Item name={'is_renewable'} valuePropName={'checked'}>
+            <Form.Item name={'is_approved'} valuePropName={'checked'}>
               <Checkbox onChange={evt => setApproveOrder(evt.target.checked)}>Registrar como venta aprobada
                 <small>Se registrará con el estado en aprobado si tienes permisos</small>
               </Checkbox>
