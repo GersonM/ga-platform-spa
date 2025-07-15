@@ -340,7 +340,10 @@ const CommercialContractDetail = () => {
         </Col>
       </Row>
       <ModalView onCancel={() => setOpenInstallmentFom(false)} open={openInstallmentFom}>
-        <InstallmentPlanForm contract={contract} />
+        <InstallmentPlanForm contract={contract} onComplete={() => {
+          setOpenInstallmentFom(false);
+          setReload(!reload);
+        }} />
       </ModalView>
       <ModalView open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)}>
         <h2>Revertir entrega</h2>

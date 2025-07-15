@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
-import type {Company, Invoice, Profile, ResponsePagination} from '../../../Types/api';
+import type {Company, Invoice, InvoiceItem, Profile, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -78,14 +78,20 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
       dataIndex: 'tracking_id',
     },
     {
-      title: 'Concepto',
+      title: 'Descripción',
       dataIndex: 'concept',
+      render: (concept:string, row:Invoice) => {
+        return concept || row.items?.map((i: InvoiceItem) => i.concept).join(', ');
+      }
     },
     {
       title: 'Monto',
-      dataIndex: 'amount_string',
-      render: (amount_string: string, row: Invoice) => {
-        return <>{amount_string} <small>Pendiente: <MoneyString value={row.pending_payment}/></small></>;
+      dataIndex: 'amount',
+      render: (amount: number, row: Invoice) => {
+        return <>
+          <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
+          <small>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
+        </>;
       }
     },
     {
