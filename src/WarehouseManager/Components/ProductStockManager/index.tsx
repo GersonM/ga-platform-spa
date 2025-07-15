@@ -11,6 +11,7 @@ import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
+import ModalView from "../../../CommonUI/ModalView";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -105,7 +106,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
             <Space>
               <div>
                 {sale_price != null ?
-                <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
+                  <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
                 }
                 <small>
                   Costo: {row.cost_price != null ? <MoneyString value={row.cost_price} currency={row.currency}/> : '-'}
@@ -163,16 +164,18 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       </Space>
       <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
              columns={columns} dataSource={productStock}/>
-      <Modal footer={null} open={openStockForm} onCancel={() => {
-        setOpenStockForm(false);
-        setSelectedStock(undefined);
-      }}>
+      <ModalView
+        open={openStockForm}
+        onCancel={() => {
+          setOpenStockForm(false);
+          setSelectedStock(undefined);
+        }}>
         <ProductStockForm product={product} stock={selectedStock} onComplete={() => {
           setReload(!reload);
           setOpenStockForm(false);
           setSelectedStock(undefined);
         }}/>
-      </Modal>
+      </ModalView>
     </div>
   );
 };

@@ -666,6 +666,7 @@ export type StorageStock = {
   fk_warehouse_uuid: string;
   metadata?: any;
   observations?: string;
+  expiration_date?: string;
   status: string;
   updated_at: string;
   product?: StorageProduct;

@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Button, Divider} from "antd";
 import {useForm} from "antd/lib/form/Form";
-import axios from "axios";
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import axios from "axios";
+import dayjs from "dayjs";
 
 import type {MetadataField, StorageProduct, StorageStock} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
@@ -113,7 +114,10 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
   console.log(stock);
 
   return (
-    <Form form={form} layout="vertical" initialValues={stock} onFinish={submit}>
+    <Form form={form} layout="vertical" initialValues={{
+      ...stock,
+      expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
+    }} onFinish={submit}>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
       <Form.Item label="Producto" name={'product_uuid'}>
         {product ?
@@ -186,20 +190,20 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         <Input.TextArea/>
       </Form.Item>
       <Row gutter={15}>
-        <Col md={14}>
+        <Col md={15}>
           <Form.Item
             name={'is_consumable'}
-            valuePropName={'checked'}
-            help={isConsumable ? 'Solo puede ser vendido según la cantidad' : 'Puede ser vendido multiples veces'}>
+            valuePropName={'checked'}>
             <Checkbox onChange={(value) => setIsConsumable(value.target.checked)}>
-              Tiene stock limitado
+              Limitar stock
+              <small>Controlar la cantidad de productos disponibles</small>
             </Checkbox>
           </Form.Item>
         </Col>
-        <Col md={10}>
+        <Col md={9}>
           {isConsumable &&
             <Form.Item label="Cantidad" name={'quantity'}>
-              <InputNumber defaultValue={1}/>
+              <InputNumber style={{width:'100%'}} defaultValue={1}/>
             </Form.Item>
           }
         </Col>
