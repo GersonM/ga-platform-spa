@@ -79,7 +79,7 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
         return <>
           {item.label} <br/>
           {/* @ts-ignore */}
-          <small>{item.data.entity?.product?.name}</small>
+          <small>{item.data.entity.variation_name || item.data.entity?.product?.name}</small>
         </>
       }}
     />
