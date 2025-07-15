@@ -127,8 +127,8 @@ const CommercialSales = () => {
       dataIndex: 'tracking_id',
       width: 100,
       render: (tracking_id:number, row:Contract) => {
-        return <>{tracking_id}
-          {row.document_progress && <Progress size={{height:3}} percent={row.document_progress} />}
+        return <>{tracking_id}<br/>
+          {row.document_progress != 0 && <Progress size={{height:3}} percent={row.document_progress} />}
         </>;
       }
     },
