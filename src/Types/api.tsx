@@ -65,6 +65,14 @@ export type Client = {
   entity?: Profile | Company | any;
   contracts?: Contract[];
 };
+export type Provider = {
+  uuid: string;
+  category: string;
+  currency: string;
+  score: string;
+  service_description: string;
+  company?: Company;
+};
 export type Lead = {
   uuid: string;
   score: number;
@@ -662,7 +670,7 @@ export type StorageStock = {
   updated_at: string;
   product?: StorageProduct;
   warehouse?: StorageWarehouse;
-  provider?: any;
+  provider?: Provider;
 };
 export type MetadataField = {
   key: string;

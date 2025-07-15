@@ -14,6 +14,7 @@ interface CompanySelectorProps {
   placeholder?: string;
   exclude?: string;
   filter?: string;
+  defaultValue?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   value?: string | string[];

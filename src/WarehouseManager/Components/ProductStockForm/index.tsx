@@ -110,6 +110,8 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
       });
   };
 
+  console.log(stock);
+
   return (
     <Form form={form} layout="vertical" initialValues={stock} onFinish={submit}>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
@@ -159,8 +161,8 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item label="Proveedor" name={'fk_provider_uuid'}>
-        <CompanySelector filter={'providers'}/>
+      <Form.Item label="Proveedor" name={'provider_uuid'}>
+        <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
       </Form.Item>
       <Row gutter={15}>
         <Col md={6}>
