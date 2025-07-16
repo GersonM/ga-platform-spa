@@ -100,7 +100,7 @@ const ActivityLogViewer = ({entity, id}: ActivityLogViewerProps) => {
             <div className={'log-item'}>
               <span>
               {entityType} <strong
-                style={{color: colors[item.event]}}>{actions[item.event]}</strong> por <strong>{item.causer?.name || 'Nadie'}</strong>
+                style={{color: colors[item.event]}}>{actions[item.event]}</strong> por <strong>{item.causer?.name || 'Sistema'}</strong>
               </span>
               {dayjs(item.created_at).fromNow()}
             </div>

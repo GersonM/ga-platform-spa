@@ -96,7 +96,6 @@ const InvoiceTableDetails = (
         block
         onClick={() => setOpenInvoiceItemForm(true)}
       />
-      <ActivityLogViewer entity={'invoice'} id={invoice?.uuid}/>
       <Modal
         open={openInvoiceItemForm}
         destroyOnHidden

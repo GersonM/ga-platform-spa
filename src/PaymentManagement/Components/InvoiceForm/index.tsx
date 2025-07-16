@@ -9,6 +9,7 @@ import type {Invoice} from "../../../Types/api.tsx";
 import CurrencySelector from "../CurrencySelector";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 
 interface InvoiceFormProps {
   invoice?: Invoice;
@@ -19,16 +20,18 @@ interface InvoiceFormProps {
   invoiceableType?: string;
 }
 
-const InvoiceForm = ({
-                       invoice,
-                       onComplete,
-                       customerType,
-                       customerUuid,
-                       invoiceableUuid,
-                       invoiceableType
-                     }: InvoiceFormProps) => {
+const InvoiceForm = (
+  {
+    invoice,
+    onComplete,
+    customerType,
+    customerUuid,
+    invoiceableUuid,
+    invoiceableType
+  }: InvoiceFormProps) => {
   const [form] = useForm();
-  const [selectedCurrency, setSelectedCurrency] = useState<string>()
+  const [selectedCurrency, setSelectedCurrency] = useState<string>();
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     form.resetFields();
@@ -74,7 +77,9 @@ const InvoiceForm = ({
       }
       <Descriptions items={invoicesItems}/>
       <br/>
-      <Form form={form} onFinish={submit}
+      <Form form={form} onValuesChange={(changes) => {
+        setIsModified(true);
+      }} onFinish={submit}
             initialValues={{
               ...invoice,
               issued_on: invoice?.issued_on ? dayjs(invoice?.issued_on) : null,
@@ -112,8 +117,11 @@ const InvoiceForm = ({
           <Checkbox>Incluir impuestos (IGV 18%)
           </Checkbox>
         </Form.Item>
-        <PrimaryButton htmlType={"submit"} label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
+        <PrimaryButton disabled={!isModified} htmlType={"submit"} label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
       </Form>
+      {invoice &&
+        <ActivityLogViewer id={invoice?.uuid} entity={'invoice'}/>
+      }
     </div>
   );
 };
