@@ -371,6 +371,7 @@ export type Plan = {
 };
 
 export type Subscription = {
+  uuid: string;
   billing_currency: string;
   billing_period: string;
   email_verified_at: string;
@@ -382,7 +383,7 @@ export type Subscription = {
   started_at: string;
   terminated_at: string;
   members: SubscriptionMember[];
-  uuid: string;
+  holder_profile?: Profile;
 };
 
 export type SubscriptionMember = {

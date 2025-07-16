@@ -327,7 +327,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 <TableList loading={loading} columns={columns} dataSource={subscription.members} />
               </Card>
               <Card title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
-                <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} />
+                <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} customerType={'profile'} customer={subscription.holder_profile} />
               </Card>
               <br />
               <br />

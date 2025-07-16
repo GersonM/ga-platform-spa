@@ -1,0 +1,121 @@
+import React, {useEffect, useState} from 'react';
+import {Checkbox, Col, DatePicker, Descriptions, type DescriptionsProps, Form, Input, Progress, Row, Tag} from "antd";
+import {useForm} from "antd/lib/form/Form";
+import axios from "axios";
+import dayjs from "dayjs";
+
+import MoneyString from "../../../CommonUI/MoneyString";
+import type {Invoice} from "../../../Types/api.tsx";
+import CurrencySelector from "../CurrencySelector";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+
+interface InvoiceFormProps {
+  invoice?: Invoice;
+  onComplete?: (invoice: Invoice) => void;
+  customerUuid?: string;
+  customerType?: string;
+  invoiceableUuid?: string;
+  invoiceableType?: string;
+}
+
+const InvoiceForm = ({
+                       invoice,
+                       onComplete,
+                       customerType,
+                       customerUuid,
+                       invoiceableUuid,
+                       invoiceableType
+                     }: InvoiceFormProps) => {
+  const [form] = useForm();
+  const [selectedCurrency, setSelectedCurrency] = useState<string>()
+
+  useEffect(() => {
+    form.resetFields();
+  }, [invoice]);
+
+  const submit = (values: any) => {
+    axios.request({
+      method: invoice ? "PUT" : "POST",
+      url: invoice ? "/payment-management/invoices/" + invoice.uuid : "/payment-management/invoices",
+      data: {
+        ...values,
+        invoice_customer_uuid: customerUuid,
+        invoice_customer_type: customerType,
+        invoiceable_uuid: invoiceableUuid,
+        invoiceable_type: invoiceableType,
+      }
+    })
+      .then(res => {
+        if (onComplete) onComplete(res.data);
+      })
+      .catch(err => {
+        ErrorHandler.showNotification(err);
+      })
+  }
+
+  const invoicesItems: DescriptionsProps['items'] = [
+    {key: 'total', label: 'Total', children: <MoneyString value={invoice?.amount}/>},
+    {
+      key: 'pending', label: 'Pendiente', children: <>
+        {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
+            <Tag color={'orange'}><MoneyString value={invoice?.pending_payment}/></Tag> :
+            <Tag color={'green'}>Pagado</Tag>
+        )}
+      </>
+    },
+  ];
+  return (
+    <div>
+      <Tag color={'blue'}>{invoice?.tracking_id}</Tag>
+      {invoice && invoice.pending_payment != null &&
+        <Progress size={{height: 2}}
+                  percent={Math.round(((invoice.amount - invoice.pending_payment) / invoice.amount) * 100)}/>
+      }
+      <Descriptions items={invoicesItems}/>
+      <br/>
+      <Form form={form} onFinish={submit}
+            initialValues={{
+              ...invoice,
+              issued_on: invoice?.issued_on ? dayjs(invoice?.issued_on) : null,
+              expires_on: invoice?.expires_on ? dayjs(invoice?.expires_on) : null
+            }}
+            layout="vertical">
+        <Row gutter={[20, 20]}>
+          <Col span={10}>
+            <Form.Item label={'Moneda'} name={'currency'}>
+              <CurrencySelector placeholder={'PEN S/'} onChange={(value: string) => setSelectedCurrency(value)}/>
+            </Form.Item>
+          </Col>
+          <Col span={14}>
+            <Form.Item label={'Monto'}>
+              <MoneyString value={invoice?.amount} currency={selectedCurrency || invoice?.currency || 'PEN'}/>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={[20, 20]}>
+          <Col span={12}>
+            <Form.Item label={'Fecha de emisión'} name={'issued_on'}>
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label={'Fecha de vencimiento'} name={'expires_on'}>
+              <DatePicker style={{width: '100%'}} placeholder={'En 7 días'}/>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item label={'Descripción (opcional)'} name={'concept'}>
+          <Input/>
+        </Form.Item>
+        <Form.Item label={''} name={'include_taxes'} valuePropName={'checked'}>
+          <Checkbox>Incluir impuestos (IGV 18%)
+          </Checkbox>
+        </Form.Item>
+        <PrimaryButton htmlType={"submit"} label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
+      </Form>
+    </div>
+  );
+};
+
+export default InvoiceForm;

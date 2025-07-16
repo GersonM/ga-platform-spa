@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Col, Empty, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
-import {TbReload, TbTrash} from 'react-icons/tb';
+import {TbCash, TbCashRegister, TbReload, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -14,6 +14,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import InvoiceTablePayments from '../InvoiceTablePayments';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ModalView from "../../../CommonUI/ModalView";
+import InvoiceForm from "../InvoiceForm";
 
 interface InvoicesProps {
   entityUuid: string;
@@ -32,6 +33,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
+  const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -80,7 +82,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
     {
       title: 'Descripción',
       dataIndex: 'concept',
-      render: (concept:string, row:Invoice) => {
+      render: (concept: string, row: Invoice) => {
         return concept || row.items?.map((i: InvoiceItem) => i.concept).join(', ');
       }
     },
@@ -109,10 +111,11 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
           return <Tag color={'green'}>Pagado</Tag>;
         }
         if (i.expires_on) {
+          const isExpired = dayjs(i.expires_on).isAfter(new Date());
           return (
-            <Tooltip title={'Vence: ' + dayjs(i.expires_on).format('DD/MM/YYYY')}>
-              <Tag color={dayjs(i.expires_on).isAfter(new Date()) ? 'orange' : 'red'}>
-                Vence {dayjs(i.expires_on).fromNow()}
+            <Tooltip title={'Fecha de vencimiento: ' + dayjs(i.expires_on).format('DD/MM/YYYY')}>
+              <Tag color={isExpired ? 'orange' : 'red'}>
+                {isExpired ? 'Vence en' : 'Venció'} {dayjs(i.expires_on).fromNow()}
               </Tag>
             </Tooltip>
           );
@@ -136,16 +139,20 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
       width: 75,
       render: (uuid: string, row: Invoice) => (
         <Space>
-          <IconButton small icon={<PiPencilSimple size={18}/>} onClick={() => {
+          <IconButton small icon={<PiPencilSimple/>} onClick={() => {
             setSelectedInvoice(row);
             setOpenInvoiceForm(true);
+          }}/>
+          <IconButton title={'Abrir ventana de pagos'} small icon={<TbCashRegister/>} onClick={() => {
+            setSelectedInvoice(row);
+            setOpenPaymentsDetail(true);
           }}/>
           <Popconfirm
             title={'¿Quiere eliminar esta factura?'}
             onConfirm={() => deleteInvoice(uuid)}
             okText={'Si'}
             cancelText={'No'}>
-            <IconButton small danger icon={<TbTrash size={18}/>}/>
+            <IconButton small danger icon={<TbTrash/>}/>
           </Popconfirm>
         </Space>
       ),
@@ -185,21 +192,46 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
         />
       }
       <ModalView
+        onCancel={() => {
+          setOpenPaymentsDetail(false);
+        }} open={openPaymentsDetail}>
+        {selectedInvoice && (
+          <>
+            <h3>Pagos</h3>
+            <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
+          </>
+        )}
+      </ModalView>
+      <ModalView
         width={1000}
-        title={'Nueva solicitud de pago'}
+        title={selectedInvoice ? 'Detalle de solicitud de pago':'Nueva solicitud de pago'}
         open={openInvoiceForm}
         onCancel={() => {
           setSelectedInvoice(undefined);
           setOpenInvoiceForm(false)
         }}>
         <Row gutter={[20, 20]}>
-          <Col span={12}>
-            {customer &&
+          <Col span={10}>
+            <InvoiceForm
+              invoice={selectedInvoice}
+              customerType={customerType}
+              invoiceableUuid={entityUuid}
+              invoiceableType={type}
+              customerUuid={customer?.uuid}
+              onComplete={(invoice) => {
+                setReload(!reload);
+                setSelectedInvoice(invoice);
+              }}/>
+          </Col>
+          <Col span={14}>
+            {!selectedInvoice && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        description={'Guarda la solicitud de pago para poder agregar los items'}/>}
+            {customer && selectedInvoice &&
               <InvoiceTableDetails
                 invoiceableUuid={entityUuid}
                 invoiceableType={type}
                 onChange={() => {
-                  setOpenInvoiceForm(false);
+                  //setOpenInvoiceForm(false);
                   setReload(!reload);
                 }}
                 invoice={selectedInvoice}
@@ -208,15 +240,6 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
               />
             }
           </Col>
-          {selectedInvoice && (
-            <>
-              <Col span={12}>
-                <h3>Pagos</h3>
-                <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
-              </Col>
-            </>
-          )}
-
         </Row>
       </ModalView>
     </>

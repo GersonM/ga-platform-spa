@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {DatePicker, Descriptions, type DescriptionsProps, Modal, Popconfirm, Space, Tag} from 'antd';
+import {Modal, Popconfirm, Space, Tag} from 'antd';
 import dayjs, {type Dayjs} from "dayjs";
 import {TbPlus} from "react-icons/tb";
 import axios from 'axios';
@@ -86,26 +86,8 @@ const InvoiceTableDetails = (
     },
   ];
 
-  const invoicesItems: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: 'Vencimiento',
-      children: <DatePicker onChange={(d) => setExpirationDate(d)} value={expirationDate}
-                            defaultValue={dayjs(invoice?.expires_on)}/>
-    },
-    {key: 'total', label: 'Total', children: <MoneyString value={invoice?.amount}/>},
-    {
-      key: 'pending', label: 'Pendiente', children: <>
-        {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
-            <Tag color={'orange'}><MoneyString value={invoice?.pending_payment}/></Tag> :
-            <Tag color={'green'}>Pagado</Tag>
-        )}
-      </>
-    },
-  ];
   return (
     <div>
-      <Descriptions layout={"vertical"} size={"small"} items={invoicesItems}/>
       <TableList columns={columns} dataSource={invoice?.items}/>
       <PrimaryButton
         icon={<TbPlus/>}
