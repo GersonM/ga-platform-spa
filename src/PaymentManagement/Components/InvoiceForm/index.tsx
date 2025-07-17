@@ -77,7 +77,7 @@ const InvoiceForm = (
       }
       <Descriptions items={invoicesItems}/>
       <br/>
-      <Form form={form} onValuesChange={(changes) => {
+      <Form form={form} onValuesChange={() => {
         setIsModified(true);
       }} onFinish={submit}
             initialValues={{

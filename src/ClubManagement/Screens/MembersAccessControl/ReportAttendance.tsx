@@ -11,13 +11,13 @@ import InvoicesTable from "../../../PaymentManagement/Components/InvoicesTable";
 
 interface ReportAttendanceProps {
   profile: Profile;
-  subscription?: SubscriptionMember;
+  member?: SubscriptionMember;
   onCompleted?: () => void;
 }
 
-const ReportAttendance = ({profile, subscription, onCompleted}: ReportAttendanceProps) => {
+const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps) => {
   const registerVisit = (values: any) => {
-    const currentProfile = profile || subscription?.profile;
+    const currentProfile = profile || member?.profile;
     axios
       .post('attendances', {...values, profile_uuid: currentProfile?.uuid})
       .then(() => {
@@ -29,7 +29,7 @@ const ReportAttendance = ({profile, subscription, onCompleted}: ReportAttendance
       });
   };
 
-  const currentProfile = profile || subscription?.profile;
+  const currentProfile = profile || member?.profile;
   return (
     <div>
       {currentProfile && currentProfile.uuid &&
@@ -38,7 +38,7 @@ const ReportAttendance = ({profile, subscription, onCompleted}: ReportAttendance
           <div>
             {currentProfile.name} {currentProfile.last_name} <br/>
             <ProfileDocument profile={currentProfile}/> <br/>
-            N° {subscription?.subscription?.code}
+            N° {member?.subscription?.code}
           </div>
         </Space>
       }
@@ -78,10 +78,10 @@ const ReportAttendance = ({profile, subscription, onCompleted}: ReportAttendance
           <Input.TextArea/>
         </Form.Item>
         <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
-        {subscription && (<>
+        {member && (<>
             <Divider>Pagos</Divider>
-            {subscription.subscription &&
-              <InvoicesTable entityUuid={subscription.subscription?.uuid} type={'subscription'}/>
+            {member.subscription &&
+              <InvoicesTable entityUuid={member.subscription?.uuid} type={'subscription'}/>
             }
           </>
         )}

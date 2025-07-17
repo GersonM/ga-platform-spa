@@ -70,7 +70,7 @@ const MembersAccessControl = () => {
             {inProcess ? (
                 <>
                   <Card title={'Registro de acceso'}>
-                    <ReportAttendance subscription={subscriptionMember} profile={profileFound} onCompleted={() => {
+                    <ReportAttendance member={subscriptionMember} profile={profileFound} onCompleted={() => {
                       setInProcess(false);
                       setProfileFound(undefined);
                       setProfileDocument(undefined);

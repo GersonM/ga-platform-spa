@@ -76,8 +76,8 @@ const ClubMembersManagement = () => {
         <>{amount ? <MoneyString value={amount}/> : <MoneyString value={row.plan.price}/>}</>
       ),
     },
-    {dataIndex: 'profile', title: 'Titular', render: (profile: Profile) => <ProfileChip profile={profile}/>},
-    {dataIndex: 'profile', title: 'Documento', render: (profile: Profile) => <ProfileDocument profile={profile}/>},
+    {dataIndex: 'holder_profile', title: 'Titular', render: (profile: Profile) => <ProfileChip profile={profile}/>},
+    {dataIndex: 'holder_profile', title: 'Documento', render: (profile: Profile) => <ProfileDocument profile={profile}/>},
     {
       dataIndex: 'activity',
       title: 'Actividad',
@@ -95,13 +95,13 @@ const ClubMembersManagement = () => {
     {
       dataIndex: 'uuid',
       title: 'Acciones',
-      render: (_uuid: string, row: any) => (
+      render: (_uuid: string, row: Subscription) => (
         <>
           <IconButton
             title={'Ver detalles'}
             icon={<PiEye size={18}/>}
             onClick={() => {
-              navigate('/club/subscriptions/' + row.profile.uuid);
+              navigate('/club/subscriptions/' + row.holder_profile?.uuid);
             }}
           />
         </>

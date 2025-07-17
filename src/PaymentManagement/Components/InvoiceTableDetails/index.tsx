@@ -1,6 +1,6 @@
 import {useState} from 'react';
-import {Modal, Popconfirm, Space, Tag} from 'antd';
-import dayjs, {type Dayjs} from "dayjs";
+import {Modal, Popconfirm, Space} from 'antd';
+import {PiPencilSimple, PiTrash} from 'react-icons/pi';
 import {TbPlus} from "react-icons/tb";
 import axios from 'axios';
 
@@ -10,9 +10,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import InvoiceItemForm from '../InvoiceItemForm';
-import {PiPencilSimple, PiTrash} from 'react-icons/pi';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 
 interface InvoiceTableDetailsProps {
   invoice?: Invoice;
@@ -27,14 +25,9 @@ const InvoiceTableDetails = (
   {
     invoice,
     onChange,
-    invoiceableType,
-    invoiceableUuid,
-    invoiceOwnerUuid,
-    invoiceOwnerType
   }: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
-  const [expirationDate, setExpirationDate] = useState<Dayjs>();
 
   const removeConcept = (uuid: string) => {
     console.log(uuid);
@@ -92,8 +85,7 @@ const InvoiceTableDetails = (
       <PrimaryButton
         icon={<TbPlus/>}
         style={{marginTop: '10px'}}
-        label={'Agregar item'}
-        block
+        label={'Añadir nuevo item'}
         onClick={() => setOpenInvoiceItemForm(true)}
       />
       <Modal
@@ -113,13 +105,8 @@ const InvoiceTableDetails = (
               onChange();
             }
           }}
-          expiresOn={expirationDate}
           invoiceItem={selectedItem}
           invoiceUuid={invoice?.uuid}
-          invoiceOwnerUuid={invoiceOwnerUuid}
-          invoiceOwnerType={invoiceOwnerType}
-          invoiceableUuid={invoiceableUuid}
-          invoiceableType={invoiceableType}
         />
       </Modal>
     </div>

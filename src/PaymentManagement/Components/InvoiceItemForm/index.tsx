@@ -1,36 +1,25 @@
 import {useState} from 'react';
 import {Col, Form, Input, InputNumber, Row} from 'antd';
-import type {InvoiceItem, StorageStock} from '../../../Types/api';
 import axios from 'axios';
-import ErrorHandler from '../../../Utils/ErrorHandler';
 import {useForm} from 'antd/lib/form/Form';
+
+import type {InvoiceItem, StorageStock} from '../../../Types/api';
+import ErrorHandler from '../../../Utils/ErrorHandler';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyInput from "../../../CommonUI/MoneyInput";
-import type {Dayjs} from "dayjs";
-import Config from "../../../Config.tsx";
 
 interface InvoiceItemFormProps {
   invoiceItem?: InvoiceItem;
   invoiceUuid?: string;
   onCompleted?: () => void;
-  invoiceOwnerUuid?: string;
-  invoiceOwnerType?: string;
-  invoiceableUuid?: string;
-  invoiceableType?: string;
-  expiresOn?: Dayjs;
 }
 
 const InvoiceItemForm = ({
-  invoiceItem,
-  invoiceUuid,
-  onCompleted,
-  invoiceOwnerUuid,
-  invoiceOwnerType,
-  invoiceableUuid,
-  invoiceableType,
-  expiresOn,
-}: InvoiceItemFormProps) => {
+                           invoiceItem,
+                           invoiceUuid,
+                           onCompleted,
+                         }: InvoiceItemFormProps) => {
   const [loading, setLoading] = useState(false);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [form] = useForm();
@@ -41,15 +30,7 @@ const InvoiceItemForm = ({
       .request({
         url: invoiceItem ? `payment-management/invoice-items/${invoiceItem.uuid}` : 'payment-management/invoice-items',
         method: invoiceItem ? 'put' : 'post',
-        data: {
-          ...values,
-          invoice_uuid: invoiceUuid,
-          expires_on: expiresOn?.format(Config.dateFormatServer),
-          invoice_customer_uuid: invoiceOwnerUuid,
-          invoice_customer_type: invoiceOwnerType,
-          invoiceable_uuid:invoiceableUuid,
-          invoiceable_type:invoiceableType,
-        },
+        data: {...values, invoice_uuid: invoiceUuid,},
       })
       .then(() => {
         setLoading(false);
@@ -67,26 +48,35 @@ const InvoiceItemForm = ({
   return (
     <Form form={form} initialValues={invoiceItem} onFinish={submitForm} layout={'vertical'}>
       <Form.Item name={'concept'} label={'Concepto'}>
-        <Input placeholder={selectedStock?.product?.name} />
+        <Input placeholder={selectedStock?.product?.name}/>
       </Form.Item>
       <Row gutter={20}>
         <Col sm={11}>
-          <Form.Item name={'stock'} label={'Producto (opcional)'}>
-            <StockSelector onChange={(_vale, stock) => setSelectedStock(stock)} />
+          <Form.Item name={'stock_uuid'} label={'Producto (opcional)'}>
+            <StockSelector onChange={(_vale, opt) => {
+              setSelectedStock(opt.entity);
+              const s = opt.entity
+              form.setFieldValue('concept', s.sku + ' - ' + (s.variation_name || s.product.name));
+              form.setFields([
+                {name:'amount', value: s.sale_price},
+                {name: 'concept', value: s.sku + ' - ' + (s.variation_name || s.product.name)}
+              ]);
+              console.log(opt);
+            }}/>
           </Form.Item>
         </Col>
         <Col sm={7}>
           <Form.Item name={'amount'} label={'Monto'}>
-            <MoneyInput />
+            <MoneyInput/>
           </Form.Item>
         </Col>
         <Col sm={6}>
           <Form.Item name={'quantity'} label={'Cantidad'}>
-            <InputNumber placeholder={'1'} />
+            <InputNumber placeholder={'1'}/>
           </Form.Item>
         </Col>
       </Row>
-      <PrimaryButton block loading={loading} label={'Guardar'} htmlType={'submit'} />
+      <PrimaryButton block loading={loading} label={'Guardar'} htmlType={'submit'}/>
     </Form>
   );
 };
