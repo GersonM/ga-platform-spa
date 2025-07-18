@@ -3,7 +3,6 @@ import {Alert, Col, Divider, Row, Space, Statistic, Tag} from 'antd';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from "../../../FileManagement/Components/FileUploader";
@@ -34,14 +33,18 @@ const ImportPayments = () => {
         <>
           <h3>Resumen de la importación</h3>
           <Space>
-            <Statistic title={'Pagos creados'} value={responseMessages.payments_created} />
-            <Statistic title={'Pagos actualizados'} value={responseMessages.payments_updated} />
+            <Statistic title={'Total entradas'} value={responseMessages.total_reviewed}/>
+            <Statistic title={'Pagos creados'} value={responseMessages.payments_created}/>
+            <Statistic title={'Pagos actualizados'} value={responseMessages.payments_updated}/>
+            <Divider type={'vertical'}/>
+            <Statistic title={'Errores encontrados'}
+                       value={responseMessages.failed.filter((e: string) => e.includes('[ERROR]')).length}/>
           </Space>
-          {responseMessages.log.map((m: any, index: number) => (
-            <Alert banner key={index} message={m} type={'info'} />
-          ))}
           {responseMessages.failed.map((m: any, index: number) => (
-            <Alert banner key={index} message={m} type={m.includes('[ERROR]') ? 'error' : 'warning'} />
+            <Alert banner key={index} message={m} type={m.includes('[ERROR]') ? 'error' : 'warning'}/>
+          ))}
+          {responseMessages.log.map((m: any, index: number) => (
+            <Alert banner key={index} message={m} type={'info'}/>
           ))}
           <PrimaryButton
             loading={loading}
@@ -59,7 +62,7 @@ const ImportPayments = () => {
               especifica en la columna "Fecha estimada de pago"
             </p>
             <p><small>Orden de valores claves en el excel</small></p>
-            <Space split={<Divider type={'vertical'} />}>
+            <Space split={<Divider type={'vertical'}/>}>
               <div><Tag color={'purple'}>A</Tag> ID Transacción</div>
               <div><Tag color={'purple'}>B</Tag> N° tarjeta</div>
               <div><Tag color={'purple'}>C</Tag> Cod. Autorización</div>
@@ -69,8 +72,8 @@ const ImportPayments = () => {
             </Space>
             <br/>
             <br/>
-            <FileUploader onChange={importDocument} onFilesUploaded={importDocument} />
-            <br />
+            <FileUploader onChange={importDocument} onFilesUploaded={importDocument}/>
+            <br/>
             <PrimaryButton
               disabled={!fileLoaded}
               loading={loading}
