@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Col, Empty, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
-import {TbCash, TbCashRegister, TbReload, TbTrash} from 'react-icons/tb';
+import {TbCashRegister, TbReload, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -19,11 +19,12 @@ import InvoiceForm from "../InvoiceForm";
 interface InvoicesProps {
   entityUuid: string;
   type: string;
+  order?: string;
   customer?: Profile | Company;
   customerType?: string;
 }
 
-const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: InvoicesProps) => {
+const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile', order = 'older'}: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -39,7 +40,10 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {page: currentPage, page_size: pageSize, invoiceable_uuid: entityUuid},
+      params: {
+        page: currentPage, page_size: pageSize, invoiceable_uuid: entityUuid,
+        order
+      },
     };
     setLoading(true);
     axios
@@ -204,7 +208,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile'}: I
       </ModalView>
       <ModalView
         width={1000}
-        title={selectedInvoice ? 'Detalle de solicitud de pago':'Nueva solicitud de pago'}
+        title={selectedInvoice ? 'Detalle de solicitud de pago' : 'Nueva solicitud de pago'}
         open={openInvoiceForm}
         onCancel={() => {
           setSelectedInvoice(undefined);

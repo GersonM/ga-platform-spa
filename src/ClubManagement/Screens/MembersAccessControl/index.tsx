@@ -1,16 +1,13 @@
 import {useState} from 'react';
 import {Scanner} from '@yudiel/react-qr-scanner';
-import {Alert, Avatar, Button, Card, Col, Divider, Form, Input, Modal, notification, Row, Select} from 'antd';
+import {Button, Card, Col, Divider, Form, Input, Row} from 'antd';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {SubscriptionMember} from '../../../Types/api';
-import InvoicesTable from '../../../PaymentManagement/Components/InvoicesTable';
-import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import ReportAttendance from "./ReportAttendance.tsx";
 
 const MembersAccessControl = () => {
