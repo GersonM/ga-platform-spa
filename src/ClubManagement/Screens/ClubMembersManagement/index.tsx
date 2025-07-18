@@ -16,6 +16,8 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import FilterForm from '../../../CommonUI/FilterForm';
 import IconButton from '../../../CommonUI/IconButton';
 import './styles.less';
+import {TbEye} from "react-icons/tb";
+import dayjs from "dayjs";
 
 const ClubMembersManagement = () => {
   const [openAddSubscription, setOpenAddSubscription] = useState(false);
@@ -57,7 +59,8 @@ const ClubMembersManagement = () => {
     {
       dataIndex: 'code',
       title: 'Código',
-      width: 60,
+      fixed: 'left',
+      width: 70,
       render: (code: string, row: Subscription) => {
         return <div className={row.is_active ? 'subscription-active' : 'subscription-inactive'}>{code}</div>;
       },
@@ -65,8 +68,16 @@ const ClubMembersManagement = () => {
     {
       dataIndex: 'plan',
       title: 'Plan',
-      width: 120,
+      width: 140,
       render: (plan?: Plan) => plan?.name,
+    },
+    {
+      title: 'Socio desde',
+      dataIndex: 'started_at',
+      width: 110,
+      render: (started_at:string) => {
+        return started_at ? dayjs(started_at).fromNow() : '-';
+      },
     },
     {
       dataIndex: 'amount',
@@ -77,10 +88,11 @@ const ClubMembersManagement = () => {
       ),
     },
     {dataIndex: 'holder_profile', title: 'Titular', render: (profile: Profile) => <ProfileChip profile={profile}/>},
-    {dataIndex: 'holder_profile', title: 'Documento', render: (profile: Profile) => <ProfileDocument profile={profile}/>},
+    {dataIndex: 'holder_profile', width: 120,title: 'Documento', render: (profile: Profile) => <ProfileDocument profile={profile}/>},
     {
       dataIndex: 'activity',
       title: 'Actividad',
+      width: 180,
       render: (activity: EntityActivity) => {
         return (
           activity && (
@@ -94,12 +106,12 @@ const ClubMembersManagement = () => {
     },
     {
       dataIndex: 'uuid',
-      title: 'Acciones',
+      width:50,
       render: (_uuid: string, row: Subscription) => (
         <>
           <IconButton
             title={'Ver detalles'}
-            icon={<PiEye size={18}/>}
+            icon={<TbEye />}
             onClick={() => {
               navigate('/club/subscriptions/' + row.holder_profile?.uuid);
             }}
@@ -127,10 +139,11 @@ const ClubMembersManagement = () => {
         </FilterForm>
       </ContentHeader>
 
-      <TableList columns={columns} dataSource={subscriptions}/>
+      <TableList scroll={{x:900}} customStyle={false} columns={columns} dataSource={subscriptions}/>
       <Pagination
+        align={'center'}
+        style={{marginTop: 10}}
         showSizeChanger={false}
-        size={'small'}
         total={pagination?.total}
         pageSize={pagination?.per_page}
         current={pagination?.current_page}

@@ -238,6 +238,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
             }}
             onRefresh={() => setReload(!reload)}
             title={subscription.plan.name}
+            showBack
             tools={
               <Space>
                 <Tag color={'blue'}>{subscription.code}</Tag>
