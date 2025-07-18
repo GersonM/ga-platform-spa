@@ -30,14 +30,16 @@ const ImportPayments = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title={'Importar pagos'} />
       {responseMessages ? (
-        <div>
+        <>
           <h3>Resumen de la importación</h3>
           <Space>
             <Statistic title={'Pagos creados'} value={responseMessages.payments_created} />
             <Statistic title={'Pagos actualizados'} value={responseMessages.payments_updated} />
           </Space>
+          {responseMessages.log.map((m: any, index: number) => (
+            <Alert banner key={index} message={m} type={'info'} />
+          ))}
           {responseMessages.failed.map((m: any, index: number) => (
             <Alert banner key={index} message={m} type={m.includes('[ERROR]') ? 'error' : 'warning'} />
           ))}
@@ -47,7 +49,7 @@ const ImportPayments = () => {
             block
             onClick={() => setResponseMessages(undefined)}
           />
-        </div>
+        </>
       ) : (
         <Row justify="center">
           <Col xs={16}>
