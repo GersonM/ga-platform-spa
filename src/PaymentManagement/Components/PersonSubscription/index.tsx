@@ -1,23 +1,18 @@
 import {useEffect, useState} from 'react';
-import {TrashIcon} from '@heroicons/react/16/solid';
 import dayjs from 'dayjs';
 import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from 'antd';
 import {
   PiCalendarCheck,
   PiCalendarX,
   PiIdentificationCard,
-  PiPencilSimple,
   PiPlusBold,
-  PiProhibitBold,
-  PiThumbsUp,
-  PiTicket,
 } from 'react-icons/pi';
+import {TbCancel, TbPencil, TbReceipt2, TbThumbUp, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {Profile, Subscription, SubscriptionMember} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
-import TextMoney from '../../../CommonUI/TextMoney';
 import IconButton from '../../../CommonUI/IconButton';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
@@ -33,6 +28,7 @@ import AddMemberSubscription from '../AddMemberSubscription';
 import './styles.less';
 import SubscriptionForm from '../../../ClubManagement/Components/SubscriptionForm';
 import FamilyRelationSelector from '../../../CommonUI/FamilyRelationSelector';
+import MoneyString from "../../../CommonUI/MoneyString";
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -172,28 +168,27 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       },
     },
     {
-      title: 'Acciones',
       dataIndex: 'uuid',
       render: (uuid: string, row: SubscriptionMember) => (
         <Space>
-          <IconButton icon={<PiPencilSimple size={18} />} onClick={() => setSelectedProfile(row.profile)} small />
+          <IconButton icon={<TbPencil />} onClick={() => setSelectedProfile(row.profile)} small />
           <Popconfirm
             title={'Eliminar miembro'}
             onConfirm={() => deleteMember(uuid)}
             description={'Esto no eliminará a la persona, solo su relación con esta subscripción'}>
-            <IconButton danger icon={<TrashIcon />} small />
+            <IconButton danger icon={<TbTrash />} small />
           </Popconfirm>
           {row.suspended_at ? (
             <Tooltip title="Activar miembro">
-              <IconButton icon={<PiThumbsUp size={18} />} small onClick={() => enableMember(uuid)} />
+              <IconButton icon={<TbThumbUp />} small onClick={() => enableMember(uuid)} />
             </Tooltip>
           ) : (
             <Tooltip title="Desactivar miembro">
-              <IconButton icon={<PiProhibitBold size={18} />} danger small onClick={() => disableMember(uuid)} />
+              <IconButton icon={<TbCancel />} danger small onClick={() => disableMember(uuid)} />
             </Tooltip>
           )}
           <IconButton
-            icon={<PiIdentificationCard size={18} />}
+            icon={<PiIdentificationCard />}
             onClick={() => {
               getCredential(row);
             }}
@@ -269,13 +264,13 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 label={'Fin'}
               />
               <InfoButton
-                icon={<PiTicket className={'icon'} />}
-                caption={<TextMoney money={subscription.amount} currency={subscription.billing_currency} />}
+                icon={<TbReceipt2 className={'icon'} />}
+                caption={<MoneyString value={subscription.amount} currency={subscription.billing_currency} />}
                 label={'Subscripción'}
               />
               <InfoButton
-                icon={<PiTicket className={'icon'} />}
-                caption={<TextMoney money={subscription.plan.price} currency={subscription.billing_currency} />}
+                icon={<TbReceipt2 className={'icon'} />}
+                caption={<MoneyString value={subscription.plan.price} currency={subscription.billing_currency} />}
                 label={'Plan'}
               />
               <div>
