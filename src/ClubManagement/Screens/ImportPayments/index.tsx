@@ -1,26 +1,23 @@
 import {useState} from 'react';
-import {Alert, Col, Row, Space, Statistic} from 'antd';
+import {Alert, Col, Divider, Row, Space, Statistic, Tag} from 'antd';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import FileUploader from '../../../CommonUI/FileUploader';
-import type {ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import FileUploader from "../../../FileManagement/Components/FileUploader";
 
 const ImportPayments = () => {
   const [responseMessages, setResponseMessages] = useState<any>();
   const [loading, setLoading] = useState(false);
-  const [fileLoaded, setFileLoaded] = useState<ApiFile>();
+  const [fileLoaded, setFileLoaded] = useState<string>();
 
-  const importDocument = (file?: ApiFile) => {
+  const importDocument = (fileUuid?: string) => {
     setLoading(true);
-    if (file) {
-      setFileLoaded(file);
-    }
+    setFileLoaded(fileUuid);
     axios
-      .post('subscriptions/import-payments', {file_uuid: file ? file.uuid : fileLoaded?.uuid})
+      .post('subscriptions/import-payments', {file_uuid: fileUuid})
       .then(response => {
         setLoading(false);
         setResponseMessages(response.data);
@@ -53,13 +50,24 @@ const ImportPayments = () => {
         </div>
       ) : (
         <Row justify="center">
-          <Col xs={12}>
+          <Col xs={16}>
             <h2>Selecciona el archivo a importar</h2>
             <p>
               Sube un archivo en excel con la información de los pagos, la fecha de pago se considerá la que se
               especifica en la columna "Fecha estimada de pago"
             </p>
-            <FileUploader onFilesUploaded={importDocument} />
+            <p><small>Orden de valores claves en el excel</small></p>
+            <Space split={<Divider type={'vertical'} />}>
+              <div><Tag color={'purple'}>A</Tag> ID Transacción</div>
+              <div><Tag color={'purple'}>B</Tag> N° tarjeta</div>
+              <div><Tag color={'purple'}>C</Tag> Cod. Autorización</div>
+              <div><Tag color={'purple'}>F</Tag> DNI</div>
+              <div><Tag color={'purple'}>O</Tag> Fecha pago</div>
+              <div><Tag color={'purple'}>Y</Tag> Boleta</div>
+            </Space>
+            <br/>
+            <br/>
+            <FileUploader onChange={importDocument} onFilesUploaded={importDocument} />
             <br />
             <PrimaryButton
               disabled={!fileLoaded}

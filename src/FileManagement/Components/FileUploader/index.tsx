@@ -12,6 +12,7 @@ interface FileUploaderProps {
   imagePath?: string;
   fileUuid?: string;
   height?: number;
+  maxWidth?: number;
   small?: boolean;
   multiple?: boolean;
   onChange?: (uuid: string) => void;
@@ -20,6 +21,7 @@ interface FileUploaderProps {
 const FileUploader = (
   {
     height,
+    maxWidth,
     onChange,
     multiple = false,
     small = false,
@@ -61,7 +63,7 @@ const FileUploader = (
 
   return (
     <>
-      <div {...getRootProps()} className={`file-uploader-wrapper ${small ? 'small' : ''}`} style={{height}}>
+      <div {...getRootProps()} className={`file-uploader-wrapper ${small ? 'small' : ''}`} style={{height, maxWidth}}>
         <input {...getInputProps()} />
         {ownedFilesFilter?.map((item, index) => (
           <div key={index}>
