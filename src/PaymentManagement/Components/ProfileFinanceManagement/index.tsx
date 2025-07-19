@@ -49,6 +49,7 @@ const ProfilePayments = ({profileUuid}: ProfilePaymentsProps) => {
     },
     {
       title: 'Monto',
+      align: 'right',
       dataIndex: 'amount_string',
     },
     {

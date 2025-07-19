@@ -12,7 +12,9 @@ const ProfileDocument = ({profile}: ProfileDocumentProps) => {
   return (
     <>
       <span style={{textTransform: 'uppercase'}}>{profile?.doc_type || 'DNI'}: </span>
-      {profile?.doc_number || 'Sin documento'}
+      <code>
+        {profile?.doc_number || 'Sin documento'}
+      </code>
     </>
   );
 };

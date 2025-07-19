@@ -176,6 +176,7 @@ const EstateProviding = () => {
     },
     {
       title: 'Monto',
+      align: 'right',
       dataIndex: 'amount',
       render: (amount: number) => <MoneyString value={amount}/>,
     },

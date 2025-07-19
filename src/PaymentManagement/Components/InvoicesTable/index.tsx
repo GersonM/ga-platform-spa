@@ -93,6 +93,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile', or
     {
       title: 'Monto',
       dataIndex: 'amount',
+      align: 'right',
       render: (amount: number, row: Invoice) => {
         return <>
           <MoneyString currency={row?.currency || 'PEN'} value={amount}/>

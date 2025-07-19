@@ -51,6 +51,7 @@ const InvoiceTableDetails = (
     {
       title: 'Monto',
       dataIndex: 'amount',
+      align: 'right',
       width: 110,
       render: (value: number) => <MoneyString value={value}/>,
     },

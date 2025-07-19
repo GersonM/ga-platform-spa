@@ -1,11 +1,10 @@
 import React from 'react';
 import dayjs from "dayjs";
-import {Tag} from "antd";
+import {Tag, Tooltip} from "antd";
 import type {Contract} from "../../../Types/api.tsx";
 
 interface ContractStatusProps {
   contract: Contract;
-  showDate?: boolean;
 }
 
 const statuses: any = {
@@ -24,12 +23,13 @@ const colors: any = {
   completed: 'green',
 }
 
-const ContractStatus = ({contract, showDate = true}: ContractStatusProps) => {
+const ContractStatus = ({contract}: ContractStatusProps) => {
   const date = contract.created_at || contract.approved_at || contract.date_start || contract.provided_at || contract.cancelled_at;
   return (
     <div>
-      <Tag style={{marginRight:0}} bordered={false} color={colors[contract.status]}>{statuses[contract.status]}</Tag>
-      {showDate && <small>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</small>}
+      <Tooltip title={<code>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</code>}>
+        <Tag style={{marginRight:0}} bordered={false} color={colors[contract.status]}>{statuses[contract.status]}</Tag>
+      </Tooltip>
     </div>
   );
 };

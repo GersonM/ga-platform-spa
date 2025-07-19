@@ -113,11 +113,11 @@ const CommercialContractDetail = () => {
     {
       key: '1',
       span: 3,
-      label: 'Nombres',
-      children: contract?.client?.entity.name + ' ' + contract?.client?.entity.last_name
+      label: 'Nombre',
+      children: contract?.client?.entity?.name + ' ' + contract?.client?.entity?.last_name
     },
-    {key: '2', span: 3, label: 'DNI', children: contract?.client?.entity.doc_number},
-    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity.phone},
+    {key: '2', span: 3, label: 'DNI', children: contract?.client?.entity?.doc_number},
+    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity?.phone},
   ];
 
   const clientCompany: DescriptionsProps['items'] = [
@@ -125,10 +125,10 @@ const CommercialContractDetail = () => {
       key: '1',
       span: 3,
       label: 'Nombre',
-      children: contract?.client?.entity.name
+      children: contract?.client?.entity?.name
     },
-    {key: '2', span: 3, label: 'RUC', children: contract?.client?.entity.legal_uid},
-    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity.phone},
+    {key: '2', span: 3, label: 'RUC', children: contract?.client?.entity?.legal_uid},
+    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity?.phone},
   ];
 
   const contractDetails: DescriptionsProps['items'] = [
@@ -193,7 +193,7 @@ const CommercialContractDetail = () => {
         loading={loading}
         onRefresh={() => setReload(!reload)}
         showBack
-        tools={<ContractStatus contract={contract} showDate={false} />}
+        tools={<ContractStatus contract={contract} />}
         title={
           <>
           {contract?.contractable?.sku || contract.tracking_id} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}

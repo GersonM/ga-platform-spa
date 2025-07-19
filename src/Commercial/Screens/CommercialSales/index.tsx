@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
-import {Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
+import {DatePicker, Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {TbBuilding, TbPencil, TbUser} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
-import dayjs from 'dayjs';
+import dayjs, {type Dayjs} from 'dayjs';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -21,38 +21,31 @@ import './styles.less';
 import CreateContractForm from "../../Components/CommercialContractForm";
 import ProfileDocument from "../../../CommonUI/ProfileTools/ProfileDocument.tsx";
 import ContractStatus from "./ContractStatus.tsx";
+import Config from "../../../Config.tsx";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
-  const [searchText, setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [commercialStats, _setCommercialStats] = useState<any>();
-  const [stageFilter, setStageFilter] = useState<string>();
-  const [blockFilter, setBlockFilter] = useState<string>();
-  const [providedFilter, setProvidedFilter] = useState<string>();
   const navigate = useNavigate();
-  const lastSearchText = useDebounce(searchText, 300);
-  const lastSearchBlock = useDebounce(blockFilter, 300);
-  const [paymentFilter, setPaymentFilter] = useState<string>();
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
+  const [filters, setFilters] = useState<any>();
+  const [dateRangeFilter, setDateRangeFilter] = useState<Dayjs[]|null>()
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        search: lastSearchText,
+        ...filters,
         page: currentPage,
         page_size: pageSize,
-        stage: stageFilter,
-        provided: providedFilter,
-        block: lastSearchBlock,
-        payments: paymentFilter,
+        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
 
@@ -72,18 +65,15 @@ const CommercialSales = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [lastSearchText, currentPage, pageSize, reload, stageFilter, providedFilter, lastSearchBlock, paymentFilter]);
+  }, [currentPage, pageSize, reload, filters, dateRangeFilter]);
 
   const exportSelection = () => {
     const config = {
       responseType: 'blob',
       params: {
-        search: lastSearchText,
         page: currentPage,
         page_size: pageSize,
-        stage: stageFilter,
-        provided: providedFilter,
-        block: lastSearchBlock,
+        ...filters
       },
     };
 
@@ -117,18 +107,20 @@ const CommercialSales = () => {
 
   const columns = [
     {
-      title: 'Estado',
-      dataIndex: 'provided_at',
+      title: 'N° / Estado',
+      dataIndex: 'tracking_id',
       align: 'center',
-      render: (_provided_at: string, row: Contract) => <ContractStatus contract={row} />,
+      render: (tracking_id: string, row: Contract) => <>
+        <code>{tracking_id}</code>
+        <ContractStatus contract={row}/></>,
     },
     {
-      title: 'N°',
+      title: 'Documentos',
       dataIndex: 'tracking_id',
-      width: 100,
-      render: (tracking_id:number, row:Contract) => {
-        return <>{tracking_id}<br/>
-          {row.document_progress != 0 && <Progress size={{height:3}} percent={row.document_progress} />}
+      width: 120,
+      render: (tracking_id: number, row: Contract) => {
+        return <>
+          {row.document_progress != null && <Progress size={{height: 3}} percent={row.document_progress}/>}
         </>;
       }
     },
@@ -138,7 +130,7 @@ const CommercialSales = () => {
       width: 180,
       render: (contractable?: StorageStock) => {
         return contractable ? <>
-          {contractable.sku}
+          <code>{contractable.sku}</code>
           <small>{contractable.variation_name || contractable.product?.name}</small>
         </> : <small>Sin producto relacionado</small>;
       },
@@ -160,7 +152,7 @@ const CommercialSales = () => {
                 <small>
                   {isCompany ?
                     `RUC: ${e.legal_uid}` :
-                    <ProfileDocument profile={e} />
+                    <ProfileDocument profile={e}/>
                   }
                 </small>
               </div>
@@ -182,6 +174,7 @@ const CommercialSales = () => {
     {
       title: 'Monto',
       dataIndex: 'amount',
+      align: 'right',
       render: (amount: number, row: Contract) => <MoneyString currency={row.contractable?.currency} value={amount}/>,
     },
     {
@@ -248,39 +241,15 @@ const CommercialSales = () => {
         }
         onRefresh={() => setReload(!reload)}>
         <FilterForm
-          onInitialValues={values => {
-            if (values?.search) setSearchText(values.search);
-            if (values?.payments) setPaymentFilter(values.payments);
-            if (values?.stage) setStageFilter(values.stage);
-            if (values?.provided) setStageFilter(values.provided);
-            if (values?.block) setStageFilter(values.block);
-          }}
+          onInitialValues={values => setFilters(values)}
           onSubmit={values => {
-            setPaymentFilter(values.payments);
-            setSearchText(values?.search);
-            setStageFilter(values?.stage);
-            setProvidedFilter(values?.provided);
-            setBlockFilter(values?.block);
+            setFilters(values);
           }}>
           <Form.Item name={'search'} label={'Buscar'}>
             <Input allowClear placeholder={'Buscar por nombre, dni o correo'}/>
           </Form.Item>
-          <Form.Item name={'stage'} label={'Etapa'}>
-            <Select
-              placeholder={'Todas'}
-              allowClear
-              style={{width: 100}}
-              options={[
-                {label: 'Etapa IV-A', value: 'IV-A'},
-                {label: 'Etapa IV', value: 'IV'},
-                {label: 'Etapa III', value: 'III'},
-                {label: 'Etapa II', value: 'II'},
-                {label: 'Etapa I', value: 'I'},
-              ]}
-            />
-          </Form.Item>
-          <Form.Item name={'block'} label={'Manzana'}>
-            <Input placeholder={'Todas'} allowClear style={{width: 75}}/>
+          <Form.Item>
+            <DatePicker.RangePicker format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
           </Form.Item>
           <Form.Item name={'provided'} label={'Entregado'}>
             <Select
@@ -340,7 +309,7 @@ const CommercialSales = () => {
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
         footer={false}>
-        <CreateContractForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)} />
+        <CreateContractForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)}/>
       </Modal>
     </ModuleContent>
   );

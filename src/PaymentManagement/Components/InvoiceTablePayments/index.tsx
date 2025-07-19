@@ -47,6 +47,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       title: 'Monto',
       dataIndex: 'amount',
       width: 110,
+      align: 'right',
       render: (value: number) => <MoneyString value={value} />,
     },
     {

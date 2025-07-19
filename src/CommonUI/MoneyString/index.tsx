@@ -13,12 +13,12 @@ const MoneyString = ({value, currency = 'PEN'}: MoneyStringProps) => {
   const string = new Intl.NumberFormat('es-PE', {style: 'currency', currency}).format(amount);
 
   return (
-    <span
+    <code
       style={{
         color: amount < 0 ? 'red' : '',
       }}>
       {secureMode ? (currency + '****') : string}
-    </span>
+    </code>
   );
 };
 

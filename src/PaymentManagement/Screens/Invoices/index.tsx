@@ -79,6 +79,7 @@ const Invoices = () => {
     },
     {
       title: 'Monto',
+      align: 'right',
       dataIndex: 'amount_string',
     },
     {

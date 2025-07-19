@@ -126,13 +126,18 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
     {
       title: 'Documento',
       dataIndex: 'profile',
-      width: 110,
+      width: 120,
       render: (profile: Profile) => <ProfileDocument profile={profile} />,
     },
     {
       title: 'Registrado',
       dataIndex: 'created_at',
-      render: (created_at: string) => dayjs(created_at).format('DD/MM/YYYY hh:mm a'),
+      render: (created_at: string) => {
+        return (<>
+          {dayjs(created_at).fromNow()}
+          <small>{dayjs(created_at).format('DD/MM/YYYY hh:mm a')}</small>
+        </>)
+      },
     },
     {
       title: 'Relación',
@@ -140,7 +145,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       dataIndex: 'relation_type',
       render: (relation: string, member: SubscriptionMember) => {
         return relation === 'SOCIO' ? (
-          'Socio titular'
+          <Tag bordered={false} color={'cyan'}>Socio titular</Tag>
         ) : (
           <FamilyRelationSelector
             value={relation}
