@@ -3,7 +3,7 @@ import {Col, Form, Input, InputNumber, Row} from 'antd';
 import axios from 'axios';
 import {useForm} from 'antd/lib/form/Form';
 
-import type {InvoiceItem, StorageStock} from '../../../Types/api';
+import type {Invoice, InvoiceItem, StorageStock} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -11,13 +11,13 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 
 interface InvoiceItemFormProps {
   invoiceItem?: InvoiceItem;
-  invoiceUuid?: string;
+  invoice: Invoice;
   onCompleted?: () => void;
 }
 
 const InvoiceItemForm = ({
                            invoiceItem,
-                           invoiceUuid,
+                           invoice,
                            onCompleted,
                          }: InvoiceItemFormProps) => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ const InvoiceItemForm = ({
       .request({
         url: invoiceItem ? `payment-management/invoice-items/${invoiceItem.uuid}` : 'payment-management/invoice-items',
         method: invoiceItem ? 'put' : 'post',
-        data: {...values, invoice_uuid: invoiceUuid,},
+        data: {...values, invoice_uuid: invoice.uuid,},
       })
       .then(() => {
         setLoading(false);
@@ -67,7 +67,7 @@ const InvoiceItemForm = ({
         </Col>
         <Col sm={7}>
           <Form.Item name={'amount'} label={'Monto'}>
-            <MoneyInput/>
+            <MoneyInput currency={invoice.currency || 'PEN'}/>
           </Form.Item>
         </Col>
         <Col sm={6}>

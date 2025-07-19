@@ -13,7 +13,7 @@ import InvoiceItemForm from '../InvoiceItemForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface InvoiceTableDetailsProps {
-  invoice?: Invoice;
+  invoice: Invoice;
   invoiceOwnerUuid: string;
   invoiceOwnerType: string;
   invoiceableUuid?: string;
@@ -21,11 +21,7 @@ interface InvoiceTableDetailsProps {
   onChange?: () => void;
 }
 
-const InvoiceTableDetails = (
-  {
-    invoice,
-    onChange,
-  }: InvoiceTableDetailsProps) => {
+const InvoiceTableDetails = ({invoice, onChange,}: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
 
@@ -45,6 +41,12 @@ const InvoiceTableDetails = (
 
   const columns = [
     {
+      title: 'Cant.',
+      align: 'center',
+      dataIndex: 'quantity',
+      width: 60,
+    },
+    {
       title: 'Concepto',
       dataIndex: 'concept',
     },
@@ -53,12 +55,8 @@ const InvoiceTableDetails = (
       dataIndex: 'amount',
       align: 'right',
       width: 110,
-      render: (value: number) => <MoneyString value={value}/>,
-    },
-    {
-      title: 'Cantidad',
-      dataIndex: 'quantity',
-      width: 75,
+      render: (value: number, row: InvoiceItem) => <MoneyString currency={invoice?.currency}
+                                                                value={value * row.quantity}/>,
     },
     {
       title: '',
@@ -107,7 +105,7 @@ const InvoiceTableDetails = (
             }
           }}
           invoiceItem={selectedItem}
-          invoiceUuid={invoice?.uuid}
+          invoice={invoice}
         />
       </Modal>
     </div>

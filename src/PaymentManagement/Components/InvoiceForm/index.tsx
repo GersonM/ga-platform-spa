@@ -1,5 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Descriptions, type DescriptionsProps, Form, Input, Progress, Row, Tag} from "antd";
+import {
+  Checkbox,
+  Col,
+  DatePicker,
+  Descriptions,
+  type DescriptionsProps,
+  Form,
+  Input,
+  Progress,
+  Row,
+  Space,
+  Tag
+} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -57,17 +69,6 @@ const InvoiceForm = (
       })
   }
 
-  const invoicesItems: DescriptionsProps['items'] = [
-    {key: 'total', label: 'Total', children: <MoneyString value={invoice?.amount}/>},
-    {
-      key: 'pending', label: 'Pendiente', children: <>
-        {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
-            <Tag color={'orange'}><MoneyString value={invoice?.pending_payment}/></Tag> :
-            <Tag color={'green'}>Pagado</Tag>
-        )}
-      </>
-    },
-  ];
   return (
     <div>
       <Tag color={'blue'}>{invoice?.tracking_id}</Tag>
@@ -75,7 +76,16 @@ const InvoiceForm = (
         <Progress size={{height: 2}}
                   percent={Math.round(((invoice.amount - invoice.pending_payment) / invoice.amount) * 100)}/>
       }
-      <Descriptions items={invoicesItems}/>
+      <Space>
+        Total: <Tag color={'blue'}><MoneyString currency={invoice?.currency} value={invoice?.amount}/></Tag>
+        <>
+          Pendiente: {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
+              <Tag color={'orange'}><MoneyString currency={invoice?.currency} value={invoice?.pending_payment}/></Tag> :
+              <Tag color={'green'}>Pagado</Tag>
+          )}
+        </>
+      </Space>
+      <br/>
       <br/>
       <Form form={form} onValuesChange={() => {
         setIsModified(true);
