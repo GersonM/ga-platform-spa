@@ -1,10 +1,9 @@
 import {useEffect, useState} from 'react';
 import {DatePicker, Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
-import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {TbBuilding, TbPencil, TbUser} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
-import dayjs, {type Dayjs} from 'dayjs';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -35,7 +34,7 @@ const CommercialSales = () => {
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
   const [filters, setFilters] = useState<any>();
-  const [dateRangeFilter, setDateRangeFilter] = useState<Dayjs[]|null>()
+  const [dateRangeFilter, setDateRangeFilter] = useState<any[]|null>()
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
