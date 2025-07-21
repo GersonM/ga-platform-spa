@@ -309,18 +309,23 @@ const CommercialContractDetail = () => {
                 key: 'finances',
                 label: 'Finanzas',
                 children: <>
-                  <PrimaryButton
-                    ghost
-                    label={'Asignar plan de pagos'}
-                    onClick={() => setOpenInstallmentFom(true)}
-                    icon={<PiPlusBold/>}
-                  />
                   {contract &&
                     <InvoicesTable
                       customerType={contract.client?.type.toLowerCase().includes('profile') ? 'profile' : 'company'}
                       customer={contract.client?.entity}
                       entityUuid={contract?.uuid}
-                      type={'contract'}/>
+                      refresh={reload}
+                      type={'contract'}
+                      tools={<>
+                        <PrimaryButton
+                          ghost
+                          size={"small"}
+                          label={'Asignar plan de pagos'}
+                          onClick={() => setOpenInstallmentFom(true)}
+                          icon={<PiPlusBold/>}
+                        />
+                      </>}
+                    />
                   }
                 </>
               },

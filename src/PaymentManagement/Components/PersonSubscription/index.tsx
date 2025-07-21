@@ -309,10 +309,11 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
             </Space>
             <div style={{padding: '10px 0'}}>{subscription?.observations || 'Sin observaciones'}</div>
           </ContentHeader>
-          <Row gutter={[30, 30]}>
+          <Row gutter={[20, 20]}>
             <Col xs={16}>
               <Card
                 title={'Miembros'}
+                variant={"borderless"}
                 size={'small'}
                 extra={
                   <PrimaryButton
@@ -327,14 +328,14 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 }>
                 <TableList loading={loading} columns={columns} dataSource={subscription.members} />
               </Card>
-              <Card title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
+              <Card
+                variant={"borderless"}
+                title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
                 <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} customerType={'profile'} customer={subscription.holder_profile} />
               </Card>
-              <br />
-              <br />
             </Col>
             <Col xs={8}>
-              <Divider orientation={'left'}>Actividad</Divider>
+              <h2>Actividad</h2>
               <EntityActivityManager uuid={subscription.uuid} type={'subscription'} />
             </Col>
           </Row>

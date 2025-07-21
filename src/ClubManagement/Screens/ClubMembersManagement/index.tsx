@@ -1,13 +1,14 @@
 import {useEffect, useState} from 'react';
-import {Form, Input, InputNumber, Modal, Pagination} from 'antd';
-import {PiEye} from 'react-icons/pi';
+import {Form, Input, InputNumber, Modal, Pagination, Tag} from 'antd';
 import {useNavigate} from 'react-router-dom';
+import {TbEye} from "react-icons/tb";
+import dayjs from "dayjs";
 import axios from 'axios';
 
+import type {EntityActivity, Plan, Profile, Subscription} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import SubscriptionForm from '../../Components/SubscriptionForm';
-import type {EntityActivity, Plan, Profile, Subscription} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import TableList from '../../../CommonUI/TableList';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -15,9 +16,6 @@ import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import FilterForm from '../../../CommonUI/FilterForm';
 import IconButton from '../../../CommonUI/IconButton';
-import './styles.less';
-import {TbEye} from "react-icons/tb";
-import dayjs from "dayjs";
 
 const ClubMembersManagement = () => {
   const [openAddSubscription, setOpenAddSubscription] = useState(false);
@@ -58,11 +56,13 @@ const ClubMembersManagement = () => {
   const columns = [
     {
       dataIndex: 'code',
-      title: 'Código',
-      fixed: 'left',
+      title: 'N°',
+      align: 'center',
       width: 70,
       render: (code: string, row: Subscription) => {
-        return <div className={row.is_active ? 'subscription-active' : 'subscription-inactive'}>{code}</div>;
+        return <Tag color={row.is_active ? 'green' : 'red'} bordered={false}>
+          <code>{code}</code>
+        </Tag>;
       },
     },
     {
@@ -82,7 +82,8 @@ const ClubMembersManagement = () => {
     {
       dataIndex: 'amount',
       title: 'Monto',
-      width: 90,
+      align: 'right',
+      width: 100,
       render: (amount: number, row: Subscription) => (
         <>{amount ? <MoneyString value={amount}/> : <MoneyString value={row.plan.price}/>}</>
       ),

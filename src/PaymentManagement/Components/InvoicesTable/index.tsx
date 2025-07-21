@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Col, Empty, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
-import {TbCashRegister, TbReload, TbTrash} from 'react-icons/tb';
+import {TbCashRegister, TbRefresh, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -20,11 +20,22 @@ interface InvoicesProps {
   entityUuid: string;
   type: string;
   order?: string;
+  refresh?: boolean;
   customer?: Profile | Company;
   customerType?: string;
+  tools?: React.ReactNode;
 }
 
-const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile', order = 'older'}: InvoicesProps) => {
+const InvoicesTable = (
+  {
+    entityUuid,
+    type,
+    customer,
+    customerType = 'profile',
+    order = 'older',
+    tools,
+    refresh,
+  }: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -35,6 +46,10 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile', or
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
+
+  useEffect(() => {
+    setReload(!reload);
+  }, [refresh]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -82,6 +97,7 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile', or
       title: 'N°',
       width: 40,
       dataIndex: 'tracking_id',
+      render: (tracking_id: string) => <code>{tracking_id}</code>,
     },
     {
       title: 'Descripción',
@@ -169,32 +185,31 @@ const InvoicesTable = ({entityUuid, type, customer, customerType = 'profile', or
       {invoices?.length === 0 ? (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pagos registrados'}/>
       ) : (
-        <>
-          <TableList loading={loading} columns={columns} dataSource={invoices}/>
-          <Space>
-            <Pagination
-              showSizeChanger={false}
-              size={'small'}
-              total={pagination?.total}
-              pageSize={pagination?.per_page}
-              current={pagination?.current_page}
-              onChange={(page, size) => {
-                setCurrentPage(page);
-                setPageSize(size);
-              }}
-            />
-            <IconButton icon={<TbReload/>} onClick={() => setReload(!reload)}/>
-          </Space>
-        </>
+        <TableList loading={loading} columns={columns} dataSource={invoices}/>
       )}
       {customer &&
-        <PrimaryButton
-          size={'small'}
-          ghost
-          label={'Agregar solicitud de pago'}
-          onClick={() => setOpenInvoiceForm(true)}
-          icon={<PiPlusBold/>}
-        />
+        <Space style={{marginTop: 10}}>
+          <Pagination
+            showSizeChanger={false}
+            size={'small'}
+            total={pagination?.total}
+            pageSize={pagination?.per_page}
+            current={pagination?.current_page}
+            onChange={(page, size) => {
+              setCurrentPage(page);
+              setPageSize(size);
+            }}
+          />
+          <IconButton title={'Recargar lista de pagos'} icon={<TbRefresh/>} onClick={() => setReload(!reload)}/>
+          <PrimaryButton
+            size={'small'}
+            ghost
+            label={'Crear requerimiento de pago'}
+            onClick={() => setOpenInvoiceForm(true)}
+            icon={<PiPlusBold/>}
+          />
+          {tools}
+        </Space>
       }
       <ModalView
         onCancel={() => {

@@ -21,7 +21,7 @@ interface InvoiceTableDetailsProps {
   onChange?: () => void;
 }
 
-const InvoiceTableDetails = ({invoice, onChange,}: InvoiceTableDetailsProps) => {
+const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
 
