@@ -144,7 +144,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       align: 'center',
       dataIndex: 'relation_type',
       render: (relation: string, member: SubscriptionMember) => {
-        return relation === 'SOCIO' ? (
+        return (relation === 'SOCIO' || relation === 'SOCIA') ? (
           <Tag bordered={false} color={'cyan'}>Socio titular</Tag>
         ) : (
           <FamilyRelationSelector

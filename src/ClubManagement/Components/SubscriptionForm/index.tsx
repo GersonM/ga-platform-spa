@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Col, DatePicker, Divider, Form, Input, InputNumber, Row} from 'antd';
+import {Col, DatePicker, Divider, Form, Input, InputNumber, Row, Space} from 'antd';
 import axios from 'axios';
 
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 import {useForm} from 'antd/lib/form/Form';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import MoneyInput from "../../../CommonUI/MoneyInput";
+import IconButton from "../../../CommonUI/IconButton";
+import {TbPencil} from "react-icons/tb";
 
 interface SubscriptionFormProps {
   onComplete?: () => void;
@@ -21,6 +23,7 @@ interface SubscriptionFormProps {
 const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => {
   const [selectedPlan, setSelectedPlan] = useState<Plan>();
   const [selectedSubscription, setSelectedSubscription] = useState<any>();
+  const [editHolderProfile, setEditHolderProfile] = useState(false)
   const [form] = useForm();
 
   useEffect(() => {
@@ -57,31 +60,31 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
       });
   };
 
-  console.log(selectedPlan);
-
   return (
     <>
       <Form form={form} onFinish={submitForm} layout="vertical" initialValues={selectedSubscription}>
         <Row gutter={[20, 20]}>
           <Col xs={8}>
             <Form.Item label={'Código de socio'} name={'code'} rules={[{required: true}]}>
-              <InputNumber prefix={'N°'} />
+              <InputNumber prefix={'N°'}/>
             </Form.Item>
           </Col>
           <Col xs={16}>
             <Form.Item name={'started_at'} label={'Fecha de inicio'} extra={'El socio estará activo desde esta fecha'}>
-              <DatePicker placeholder={'Hoy'} />
+              <DatePicker placeholder={'Hoy'}/>
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'fk_profile_uuid'} label={'Socio titular'} rules={[{required: true}]}>
-          <ProfileSelector />
+        <Form.Item name={'fk_profile_uuid'} label={'Socio titular'} rules={subscription?undefined:[{required: true}]}>
+          {(!editHolderProfile && subscription) ?
+            <Space>
+              <ProfileChip profile={subscription.holder_profile} showDocument/>
+              <IconButton icon={<TbPencil />} onClick={() => setEditHolderProfile(true)} />
+            </Space>
+            :
+            <ProfileSelector placeholder={subscription?.holder_profile?.name}/>
+          }
         </Form.Item>
-        {subscription && (
-          <div>
-            <ProfileChip profile={subscription.members.find(m => m.relation_type == 'SOCIO')?.profile} />
-          </div>
-        )}
         <Divider>Subscripción</Divider>
         <Form.Item label={'Plan'} name={'fk_plan_uuid'}>
           <SubscriptionPlanSelector
@@ -91,13 +94,13 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
           />
         </Form.Item>
         <Form.Item name={'amount'} label={'Precio'}>
-          <MoneyInput placeholder={selectedPlan ? (selectedPlan?.price / 100).toString() : ''} />
+          <MoneyInput placeholder={selectedPlan ? (selectedPlan?.price / 100).toString() : ''}/>
         </Form.Item>
         <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-          <Input.TextArea />
+          <Input.TextArea/>
         </Form.Item>
-        {!subscription && <AlertMessage message={'El núcleo familiar se podrá agregar posteriormente'} type={'info'} />}
-        <PrimaryButton label={'Guardar'} htmlType={'submit'} block />
+        {!subscription && <AlertMessage message={'El núcleo familiar se podrá agregar posteriormente'} type={'info'}/>}
+        <PrimaryButton label={'Guardar'} htmlType={'submit'} block/>
       </Form>
     </>
   );

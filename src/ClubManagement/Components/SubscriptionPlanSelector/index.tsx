@@ -61,7 +61,7 @@ const SubscriptionPlanSelector = ({...props}) => {
               }}>
               {p.entity.name} <MoneyString value={p.entity.price} />
             </div>
-            <span style={{fontSize: '12px', lineHeight: '12px', opacity: '0.4'}}>{p.entity.description}</span>
+            <span style={{fontSize: '12px', lineHeight: '10px', opacity: '0.4'}}>{p.entity.description}</span>
           </div>
         );
       }}
