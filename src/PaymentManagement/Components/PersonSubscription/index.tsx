@@ -2,12 +2,11 @@ import {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
 import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from 'antd';
 import {
-  PiCalendarCheck,
   PiCalendarX,
   PiIdentificationCard,
   PiPlusBold,
 } from 'react-icons/pi';
-import {TbCancel, TbPencil, TbReceipt2, TbThumbUp, TbTrash} from "react-icons/tb";
+import {TbCalendarUp, TbCalendarX, TbCancel, TbPencil, TbReceipt2, TbThumbUp, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -121,13 +120,13 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
     {
       title: 'Nombres',
       dataIndex: 'profile',
-      render: (profile: Profile) => <ProfileChip profile={profile} />,
+      render: (profile: Profile) => <ProfileChip profile={profile}/>,
     },
     {
       title: 'Documento',
       dataIndex: 'profile',
       width: 120,
-      render: (profile: Profile) => <ProfileDocument profile={profile} />,
+      render: (profile: Profile) => <ProfileDocument profile={profile}/>,
     },
     {
       title: 'Registrado',
@@ -176,24 +175,24 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       dataIndex: 'uuid',
       render: (uuid: string, row: SubscriptionMember) => (
         <Space>
-          <IconButton icon={<TbPencil />} onClick={() => setSelectedProfile(row.profile)} small />
+          <IconButton icon={<TbPencil/>} onClick={() => setSelectedProfile(row.profile)} small/>
           <Popconfirm
             title={'Eliminar miembro'}
             onConfirm={() => deleteMember(uuid)}
             description={'Esto no eliminará a la persona, solo su relación con esta subscripción'}>
-            <IconButton danger icon={<TbTrash />} small />
+            <IconButton danger icon={<TbTrash/>} small/>
           </Popconfirm>
           {row.suspended_at ? (
             <Tooltip title="Activar miembro">
-              <IconButton icon={<TbThumbUp />} small onClick={() => enableMember(uuid)} />
+              <IconButton icon={<TbThumbUp/>} small onClick={() => enableMember(uuid)}/>
             </Tooltip>
           ) : (
             <Tooltip title="Desactivar miembro">
-              <IconButton icon={<TbCancel />} danger small onClick={() => disableMember(uuid)} />
+              <IconButton icon={<TbCancel/>} danger small onClick={() => disableMember(uuid)}/>
             </Tooltip>
           )}
           <IconButton
-            icon={<PiIdentificationCard />}
+            icon={<PiIdentificationCard/>}
             onClick={() => {
               getCredential(row);
             }}
@@ -232,7 +231,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
   return (
     <div>
       {subscriptions?.length == 0 && (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay subscripciones para esta persona'} />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay subscripciones para esta persona'}/>
       )}
       {subscriptions?.map((subscription: Subscription) => (
         <div key={subscription.uuid}>
@@ -252,35 +251,34 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 </Tag>
               </Space>
             }>
-            <Space split={<Divider type={'vertical'} />}>
+            <Space split={<Divider type={'vertical'}/>}>
               <InfoButton
-                icon={<PiCalendarCheck className={'icon'} />}
+                icon={<TbCalendarUp className={'icon'}/>}
                 caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
                 label={'Inicio'}
               />
-              <InfoButton
-                icon={<PiCalendarX className={'icon'} />}
-                caption={
-                  subscription.terminated_at
-                    ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
+              {subscription.terminated_at ?
+                <InfoButton
+                  icon={<PiCalendarX className={'icon'}/>}
+                  caption={
+                    subscription.terminated_at
+                      ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
                       ' - ' +
                       dayjs(subscription.started_at).diff(new Date(), 'days')
-                    : 'Indeterminado'
-                }
-                label={'Fin'}
-              />
+                      : 'Indeterminado'
+                  }
+                  label={'Fin'}
+                /> :
+                <PrimaryButton icon={<TbCalendarX size={18}/>} disabled ghost danger label={'Terminar membresía'}/>
+              }
               <InfoButton
-                icon={<TbReceipt2 className={'icon'} />}
-                caption={<MoneyString value={subscription.amount} currency={subscription.billing_currency} />}
-                label={'Subscripción'}
-              />
-              <InfoButton
-                icon={<TbReceipt2 className={'icon'} />}
-                caption={<MoneyString value={subscription.plan.price} currency={subscription.billing_currency} />}
-                label={'Plan'}
+                label={'Precio del plan'}
+                icon={<TbReceipt2 className={'icon'}/>}
+                caption={<MoneyString value={subscription.amount || subscription.plan.price}
+                                      currency={subscription.billing_currency}/>}
               />
               <div>
-                <span>Marca de agua</span> <br />
+                <span>Marca de agua</span> <br/>
                 <Switch
                   size={'small'}
                   defaultValue={pdfWatermark}
@@ -317,7 +315,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                 size={'small'}
                 extra={
                   <PrimaryButton
-                    icon={<PiPlusBold size={13} />}
+                    icon={<PiPlusBold size={13}/>}
                     label={'Agregar miembro'}
                     onClick={() => {
                       setOpenAddMember(true);
@@ -326,17 +324,18 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
                     size={'small'}
                   />
                 }>
-                <TableList loading={loading} columns={columns} dataSource={subscription.members} />
+                <TableList loading={loading} columns={columns} dataSource={subscription.members}/>
               </Card>
               <Card
                 variant={"borderless"}
                 title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
-                <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} customerType={'profile'} customer={subscription.holder_profile} />
+                <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} customerType={'profile'}
+                               customer={subscription.holder_profile}/>
               </Card>
             </Col>
             <Col xs={8}>
-              <h2>Actividad</h2>
-              <EntityActivityManager uuid={subscription.uuid} type={'subscription'} />
+              <h3>Actividad</h3>
+              <EntityActivityManager uuid={subscription.uuid} type={'subscription'}/>
             </Col>
           </Row>
         </div>
@@ -387,7 +386,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
         onCancel={() => {
           setSelectedProfile(undefined);
         }}>
-        {selectedProfile && <ProfileEditor profileUuid={selectedProfile.uuid} />}
+        {selectedProfile && <ProfileEditor profileUuid={selectedProfile.uuid}/>}
       </Modal>
       <Modal
         destroyOnHidden
@@ -398,8 +397,8 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
           setOpenPrint(false);
           setTempURL(undefined);
         }}>
-        <LoadingIndicator visible={downloading} />
-        {tempURL && <iframe src={tempURL} height={600} width={'100%'} frameBorder="0"></iframe>}
+        <LoadingIndicator visible={downloading}/>
+        {tempURL && <iframe src={tempURL} height={600} width={'100%'} style={{border: 0}}></iframe>}
       </Modal>
     </div>
   );

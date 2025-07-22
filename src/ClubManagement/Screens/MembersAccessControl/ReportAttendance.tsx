@@ -81,7 +81,7 @@ const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps)
         {member && (<>
             <Divider>Pagos</Divider>
             {member.subscription &&
-              <InvoicesTable entityUuid={member.subscription?.uuid} order={'newest'} type={'subscription'}/>
+              <InvoicesTable entityUuid={member.subscription?.uuid} order={'newest'} type={'subscription'} showActions={false}/>
             }
           </>
         )}

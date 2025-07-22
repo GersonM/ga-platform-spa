@@ -2,13 +2,9 @@ import {type ReactNode, useEffect} from 'react';
 import {Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {PiPencilSimple} from 'react-icons/pi';
+import {TbArrowLeft, TbPlus, TbRefresh} from "react-icons/tb";
 
 import IconButton from '../IconButton';
-import {
-  TbArrowLeft,
-  TbPlus,
-  TbRefresh
-} from "react-icons/tb";
 
 interface ContentHeaderProps {
   title?: string | ReactNode;

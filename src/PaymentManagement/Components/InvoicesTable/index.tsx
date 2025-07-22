@@ -24,6 +24,7 @@ interface InvoicesProps {
   customer?: Profile | Company;
   customerType?: string;
   tools?: React.ReactNode;
+  showActions?: boolean;
 }
 
 const InvoicesTable = (
@@ -35,6 +36,7 @@ const InvoicesTable = (
     order = 'older',
     tools,
     refresh,
+    showActions = true
   }: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
@@ -92,7 +94,7 @@ const InvoicesTable = (
       });
   };
 
-  const columns = [
+  const columns: any = [
     {
       title: 'N°',
       width: 40,
@@ -119,7 +121,7 @@ const InvoicesTable = (
     },
     {
       title: 'Creado',
-      width: 110,
+      width: 100,
       dataIndex: 'issued_on',
       render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
     },
@@ -154,7 +156,10 @@ const InvoicesTable = (
         );
       },
     },
-    {
+  ];
+
+  if(showActions) {
+    columns.push({
       title: '',
       dataIndex: 'uuid',
       width: 75,
@@ -177,8 +182,8 @@ const InvoicesTable = (
           </Popconfirm>
         </Space>
       ),
-    },
-  ];
+    },);
+  }
 
   return (
     <>

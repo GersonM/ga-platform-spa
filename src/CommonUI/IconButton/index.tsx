@@ -1,6 +1,5 @@
 import {Button, Tooltip} from 'antd';
 import type {ReactNode} from "react";
-import './styles.less';
 
 interface IconButtonProps {
   icon: ReactNode;
@@ -22,8 +21,9 @@ const IconButton = ({title, icon, small, type = 'text', loading, ...props}: Icon
       size={small ? 'small' : 'middle'}
       type={type}
       loading={loading}
-      className={`icon-button-wrapper ${small ? 'small' : ''}`}
+      className={`${small ? 'small' : ''}`}
       shape={'circle'}
+      style={{fontSize:19}}
       {...props}
     >
       {loading ? null : icon}
