@@ -204,7 +204,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             </Form.Item>
             {approveOrder && (
               <>
-                <Form.Item label="Fecha de compra (opcional)" name="approved_at">
+                <Form.Item label="Fecha de venta (opcional)" name="approved_at">
                   <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
                 </Form.Item>
                 <Form.Item label="Fecha de entrega (opcional)" name="provided_at">

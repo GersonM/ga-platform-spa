@@ -177,13 +177,13 @@ const CommercialSales = () => {
       render: (amount: number, row: Contract) => <MoneyString currency={row.contractable?.currency} value={amount}/>,
     },
     {
-      title: 'F. compra',
+      title: 'F. Venta',
       width: 140,
-      dataIndex: 'created_at',
-      render: (created_at: string) => {
+      dataIndex: 'approved_at',
+      render: (approved_at: string) => {
         return <>
-          {dayjs(created_at).fromNow()}
-          <small>{dayjs(created_at).format('DD/MM/YYYY HH:MM')}</small>
+          {dayjs(approved_at).fromNow()}
+          <small>{dayjs(approved_at).format('DD/MM/YYYY HH:MM')}</small>
         </>
       },
     },
