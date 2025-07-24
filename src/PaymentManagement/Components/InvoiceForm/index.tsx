@@ -14,7 +14,7 @@ import {
 } from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
-import dayjs from "dayjs";
+import dayjs, {type Dayjs} from "dayjs";
 
 import MoneyString from "../../../CommonUI/MoneyString";
 import type {Invoice} from "../../../Types/api.tsx";
@@ -44,6 +44,7 @@ const InvoiceForm = (
   const [form] = useForm();
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
   const [isModified, setIsModified] = useState(false);
+  const [issuedOn, setIssuedOn] = useState<Dayjs>();
 
   useEffect(() => {
     form.resetFields();
@@ -111,12 +112,12 @@ const InvoiceForm = (
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Fecha de emisión'} name={'issued_on'}>
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+              <DatePicker format={'DD/MM/YYYY'} onChange={d => setIssuedOn(d)} style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label={'Fecha de vencimiento'} name={'expires_on'}>
-              <DatePicker style={{width: '100%'}} placeholder={'En 7 días'}/>
+              <DatePicker format={'DD/MM/YYYY'} minDate={issuedOn} style={{width: '100%'}} placeholder={'En 7 días'}/>
             </Form.Item>
           </Col>
         </Row>

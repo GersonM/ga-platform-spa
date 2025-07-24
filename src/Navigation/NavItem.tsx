@@ -8,7 +8,7 @@ interface NavItemProps {
   icon: ReactNode;
   children?: ReactNode[];
   path?: string;
-  notifications?: number;
+  notifications?: number|string;
 }
 
 const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => {
@@ -17,7 +17,7 @@ const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => 
   const content = (
     <>
       <span className={'label'}>{label}</span>
-      <Badge showZero={false} count={notifications} />
+      <Badge showZero={false} size={'small'} count={notifications} />
     </>
   );
 

@@ -9,6 +9,7 @@ import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import GuestLayout from './GuestLayout';
 import CompaniesManagement from "../HRManagement/Screens/CompaniesManagement";
+import PublicContainerViewer from "../FileManagement/Screens/PublicContainerViewer";
 
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
@@ -104,6 +105,7 @@ const App = () => {
         <Route path={'google/callback'} element={<GoogleCallback />} />
       </Route>
       <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
+      <Route path={'/storage/containers/:uuid'} element={<PublicContainerViewer />} />
       <Route path={'/'} element={<AuthenticatedLayout />}>
         <Route index element={<DashboardHome />} />
         <Route path={'/my-tasks'} element={<MyTasks />} />

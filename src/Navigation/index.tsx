@@ -40,7 +40,7 @@ import {
   TbBuilding,
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,
-  TbForklift,
+  TbForklift, TbHeadset,
   TbListCheck, TbMapPinBolt, TbMessageUser,
   TbPackage, TbShieldCheck, TbShieldOff, TbShoppingCart, TbTicket,
 } from 'react-icons/tb';
@@ -166,6 +166,15 @@ const Navigation = () => {
                 <NavItem icon={<PiBuildingsLight/>} label={'Propiedades'} path={'/real-estate/estates'}/>
                 <NavItem icon={<PiVectorThreeLight/>} label={'Proyectos'} path={'/real-estate/projects'}/>
                 <NavItem icon={<PiDoorOpenLight/>} label={'Entregas'} path={'/real-estate/providing'}/>
+              </NavItem>
+            )}
+            {config?.modules.includes('commercial') && (
+              <NavItem label={'CRM'} icon={<TbHeadset/>} notifications={'Beta'}>
+                <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/crm/dashboard'}/>
+                <NavItem icon={<TbMessageUser/>} label={'Chat'} path={'/crm/incidents'}/>
+                <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/crm/leads'}/>
+                <NavItem icon={<PiUserFocus/>} label={'Campañas'} path={'/crm/leads'}/>
+                <NavItem icon={<TbContract/>} label={'Procesos'} path={'/crm/contract-templates'}/>
               </NavItem>
             )}
             {config?.modules.includes('commercial') && (

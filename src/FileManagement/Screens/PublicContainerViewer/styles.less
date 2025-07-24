@@ -1,0 +1,153 @@
+.container-detail-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+
+  .footer {
+    text-align: center;
+    margin: 20px 0;
+    opacity: 0.4;
+    font-size: 12px;
+  }
+}
+
+.container-detail-container {
+  padding: 30px;
+  width: 100%;
+  max-width: 1200px;
+  background: var(--background-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  .timeline-item {
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #f6f6f6;
+    }
+  }
+
+  .title {
+    margin-bottom: 5px;
+  }
+
+  .logo {
+    width: auto;
+    max-height: 40px;
+  }
+
+  .container-files-wrapper {
+    background: var(--background-color-body);
+    border-radius: var(--border-radius);
+    margin-top: 20px;
+    padding: 20px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 20px;
+    position: relative;
+
+    &.mode-list {
+      grid-gap: 5px;
+      display: flex;
+      flex-direction: column;
+
+      .file-item {
+        flex-direction: row;
+        padding: 0 7px;
+        align-items: center;
+        border-radius: 7px;
+
+        .icon {
+          font-size: 24px;
+          height: 24px;
+          width: 24px;
+        }
+
+        .file-image {
+          min-height: 30px;
+          height: 100%;
+          margin-right: 5px;
+          border-radius: 3px;
+          max-width: 30px;
+        }
+
+        .file-caption {
+          display: inline-block;
+          user-select: none;
+        }
+      }
+    }
+
+    .file-item {
+      background: var(--background-color);
+      outline: 2px solid var(--background-color);
+      outline-offset: -2px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 11px;
+      padding: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        outline-color: var(--primary-color);
+
+        .file-image {
+          background-position: bottom center;
+        }
+      }
+
+      &.selected {
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+        outline-color: var(--primary-color);
+      }
+
+      .icon {
+        font-size: 40px;
+        height: 40px;
+        width: 40px;
+      }
+
+      .file-image {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        background: no-repeat top center;
+        background-size: cover;
+        min-height: 100px;
+        border-radius: 6px;
+        overflow: hidden;
+        transition: background-position 6s;
+      }
+
+      .file-item-info {
+        padding: 5px;
+      }
+
+      .file-name {
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 22px;
+        display: block;
+        text-overflow: ellipsis;
+        user-select: none;
+      }
+
+      .file-caption {
+        user-select: none;
+        font-size: 11px;
+        color: #999999;
+        display: block;
+      }
+    }
+  }
+}

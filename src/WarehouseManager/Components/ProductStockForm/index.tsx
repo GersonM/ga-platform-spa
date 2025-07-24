@@ -165,7 +165,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item label="Proveedor" name={'provider_uuid'} rules={[{required: true}]}>
+      <Form.Item label="Proveedor" name={'provider_uuid'} rules={!stock ? [{required: true}] : undefined}>
         <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
       </Form.Item>
       <Row gutter={15}>
@@ -186,7 +186,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item label="Observaciones (opcional)" name={'description'}>
+      <Form.Item label="Observaciones (opcional)" name={'observations'}>
         <Input.TextArea/>
       </Form.Item>
       <Row gutter={15}>

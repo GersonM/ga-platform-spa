@@ -131,6 +131,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
     {
       title: 'Registrado',
       dataIndex: 'created_at',
+      width: 135,
       render: (created_at: string) => {
         return (<>
           {dayjs(created_at).fromNow()}

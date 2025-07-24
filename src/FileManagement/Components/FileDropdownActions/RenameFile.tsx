@@ -1,4 +1,3 @@
-
 import {Form, Input} from 'antd';
 import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -33,27 +32,36 @@ const RenameFile = ({file, onCompleted}: RenameFileProps) => {
         Al cambiar el nombre o reemplazar el archivos no se modifica la url compartida, se recomienda mantener el
         formato de archivo para evitar problemas
       </p>
+      <p>
+        <small>
+          <code>
+            <a href={file.source} target="_blank" rel="noopener noreferrer">
+              {file.source}
+            </a>
+          </code>
+        </small>
+      </p>
       <Form.Item
         name={'name'}
         label={'Nombre'}
         tooltip={'Puedes usar caracteres especiales, tildes, etc. Esto no afectar a la accesibilidad del archivo'}>
-        <Input placeholder={'Nombre'} />
+        <Input placeholder={'Nombre'}/>
       </Form.Item>
       {(file.type.includes('vid') || file.type.includes('aud')) && (
         <Form.Item
           name={'start_from'}
           label={'Inicio de reproducción'}
           tooltip={'Marca el segundo en el que se iniciar la reproducción'}>
-          <Input placeholder={'Segundo'} />
+          <Input placeholder={'Segundo'}/>
         </Form.Item>
       )}
       <Form.Item name={'description'} label={'Descripción'}>
-        <Input.TextArea />
+        <Input.TextArea/>
       </Form.Item>
       <Form.Item label={'Actualizar archivo'}>
-        <FileUploader fileUuid={file.uuid} height={180} imagePath={file.thumbnail} showPreview />
+        <FileUploader fileUuid={file.uuid} height={180} imagePath={file.thumbnail} showPreview/>
       </Form.Item>
-      <PrimaryButton icon={<CheckIcon />} label={'Guardar'} htmlType={'submit'} block />
+      <PrimaryButton icon={<CheckIcon/>} label={'Guardar'} htmlType={'submit'} block/>
     </Form>
   );
 };
