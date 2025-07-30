@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {DatePicker, Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
-import {TbBuilding, TbPencil, TbUser} from "react-icons/tb";
+import {TbPencil} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -16,11 +16,11 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import IconButton from "../../../CommonUI/IconButton";
-import './styles.less';
 import CreateContractForm from "../../Components/CommercialContractForm";
-import ProfileDocument from "../../../CommonUI/ProfileTools/ProfileDocument.tsx";
 import ContractStatus from "./ContractStatus.tsx";
 import Config from "../../../Config.tsx";
+import CompanyChip from "../../../HRManagement/Components/CompanyChip";
+import './styles.less';
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -34,7 +34,7 @@ const CommercialSales = () => {
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
   const [filters, setFilters] = useState<any>();
-  const [dateRangeFilter, setDateRangeFilter] = useState<any[]|null>()
+  const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>()
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -144,18 +144,10 @@ const CommercialSales = () => {
         if (!e) return 'Sin cliente';
         return (
           <>
-            <Space>
-              {isCompany ? <TbBuilding size={25}/> : <TbUser size={25}/>}
-              <div>
-                {isCompany ? (e.name || e.legal_name) : (e.name + ' ' + e.last_name)}
-                <small>
-                  {isCompany ?
-                    `RUC: ${e.legal_uid}` :
-                    <ProfileDocument profile={e}/>
-                  }
-                </small>
-              </div>
-            </Space>
+            {isCompany ?
+              <CompanyChip company={e}/> :
+              <ProfileChip profile={e} showDocument/>
+            }
           </>
         );
       },

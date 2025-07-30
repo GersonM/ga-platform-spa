@@ -51,7 +51,7 @@ const RolePermissionSwitch = ({permission, role}: IRolePermissionSwitchProps) =>
     <div className={'role-permissions-wrapper'}>
       <span className={'name'}>
         <span>{permission.hint || permission.name}</span>
-        <small>{permission.name}</small>
+        <small style={{lineBreak:'anywhere'}}>{permission.name}</small>
       </span>
       <Switch
         defaultChecked={role.name == 'admin' || (!!role.permissions.find(p => p.id == permission.id))}

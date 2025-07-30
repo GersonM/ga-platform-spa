@@ -103,10 +103,9 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       initialValues={product}
       onFinish={submit}
     >
-      <h2>{product ? 'Editar producto' : 'Crear Producto'}</h2>
+      <h2>{product ? 'Editar producto' : 'Registrar nuevo producto'}</h2>
       <Row gutter={[25, 25]}>
-        <Col span={12}>
-          <Divider>Descripción del producto</Divider>
+        <Col span={13}>
           <Form.Item label="Nombre" name={'name'}>
             <Input/>
           </Form.Item>
@@ -134,7 +133,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
             </Col>
           </Row>
         </Col>
-        <Col span={12}>
+        <Col span={11}>
           <Divider>Información adicional</Divider>
           <Row gutter={[15, 15]}>
             <Col md={12}>

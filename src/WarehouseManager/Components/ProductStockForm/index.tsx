@@ -199,6 +199,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
               <small>Controlar la cantidad de productos disponibles</small>
             </Checkbox>
           </Form.Item>
+          <Button size={'small'} disabled block>Registrar números de serie</Button>
         </Col>
         <Col md={9}>
           {isConsumable &&

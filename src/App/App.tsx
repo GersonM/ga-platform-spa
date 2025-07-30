@@ -10,6 +10,7 @@ import AuthenticatedLayout from './AuthenticatedLayout';
 import GuestLayout from './GuestLayout';
 import CompaniesManagement from "../HRManagement/Screens/CompaniesManagement";
 import PublicContainerViewer from "../FileManagement/Screens/PublicContainerViewer";
+import ProcessesManagement from "../CRMModule/Screens/ProcessesManagement";
 
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
@@ -97,7 +98,6 @@ const App = () => {
 
   return (
     <Routes>
-
       <Route path={'/auth'} element={<GuestLayout />}>
         <Route path={'login'} element={<Login />} />
         <Route path={'recover'} element={<PasswordRecovery />} />
@@ -173,6 +173,9 @@ const App = () => {
           <Route path={'dashboard'} element={<AttendanceDashboard />} />
           <Route path={'management'} element={<AttendanceManager />} />
           <Route path={'access-control'} element={<MembersAccessControl />} />
+        </Route>
+        <Route path={'crm'}>
+          <Route path={'processes'} element={<ProcessesManagement />} />
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard />} />

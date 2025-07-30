@@ -1,6 +1,6 @@
 import {useContext, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Avatar, Badge, Dropdown, notification, Popover, Space, Tag} from 'antd';
+import {Avatar, Badge, Dropdown, notification, Popover, Space, Tag, Tooltip} from 'antd';
 import axios from 'axios';
 import {
   PiBooksLight,
@@ -77,7 +77,16 @@ const menuItems: ItemType[] = [
 ];
 
 const Navigation = () => {
-  const {setSecureMode, secureMode, user, logout, config, setOpenMenu, openMenu, activityCount} = useContext(AuthContext);
+  const {
+    setSecureMode,
+    secureMode,
+    user,
+    logout,
+    config,
+    setOpenMenu,
+    openMenu,
+    activityCount
+  } = useContext(AuthContext);
   const {pathname} = useLocation();
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
@@ -133,10 +142,12 @@ const Navigation = () => {
       {contextHolder}
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
-          <div className="logo-square">
-            <img src={config?.dark_logo || logo} alt={config?.config?.name}/>
-            <PiCaretUpDown/>
-          </div>
+          <Tooltip title={config?.config?.name}>
+            <div className="logo-square">
+              <img src={config?.dark_logo || logo} alt={config?.config?.name}/>
+              <PiCaretUpDown/>
+            </div>
+          </Tooltip>
         </Dropdown>
       </div>
       <OverlayScrollbarsComponent style={{flex: 1}} className={'scroll-content'} defer
@@ -174,7 +185,7 @@ const Navigation = () => {
                 <NavItem icon={<TbMessageUser/>} label={'Chat'} path={'/crm/incidents'}/>
                 <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/crm/leads'}/>
                 <NavItem icon={<PiUserFocus/>} label={'Campañas'} path={'/crm/leads'}/>
-                <NavItem icon={<TbContract/>} label={'Procesos'} path={'/crm/contract-templates'}/>
+                <NavItem icon={<TbContract/>} label={'Procesos'} path={'/crm/processes'}/>
               </NavItem>
             )}
             {config?.modules.includes('commercial') && (
@@ -259,9 +270,10 @@ const Navigation = () => {
       </OverlayScrollbarsComponent>
       <div className="bottom-nav">
         <Space>
-          <div className={`user-tool ${secureMode ? '':'danger'}`} onClick={() => setSecureMode(!secureMode)}>
+          <div className={`user-tool ${secureMode ? '' : 'danger'}`} onClick={() => setSecureMode(!secureMode)}>
             <Popover
-              title={<>Modo seguro {secureMode ? <Tag color={'green'}>Activo</Tag> : <Tag color={'red'}>Desactivado</Tag>}</>}
+              title={<>Modo seguro {secureMode ? <Tag color={'green'}>Activo</Tag> :
+                <Tag color={'red'}>Desactivado</Tag>}</>}
               content={
                 <>
                   Muestra u oculta información que podría ser sensible <br/>{' '}

@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import {TbArrowsMoveVertical, TbPencil, TbTrash, TbZoom} from 'react-icons/tb';
-import {Modal, Popconfirm} from 'antd';
 import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/24/solid';
+import {Modal, Popconfirm} from 'antd';
 import axios from 'axios';
 
 import type {TaxonomyDefinition} from '../../../Types/api';
@@ -11,8 +11,8 @@ import IconButton from '../../../CommonUI/IconButton';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import TaxonomyForm from '../TaxonomyForm';
-import './styles.less';
 import TaxonomyDefinitionItems from '../TaxonomyDefinitionItems';
+import './styles.less';
 
 interface TaxonomyItemProps {
   taxonomy: TaxonomyDefinition;

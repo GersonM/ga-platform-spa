@@ -182,7 +182,7 @@ const InvoicesTable = (
           </Popconfirm>
         </Space>
       ),
-    },);
+    });
   }
 
   return (

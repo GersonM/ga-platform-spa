@@ -32,6 +32,7 @@ export type SettingValue = {
 export type Company = {
   uuid: string;
   name: string;
+  logo?: ApiFile;
   legal_name: string;
   legal_uid: string;
 };
@@ -432,7 +433,7 @@ export type Invoice = {
   currency: string;
   pending_payment?: number;
   created_at: string;
-  customer: Profile;
+  customer: Profile|Company;
   customer_id: string;
   customer_type: string;
   expires_on: string;
