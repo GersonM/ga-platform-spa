@@ -53,8 +53,8 @@ const Login = () => {
 
   const handleGoogleLogin = () => {
     setGoogleLoading(true);
-    //window.location.href = axios.defaults.baseURL + 'authenticate/auth/google/redirect';
-    window.location.href = 'http://localhost:8000/api/v1/authenticate/auth/google/redirect';
+    window.location.href = axios.defaults.baseURL + 'authenticate/auth/google/redirect';
+    //window.location.href = 'http://localhost:8000/api/v1/authenticate/auth/google/redirect';
   };
 
   // Función para manejar el callback de Google (si necesitas procesarlo en el frontend)

@@ -227,8 +227,8 @@ const Invoices = () => {
               </Tag>
             </ContentHeader>
             {selectedInvoice.customer_type?.includes('profile') ?
-              <CompanyChip company={selectedInvoice?.customer}/> :
-              <ProfileCard profile={selectedInvoice?.customer}/>
+              <ProfileCard profile={selectedInvoice?.customer}/> :
+              <CompanyChip company={selectedInvoice?.customer}/>
             }
             <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={'234'} invoiceOwnerType={'person'}/>
             <Divider>Pagos</Divider>

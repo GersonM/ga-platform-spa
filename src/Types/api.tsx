@@ -433,7 +433,7 @@ export type Invoice = {
   currency: string;
   pending_payment?: number;
   created_at: string;
-  customer: Profile|Company;
+  customer: any; //TODO: use Customer Type
   customer_id: string;
   customer_type: string;
   expires_on: string;
