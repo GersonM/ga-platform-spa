@@ -11,6 +11,7 @@ import GuestLayout from './GuestLayout';
 import CompaniesManagement from "../HRManagement/Screens/CompaniesManagement";
 import PublicContainerViewer from "../FileManagement/Screens/PublicContainerViewer";
 import ProcessesManagement from "../CRMModule/Screens/ProcessesManagement";
+import WarehouseActivityManager from "../WarehouseManager/Screens/WarehouseActivityManager";
 
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
@@ -188,6 +189,7 @@ const App = () => {
         </Route>
         <Route path={'warehouse'}>
           <Route path={'products'} element={<WarehouseProductsManager />} />
+          <Route path={'activity'} element={<WarehouseActivityManager />} />
         </Route>
         <Route path={'real-estate'}>
           <Route path={'dashboard'} element={<RealEstateDashboard />} />
