@@ -66,7 +66,6 @@ const FileUploader = (
             <Progress percent={item.progress} size={'small'} strokeWidth={small ? 3 : undefined}/>
           </div>
         ))}
-
         {(isDragActive || ownedFilesFilter.length == 0) && (
           <div className={'content-label'}>
             <ArrowUpTrayIcon width={small ? 18 : 24} style={{marginRight: 10}}/>
