@@ -34,13 +34,8 @@ const FileUploader = (
   const {addFile, lastFileCompleted, fileList} = useContext(UploadContext);
 
   useEffect(() => {
-    console.log('updated file list: ');
-  }, [fileList]);
-
-  useEffect(() => {
     if (lastFileCompleted && lastFileCompleted.fileData) {
       if (ownedFiles.includes(lastFileCompleted.id)) {
-        console.log('lastFileCompleted', lastFileCompleted);
         setUploadedFile(lastFileCompleted.fileData);
         if (onChange) {
           onChange(lastFileCompleted.fileData?.uuid);
@@ -71,7 +66,6 @@ const FileUploader = (
             <Progress percent={item.progress} size={'small'} strokeWidth={small ? 3 : undefined}/>
           </div>
         ))}
-
         {(isDragActive || ownedFilesFilter.length == 0) && (
           <div className={'content-label'}>
             <ArrowUpTrayIcon width={small ? 18 : 24} style={{marginRight: 10}}/>
