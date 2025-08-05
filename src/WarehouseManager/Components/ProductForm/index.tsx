@@ -12,6 +12,7 @@ import ProductGroupsSelector from "../ProductGroupsSelector";
 import ProductUnitTypesSelector from "../ProductUnitTypesSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import {TbPlus, TbTrash} from "react-icons/tb";
+import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 
 interface ProductFormProps {
   product?: StorageProduct;
@@ -21,6 +22,7 @@ interface ProductFormProps {
 const ProductForm = ({product, onComplete}: ProductFormProps) => {
   const [form] = Form.useForm();
   const [metadataFields, setMetadataFields] = useState<MetadataField[]>([]);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (product?.metadata) {
@@ -74,7 +76,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
 
   const submit = (values: any) => {
     const metadata = buildMetadataObject();
-
+    setLoading(true);
     const formData = {
       ...values,
       metadata: JSON.stringify(metadata)
@@ -87,11 +89,13 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
         data: formData
       })
       .then(() => {
+        setLoading(false);
         if (onComplete) {
           onComplete();
         }
       })
       .catch(err => {
+        setLoading(false);
         ErrorHandler.showNotification(err);
       });
   };
@@ -103,6 +107,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       initialValues={product}
       onFinish={submit}
     >
+      <LoadingIndicator visible={loading} overlay />
       <h2>{product ? 'Editar producto' : 'Registrar nuevo producto'}</h2>
       <Row gutter={[25, 25]}>
         <Col span={13}>
@@ -198,7 +203,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
+      <PrimaryButton loading={loading} block htmlType={'submit'} label={'Guardar'}/>
     </Form>
   );
 };
