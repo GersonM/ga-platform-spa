@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Col, Divider, Form, Input, Row, Button} from "antd";
+import {Col, Divider, Form, Input, Row, Button, notification} from "antd";
 import {DefaultEditor} from "react-simple-wysiwyg";
 import axios from "axios";
 
@@ -22,7 +22,8 @@ interface ProductFormProps {
 const ProductForm = ({product, onComplete}: ProductFormProps) => {
   const [form] = Form.useForm();
   const [metadataFields, setMetadataFields] = useState<MetadataField[]>([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     if (product?.metadata) {
@@ -53,12 +54,18 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
   };
 
   const removeField = (id: string) => {
+    if (!isModified) {
+      setIsModified(true);
+    }
     if (metadataFields.length > 1) {
       setMetadataFields(metadataFields.filter(field => field.id !== id));
     }
   };
 
   const updateField = (id: string, type: 'key' | 'value', newValue: string) => {
+    if (!isModified) {
+      setIsModified(true);
+    }
     setMetadataFields(metadataFields.map(field =>
       field.id === id ? {...field, [type]: newValue} : field
     ));
@@ -67,9 +74,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
   const buildMetadataObject = () => {
     const metadata: Record<string, string> = {};
     metadataFields.forEach(field => {
-      if (field.key.trim() && field.value.trim()) {
-        metadata[field.key.trim()] = field.value.trim();
-      }
+      metadata[field.key.trim()] = field.value.trim();
     });
     return metadata;
   };
@@ -90,6 +95,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       })
       .then(() => {
         setLoading(false);
+        notification.success({message:'Información guardada', description: 'La información se guardo correctamente'});
         if (onComplete) {
           onComplete();
         }
@@ -105,6 +111,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       form={form}
       layout="vertical"
       initialValues={product}
+      onValuesChange={() => setIsModified(true)}
       onFinish={submit}
     >
       <LoadingIndicator visible={loading} overlay />
@@ -203,7 +210,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <PrimaryButton loading={loading} block htmlType={'submit'} label={'Guardar'}/>
+      <PrimaryButton disabled={!isModified} loading={loading} block htmlType={'submit'} label={'Guardar'}/>
     </Form>
   );
 };

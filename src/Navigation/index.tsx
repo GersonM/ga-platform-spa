@@ -37,10 +37,11 @@ import {
 } from 'react-icons/pi';
 import {MapPinIcon, QueueListIcon} from '@heroicons/react/24/outline';
 import {
+  TbActivityHeartbeat,
   TbBuilding,
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,
-  TbForklift, TbHeadset,
+  TbForklift, TbHeadset, TbHeartRateMonitor,
   TbListCheck, TbMapPinBolt, TbMessageUser,
   TbPackage, TbShieldCheck, TbShieldOff, TbShoppingCart, TbTicket,
 } from 'react-icons/tb';
@@ -258,6 +259,7 @@ const Navigation = () => {
             {config?.modules.includes('payments') && (
               <NavItem label={'Pagos'} icon={<PiCashRegister/>} path={'/invoices'}/>
             )}
+            <NavItem label={'Monitor de servicios'} icon={<TbHeartRateMonitor/>} path={'/monitoring'}/>
             {user?.roles?.includes('admin') && (
               <>
                 <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/profiles'}/>

@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
+import {TbGaugeFilled} from "react-icons/tb";
 
-import './styles.less';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import type {FileManagementStatus} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileSize from '../../../CommonUI/FileSize';
+import './styles.less';
 
 const ServiceStatus = () => {
   const [serviceStatus, setServiceStatus] = useState<FileManagementStatus>();
@@ -36,20 +37,18 @@ const ServiceStatus = () => {
 
   return (
     <div className={'service-usage-wrapper'}>
-      <LoadingIndicator visible={loading} />
-      <span onClick={() => setReload(!reload)} className="icon icon-pie-chart"></span>
-      <div>
-        <small>Espacio utilizado</small>
-        {serviceStatus && (
-          <>
-            <FileSize size={serviceStatus.usage} /> ({((serviceStatus.usage / serviceStatus.total) * 100).toFixed(2)}%)
-          </>
-        )}
-      </div>
-      <div>
-        <small>Total</small>
-        {serviceStatus && <FileSize size={serviceStatus.total} />}
-      </div>
+      <LoadingIndicator visible={loading} overlay/>
+      <TbGaugeFilled size={28} onClick={() => setReload(!reload)}/>
+      {serviceStatus && (
+        <div>
+          <div>{((serviceStatus.usage / serviceStatus.total) * 100).toFixed(1)} % de uso</div>
+          <code>
+            <small>
+              <FileSize size={serviceStatus.usage}/> de <FileSize size={serviceStatus.total}/>
+            </small>
+          </code>
+        </div>
+      )}
     </div>
   );
 };

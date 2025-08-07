@@ -25,7 +25,7 @@ const ProfileCard = ({profile, onChange, allowEdit = true}: ProfileCardProps) =>
       .put(`hr-management/profiles/${profile.uuid}`, {avatar_uuid: file.uuid})
       .then(() => {
         setLoading(false);
-        onChange && onChange();
+        if(onChange) onChange();
         setShowUploader(false);
       })
       .catch(e => {

@@ -12,6 +12,7 @@ import CompaniesManagement from "../HRManagement/Screens/CompaniesManagement";
 import PublicContainerViewer from "../FileManagement/Screens/PublicContainerViewer";
 import ProcessesManagement from "../CRMModule/Screens/ProcessesManagement";
 import WarehouseActivityManager from "../WarehouseManager/Screens/WarehouseActivityManager";
+import MonitorServicesManager from "../ServiceMonitoring/Screens/MonitorServicesManager";
 
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
@@ -197,6 +198,7 @@ const App = () => {
           <Route path={'estates/:state?'} element={<EstateDetailView />} />
           <Route path={'providing'} element={<EstateProviding />} />
         </Route>
+        <Route path={'monitoring'} element={<MonitorServicesManager />} />
         <Route path={'workspaces'}>
           <Route path={'dashboard'} element={<RealEstateDashboard />} />
         </Route>
