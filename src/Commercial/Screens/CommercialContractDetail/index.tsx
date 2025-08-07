@@ -334,7 +334,7 @@ const CommercialContractDetail = () => {
                 key: 'info',
                 label: 'Detalle del contrato',
                 children: <>
-                  {contract && <ContractDetails contract={contract}/>}
+                  {contract && <ContractDetails contract={contract} onChange={() => setReload(!reload)} />}
                 </>
               },
               {

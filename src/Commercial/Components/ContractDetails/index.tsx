@@ -16,16 +16,8 @@ interface ContractDetailsProps {
 }
 
 const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
-  const [groups, setGroups] = useState<any>();
   const [changeStockUuid, setChangeStockUuid] = useState<string>();
   const [loading, setLoading] = useState(false);
-  const [reload, setReload] = useState(false);
-
-
-  useEffect(() => {
-    // @ts-ignore
-    setGroups(Object.groupBy(contract.items, ({group}: ContractItem) => group));
-  }, [contract]);
 
   const updateStock = () => {
     setLoading(true);
@@ -33,7 +25,6 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
       .post(`commercial/contracts/${contract?.uuid}/update-stock`, {stock_uuid: changeStockUuid})
       .then(() => {
         setLoading(false);
-        setReload(!reload);
         if (onChange) onChange();
       })
       .catch(e => {
@@ -50,7 +41,7 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
           <PrimaryButton style={{marginTop: 10}} block label={'Cambiar lote'} onClick={updateStock}/>
         )}
       </div>
-      <CommercialContractForm contract={contract} />
+      <CommercialContractForm contract={contract} onComplete={onChange} />
       <Divider />
       {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
       <Divider>

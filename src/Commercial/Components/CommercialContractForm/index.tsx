@@ -1,11 +1,12 @@
 import {useContext, useEffect, useState} from 'react';
-import {Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
+import {Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
+import {useForm} from "antd/lib/form/Form";
+import dayjs from "dayjs";
 import axios from 'axios';
 
 import type {Contract, StorageStock} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
-import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -13,12 +14,9 @@ import MoneyString from '../../../CommonUI/MoneyString';
 import StockViewerState from '../StockViewerState';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import MoneyInput from "../../../CommonUI/MoneyInput";
-import CompanySelector from "../../../HRManagement/Components/CompanySelector";
-import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
-import {useForm} from "antd/lib/form/Form";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -30,13 +28,28 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   const {user} = useContext(AuthContext);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
-  const [clientType, setClientType] = useState<'company' | 'profile'>()
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
   const [chooseSeller, setChooseSeller] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
   const [period, setPeriod] = useState<string>();
-  const [approveOrder, setApproveOrder] = useState(false);
+  const [formData, setFormData] = useState<any>();
   const [form] = useForm();
+
+  useEffect(() => {
+    if (contract && form) {
+      const newFields: any = {...contract};
+      newFields.created_at = dayjs(contract.created_at);
+      newFields.approved_at = newFields.approved_at ? dayjs(contract.created_at) : null;
+      newFields.provided_at = newFields.provided_at ? dayjs(contract.provided_at) : null;
+      setFormData(newFields);
+    }
+  }, [contract]);
+
+  useEffect(() => {
+    if (formData) {
+      form.resetFields();
+    }
+  }, [formData]);
 
   useEffect(() => {
     if (!selectedStockUUID) {
@@ -86,31 +99,19 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
 
   return (
     <div>
-      <Form form={form} layout="vertical" onFinish={submitForm} initialValues={contract}>
+      <Form form={form} layout="vertical" onFinish={submitForm} initialValues={formData}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
-            <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
-              <ContractTemplateSelector/>
-            </Form.Item>
-            <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
+            <Form.Item label={'Duración'} name={'period'}>
               <Select
                 showSearch
-                onChange={value => setClientType(value)}
-                placeholder={'Seleccione modalidad'}
+                allowClear
+                onChange={value => setPeriod(value)}
+                placeholder={'Único'}
                 options={[
-                  {value: 'company', label: 'Empresa'},
-                  {value: 'profile', label: 'Persona'},
-                ]}
-              />
-            </Form.Item>
-            <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
-              <Select
-                showSearch
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: 'first_30', label: 'Inicial de 30%'},
-                  {value: '1_pago', label: '1 Solo pago'},
-                  {value: '0', label: 'Ninguno'},
+                  {value: 'unique', label: 'Único'},
+                  {value: 'monthly', label: 'Mensual'},
+                  {value: 'annual', label: 'Anual'},
                 ]}
               />
             </Form.Item>
@@ -123,7 +124,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 </Form.Item>
               </Col>
               <Col xs={14}>
-                <Form.Item label={'Precio de venta'} name={'sale_price'}>
+                <Form.Item label={'Precio de venta'} name={'amount'}>
                   <MoneyInput currency={selectedCurrency || selectedStock?.currency}
                               placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
                 </Form.Item>
@@ -150,21 +151,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
           </Col>
           <Col span={12}>
             <Row gutter={[20, 20]}>
-              <Col span={9}>
-                <Form.Item label={'Duración'} name={'period'}>
-                  <Select
-                    showSearch
-                    allowClear
-                    onChange={value => setPeriod(value)}
-                    placeholder={'Único'}
-                    options={[
-                      {value: 'unique', label: 'Único'},
-                      {value: 'monthly', label: 'Mensual'},
-                      {value: 'annual', label: 'Anual'},
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
               <Col span={15}>
                 {(period && period != 'unique') &&
                   <Form.Item label={' '} name={'is_renewable'} valuePropName={'checked'}>
@@ -173,21 +159,12 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 }
               </Col>
             </Row>
-            <Form.Item name={'is_approved'} valuePropName={'checked'}>
-              <Checkbox onChange={evt => setApproveOrder(evt.target.checked)}>Registrar como venta aprobada
-                <small>Se registrará con el estado en aprobado si tienes permisos</small>
-              </Checkbox>
-            </Form.Item>
-            {approveOrder && (
-              <>
-                <Form.Item label="Fecha de venta (opcional)" name="approved_at">
-                  <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
-                </Form.Item>
-                <Form.Item label="Fecha de entrega (opcional)" name="provided_at">
-                  <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
-                </Form.Item>
-              </>
-            )}
+              <Form.Item label="Fecha de propuesta (opcional)" name="created_at">
+                <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+              </Form.Item>
+              <Form.Item label="Fecha de venta (opcional)" name="approved_at">
+                <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+              </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <Select
                 showSearch
@@ -229,7 +206,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
         </Row>
         <PrimaryButton
           icon={<TbCheck/>} loading={loading} block htmlType={'submit'}
-          label={isTemplate ? 'Guardar' : 'Registrar contrato'}/>
+          label={'Guardar cambios'}/>
       </Form>
     </div>
   );
