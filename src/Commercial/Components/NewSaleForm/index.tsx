@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
+import {Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
 import axios from 'axios';
 
@@ -18,15 +18,14 @@ import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
-import {useForm} from "antd/lib/form/Form";
 
-interface CommercialContractFormProps {
+interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
   contract?: Contract;
   isTemplate?: boolean;
 }
 
-const CommercialContractForm = ({onComplete, contract, isTemplate = false}: CommercialContractFormProps) => {
+const NewSaleForm = ({onComplete, contract, isTemplate = false}: NewSaleFormProps) => {
   const {user} = useContext(AuthContext);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
@@ -36,7 +35,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
   const [period, setPeriod] = useState<string>();
   const [approveOrder, setApproveOrder] = useState(false);
-  const [form] = useForm();
 
   useEffect(() => {
     if (!selectedStockUUID) {
@@ -86,49 +84,75 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
 
   return (
     <div>
-      <Form form={form} layout="vertical" onFinish={submitForm} initialValues={contract}>
+      <h2>{isTemplate ? 'Crear plantilla' : (approveOrder ? 'Nueva venta' : 'Nueva cotización')}</h2>
+      <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
-            <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
-              <ContractTemplateSelector/>
-            </Form.Item>
-            <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
-              <Select
-                showSearch
-                onChange={value => setClientType(value)}
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: 'company', label: 'Empresa'},
-                  {value: 'profile', label: 'Persona'},
-                ]}
-              />
-            </Form.Item>
-            <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
-              <Select
-                showSearch
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: 'first_30', label: 'Inicial de 30%'},
-                  {value: '1_pago', label: '1 Solo pago'},
-                  {value: '0', label: 'Ninguno'},
-                ]}
-              />
-            </Form.Item>
-            <Row gutter={[15, 15]}>
-              <Col xs={10}>
-                <Form.Item label={'Moneda'} name={'currency'}>
-                  <CurrencySelector
-                    placeholder={selectedStock?.currency}
-                    onChange={(value: string) => setSelectedCurrency(value)}/>
+            {isTemplate ? (
+                <Form.Item label={'Nombre de la plantilla'} name={'title'}>
+                  <Input/>
                 </Form.Item>
-              </Col>
-              <Col xs={14}>
-                <Form.Item label={'Precio de venta'} name={'sale_price'}>
-                  <MoneyInput currency={selectedCurrency || selectedStock?.currency}
-                              placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
+              ) :
+              <>
+                <Form.Item label={'Producto'} name={'stock_uuid'}>
+                  <StockSelector onChange={uuid => setSelectedStockUUID(uuid)}/>
                 </Form.Item>
-              </Col>
-            </Row>
+                <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
+                  <ContractTemplateSelector/>
+                </Form.Item>
+                <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
+                  <Select
+                    showSearch
+                    onChange={value => setClientType(value)}
+                    placeholder={'Seleccione modalidad'}
+                    options={[
+                      {value: 'company', label: 'Empresa'},
+                      {value: 'profile', label: 'Persona'},
+                    ]}
+                  />
+                </Form.Item>
+                {clientType == 'profile' && (
+                  <Form.Item label={'Persona'} name={'fk_profile_uuid'}>
+                    <ProfileSelector/>
+                  </Form.Item>
+                )}
+                {clientType == 'company' && (
+                  <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
+                    <CompanySelector/>
+                  </Form.Item>
+                )}
+              </>
+            }
+            {!isTemplate && (
+              <>
+                <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
+                  <Select
+                    showSearch
+                    placeholder={'Seleccione modalidad'}
+                    options={[
+                      {value: 'first_30', label: 'Inicial de 30%'},
+                      {value: '1_pago', label: '1 Solo pago'},
+                      {value: '0', label: 'Ninguno'},
+                    ]}
+                  />
+                </Form.Item>
+                <Row gutter={[15, 15]}>
+                  <Col xs={10}>
+                    <Form.Item label={'Moneda'} name={'currency'}>
+                      <CurrencySelector
+                        placeholder={selectedStock?.currency}
+                        onChange={(value: string) => setSelectedCurrency(value)}/>
+                    </Form.Item>
+                  </Col>
+                  <Col xs={14}>
+                    <Form.Item label={'Precio de venta'} name={'sale_price'}>
+                      <MoneyInput currency={selectedCurrency || selectedStock?.currency}
+                                  placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </>
+            )}
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
@@ -235,4 +259,4 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   );
 };
 
-export default CommercialContractForm;
+export default NewSaleForm;

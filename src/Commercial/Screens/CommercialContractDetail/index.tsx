@@ -25,6 +25,7 @@ import StepsNavigation from "../../../CommonUI/StepsNavigation";
 import CommercialContractForm from "../../Components/CommercialContractForm";
 import ContractStatus from "../CommercialSales/ContractStatus.tsx";
 import InstallmentPlanForm from "../../../PaymentManagement/Components/InstallmentPlanForm";
+import NewSaleForm from "../../Components/NewSaleForm";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -379,7 +380,7 @@ const CommercialContractDetail = () => {
         />
       </ModalView>
       <ModalView onCancel={() => setOpenEditContract(false)} open={openEditContract}>
-        <CommercialContractForm contract={contract} onComplete={() => {
+        <NewSaleForm contract={contract} onComplete={() => {
           setOpenEditContract(false);
           setReload(!reload);
         }}/>

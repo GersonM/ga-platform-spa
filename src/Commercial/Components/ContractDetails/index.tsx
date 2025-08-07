@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import type {Contract, ContractItem} from '../../../Types/api';
-import {Statistic, Tag} from 'antd';
+import {Descriptions, Divider, Statistic, Tag} from 'antd';
 import axios from "axios";
 
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
@@ -8,6 +8,7 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import StockViewerState from "../StockViewerState";
+import CommercialContractForm from "../CommercialContractForm";
 
 interface ContractDetailsProps {
   contract: Contract;
@@ -33,7 +34,7 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
       .then(() => {
         setLoading(false);
         setReload(!reload);
-        if(onChange) onChange();
+        if (onChange) onChange();
       })
       .catch(e => {
         setLoading(false);
@@ -49,37 +50,18 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
           <PrimaryButton style={{marginTop: 10}} block label={'Cambiar lote'} onClick={updateStock}/>
         )}
       </div>
-      {contract?.created_by && (
-        <>
-          <h3>Vendedor:</h3>
-          <div>
-            <ProfileChip profile={contract?.created_by}/>
-          </div>
-        </>
-      )}
+      <CommercialContractForm contract={contract} />
+      <Divider />
       {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
-      <p>
-        <strong>Observaciones: </strong> <br/>
-        {contract?.observations}
-      </p>
-      <Statistic
-        valueStyle={{fontSize: 15}}
-        title={'Dirección'}
-        value={`
-            ${contract.items?.find(i => i.description == 'Manzana')?.value} -
-            ${contract.items?.find(i => i.description == 'Lote')?.value}
-            Etapa ${contract.items?.find(i => i.description == 'Etapa')?.value}
-          `}
-      />
-
-      {contract?.items?.map((item: ContractItem, iIndex: number) => {
-        return (
-          <Tag key={iIndex}>
-            <strong>{item.description}:</strong> <br />
-            {item.value}
-          </Tag>
-        );
-      })}
+      <Divider>
+        Items de contrato
+      </Divider>
+      {contract?.items &&
+        <Descriptions items={
+          contract?.items?.map((item: ContractItem) => {
+            return {key: item.uuid, label: item.description, children: item.value};
+          })}/>
+      }
     </div>
   );
 };
