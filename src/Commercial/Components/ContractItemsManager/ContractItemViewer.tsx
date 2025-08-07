@@ -8,7 +8,7 @@ import {
   TbPencil,
   TbTrash, TbTrashX
 } from "react-icons/tb";
-import {Divider, Input, Popover, Space, Switch} from "antd";
+import {Divider, Input, Popconfirm, Popover, Space, Switch} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -37,6 +37,17 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
       .then(() => {
         if (onChange) onChange();
         setIsModified(false);
+      })
+      .catch(err => {
+        ErrorHandler.showNotification(err);
+      });
+  }
+
+  const destroyItem = () => {
+    axios
+      .delete(`commercial/contract-items/${contractItem.uuid}`)
+      .then(() => {
+        if (onChange) onChange();
       })
       .catch(err => {
         ErrorHandler.showNotification(err);
@@ -145,7 +156,9 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           {editMode ? (<>
             {itemTypes[contractItem.type]}
             <IconButton icon={<TbPencil/>} onClick={onEdit}/>
-            <IconButton icon={<TbTrash/>} danger/>
+            <Popconfirm onConfirm={destroyItem} title={'¿Quieres eliminar este item?'} description={'Los valores almacenados también se eliminarán y no se pueden recuperar'}>
+              <IconButton icon={<TbTrash/>} danger />
+            </Popconfirm>
           </>) : <>
             {contractItem.approved_at ?
               <>
