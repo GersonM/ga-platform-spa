@@ -119,14 +119,15 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <Col xs={10}>
                 <Form.Item label={'Moneda'} name={'currency'}>
                   <CurrencySelector
-                    placeholder={selectedStock?.currency}
+                    placeholder={contract?.contractable?.currency}
                     onChange={(value: string) => setSelectedCurrency(value)}/>
                 </Form.Item>
               </Col>
               <Col xs={14}>
                 <Form.Item label={'Precio de venta'} name={'amount'}>
-                  <MoneyInput currency={selectedCurrency || selectedStock?.currency}
-                              placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
+                  <MoneyInput
+                    currency={contract?.contractable?.currency}
+                    placeholder={contract?.amount ? contract.amount + '' : contract?.contractable?.currency}/>
                 </Form.Item>
               </Col>
             </Row>
@@ -139,7 +140,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                     <ProfileSelector/>
                   ) :
                   <Space>
-                    <ProfileChip profile={user?.profile}/>
+                    <ProfileChip profile={contract?.created_by}/>
                     <IconButton
                       icon={<TbPencil/>}
                       onClick={() => setChooseSeller(!chooseSeller)}
@@ -159,12 +160,12 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 }
               </Col>
             </Row>
-              <Form.Item label="Fecha de propuesta (opcional)" name="created_at">
-                <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
-              </Form.Item>
-              <Form.Item label="Fecha de venta (opcional)" name="approved_at">
-                <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
-              </Form.Item>
+            <Form.Item label="Fecha de propuesta (opcional)" name="created_at">
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+            </Form.Item>
+            <Form.Item label="Fecha de venta (opcional)" name="approved_at">
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+            </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <Select
                 showSearch
@@ -182,26 +183,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
               <Input.TextArea/>
             </Form.Item>
-            {selectedStock ? (
-              <>
-                <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
-                <strong>{selectedStock.product?.name}</strong>
-                {selectedStock.product?.description &&
-                  <div dangerouslySetInnerHTML={{__html: selectedStock.product?.description}}></div>
-                }
-                {selectedStock.product?.type == 'property' &&
-                  <StockViewerState stock={selectedStock}/>
-                }
-                <p>
-                  <strong>Precio de venta: </strong>
-                  <span>
-                    <MoneyString currency={selectedStock.currency} value={selectedStock?.sale_price}/>
-                  </span>
-                </p>
-              </>
-            ) : (
-              isTemplate ? '' : <EmptyMessage message={'Elige un producto para ver los detalles'}/>
-            )}
           </Col>
         </Row>
         <PrimaryButton
