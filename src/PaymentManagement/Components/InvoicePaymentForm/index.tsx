@@ -57,7 +57,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       </p>
       <Form
         form={form}
-        initialValues={{amount: invoice.pending_payment}}
+        initialValues={payment ? payment : {amount: invoice.pending_payment}}
         requiredMark={false}
         layout={'vertical'}
         onFinish={submitForm}>

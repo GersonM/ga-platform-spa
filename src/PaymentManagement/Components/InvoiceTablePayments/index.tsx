@@ -12,6 +12,7 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
 import IconButton from '../../../CommonUI/IconButton';
 import FilePreview from "../../../CommonUI/FilePreview";
+import {TbPencil, TbTrash} from "react-icons/tb";
 
 interface InvoiceTablePayments {
   invoice: Invoice;
@@ -20,6 +21,7 @@ interface InvoiceTablePayments {
 
 const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<InvoicePayment>();
 
   const deletePayment = (uuid: string) => {
     axios.delete('payment-management/payments/' + uuid).then(() => {
@@ -68,23 +70,25 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
     {
       title: 'Doc.',
       dataIndex: 'attachments',
-      width: 50,
+      width: 100,
       render: (attachments: ApiFile[]) => {
-        if (attachments && attachments.length > 0) {
-          return (
-            <FilePreview fileUuid={attachments[0].uuid} />
+          return attachments?.map(f =>
+            <FilePreview fileUuid={f.uuid} />
           );
-        }
       },
     },
     {
       title: '',
       dataIndex: 'uuid',
-      render: (uuid: string) => {
+      render: (uuid: string, p: InvoicePayment) => {
         return (
           <Space>
+            <IconButton icon={<TbPencil />} small onClick={() => {
+              setSelectedPayment(p);
+              setOpenInvoiceForm(true);
+            }} />
             <Popconfirm title={'¿Quieres eliminar este concepto?'} onConfirm={() => deletePayment(uuid)}>
-              <IconButton icon={<TrashIcon />} small danger />
+              <IconButton icon={<TbTrash />} small danger />
             </Popconfirm>
           </Space>
         );
@@ -106,6 +110,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       <Modal destroyOnHidden open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
         <InvoicePaymentForm
           invoice={invoice}
+          payment={selectedPayment}
           onCompleted={() => {
             setOpenInvoiceForm(false);
             if (onChange) {
