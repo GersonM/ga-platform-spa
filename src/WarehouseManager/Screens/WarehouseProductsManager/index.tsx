@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Pagination, Space, Tooltip} from 'antd';
+import {Form, Input, Pagination, Space, Tooltip, notification} from 'antd';
 import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import {PiShippingContainer} from "react-icons/pi";
 import axios from "axios";
@@ -29,6 +29,7 @@ const WarehouseProductsManager = () => {
   const [openStockManager, setOpenStockManager] = useState(false);
   const [filters, setFilters] = useState<any>()
   const [openWarehouseManager, setOpenWarehouseManager] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -54,6 +55,19 @@ const WarehouseProductsManager = () => {
 
     return cancelTokenSource.cancel;
   }, [reload, currentPage, filters]);
+
+  const handleEditProduct = (product: StorageProduct) => {
+    if (isUpdating) {
+      notification.warning({
+        message: 'Por favor espere',
+        description: 'Los cambios se están aplicando. Intente nuevamente en unos segundos.'
+      });
+      return;
+    }
+
+    setSelectedProduct(product);
+    setOpenAddProduct(true);
+  };
 
   const columns = [
     {
@@ -104,10 +118,12 @@ const WarehouseProductsManager = () => {
               setSelectedProduct(p);
             }}/>
           </Tooltip>
-          <IconButton small icon={<TbPencil/>} onClick={() => {
-            setOpenAddProduct(true);
-            setSelectedProduct(p);
-          }}/>
+          <IconButton
+            small
+            icon={<TbPencil/>}
+            onClick={() => handleEditProduct(p)}
+            disabled={isUpdating}
+          />
           <IconButton small icon={<TbTrash/>} danger/>
         </Space>
       }
@@ -166,11 +182,18 @@ const WarehouseProductsManager = () => {
           setOpenAddProduct(false);
           setSelectedProduct(undefined);
         }}>
-        <ProductForm product={selectedProduct} onComplete={() => {
-          setReload(!reload);
-          setOpenAddProduct(false);
-          setSelectedProduct(undefined);
-        }}/>
+        <ProductForm
+          key={selectedProduct?.uuid || 'new'}
+          product={selectedProduct}
+          onComplete={() => {
+            setOpenAddProduct(false);
+            setSelectedProduct(undefined);
+            setReload(!reload);
+            setIsUpdating(true);
+            setTimeout(() => {
+              setIsUpdating(false);
+            }, 3000);
+          }}/>
       </ModalView>
       <ModalView width={800} open={openStockManager} onCancel={() => {
         setOpenStockManager(false);
