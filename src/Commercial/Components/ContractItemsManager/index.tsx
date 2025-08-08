@@ -110,7 +110,6 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
   }
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
-    console.log('click', e);
     switch (e.key) {
       case 'edit':
         setEditMode(!editMode);

@@ -340,7 +340,7 @@ const CommercialContractDetail = () => {
               {
                 key: 'documents',
                 label: 'Documentos',
-                children: <ContractItemsManager contract={contract} group={'documents'}/>
+                children: <ContractItemsManager contract={contract} group={'documents'} forceToEdit={false}/>
               },
               {
                 key: 'crm',
