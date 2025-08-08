@@ -109,26 +109,25 @@ const InvoiceForm = (
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label={'Descripción (opcional)'} name={'concept'}>
+          <Input/>
+        </Form.Item>
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Fecha de emisión'} name={'issued_on'}>
-              <DatePicker format={'DD/MM/YYYY'} onChange={d => setIssuedOn(d)} style={{width: '100%'}} placeholder={'Hoy'}/>
+              <DatePicker format={'DD/MM/YYYY'} showNow={false} onChange={d => setIssuedOn(d)} style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label={'Fecha de vencimiento'} name={'expires_on'}>
-              <DatePicker format={'DD/MM/YYYY'} minDate={issuedOn} style={{width: '100%'}} placeholder={'En 7 días'}/>
+              <DatePicker format={'DD/MM/YYYY'} showNow={false} minDate={issuedOn} style={{width: '100%'}} placeholder={'En 7 días'}/>
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={'Descripción (opcional)'} name={'concept'}>
-          <Input/>
-        </Form.Item>
         <Form.Item label={''} name={'include_taxes'} valuePropName={'checked'}>
-          <Checkbox>Incluir impuestos (IGV 18%)
-          </Checkbox>
+          <Checkbox>Incluir impuestos (IGV 18%)</Checkbox>
         </Form.Item>
-        <PrimaryButton disabled={!isModified} htmlType={"submit"} label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
+        <PrimaryButton disabled={!isModified && !!invoice} htmlType={"submit"} label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
       </Form>
       {invoice &&
         <ActivityLogViewer id={invoice?.uuid} entity={'invoice'}/>

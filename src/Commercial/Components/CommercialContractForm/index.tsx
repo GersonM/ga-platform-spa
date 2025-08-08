@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
 import {useForm} from "antd/lib/form/Form";
@@ -7,12 +7,8 @@ import axios from 'axios';
 
 import type {Contract, StorageStock} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
-import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import MoneyString from '../../../CommonUI/MoneyString';
-import StockViewerState from '../StockViewerState';
-import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import IconButton from "../../../CommonUI/IconButton";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
@@ -25,7 +21,6 @@ interface CommercialContractFormProps {
 }
 
 const CommercialContractForm = ({onComplete, contract, isTemplate = false}: CommercialContractFormProps) => {
-  const {user} = useContext(AuthContext);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
