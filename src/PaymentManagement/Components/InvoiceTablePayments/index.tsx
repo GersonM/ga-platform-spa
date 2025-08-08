@@ -70,11 +70,13 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
     {
       title: 'Doc.',
       dataIndex: 'attachments',
-      width: 100,
+      width: 190,
       render: (attachments: ApiFile[]) => {
-          return attachments?.map(f =>
-            <FilePreview fileUuid={f.uuid} />
-          );
+          return <Space wrap>
+            {attachments?.map(f =>
+              <FilePreview fileUuid={f.uuid} />
+            )}
+          </Space> ;
       },
     },
     {

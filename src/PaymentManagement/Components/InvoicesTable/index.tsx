@@ -217,6 +217,7 @@ const InvoicesTable = (
         </Space>
       }
       <ModalView
+        width={700}
         onCancel={() => {
           setOpenPaymentsDetail(false);
         }} open={openPaymentsDetail}>
