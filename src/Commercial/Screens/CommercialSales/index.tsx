@@ -21,6 +21,7 @@ import ContractStatus from "./ContractStatus.tsx";
 import Config from "../../../Config.tsx";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import './styles.less';
+import NewSaleForm from "../../Components/NewSaleForm";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -300,7 +301,7 @@ const CommercialSales = () => {
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
         footer={false}>
-        <CreateContractForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)}/>
+        <NewSaleForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)}/>
       </Modal>
     </ModuleContent>
   );
