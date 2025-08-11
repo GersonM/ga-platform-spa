@@ -23,7 +23,7 @@ dayjs.extend(relativeTime);
 const token = Cookies.get('session_token');
 const selectedWorkspace = Cookies.get('workspace');
 const isDevMode = window.location.hostname.includes('localhost') || window.location.hostname.includes('192.168');
-let tenantID = selectedWorkspace ? selectedWorkspace : isDevMode ? 'app' : window.location.hostname.split('.')[0];
+let tenantID = selectedWorkspace ? selectedWorkspace : isDevMode ? import.meta.env.VITE_CODE : window.location.hostname.split('.')[0];
 
 if (window.location.hostname.includes('countryclublavilla.pe')) {
   tenantID = 'country-moquegua';
