@@ -16,7 +16,7 @@ import EstateContractAddress from '../../Components/RealState/EstateContractAddr
 import FilterForm from '../../../CommonUI/FilterForm';
 import type {Client, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import CreateContractForm from '../../Components/CommercialContractForm';
+import NewSaleForm from "../../Components/NewSaleForm";
 import './styles.less';
 
 const CommercialClients = () => {
@@ -275,7 +275,7 @@ const CommercialClients = () => {
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
         footer={false}>
-        <CreateContractForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)} />
+        <NewSaleForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)} />
       </Modal>
     </ModuleContent>
   );
