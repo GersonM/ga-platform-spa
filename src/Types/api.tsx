@@ -32,8 +32,11 @@ export type SettingValue = {
 export type Company = {
   uuid: string;
   name: string;
+  email: string;
+  phone: string;
   logo?: ApiFile;
   legal_name: string;
+  legal_address: string;
   legal_uid: string;
 };
 

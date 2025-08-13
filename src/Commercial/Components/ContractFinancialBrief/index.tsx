@@ -12,7 +12,7 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
   return (
     <>
       <div className={'contract-invoice'}>
-        {contract.provided_at && <Tag color={'blue'}>Entregado</Tag>} <MoneyString currency={contract.currency} value={contract.amount} />
+        <MoneyString currency={contract.contractable?.currency} value={contract.amount} />
       </div>
       {contract.invoices?.map((i, index) => {
         return (
@@ -29,7 +29,7 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
                   )}
                 </>
               }>
-              <Tag color={i.paid_at ? 'green' : 'red'}>{i.concept}</Tag>
+              <Tag bordered={false} color={i.paid_at ? 'green' : 'red'}>{i.tracking_id} :: <MoneyString currency={i.currency || contract.contractable?.currency} value={i.pending_payment} /></Tag>
             </Tooltip>
           </div>
         );

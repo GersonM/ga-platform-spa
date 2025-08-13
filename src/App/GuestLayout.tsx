@@ -7,6 +7,7 @@ import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import LoadingIndicator from '../CommonUI/LoadingIndicator';
 import './GuestLayout.less';
+
 const key = 'KcEke7cCtNBvgokFMxxhW2YUuV2AX3rrNVPyIyTo48Dwi7Accj2SRZjm';
 
 const GuestLayout = () => {

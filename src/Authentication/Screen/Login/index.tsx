@@ -2,15 +2,15 @@ import {useContext, useState} from 'react';
 import {Button, Divider, Form, Input, Modal} from 'antd';
 import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {type AxiosRequestConfig} from 'axios';
-import Cookies from 'js-cookie';
 import {TbAt, TbChevronRight, TbKey} from 'react-icons/tb';
 import {GoogleLogin} from "@react-oauth/google";
+import Cookies from 'js-cookie';
+
 import AuthContext from "../../../Context/AuthContext.tsx";
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const {darkMode} = useContext(AuthContext);
 
   const login = ({email, password}: any) => {
@@ -54,8 +54,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = (credentialResponse: any) => {
-    setGoogleLoading(true);
-    axios.post('authenticate/auth/google', {token:credentialResponse.credential, code: credentialResponse.credential})
+    axios.post('authenticate/service/google', {token:credentialResponse.credential})
       .then(({data}) => {
         axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
         Cookies.set('session_token', data.token);

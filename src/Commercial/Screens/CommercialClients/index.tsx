@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tooltip} from 'antd';
+import {Form, Input, Modal, Pagination, Select, Space, Tooltip} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {useNavigate} from 'react-router-dom';
@@ -14,20 +14,21 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ContractList from './ContractList';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
 import FilterForm from '../../../CommonUI/FilterForm';
-import type {Client, Profile, ResponsePagination} from '../../../Types/api';
+import type {Client, Company, Contract, Profile, ResponsePagination} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import NewSaleForm from "../../Components/NewSaleForm";
 import './styles.less';
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 
 const CommercialClients = () => {
-  const [clients, setClients] = useState<Profile[]>();
+  const [clients, setClients] = useState<Client[]>();
   const [searchText, setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [commercialStats, setCommercialStats] = useState<any>();
   const [stageFilter, setStageFilter] = useState<string>();
   const [blockFilter, setBlockFilter] = useState<string>();
   const [providedFilter, setProvidedFilter] = useState<string>();
@@ -36,26 +37,6 @@ const CommercialClients = () => {
   const lastSearchBlock = useDebounce(blockFilter, 300);
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
-
-  useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-
-    axios
-      .get(`commercial/stats`, config)
-      .then(response => {
-        if (response) {
-          setCommercialStats(response.data);
-        }
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-
-    return cancelTokenSource.cancel;
-  }, [stageFilter]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -133,30 +114,28 @@ const CommercialClients = () => {
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'uuid',
-      width: 280,
-      render: (_uuid: string, row: Profile) => {
+      dataIndex: 'entity',
+      width: 220,
+      render: (entity: any, row: Client) => {
         return (
-          <>
-            {row.name} {row.last_name} <br />
-            <small>
-              <ProfileDocument profile={row} />
-            </small>
-          </>
+          row.type.includes('Profile') ? <ProfileChip profile={entity} /> : <CompanyChip company={entity} />
         );
       },
     },
     {
       title: 'Teléfono',
-      dataIndex: 'phone',
+      dataIndex: 'entity',
       width: 70,
+      render: (entity: Company|Profile) => {
+        return entity.phone;
+      }
     },
     {
       title: 'Contratos',
-      dataIndex: 'client',
-      render: (client?: Client) => (
+      dataIndex: 'contracts',
+      render: (contracts?: Contract[]) => (
         <Space wrap>
-          {client?.contracts?.map(c => {
+          {contracts?.map(c => {
             return (
               <EstateContractAddress
                 contract={c}
@@ -172,8 +151,8 @@ const CommercialClients = () => {
     },
     {
       title: 'Pagos vencidos',
-      dataIndex: 'client',
-      render: (client: Client) => <ContractList contracts={client?.contracts} />,
+      dataIndex: 'contracts',
+      render: (contracts: Contract[]) => <ContractList contracts={contracts} />,
     },
   ];
 
@@ -242,20 +221,6 @@ const CommercialClients = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <Space size={'large'}>
-        {commercialStats && (
-          <>
-            <Progress
-              showInfo
-              type={'dashboard'}
-              size={40}
-              percent={Math.round((commercialStats?.contracts.provided * 100) / commercialStats.contracts.total)}
-            />
-            <Statistic title={'Entregados'} value={commercialStats.contracts.provided} />
-            <Statistic title={'Vendidas'} value={commercialStats.contracts.total} />
-          </>
-        )}
-      </Space>
       <TableList loading={loading} columns={columns} dataSource={clients} pagination={false} />
       {pagination && (
         <Pagination
