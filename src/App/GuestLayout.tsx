@@ -2,26 +2,29 @@ import {Suspense, useContext, useEffect, useState} from 'react';
 import {Outlet} from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import { createClient } from 'pexels';
-
 import logo from './../Assets/ga_logo.webp';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import LoadingIndicator from '../CommonUI/LoadingIndicator';
 import './GuestLayout.less';
 const key = 'KcEke7cCtNBvgokFMxxhW2YUuV2AX3rrNVPyIyTo48Dwi7Accj2SRZjm';
-const client = createClient(key);
 
 const GuestLayout = () => {
   const {config, darkMode} = useContext(AuthContext);
   const [bgResource, setBgResource] = useState<string>();
 
   useEffect(() => {
-    client.photos.search({query:'cloud city night cloud'}).then((res: any) => {
-      const random = Math.floor(Math.random() * res.photos.length);
-      setBgResource(res?.photos[random].src?.landscape);
-    })
-  }, []);
+    const query = 'cloud city ' + (darkMode ? 'night' : 'day');
+    fetch(
+      `https://api.pexels.com/v1/search?query=${query}&per_page=15&page=1`,
+      {headers: {Authorization: key,}},
+    ).then((response) => {
+      response.json().then(data => {
+        const random = Math.floor(Math.random() * data.photos.length);
+        setBgResource(data?.photos[random].src?.landscape);
+      });
+    });
+  }, [darkMode]);
 
   const tenantLogo = darkMode ? config?.dark_logo : config?.white_logo;
 
