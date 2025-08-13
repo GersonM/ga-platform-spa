@@ -12,7 +12,7 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
   return (
     <>
       <div className={'contract-invoice'}>
-        {contract.provided_at && <Tag color={'blue'}>Entregado</Tag>} {contract.amount_string}{' '}
+        {contract.provided_at && <Tag color={'blue'}>Entregado</Tag>} <MoneyString currency={contract.currency} value={contract.amount} />
       </div>
       {contract.invoices?.map((i, index) => {
         return (
@@ -20,11 +20,11 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
             <Tooltip
               title={
                 <>
-                  Total <MoneyString value={i.amount} />
+                  Total <MoneyString currency={i.currency} value={i.amount} />
                   <br />
                   {i.pending_payment && (
                     <>
-                      Pendiente por pagar: <MoneyString value={i.pending_payment} />
+                      Pendiente por pagar: <MoneyString currency={i.currency} value={i.pending_payment} />
                     </>
                   )}
                 </>

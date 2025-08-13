@@ -172,14 +172,14 @@ const Navigation = () => {
                 <NavItem label={'Control de acceso'} icon={<PiUserFocus/>} path={'/attendance/access-control'}/>
               </NavItem>
             )}
-            {config?.modules.includes('real-estate') && (
+            {/*config?.modules.includes('real-estate') && (
               <NavItem label={'Constructora'} icon={<PiBulldozerLight/>}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/real-estate/dashboard'}/>
                 <NavItem icon={<PiBuildingsLight/>} label={'Propiedades'} path={'/real-estate/estates'}/>
                 <NavItem icon={<PiVectorThreeLight/>} label={'Proyectos'} path={'/real-estate/projects'}/>
                 <NavItem icon={<PiDoorOpenLight/>} label={'Entregas'} path={'/real-estate/providing'}/>
               </NavItem>
-            )}
+            )*/}
             {config?.modules.includes('commercial') && (
               <NavItem label={'CRM'} icon={<TbHeadset/>} notifications={'Beta'}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/crm/dashboard'}/>

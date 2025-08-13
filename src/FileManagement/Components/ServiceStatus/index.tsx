@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {TbGaugeFilled} from "react-icons/tb";
+import {TbChartPie} from "react-icons/tb";
 
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import type {FileManagementStatus} from '../../../Types/api';
@@ -38,7 +38,7 @@ const ServiceStatus = () => {
   return (
     <div className={'service-usage-wrapper'}>
       <LoadingIndicator visible={loading} overlay/>
-      <TbGaugeFilled size={28} onClick={() => setReload(!reload)}/>
+      <TbChartPie size={28} onClick={() => setReload(!reload)}/>
       {serviceStatus && (
         <div>
           <div>{((serviceStatus.usage / serviceStatus.total) * 100).toFixed(1)} % de uso</div>

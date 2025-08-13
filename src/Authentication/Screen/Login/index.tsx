@@ -1,15 +1,17 @@
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {Button, Divider, Form, Input, Modal} from 'antd';
 import {NavLink, useNavigate} from 'react-router-dom';
 import axios, {type AxiosRequestConfig} from 'axios';
 import Cookies from 'js-cookie';
 import {TbAt, TbChevronRight, TbKey} from 'react-icons/tb';
-import GoogleButton from './GoogleButton';
+import {GoogleLogin} from "@react-oauth/google";
+import AuthContext from "../../../Context/AuthContext.tsx";
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [_googleLoading, setGoogleLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const {darkMode} = useContext(AuthContext);
 
   const login = ({email, password}: any) => {
     axios.defaults.headers.common.Authorization = 'Bearer token';
@@ -51,32 +53,33 @@ const Login = () => {
       });
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (credentialResponse: any) => {
     setGoogleLoading(true);
-    window.location.href = axios.defaults.baseURL + 'authenticate/auth/google/redirect';
-    //window.location.href = 'http://localhost:8000/api/v1/authenticate/auth/google/redirect';
-  };
+    axios.post('authenticate/auth/google', {token:credentialResponse.credential, code: credentialResponse.credential})
+      .then(({data}) => {
+        axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
+        Cookies.set('session_token', data.token);
+        document.location.href = '/';
+      })
+      .catch(error => {
+        if (error.response && error.response.data.error === 'pending_verification') {
+          Cookies.set('2fa', error.response.data.hint);
+          navigate('/two-factor-verify');
+        } else {
+          let message = error.message;
+          if (error.response) {
+            message = error.response.data.error;
+          }
 
-  // Función para manejar el callback de Google (si necesitas procesarlo en el frontend)
-  /*const handleGoogleCallback = async (token: string, profileUuid: string) => {
-    try {
-      axios.defaults.headers.common.Authorization = 'Bearer ' + token;
-      Cookies.set('session_token', token);
-      if (profileUuid) {
-        Cookies.set('profile_uuid', profileUuid);
-      }
-      document.location.href = '/';
-    } catch (error) {
-      console.error('Error processing Google callback:', error);
-      Modal.error({
-        title: 'Error de autenticación',
-        content: 'No se pudo completar el login con Google',
-        okText: 'Volver a intentar',
-        centered: true,
-      });
-      setGoogleLoading(false);
-    }
-  };*/
+          Modal.error({
+            title: 'No se pudo iniciar sesión',
+            content: message,
+            okText: 'Volver a intentar',
+            centered: true,
+          });
+        }
+      })
+  };
 
   return (
     <>
@@ -101,14 +104,21 @@ const Login = () => {
           Ingresar <TbChevronRight />
         </Button>
       </Form>
-      <Divider>o</Divider>
-      <GoogleButton onClick={handleGoogleLogin} />
-      <Divider />
+      <br/>
       <NavLink to={'/auth/recover'}>
-        <Button block variant="filled" color="default">
+        <Button block type={'link'} color="default">
           Recuperar contraseña
         </Button>
       </NavLink>
+      <Divider/>
+      <GoogleLogin
+        theme={darkMode ? 'filled_black':'filled_blue'}
+        onSuccess={handleGoogleLogin}
+      />
+      <br/>
+      <a href="https://geekadvice.pe/politica-privacidad/">
+          Política de privacidad
+      </a>
     </>
   );
 };

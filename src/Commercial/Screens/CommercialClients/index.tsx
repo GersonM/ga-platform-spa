@@ -171,7 +171,7 @@ const CommercialClients = () => {
       ),
     },
     {
-      title: 'Pagos',
+      title: 'Pagos vencidos',
       dataIndex: 'client',
       render: (client: Client) => <ContractList contracts={client?.contracts} />,
     },
