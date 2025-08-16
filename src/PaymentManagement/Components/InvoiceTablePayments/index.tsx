@@ -32,6 +32,16 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
 
   const columns = [
     {
+      title: 'Fecha de pago',
+      width: 140,
+      dataIndex: 'created_at',
+      render: (created_at: string) => {
+        return created_at && <>
+          {dayjs(created_at).format('DD/MM/YYYY')}
+          <small>{dayjs(created_at).format('HH:MM a')}</small>
+        </>
+      }},
+    {
       title: 'Descripción',
       dataIndex: 'method',
       render: (method: any, row: InvoicePayment) => {
@@ -49,23 +59,13 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       dataIndex: 'amount',
       width: 110,
       align: 'right',
-      render: (value: number) => <MoneyString value={value} />,
+      render: (value: number) => <MoneyString currency={invoice.currency} value={value} />,
     },
     {
       title: 'N° Voucher',
       dataIndex: 'voucher_code',
       width: 150,
     },
-    {
-      title: 'Creado',
-      width: 110,
-      dataIndex: 'created_at',
-      render: (created_at: string) => {
-        return created_at && <>
-          {dayjs(created_at).format('DD/MM/YYYY')}
-          <small>{dayjs(created_at).format('HH:MM a')}</small>
-        </>
-      }},
     {
       title: 'Doc.',
       dataIndex: 'attachments',
