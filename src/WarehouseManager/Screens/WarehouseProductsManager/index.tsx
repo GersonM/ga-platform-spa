@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Pagination, Space, Tooltip, notification} from 'antd';
+import {Form, Input, Pagination, Space, Tooltip, notification, Tag} from 'antd';
 import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import {PiShippingContainer} from "react-icons/pi";
 import axios from "axios";
@@ -17,6 +17,7 @@ import ProductManufacturerSelector from "../../Components/ProductManufacturerSel
 import ProductStockManager from "../../Components/ProductStockManager";
 import WarehouseManager from "../../Components/WarehouseManager";
 import ModalView from "../../../CommonUI/ModalView";
+import pluralize from "pluralize";
 
 const WarehouseProductsManager = () => {
   const [loading, setLoading] = useState(false);
@@ -71,17 +72,23 @@ const WarehouseProductsManager = () => {
 
   const columns = [
     {
-      title: 'Nombre',
-      dataIndex: 'name',
-      width: 200,
-      render: (name: string, product: StorageProduct) => (
-        <span>{name} <br/> <small>{product.code}</small></span>
+      title: 'Código',
+      dataIndex: 'code',
+      width: 120,
+      render: (code: string) => (
+        <small>
+
+        <code>{code}</code>
+        </small>
       )
     },
     {
-      title: 'Descripción',
-      responsive: ['md'],
-      dataIndex: 'excerpt',
+      title: 'Nombre',
+      dataIndex: 'name',
+      width: 260,
+      render: (name: string, product: StorageProduct) => (
+        <span>{name} <br/> <small>{product.description}</small></span>
+      )
     },
     {
       title: 'Marca',
@@ -97,15 +104,21 @@ const WarehouseProductsManager = () => {
       title: 'Variaciones',
       width: 50,
       dataIndex: 'available_variations',
+      render: (available_variations: string[]) => (
+        <Space wrap>
+          {available_variations && available_variations.map((value, index) => (
+            <Tag color={'blue'} bordered={false} key={index}>{value}</Tag>
+          ))}
+        </Space>
+      )
     },
     {
-      title: 'Existencias',
-      width: 50,
+      title: 'Existencias disponibles',
+      width: 120,
       dataIndex: 'available_stock',
-    },
-    {
-      title: 'Tipo de unidad',
-      dataIndex: 'unit_type',
+      render: (available_stock: number, product: StorageProduct) => (
+        available_stock ? pluralize(product?.unit_type || 'unidad', available_stock, true) : ''
+      )
     },
     {
       title: '',
@@ -141,28 +154,30 @@ const WarehouseProductsManager = () => {
             <IconButton icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
           </Tooltip>
         </Space>}
-        onAdd={() => setOpenAddProduct(true)}/>
-      <FilterForm
-        onInitialValues={values => setFilters(values)}
-        onSubmit={values => setFilters(values)}
+        onAdd={() => setOpenAddProduct(true)}
       >
-        <Form.Item name={'search'} label={'Buscar'}>
-          <Input.Search
-            allowClear
-            placeholder={'Buscar por nombre, código o descripción'}
-          />
-        </Form.Item>
-        <Form.Item name={'group'} label={'Grupo'}>
-          <ProductGroupsSelector/>
-        </Form.Item>
-        <Form.Item name={'brand'}>
-          <ProductBrandSelector/>
-        </Form.Item>
-        <Form.Item name={'manufacturer'}>
-          <ProductManufacturerSelector/>
-        </Form.Item>
-      </FilterForm>
-      <TableList columns={columns} dataSource={products}/>
+        <FilterForm
+          onInitialValues={values => setFilters(values)}
+          onSubmit={values => setFilters(values)}
+        >
+          <Form.Item name={'search'} label={'Buscar'}>
+            <Input.Search
+              allowClear
+              placeholder={'Buscar por nombre, código o descripción'}
+            />
+          </Form.Item>
+          <Form.Item name={'group'} label={'Grupo'}>
+            <ProductGroupsSelector/>
+          </Form.Item>
+          <Form.Item name={'brand'}>
+            <ProductBrandSelector/>
+          </Form.Item>
+          <Form.Item name={'manufacturer'}>
+            <ProductManufacturerSelector/>
+          </Form.Item>
+        </FilterForm>
+      </ContentHeader>
+      <TableList customStyle={false} scroll={{x:1000}} columns={columns} dataSource={products}/>
       {pagination && (
         <Pagination
           showSizeChanger={false}
