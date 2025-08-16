@@ -121,7 +121,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
                 {sale_price != null ?
                   <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
                 }
-                {row.cost_price && <small>
+                {row.cost_price != null && <small>
                   Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
                 </small>}
               </div>

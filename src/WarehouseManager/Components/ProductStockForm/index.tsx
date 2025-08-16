@@ -14,6 +14,7 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
+import Config from "../../../Config.tsx";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -111,8 +112,6 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
       });
   };
 
-  console.log(stock);
-
   return (
     <Form form={form} layout="vertical" initialValues={{
       ...stock,
@@ -161,7 +160,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         </Col>
         <Col md={9} xs={24}>
           <Form.Item label="Fecha de vencimiento" name={'expiration_date'}>
-            <DatePicker style={{width: '100%'}}/>
+            <DatePicker style={{width: '100%'}} format={Config.dateFormatUser}/>
           </Form.Item>
         </Col>
       </Row>
@@ -180,8 +179,10 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           </Form.Item>
         </Col>
         <Col md={9}>
-          <Form.Item label="Venta" name={'sale_price'}
-                     tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
+          <Form.Item
+            label="Venta"
+            name={'sale_price'}
+            tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
             <MoneyInput currency={currentCurrency || stock?.currency}/>
           </Form.Item>
         </Col>
@@ -255,7 +256,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         <small style={{color: '#a6a6a6', display: 'block', lineHeight: '1.4'}}>
           <strong>Agrega información adicional específica de este stock.</strong>
           <br/>
-          Campos sugeridos: ubicacion, lote, proveedor ref, test realizado, condicion, vencimiento proximo.
+          Campos sugeridos: ubicación, lote, proveedor ref, test realizado, condition, vencimiento proximo.
         </small>
       </Form.Item>
 

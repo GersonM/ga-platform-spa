@@ -20,11 +20,11 @@ const MoneyInput = ({value, currency = 'PEN', onChange, onCurrencyChange, ...pro
       style={{width: '100%'}}
       onChange={value => {
         if (onChange) {
-          onChange(value ? value * 100 : undefined);
+          onChange((value != null) ? value * 100 : undefined);
         }
       }}
       addonBefore={currencies[currency]}
-      value={value ? value / 100 : null}
+      value={(value != null || value != undefined) ? value / 100 : null}
       {...props}
     />
   );

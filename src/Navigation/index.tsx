@@ -143,7 +143,7 @@ const Navigation = () => {
       {contextHolder}
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
-          <Tooltip title={config?.config?.name}>
+          <Tooltip title={config?.config?.name} placement={"right"}>
             <div className="logo-square">
               <img src={config?.dark_logo || logo} alt={config?.config?.name}/>
               <PiCaretUpDown/>

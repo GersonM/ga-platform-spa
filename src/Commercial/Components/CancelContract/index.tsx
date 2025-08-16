@@ -24,7 +24,7 @@ const CancelContract = ({contract, onComplete}: CancelContractsProps) => {
   };
   return (
     <div>
-      <h2>Anular contrato</h2>
+      <h2>Anular</h2>
       <p>Al anular el contrato este queda en estado anulado, las facturas relacionadas se </p>
       <Form onFinish={onSubmit} layout="vertical">
         <Form.Item label={'Motivo'} name={'reason'}>

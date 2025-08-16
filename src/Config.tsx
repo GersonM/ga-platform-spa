@@ -11,8 +11,9 @@ const Config = {
   buttonColor: '#000000',
   buttonTextColor: '#ffffff',
   datetimeFormatServer: 'YYYY-MM-DD HH:mm:ss',
-  datetimeFormatUser: 'DD/MM/YYYY HH:mm a',
   dateFormatServer: 'YYYY-MM-DD',
+  dateFormatUser: 'DD/MM/YYYY',
+  datetimeFormatUser: 'DD/MM/YYYY HH:mm a',
   accountId: '6267108632001',
   policyKey:
     'BCpkADawqM1Tg1a6JdUJSOdOPJt8snv9A_guoitVkKENpgjhPlNaJ0v73MMPEBVJ7byxGl3OeXMdaXfFh-YuiqQtvALgXqNWLir91MGHcy9bycNO0XCribzzrHjtYh25GHG9cdwLBTrF9ZjN',

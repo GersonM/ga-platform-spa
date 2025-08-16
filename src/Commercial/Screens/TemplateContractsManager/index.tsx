@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {TbContract, TbPlus, TbReload} from "react-icons/tb";
+import {TbPlus, TbReload} from "react-icons/tb";
+import {LuLayoutList} from "react-icons/lu";
 import axios from "axios";
 
 import ModuleContent from "../../../CommonUI/ModuleContent";
@@ -13,7 +14,7 @@ import {Space} from "antd";
 import EmptyMessage from "../../../CommonUI/EmptyMessage";
 import ContractItemsManager from "../../Components/ContractItemsManager";
 import ModalView from "../../../CommonUI/ModalView";
-import CreateContractForm from "../../Components/CommercialContractForm";
+import ContractTemplateForm from "../../Components/ContractTemplateForm";
 
 const TemplateContractsManager = () => {
   const [templates, setTemplates] = useState<Contract[]>();
@@ -90,24 +91,26 @@ const TemplateContractsManager = () => {
           {templates?.map((template, index) => (
             <NavListItem
               path={`/commercial/contract-templates/${template.uuid}`}
-              key={index} icon={<TbContract/>}
-              name={<>
-                {template.title}
-                <small>{template.observations}</small>
-              </>}
+              key={index} icon={<LuLayoutList/>}
+              caption={template.observations}
+              name={template.title}
             />
           ))}
         </NavList>
       </ModuleSidebar>
       <ModuleContent withSidebar>
-        <ContentHeader title={'Valores de la plantilla'}/>
+        <ContentHeader title={selectedContract?.title} loading={loading}/>
         {selectedContract && <ContractItemsManager group={'documents'} contract={selectedContract} forceToEdit={true} />}
       </ModuleContent>
-      <ModalView width={700} onCancel={() => setOpenNewTemplate(false)} open={openNewTemplate}>
-        <CreateContractForm contract={selectedContract} isTemplate onComplete={() => {
-          setOpenNewTemplate(false);
-          setReload(!reload);
-        }} />
+      <ModalView onCancel={() => setOpenNewTemplate(false)} open={openNewTemplate}>
+        <ContractTemplateForm
+          contract={selectedContract}
+          isTemplate
+          onComplete={() => {
+            setOpenNewTemplate(false);
+            setReload(!reload);
+          }}
+        />
       </ModalView>
     </>
   );

@@ -20,6 +20,7 @@ import NewSaleForm from "../../Components/NewSaleForm";
 import './styles.less';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
+import MetaTitle from "../../../CommonUI/MetaTitle";
 
 const CommercialClients = () => {
   const [clients, setClients] = useState<Client[]>();
@@ -115,7 +116,7 @@ const CommercialClients = () => {
     {
       title: 'Nombre',
       dataIndex: 'entity',
-      width: 220,
+      width: 250,
       render: (entity: any, row: Client) => {
         return (
           row.type.includes('Profile') ? <ProfileChip profile={entity} /> : <CompanyChip company={entity} />
@@ -125,7 +126,7 @@ const CommercialClients = () => {
     {
       title: 'Teléfono',
       dataIndex: 'entity',
-      width: 70,
+      width: 110,
       render: (entity: Company|Profile) => {
         return entity.phone;
       }
@@ -158,6 +159,7 @@ const CommercialClients = () => {
 
   return (
     <ModuleContent>
+      <MetaTitle title={'Clientes'} />
       <ContentHeader
         tools={
           <>

@@ -290,7 +290,7 @@ const CommercialContractDetail = () => {
                 block
                 icon={<PiReceiptXBold/>}
                 disabled={!!contract?.cancelled_at}
-                label={'Anular contrato'}
+                label={'Anular'}
                 onClick={() => setOpenCancelContract(true)}
               />
             }

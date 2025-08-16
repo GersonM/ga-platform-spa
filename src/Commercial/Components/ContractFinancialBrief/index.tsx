@@ -29,7 +29,7 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
                   )}
                 </>
               }>
-              <Tag bordered={false} color={i.paid_at ? 'green' : 'red'}>{i.tracking_id} :: <MoneyString currency={i.currency || contract.contractable?.currency} value={i.pending_payment} /></Tag>
+              <Tag bordered={false} color={i.paid_at ? 'green' : 'red'}>{i.tracking_id} {'->'} <MoneyString currency={i.currency || contract.contractable?.currency} value={i.pending_payment} /></Tag>
             </Tooltip>
           </div>
         );
