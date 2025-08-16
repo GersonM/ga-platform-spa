@@ -3,10 +3,7 @@ import {
   Checkbox,
   Col,
   DatePicker,
-  Descriptions,
-  type DescriptionsProps,
   Form,
-  Input,
   Progress,
   Row,
   Space,
@@ -109,9 +106,6 @@ const InvoiceForm = (
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={'Descripción (opcional)'} name={'concept'}>
-          <Input/>
-        </Form.Item>
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Fecha de emisión'} name={'issued_on'}>

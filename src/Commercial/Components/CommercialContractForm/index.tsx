@@ -13,6 +13,7 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import IconButton from "../../../CommonUI/IconButton";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -162,15 +163,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
             </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
-              <Select
-                showSearch
-                allowClear
-                options={[
-                  {value: 'credit', label: 'Tarjeta Crédito / Débido'},
-                  {value: 'cash', label: 'Efectivo'},
-                  {value: 'other', label: 'Otro'},
-                ]}
-              />
+              <PaymentMethodTypesSelector />
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
               <Input.TextArea/>

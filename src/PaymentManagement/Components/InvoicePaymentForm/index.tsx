@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {Col, Form, Input, Row} from 'antd';
+import {useEffect, useState} from 'react';
+import {Col, DatePicker, Form, Input, Row, Select, Tag} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCheck} from 'react-icons/pi';
 import axios from 'axios';
@@ -10,6 +10,9 @@ import type {Invoice, InvoicePayment} from '../../../Types/api';
 import FileUploader from '../../../CommonUI/FileUploader';
 import MoneyString from '../../../CommonUI/MoneyString';
 import MoneyInput from "../../../CommonUI/MoneyInput";
+import dayjs from "dayjs";
+import Config from "../../../Config.tsx";
+import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 
 interface InvoicePaymentProps {
   onCompleted: () => void;
@@ -50,30 +53,38 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
 
   return (
     <>
-      <h3>Registrar nuevo pago</h3>
+      <h3>Registrar nuevo pago
+      </h3>
       <p>
-        <MoneyString value={invoice.amount} />
-        <MoneyString value={invoice.pending_payment} />
+        <Tag bordered={false} color="blue">
+          {invoice.tracking_id}
+        </Tag>
+        Pendiente: <MoneyString value={invoice.pending_payment} /> de <MoneyString value={invoice.amount} />
       </p>
       <Form
         form={form}
-        initialValues={payment ? payment : {amount: invoice.pending_payment}}
+        initialValues={payment ? {...payment, created_at: dayjs(payment.created_at)} : {amount: invoice.pending_payment}}
         requiredMark={false}
         layout={'vertical'}
         onFinish={submitForm}>
         <Row gutter={[15, 15]}>
-          <Col span={7}>
-            <Form.Item name={'amount'} label={'Monto'} rules={[{required: true}]}>
-              <MoneyInput />
+          <Col span={10}>
+            <Form.Item name={'payment_method'} label={'Método de pago'}>
+              <PaymentMethodTypesSelector />
             </Form.Item>
           </Col>
-          <Col span={17}>
-            <Form.Item name={'description'} label={'Descripción'} rules={[{required: true}]}>
-              <Input />
+          <Col span={7}>
+            <Form.Item name={'amount'} label={'Monto'} rules={[{required: true}]}>
+              <MoneyInput currency={invoice.currency || 'PEN'} />
+            </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form.Item name={'created_at'} label={'Fecha de pago'}>
+              <DatePicker placeholder={'Hoy'} format={Config.dateFormatUser} />
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'voucher_code'} label={'Número de comprobante'} rules={[{required: true}]}>
+        <Form.Item name={'voucher_code'} label={'Número de comprobante / Transacción'}>
           <Input />
         </Form.Item>
         <Form.Item label={'Foto del comprobante'}>
@@ -84,7 +95,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
             }}
           />
         </Form.Item>
-        <Form.Item name={'transaction_info'} label={'Información adicional (opcional)'}>
+        <Form.Item name={'description'} label={'Descripción (opcional)'} tooltip={'Información adicional'}>
           <Input />
         </Form.Item>
         <PrimaryButton icon={<PiCheck />} block loading={loading} label={'Guardar'} htmlType={'submit'} />
