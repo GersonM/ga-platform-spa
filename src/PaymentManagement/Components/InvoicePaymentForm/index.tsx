@@ -59,7 +59,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         <Tag bordered={false} color="blue">
           {invoice.tracking_id}
         </Tag>
-        Pendiente: <MoneyString value={invoice.pending_payment} /> de <MoneyString value={invoice.amount} />
+        Pendiente: <MoneyString currency={invoice.currency || 'PEN'} value={invoice.pending_payment} /> de <MoneyString currency={invoice.currency || 'PEN'} value={invoice.amount} />
       </p>
       <Form
         form={form}
