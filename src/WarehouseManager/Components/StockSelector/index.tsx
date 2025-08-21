@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import {Select, Tag} from 'antd';
+import {Divider, Select, Tag} from 'antd';
 import pluralize from 'pluralize';
 
 import type {StorageStock} from '../../../Types/api';
@@ -10,6 +10,7 @@ import MoneyString from '../../../CommonUI/MoneyString';
 
 interface ProductSelectorProps {
   placeholder?: string;
+  currency?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
@@ -20,7 +21,7 @@ interface ProductSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorProps) => {
+const StockSelector = ({placeholder, currency, mode, refresh, ...props}: ProductSelectorProps) => {
   const [stock, setStock] = useState<StorageStock[]>([]);
   const [loading, setLoading] = useState(false);
   const [stockSearch, setStockSearch] = useState<string>();
@@ -40,17 +41,23 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
         setLoading(false);
         if (response) {
           setStock(
-            response.data.data.map((item: StorageStock) => {
-              const units = item.is_consumable ? pluralize(item.product?.unit_type || 'unit', item.quantity, true) : 'Ilimitado';
+            response.data
+              .data
+              .filter((item: StorageStock) => !currency || item.currency === currency)
+              .map((item: StorageStock) => {
+              let disabled = item.status != 'available';
+              if(currency != null) {
+                disabled = currency != item.currency
+              }
               return {
                 value: item.uuid,
                 entity: item,
-                disabled: item.status != 'available',
+                disabled,
                 title: item.status,
                 label: (
                   <>
-                    {item.sku} - <MoneyString currency={item.currency} value={item.sale_price}/> <Tag bordered={false} color={item.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
-                    <small>{item.variation_name || item.product?.name}</small>
+                    <Tag bordered={false} color={'blue'}>{item.sku}</Tag>
+                    <MoneyString currency={item.currency} value={item.sale_price}/> - {item?.variation_name || item?.product?.name}
                   </>
                 ),
               };
@@ -64,7 +71,7 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
       });
 
     return cancelTokenSource.cancel;
-  }, [refresh, lastSearchText]);
+  }, [refresh, lastSearchText, currency]);
 
   return (
     <Select
@@ -75,6 +82,15 @@ const StockSelector = ({placeholder, mode, refresh, ...props}: ProductSelectorPr
       filterOption={false}
       loading={loading}
       options={stock}
+      optionRender={option => {
+        // @ts-ignore
+        const stock: StorageStock = option.data.entity;
+        const units = stock.is_consumable ? pluralize(stock.product?.unit_type || 'unit', stock.quantity, true) : 'Ilimitado';
+        return <div>
+          <code>{stock.sku}</code> <Divider type={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
+          <small>{stock?.variation_name || stock?.product?.name}</small>
+        </div>;
+      }}
       mode={mode || undefined}
       onSearch={value => setStockSearch(value)}
     />

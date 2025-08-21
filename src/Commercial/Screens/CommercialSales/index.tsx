@@ -1,5 +1,18 @@
 import {useEffect, useState} from 'react';
-import {DatePicker, Form, Input, Modal, Pagination, Progress, Select, Space, Statistic, Tag, Tooltip} from 'antd';
+import {
+  DatePicker, Divider,
+  Empty,
+  Form,
+  Input,
+  Modal,
+  Pagination, Popover,
+  Progress,
+  Select,
+  Space,
+  Statistic,
+  Tag,
+  Tooltip
+} from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {TbPencil} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
@@ -11,7 +24,15 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FilterForm from '../../../CommonUI/FilterForm';
-import type {Client, Contract, Invoice, Profile, ResponsePagination, StorageStock} from '../../../Types/api';
+import type {
+  Client,
+  Contract,
+  Invoice,
+  Profile,
+  ResponsePagination,
+  StorageContractCartItem,
+  StorageStock
+} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
@@ -22,6 +43,7 @@ import Config from "../../../Config.tsx";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import './styles.less';
 import NewSaleForm from "../../Components/NewSaleForm";
+import StorageStockChip from "../../Components/StorageStockChip";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -125,9 +147,29 @@ const CommercialSales = () => {
       }
     },
     {
-      title: 'Producto',
+      title: 'Productos',
+      dataIndex: 'cart',
+      width: 200,
+      render: (cart?: StorageContractCartItem[]) => {
+        if (!cart?.length) {
+          return <small>Sin productos</small>;
+        }
+        return <Popover content={<div>
+          <Space direction={'vertical'} split={<Divider style={{margin: '5px 0'}}/>}>
+            {cart?.map((cI, index) => {
+              return <StorageStockChip key={index} storageStock={cI.stock} quantity={cI.quantity}/>
+            })}
+          </Space>
+        </div>}>
+          <StorageStockChip storageStock={cart[0].stock} quantity={cart[0].quantity}/>
+          {cart.length > 1 && <Tag bordered={false}>(...{cart.length - 1} más)</Tag>}
+        </Popover>
+      },
+    },
+    {
+      title: 'Producto (old)',
       dataIndex: 'contractable',
-      width: 180,
+      width: 130,
       render: (contractable?: StorageStock) => {
         return contractable ? <>
           <code>{contractable.sku}</code>
@@ -297,7 +339,7 @@ const CommercialSales = () => {
       )}
       <Modal
         destroyOnHidden
-        width={800}
+        width={1000}
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
         footer={false}>

@@ -1,8 +1,21 @@
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Button, Card, Col, Descriptions, type DescriptionsProps, Divider, Form, Input, Row, Tabs} from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  type DescriptionsProps,
+  Divider,
+  Form,
+  Input, InputNumber,
+  List,
+  Row, Space,
+  Tabs,
+  Tag
+} from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
-import {TbCancel, TbCheck} from "react-icons/tb";
+import {TbCancel, TbCheck, TbPencil, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -26,6 +39,9 @@ import CommercialContractForm from "../../Components/CommercialContractForm";
 import ContractStatus from "../CommercialSales/ContractStatus.tsx";
 import InstallmentPlanForm from "../../../PaymentManagement/Components/InstallmentPlanForm";
 import NewSaleForm from "../../Components/NewSaleForm";
+import StorageStockChip from "../../Components/StorageStockChip";
+import MoneyInput from "../../../CommonUI/MoneyInput";
+import IconButton from "../../../CommonUI/IconButton";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -142,7 +158,6 @@ const CommercialContractDetail = () => {
       label: 'Monto',
       children: <MoneyString currency={contract?.contractable?.currency} value={contract?.amount}/>
     },
-    {key: 'product', span: 3, label: 'Producto', children: contract?.contractable?.sku},
     {
       key: '3',
       span: 3,
@@ -194,10 +209,10 @@ const CommercialContractDetail = () => {
         loading={loading}
         onRefresh={() => setReload(!reload)}
         showBack
-        tools={<ContractStatus contract={contract} />}
+        tools={<ContractStatus contract={contract}/>}
         title={
           <>
-          {contract?.contractable?.sku || contract.tracking_id} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
+            {contract?.contractable?.sku || contract.tracking_id} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
           </>
         }>
         {contract?.cancelled_at && (
@@ -300,6 +315,25 @@ const CommercialContractDetail = () => {
               items={contract?.client?.type.includes('Profile') ? clientProfile : clientCompany}/>
             <Divider>Contrato</Divider>
             <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
+            <Divider>Productos</Divider>
+            <List
+              dataSource={contract.cart}
+              renderItem={(cartItem, index) => {
+                return <List.Item>
+                  <List.Item.Meta
+                    title={cartItem.stock?.variation_name || cartItem.stock?.product?.name}
+                    description={<Tag bordered={false} color={'blue'}>{cartItem.stock?.sku}</Tag>}
+                  />
+                  <Space>
+                    <MoneyString
+                      currency={cartItem.stock?.currency} value={cartItem.unit_amount}
+                    />
+                    x{cartItem.quantity}
+                    <IconButton icon={<TbPencil/>} small />
+                    <IconButton icon={<TbTrash/>} danger small />
+                  </Space>
+                </List.Item>;
+              }}/>
             {contract && <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>}
           </div>
         </Col>
@@ -334,7 +368,7 @@ const CommercialContractDetail = () => {
                 key: 'info',
                 label: 'Detalle del contrato',
                 children: <>
-                  {contract && <ContractDetails contract={contract} onChange={() => setReload(!reload)} />}
+                  {contract && <ContractDetails contract={contract} onChange={() => setReload(!reload)}/>}
                 </>
               },
               {
@@ -355,7 +389,7 @@ const CommercialContractDetail = () => {
         <InstallmentPlanForm contract={contract} onComplete={() => {
           setOpenInstallmentFom(false);
           setReload(!reload);
-        }} />
+        }}/>
       </ModalView>
       <ModalView open={openProvisionRevert} onCancel={() => setOpenProvisionRevert(false)}>
         <h2>Revertir entrega</h2>

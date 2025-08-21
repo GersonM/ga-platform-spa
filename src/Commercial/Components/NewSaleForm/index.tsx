@@ -1,6 +1,20 @@
 import {useContext, useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
-import {TbCheck, TbPencil} from "react-icons/tb";
+import {
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  List,
+  notification,
+  Row,
+  Segmented,
+  Select,
+  Space,
+  Tag
+} from 'antd';
+import {TbCheck, TbPencil, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 
 import type {Contract, StorageStock} from '../../../Types/api';
@@ -16,25 +30,25 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
-import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 
 interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
   contract?: Contract;
-  isTemplate?: boolean;
 }
 
-const NewSaleForm = ({onComplete, contract, isTemplate = false}: NewSaleFormProps) => {
+const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
   const {user} = useContext(AuthContext);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
-  const [clientType, setClientType] = useState<'company' | 'profile'>()
+  const [clientType, setClientType] = useState<string>('Persona')
   const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
   const [chooseSeller, setChooseSeller] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
   const [period, setPeriod] = useState<string>();
   const [approveOrder, setApproveOrder] = useState(false);
+  const [shoppingCart, setShoppingCart] = useState<StorageStock[]>([]);
 
   useEffect(() => {
     if (!selectedStockUUID) {
@@ -63,12 +77,31 @@ const NewSaleForm = ({onComplete, contract, isTemplate = false}: NewSaleFormProp
   }, [selectedStockUUID]);
 
   const submitForm = (data: any) => {
+    if (!data.fk_company_uuid && !data.fk_profile_uuid) {
+      console.log(data);
+      notification.info({
+        description: 'Selecciona un cliente para poder registrar la venta',
+        message: 'Elige un cliente'
+      })
+      return;
+    }
+
+    if (shoppingCart.length == 0) {
+      console.log(shoppingCart);
+      notification.info({description: 'Agrega al menos un producto', message: 'El carrito está vació'})
+      return;
+    }
+
     setLoading(true);
     axios
       .request({
         url: contract ? `commercial/contracts/${contract.uuid}` : 'commercial/contracts',
         method: contract ? 'PUT' : 'POST',
-        data: {...data, is_template: isTemplate}
+        data: {
+          ...data,
+          cart: shoppingCart.map(({quantity, sale_price, uuid}) => ({quantity, sale_price, uuid})),
+          client_type: clientType == 'Persona' ? 'profile' : 'company',
+        }
       })
       .then(response => {
         setLoading(false);
@@ -82,97 +115,145 @@ const NewSaleForm = ({onComplete, contract, isTemplate = false}: NewSaleFormProp
       });
   };
 
+  const addStock = (data: StorageStock) => {
+    const newCart = [...shoppingCart];
+    newCart.push({...data});
+    setShoppingCart(newCart);
+  }
+
+  const removeStock = (data: StorageStock) => {
+    const newCart = [...shoppingCart];
+    const index = newCart.findIndex(i => i.uuid === data.uuid);
+    if (index !== -1) {
+      newCart.splice(index, 1);
+      setShoppingCart(newCart);
+    }
+  }
+
+  const updateQuantity = (data: StorageStock, quantity: number | null) => {
+    const newCart = [...shoppingCart];
+    const index = newCart.findIndex(i => i.uuid === data.uuid);
+    if (index !== -1) {
+      newCart[index].quantity = quantity || 1;
+      setShoppingCart(newCart);
+    }
+  }
+
+  const updateAmount = (data: StorageStock, amount?: number) => {
+    const newCart = [...shoppingCart];
+    const index = newCart.findIndex(i => i.uuid === data.uuid);
+    if (index !== -1) {
+      newCart[index].sale_price = amount != null ? amount : data.sale_price;
+      setShoppingCart(newCart);
+    }
+  }
+
+  const cartTotalAmountPen = shoppingCart.reduce((s, item) => {
+    const itemAmount = (item.quantity || 1) * (item.sale_price != null ? item.sale_price : 0);
+    return s + (item.currency == 'PEN' ? itemAmount : 0);
+  }, 0);
+
+  const cartTotalAmountUSD = shoppingCart.reduce((s, item) => {
+    const itemAmount = (item.quantity || 1) * (item.sale_price != null ? item.sale_price : 0);
+    return s + (item.currency == 'USD' ? itemAmount : 0);
+  }, 0);
+
   return (
     <div>
-      <h2>{isTemplate ? 'Crear plantilla' : (approveOrder ? 'Nueva venta' : 'Nueva cotización')}</h2>
+      <Space>
+        <h2>{approveOrder ? 'Nueva venta' : 'Nueva cotización'}{' '}
+          <Segmented options={['Propuesta', 'Venta']} onChange={value => setApproveOrder(value == 'Venta')}/>
+        </h2>
+      </Space>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
         <Row gutter={[20, 20]}>
-          <Col span={12}>
-            {isTemplate ? (
-                <Form.Item label={'Nombre de la plantilla'} name={'title'}>
-                  <Input/>
+          <Col span={14}>
+            <Row gutter={[15, 15]}>
+              <Col xs={14}>
+                <Form.Item label={'Agregar producto'}>
+                  <StockSelector value={null} onChange={(_uuid, option) => {
+                    addStock(option.entity);
+                  }}/>
                 </Form.Item>
-              ) :
-              <>
-                <Form.Item label={'Producto'} name={'stock_uuid'}>
-                  <StockSelector onChange={uuid => setSelectedStockUUID(uuid)}/>
+              </Col>
+              <Col xs={10}>
+                <Form.Item label={'Total'}>
+                  {cartTotalAmountPen > 0 &&
+                    <Tag bordered={false} color={'blue'}>
+                      <MoneyString currency={'PEN'} value={cartTotalAmountPen}/>
+                    </Tag>
+                  }
+                  {cartTotalAmountUSD > 0 &&
+                    <Tag bordered={false} color={'green'}>
+                      <MoneyString currency={'USD'} value={cartTotalAmountUSD}/>
+                    </Tag>
+                  }
                 </Form.Item>
-                <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
-                  <ContractTemplateSelector/>
-                </Form.Item>
-                <Form.Item label={'Tipo de cliente'} name={'client_type'} rules={[{required: true}]}>
-                  <Select
-                    showSearch
-                    onChange={value => setClientType(value)}
-                    placeholder={'Seleccione modalidad'}
-                    options={[
-                      {value: 'company', label: 'Empresa'},
-                      {value: 'profile', label: 'Persona'},
-                    ]}
-                  />
-                </Form.Item>
-                {clientType == 'profile' && (
-                  <Form.Item label={'Persona'} name={'fk_profile_uuid'}>
-                    <ProfileSelector/>
-                  </Form.Item>
-                )}
-                {clientType == 'company' && (
-                  <Form.Item label={'Empresa'} name={'fk_company_uuid'}>
-                    <CompanySelector/>
-                  </Form.Item>
-                )}
-              </>
-            }
-            {!isTemplate && (
-              <>
-                <Form.Item label={'Modalidad de pago'} name={'payment_mode'} rules={[{required: true}]}>
-                  <Select
-                    showSearch
-                    placeholder={'Seleccione modalidad'}
-                    options={[
-                      {value: 'first_30', label: 'Inicial de 30%'},
-                      {value: '1_pago', label: '1 Solo pago'},
-                      {value: '0', label: 'Ninguno'},
-                    ]}
-                  />
-                </Form.Item>
-                <Row gutter={[15, 15]}>
-                  <Col xs={10}>
-                    <Form.Item label={'Moneda'} name={'currency'}>
-                      <CurrencySelector
-                        placeholder={selectedStock?.currency}
-                        onChange={(value: string) => setSelectedCurrency(value)}/>
-                    </Form.Item>
-                  </Col>
-                  <Col xs={14}>
-                    <Form.Item label={'Precio de venta'} name={'sale_price'}>
-                      <MoneyInput currency={selectedCurrency || selectedStock?.currency}
-                                  placeholder={selectedStock ? (selectedStock.sale_price || 0) / 100 + '' : ''}/>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </>
+              </Col>
+            </Row>
+            <Form.Item>
+              <List
+                bordered
+                size={'small'}
+                dataSource={shoppingCart}
+                renderItem={(stock, index) => {
+                  return <List.Item>
+                    <List.Item.Meta
+                      title={stock.variation_name || stock.product?.name}
+                      description={<Tag bordered={false} color={'blue'}>{stock.sku}</Tag>}
+                    />
+                    <Space>
+                      <InputNumber
+                        min={1} max={999} addonBefore={'Cant.'} placeholder={'1'} style={{width: 110}}
+                        onChange={value => {
+                          updateQuantity(stock, value);
+                        }}/>
+                      <MoneyInput
+                        min={0}
+                        block={false} currency={stock.currency} value={stock.sale_price}
+                        onChange={value => {
+                          updateAmount(stock, value);
+                        }}
+                      />
+                      <IconButton icon={<TbTrash/>} danger small onClick={() => removeStock(stock)}/>
+                    </Space>
+                  </List.Item>;
+                }}/>
+            </Form.Item>
+            <Form.Item label={'Cliente'} style={{marginBottom: 10}}>
+              <Segmented options={['Persona', 'Empresa']} onChange={value => setClientType(value)}/>
+            </Form.Item>
+            {clientType == 'Persona' && (
+              <Form.Item name={'fk_profile_uuid'}>
+                <ProfileSelector placeholder={'Buscar persona'}/>
+              </Form.Item>
+            )}
+            {clientType == 'Empresa' && (
+              <Form.Item name={'fk_company_uuid'}>
+                <CompanySelector/>
+              </Form.Item>
             )}
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
-            {!isTemplate && (
-              <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
-                {chooseSeller ? (
-                    <ProfileSelector/>
-                  ) :
-                  <Space>
-                    <ProfileChip profile={user?.profile}/>
-                    <IconButton
-                      icon={<TbPencil/>}
-                      onClick={() => setChooseSeller(!chooseSeller)}
-                    />
-                  </Space>
-                }
-              </Form.Item>
-            )}
+            <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
+              {chooseSeller ? (
+                  <ProfileSelector/>
+                ) :
+                <Space>
+                  <ProfileChip profile={user?.profile}/>
+                  <IconButton
+                    icon={<TbPencil/>}
+                    onClick={() => setChooseSeller(!chooseSeller)}
+                  />
+                </Space>
+              }
+            </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={10}>
+            <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
+              <ContractTemplateSelector/>
+            </Form.Item>
             <Row gutter={[20, 20]}>
               <Col span={9}>
                 <Form.Item label={'Duración'} name={'period'}>
@@ -212,16 +293,19 @@ const NewSaleForm = ({onComplete, contract, isTemplate = false}: NewSaleFormProp
                 </Form.Item>
               </>
             )}
-            <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
+            <Form.Item label={'Modalidad de pago'} name={'payment_mode'}>
               <Select
                 showSearch
-                allowClear
+                placeholder={'Seleccione modalidad'}
                 options={[
-                  {value: 'credit', label: 'Tarjeta Crédito / Débido'},
-                  {value: 'cash', label: 'Efectivo'},
-                  {value: 'other', label: 'Otro'},
+                  {value: 'first_30', label: 'Inicial de 30%'},
+                  {value: '1_pago', label: '1 Solo pago'},
+                  {value: '0', label: 'Ninguno'},
                 ]}
               />
+            </Form.Item>
+            <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
+              <PaymentMethodTypesSelector />
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
               <Input.TextArea/>
@@ -247,13 +331,13 @@ const NewSaleForm = ({onComplete, contract, isTemplate = false}: NewSaleFormProp
                 </p>
               </>
             ) : (
-              isTemplate ? '' : <EmptyMessage message={'Elige un producto para ver los detalles'}/>
+              <EmptyMessage message={'Elige un producto para ver los detalles'}/>
             )}
           </Col>
         </Row>
         <PrimaryButton
           icon={<TbCheck/>} loading={loading} block htmlType={'submit'}
-          label={isTemplate ? 'Guardar' : 'Registrar contrato'}/>
+          label={'Guardar'}/>
       </Form>
     </div>
   );

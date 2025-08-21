@@ -2,8 +2,11 @@ import {InputNumber} from "antd";
 
 interface MoneyStringProps {
   value?: number;
+  min?: number;
   currency?: string;
   placeholder?: string;
+  block?: boolean;
+  style?: React.CSSProperties;
   defaultValue?: number;
   onChange?: (value?: number) => void;
   onCurrencyChange?: (value?: string) => void;
@@ -14,10 +17,10 @@ const currencies: any = {
   'USD': 'USD $',
 };
 
-const MoneyInput = ({value, currency = 'PEN', onChange, onCurrencyChange, ...props}: MoneyStringProps) => {
+const MoneyInput = ({value, style, block = true, currency = 'PEN', onChange, onCurrencyChange, ...props}: MoneyStringProps) => {
   return (
     <InputNumber
-      style={{width: '100%'}}
+      style={block ? {width: '100%'}:{width: 120}}
       onChange={value => {
         if (onChange) {
           onChange((value != null) ? value * 100 : undefined);

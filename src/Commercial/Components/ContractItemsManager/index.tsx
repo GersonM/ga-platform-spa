@@ -56,12 +56,14 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
         if (response) {
           const groups: any = {};
           response.data.forEach((item: ContractItem) => {
-            if (!groups[item.group]) {
-              groups[item.group] = [];
+            const groupName = item.group || 'Sin grupo';
+            if (!groups[groupName]) {
+              groups[groupName] = [];
             }
-            groups[item.group].push(item);
+            groups[groupName].push(item);
           });
           setContractItemsGroups(groups);
+          console.log({groups});
           setContractItems(response.data);
         }
         setLoading(false);
@@ -201,7 +203,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
           setTempURL(undefined);
         }}>
         <LoadingIndicator visible={downloading}/>
-        {tempURL && <iframe src={tempURL} height={600} width={'100%'} frameBorder="0"></iframe>}
+        {tempURL && <iframe src={tempURL} height={600} width={'100%'} style={{border:"none"}}/>}
       </ModalView>
       <ModalView
         title={selectedItem ? 'Editar item' : 'Agregar item'}

@@ -21,6 +21,7 @@ import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import FilterForm from "../../../CommonUI/FilterForm";
 import {PiPencilSimple} from "react-icons/pi";
 import {TbCashRegister, TbTrash} from "react-icons/tb";
+import InvoiceTablePayments from "../../Components/InvoiceTablePayments";
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -80,10 +81,17 @@ const Invoices = () => {
       render: (tracking_id: string) => <code>{tracking_id}</code>,
     },
     {
-      title: 'Descripción',
+      title: 'Concepto',
+      dataIndex: 'items',
+      render: (items: InvoiceItem[]) => {
+        return items?.map((i: InvoiceItem) => i.concept).join(', ');
+      }
+    },
+    {
+      title: 'Observaciones',
       dataIndex: 'concept',
-      render: (concept: string, row: Invoice) => {
-        return concept || row.items?.map((i: InvoiceItem) => i.concept).join(', ');
+      render: (concept: string) => {
+        return concept;
       }
     },
     {
@@ -131,20 +139,14 @@ const Invoices = () => {
           return (
             <Tooltip title={'Fecha de vencimiento: ' + dayjs(i.expires_on).format('DD/MM/YYYY')}>
               <Tag color={isExpired ? 'orange' : 'red'}>
-                {isExpired ? 'Vence en' : 'Venció'} {dayjs(i.expires_on).fromNow()}
+                {isExpired ? 'Por cobrar' : 'Vencido'}
               </Tag>
             </Tooltip>
           );
         }
         return (
           <Tag color={i.paid_at ? 'green' : 'red'}>
-            {pending_payment > 0 ? (
-              <>
-                <MoneyString value={pending_payment}/>
-              </>
-            ) : (
-              'Pagado'
-            )}
+            {pending_payment > 0 ? 'Pendiente' : 'Pagado'}
           </Tag>
         );
       },
@@ -233,10 +235,12 @@ const Invoices = () => {
             <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={'234'} invoiceOwnerType={'person'}/>
             <Divider>Pagos</Divider>
             <TableList columns={columns} dataSource={selectedInvoice.payments}/>
+            <InvoiceTablePayments invoice={selectedInvoice} />
             <Divider>Otras subscripciones</Divider>
             <PersonSubscription profileUuid={selectedInvoice.invoiceable_id}/>
           </>
         )}
+
       </ModuleContent>
     </>
   );

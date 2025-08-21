@@ -23,6 +23,7 @@ interface ProfileSelectorProps {
 
 const ProfileSelector = ({
   onChange,
+  placeholder,
   allowCreate = true
 }: ProfileSelectorProps) => {
   const [openCreateProfile, setOpenCreateProfile] = useState(false);
@@ -33,7 +34,7 @@ const ProfileSelector = ({
       <div style={{display: 'flex'}}>
         <SearchProfile
           style={{flex: 1}}
-          placeholder={createdProfile?.name}
+          placeholder={createdProfile?.name || placeholder}
           onChange={(values, item) => {
             //setSelectedProfile(item);
             if (onChange) {

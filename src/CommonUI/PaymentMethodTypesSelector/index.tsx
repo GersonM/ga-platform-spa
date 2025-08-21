@@ -11,6 +11,7 @@ const PaymentMethodTypesSelector = () => {
       {label: 'Tarjeta crédito/débido', value:'credit_card'},
       {label: 'Yape', value:'yape'},
       {label: 'Plin', value:'plin'},
+      {label: 'Cheque de gerencia', value:'cashier_check'},
       {label: 'Otro', value:'other'},
     ]} />
   );

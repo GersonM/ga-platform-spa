@@ -118,6 +118,7 @@ export type Contract = {
   cancelled_at?: string;
   cancellation_reason?: string;
   contractable?: any;
+  cart?: StorageContractCartItem[];
   invoices?: Invoice[];
   items?: ContractItem[];
   title: string;
@@ -658,11 +659,21 @@ export type StorageProduct = {
   unit_type?: string;
   updated_at: string;
 };
+
+export type StorageContractCartItem = {
+  uuid: string;
+  quantity: number;
+  stock?: StorageStock;
+  unit_amount: number;
+  amount_string: string;
+  created_at: string;
+};
+
 export type StorageStock = {
   uuid: string;
   sku: string;
   variation_name: string;
-  currency?: string;
+  currency: string;
   cost_price?: number;
   sale_price?: number;
   quantity?: number;
