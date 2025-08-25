@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {
   DatePicker, Divider,
-  Empty,
   Form,
   Input,
   Modal,
@@ -9,12 +8,10 @@ import {
   Progress,
   Select,
   Space,
-  Statistic,
   Tag,
   Tooltip
 } from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
-import {TbPencil} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -31,19 +28,18 @@ import type {
   Profile,
   ResponsePagination,
   StorageContractCartItem,
-  StorageStock
 } from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import IconButton from "../../../CommonUI/IconButton";
-import CreateContractForm from "../../Components/CommercialContractForm";
 import ContractStatus from "./ContractStatus.tsx";
 import Config from "../../../Config.tsx";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
-import './styles.less';
 import NewSaleForm from "../../Components/NewSaleForm";
 import StorageStockChip from "../../Components/StorageStockChip";
+import './styles.less';
+import {LuCircleChevronRight} from "react-icons/lu";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -52,7 +48,6 @@ const CommercialSales = () => {
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [commercialStats, _setCommercialStats] = useState<any>();
   const navigate = useNavigate();
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
@@ -167,17 +162,6 @@ const CommercialSales = () => {
       },
     },
     {
-      title: 'Producto (old)',
-      dataIndex: 'contractable',
-      width: 130,
-      render: (contractable?: StorageStock) => {
-        return contractable ? <>
-          <code>{contractable.sku}</code>
-          <small>{contractable.variation_name || contractable.product?.name}</small>
-        </> : <small>Sin producto relacionado</small>;
-      },
-    },
-    {
       title: 'Cliente',
       dataIndex: 'client',
       width: 300,
@@ -198,28 +182,32 @@ const CommercialSales = () => {
     {
       title: 'Vendedor',
       dataIndex: 'created_by',
-      width: 210,
+      width: 100,
       render: (created_by: Profile, contract: Contract) => {
         return created_by ?
-          <ProfileChip profile={created_by}/> :
+          <ProfileChip profile={created_by} small/> :
           contract.items?.find(i => i.description == 'Vendedor')?.value
       },
     },
     {
       title: 'Monto',
-      dataIndex: 'amount',
+      dataIndex: 'totals',
       align: 'right',
-      render: (amount: number, row: Contract) => <MoneyString currency={row.contractable?.currency} value={amount}/>,
+      render: (totals: any) =>
+        <>
+          <MoneyString currency={'PEN'} value={totals?.PEN}/><br/>
+          <MoneyString currency={'USD'} value={totals?.USD}/>
+        </>,
     },
     {
       title: 'F. Venta',
-      width: 140,
+      width: 160,
       dataIndex: 'approved_at',
-      render: (approved_at: string) => {
-        return <>
+      render: (approved_at?: string, contract?: Contract) => {
+        return approved_at ? <>
           {dayjs(approved_at).fromNow()}
-          <small>{dayjs(approved_at).format('DD/MM/YYYY HH:MM')}</small>
-        </>
+          <small>{dayjs(approved_at).format(Config.datetimeFormatUser)}</small>
+        </> : <small>Aún no aprobado<br/>{dayjs(contract?.created_at).format(Config.datetimeFormatUser)}</small>
       },
     },
     {
@@ -250,7 +238,7 @@ const CommercialSales = () => {
     {
       dataIndex: 'uuid',
       render: (uuid: string) => {
-        return <IconButton icon={<TbPencil/>} onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>;
+        return <IconButton icon={<LuCircleChevronRight/>} onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>;
       }
     }
   ];
@@ -309,20 +297,6 @@ const CommercialSales = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <Space size={'large'}>
-        {commercialStats && (
-          <>
-            <Progress
-              showInfo
-              type={'dashboard'}
-              size={40}
-              percent={Math.round((commercialStats?.contracts.provided * 100) / commercialStats.contracts.total)}
-            />
-            <Statistic title={'Entregados'} value={commercialStats.contracts.provided}/>
-            <Statistic title={'Vendidas'} value={commercialStats.contracts.total}/>
-          </>
-        )}
-      </Space>
       <TableList scroll={{x: 1100}} customStyle={false} loading={loading} columns={columns} dataSource={clients}/>
       {pagination && (
         <Pagination

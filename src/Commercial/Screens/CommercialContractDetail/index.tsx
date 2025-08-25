@@ -8,14 +8,13 @@ import {
   type DescriptionsProps,
   Divider,
   Form,
-  Input, InputNumber,
-  List,
+  Input,
+  List, Popconfirm,
   Row, Space,
   Tabs,
-  Tag
 } from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
-import {TbCancel, TbCheck, TbPencil, TbTrash} from "react-icons/tb";
+import {TbCancel, TbCheck, TbChevronCompactRight, TbPencil, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -35,13 +34,14 @@ import ModalView from "../../../CommonUI/ModalView";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 import ContractItemsManager from "../../Components/ContractItemsManager";
 import StepsNavigation from "../../../CommonUI/StepsNavigation";
-import CommercialContractForm from "../../Components/CommercialContractForm";
 import ContractStatus from "../CommercialSales/ContractStatus.tsx";
 import InstallmentPlanForm from "../../../PaymentManagement/Components/InstallmentPlanForm";
 import NewSaleForm from "../../Components/NewSaleForm";
-import StorageStockChip from "../../Components/StorageStockChip";
-import MoneyInput from "../../../CommonUI/MoneyInput";
 import IconButton from "../../../CommonUI/IconButton";
+import CompanyChip from "../../../HRManagement/Components/CompanyChip";
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import StorageStockChip from "../../Components/StorageStockChip";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -122,85 +122,79 @@ const CommercialContractDetail = () => {
       });
   };
 
-  if (!contract) {
-    return null;
+  const removeCartItem = (uuid: string) => {
+    axios.delete(`commercial/cart-items/${uuid}`)
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      })
   }
 
-  const clientProfile: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      span: 3,
-      label: 'Nombre',
-      children: contract?.client?.entity?.name + ' ' + contract?.client?.entity?.last_name
-    },
-    {key: '2', span: 3, label: 'DNI', children: contract?.client?.entity?.doc_number},
-    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity?.phone},
-  ];
+  if (!contract) {
+    return <LoadingIndicator message={'Cargando información de contrato'}/>;
+  }
 
-  const clientCompany: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      span: 3,
-      label: 'Nombre',
-      children: contract?.client?.entity?.name
-    },
-    {key: '2', span: 3, label: 'RUC', children: contract?.client?.entity?.legal_uid},
-    {key: '3', span: 3, label: 'Teléfono', children: contract?.client?.entity?.phone},
-  ];
+  const totals: any = {};
+
+  if (contract.cart) {
+    for (const cartItem of contract.cart) {
+      console.log(cartItem.stock?.currency);
+      if (cartItem.stock?.currency) {
+        if (!totals[cartItem.stock.currency]) {
+          totals[cartItem.stock.currency] = 0;
+        }
+        totals[cartItem.stock.currency] += cartItem.unit_amount * cartItem.quantity;
+      }
+    }
+  }
 
   const contractDetails: DescriptionsProps['items'] = [
     {
-      key: '1', span: 3, label: 'ID', children: contract.tracking_id
-    },
-    {
-      key: '2',
-      span: 3,
-      label: 'Monto',
-      children: <MoneyString currency={contract?.contractable?.currency} value={contract?.amount}/>
+      key: '1',
+      label: 'ID',
+      children: <code>{contract.tracking_id}</code>
     },
     {
       key: '3',
-      span: 3,
       label: 'Aprobación',
-      children: contract?.approved_at ? dayjs(contract?.approved_at).format('DD/MM/YYYY HH:mm a') : 'Sin aprobación'
-    },
-    {
-      key: '3',
-      span: 3,
-      label: 'Fecha de firma',
-      children: contract?.signed_at ? dayjs(contract?.signed_at).format('DD/MM/YYYY HH:mm a') : 'Sin firma de contrato'
+      children: contract?.approved_at ? dayjs(contract?.approved_at).format('DD/MM/YYYY hh:mm a') : 'Sin aprobación'
     },
     {
       key: '4',
-      span: 3,
       label: 'Fecha de inicio',
-      children: contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY HH:mm a') : 'No iniciado'
+      children: contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY hh:mm a') : 'No iniciado'
     },
     {
       key: '3',
-      span: 3,
       label: 'Entrega',
-      children: contract?.provided_at ? dayjs(contract?.provided_at).format('DD/MM/YYYY HH:mm a') : 'No entregado'
+      children: contract?.provided_at ? dayjs(contract?.provided_at).format('DD/MM/YYYY hh:mm a') : 'No entregado'
     },
     {
       key: 'period',
-      span: 3,
       label: 'Periodo',
       children: contract?.period
     },
     {
       key: 'payment_type',
-      span: 3,
       label: 'Método de pago',
       children: contract?.payment_type
     },
     {
-      key: '6',
-      span: 3,
-      label: 'Vendedor',
-      children: <>{contract?.created_by?.name} {contract?.created_by?.last_name}</>
+      key: '2',
+      label: 'Monto',
+      children: <>
+        <MoneyString currency={'PEN'} value={contract.totals?.PEN}/><br/>
+        <MoneyString currency={'USD'} value={contract.totals?.USD}/>
+      </>
     },
-    {key: '5', span: 3, label: 'Observaciones', children: contract?.observations},
+    {
+      key: '6',
+      label: 'Vendedor',
+      children: <ProfileChip profile={contract?.created_by}/>
+    },
+    {key: '5', label: 'Observaciones', children: contract?.observations || <small>Sin observaciones</small>},
   ];
 
   return (
@@ -212,7 +206,9 @@ const CommercialContractDetail = () => {
         tools={<ContractStatus contract={contract}/>}
         title={
           <>
-            {contract?.contractable?.sku || contract.tracking_id} - {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
+            <code>{contract?.title || contract.tracking_id}</code>
+            <TbChevronCompactRight
+              style={{margin: '0 10px'}}/> {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
           </>
         }>
         {contract?.cancelled_at && (
@@ -220,7 +216,6 @@ const CommercialContractDetail = () => {
         )}
       </ContentHeader>
       <StepsNavigation
-        style={{marginBottom: 20}}
         current={-1}
         items={[
           {
@@ -259,8 +254,9 @@ const CommercialContractDetail = () => {
           },
           {
             title: 'Documentación',
-            status: contract?.document_progress == 100 ? 'finish' : 'wait',
-            description: <small>{contract?.document_progress}%</small>,
+            status: (contract?.document_progress == null || contract?.document_progress == 100) ? 'finish' : 'pending',
+            description:
+              <small>{contract?.document_progress == null ? 'Sin documentos requeridos' : contract?.document_progress + '%'}</small>,
           },
           contract?.cancelled_at ? {
               title: 'Anulado',
@@ -297,47 +293,65 @@ const CommercialContractDetail = () => {
         ]}
       />
       <Row gutter={[20, 20]}>
-        <Col xs={24} md={7}>
+        <Col md={24} lg={7}>
           <div style={{position: "sticky", top: 62}}>
-            {!contract.provided_at &&
-              <PrimaryButton
-                danger
-                block
-                icon={<PiReceiptXBold/>}
-                disabled={!!contract?.cancelled_at}
-                label={'Anular'}
-                onClick={() => setOpenCancelContract(true)}
-              />
-            }
-            <Divider>Datos del cliente:</Divider>
+            <Divider orientation={'left'}>Cliente</Divider>
+            <Card variant={"borderless"} size={"small"}>
+              {
+                contract?.client?.type.includes('Profile') ?
+                  <ProfileChip profile={contract?.client?.entity} showDocument/> :
+                  <CompanyChip company={contract?.client?.entity}/>
+              }
+            </Card>
+            <Divider orientation={'left'}>Detalles</Divider>
             <Descriptions
-              layout={'horizontal'} size={"small"}
-              items={contract?.client?.type.includes('Profile') ? clientProfile : clientCompany}/>
-            <Divider>Contrato</Divider>
-            <Descriptions layout={'horizontal'} size={"small"} items={contractDetails}/>
-            <Divider>Productos</Divider>
+              column={1}
+              bordered layout={'horizontal'} size={"small"} items={contractDetails}/>
+            <Divider orientation={"left"}>Productos</Divider>
             <List
+              bordered
+              size={"small"}
               dataSource={contract.cart}
               renderItem={(cartItem, index) => {
                 return <List.Item>
                   <List.Item.Meta
-                    title={cartItem.stock?.variation_name || cartItem.stock?.product?.name}
-                    description={<Tag bordered={false} color={'blue'}>{cartItem.stock?.sku}</Tag>}
+                    title={<StorageStockChip storageStock={cartItem.stock}/>}
                   />
                   <Space>
-                    <MoneyString
-                      currency={cartItem.stock?.currency} value={cartItem.unit_amount}
-                    />
-                    x{cartItem.quantity}
-                    <IconButton icon={<TbPencil/>} small />
-                    <IconButton icon={<TbTrash/>} danger small />
+                    <small>
+                      <MoneyString
+                        currency={cartItem.stock?.currency} value={cartItem.unit_amount}
+                      />{' '}x {cartItem.quantity}
+                    </small>
+                    {contract.status == 'proposal' &&
+                      <>
+                        <IconButton icon={<TbPencil/>} small/>
+                        <Popconfirm
+                          title={'¿Seguro que quieres eliminar este producto?'}
+                          description={'Esto modificará el monto total del contrato'}
+                          onConfirm={() => removeCartItem(cartItem.uuid)}
+                        >
+                          <IconButton icon={<TbTrash/>} danger small/>
+                        </Popconfirm>
+                      </>}
                   </Space>
                 </List.Item>;
               }}/>
+            {!contract.provided_at &&
+              <PrimaryButton
+                danger
+                block
+                style={{marginTop: 10}}
+                icon={<PiReceiptXBold size={20}/>}
+                disabled={!!contract?.cancelled_at}
+                label={'Anular venta'}
+                onClick={() => setOpenCancelContract(true)}
+              />
+            }
             {contract && <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>}
           </div>
         </Col>
-        <Col xs={24} md={17}>
+        <Col md={24} lg={17}>
           <Card variant={'borderless'}>
             <Tabs style={{marginTop: -20}} centered items={[
               {
@@ -385,6 +399,12 @@ const CommercialContractDetail = () => {
           </Card>
         </Col>
       </Row>
+      <ModalView onCancel={() => setOpenInstallmentFom(false)} open={openInstallmentFom}>
+        <InstallmentPlanForm contract={contract} onComplete={() => {
+          setOpenInstallmentFom(false);
+          setReload(!reload);
+        }}/>
+      </ModalView>
       <ModalView onCancel={() => setOpenInstallmentFom(false)} open={openInstallmentFom}>
         <InstallmentPlanForm contract={contract} onComplete={() => {
           setOpenInstallmentFom(false);

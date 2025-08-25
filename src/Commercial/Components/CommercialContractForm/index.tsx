@@ -35,8 +35,10 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
     if (contract && form) {
       const newFields: any = {...contract};
       newFields.created_at = dayjs(contract.created_at);
-      newFields.approved_at = newFields.approved_at ? dayjs(contract.created_at) : null;
-      newFields.provided_at = newFields.provided_at ? dayjs(contract.provided_at) : null;
+      newFields.date_start = newFields.date_start ? dayjs(contract.date_start) : undefined;
+      newFields.date_end = newFields.date_end ? dayjs(contract.date_end) : undefined;
+      newFields.approved_at = newFields.approved_at ? dayjs(contract.approved_at) : undefined;
+      newFields.provided_at = newFields.provided_at ? dayjs(contract.provided_at) : undefined;
       setFormData(newFields);
     }
   }, [contract]);
@@ -160,6 +162,12 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
             </Form.Item>
             <Form.Item label="Fecha de venta (opcional)" name="approved_at">
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+            </Form.Item>
+            <Form.Item label="Fecha de inicio (opcional)" name="date_start">
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+            </Form.Item>
+            <Form.Item label="Fecha de finalización (opcional)" name="date_end">
               <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
             </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>

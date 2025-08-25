@@ -1,8 +1,8 @@
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Checkbox,
   Col,
-  DatePicker,
+  DatePicker, Divider,
   Form,
   Input,
   InputNumber,
@@ -32,6 +32,7 @@ import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
+import {DefaultEditor} from "react-simple-wysiwyg";
 
 interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
@@ -47,10 +48,10 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
   const [chooseSeller, setChooseSeller] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
   const [period, setPeriod] = useState<string>();
-  const [approveOrder, setApproveOrder] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
   const [shoppingCart, setShoppingCart] = useState<StorageStock[]>([]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!selectedStockUUID) {
       return;
     }
@@ -74,7 +75,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [selectedStockUUID]);
+  }, [selectedStockUUID]);*/
 
   const submitForm = (data: any) => {
     if (!data.fk_company_uuid && !data.fk_profile_uuid) {
@@ -99,6 +100,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
         method: contract ? 'PUT' : 'POST',
         data: {
           ...data,
+          is_approved: isApproved,
           cart: shoppingCart.map(({quantity, sale_price, uuid}) => ({quantity, sale_price, uuid})),
           client_type: clientType == 'Persona' ? 'profile' : 'company',
         }
@@ -160,11 +162,16 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
 
   return (
     <div>
-      <Space>
-        <h2>{approveOrder ? 'Nueva venta' : 'Nueva cotización'}{' '}
-          <Segmented options={['Propuesta', 'Venta']} onChange={value => setApproveOrder(value == 'Venta')}/>
-        </h2>
-      </Space>
+      <h2>
+        <Space>
+          Nueva:
+          <Segmented
+            size={"large"}
+            options={[{label: 'propuesta', value: 'proposal'}, 'venta']}
+            onChange={value => setIsApproved(value != 'proposal')}
+          />
+        </Space>
+      </h2>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
         <Row gutter={[20, 20]}>
           <Col span={14}>
@@ -220,6 +227,37 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                   </List.Item>;
                 }}/>
             </Form.Item>
+            <Row gutter={[20, 20]}>
+              <Col span={14}>
+                <Form.Item label={'Generar pagos (opcional)'} name={'payment_mode'}>
+                  <Select
+                    allowClear
+                    showSearch
+                    placeholder={'Se pueden generar posteriormente'}
+                    options={[
+                      {value: 'first_30', label: 'Inicial de 30%'},
+                      {value: '1_pago', label: '1 Solo pago'},
+                      {value: '0', label: 'Generar posteriormente'},
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={10}>
+                <Form.Item label={'Periodo'} name={'period'}>
+                  <Select
+                    showSearch
+                    allowClear
+                    onChange={value => setPeriod(value)}
+                    placeholder={'Único'}
+                    options={[
+                      {value: 'unique', label: 'Único'},
+                      {value: 'monthly', label: 'Mensual'},
+                      {value: 'annual', label: 'Anual'},
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
             <Form.Item label={'Cliente'} style={{marginBottom: 10}}>
               <Segmented options={['Persona', 'Empresa']} onChange={value => setClientType(value)}/>
             </Form.Item>
@@ -233,9 +271,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 <CompanySelector/>
               </Form.Item>
             )}
-            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-              <Input.TextArea/>
-            </Form.Item>
             <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
               {chooseSeller ? (
                   <ProfileSelector/>
@@ -251,39 +286,11 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
             </Form.Item>
           </Col>
           <Col span={10}>
+            <Divider>Información opcional</Divider>
             <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
               <ContractTemplateSelector/>
             </Form.Item>
-            <Row gutter={[20, 20]}>
-              <Col span={9}>
-                <Form.Item label={'Duración'} name={'period'}>
-                  <Select
-                    showSearch
-                    allowClear
-                    onChange={value => setPeriod(value)}
-                    placeholder={'Único'}
-                    options={[
-                      {value: 'unique', label: 'Único'},
-                      {value: 'monthly', label: 'Mensual'},
-                      {value: 'annual', label: 'Anual'},
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={15}>
-                {(period && period != 'unique') &&
-                  <Form.Item label={' '} name={'is_renewable'} valuePropName={'checked'}>
-                    <Checkbox>Renovar automáticamente</Checkbox>
-                  </Form.Item>
-                }
-              </Col>
-            </Row>
-            <Form.Item name={'is_approved'} valuePropName={'checked'}>
-              <Checkbox onChange={evt => setApproveOrder(evt.target.checked)}>Registrar como venta aprobada
-                <small>Se registrará con el estado en aprobado si tienes permisos</small>
-              </Checkbox>
-            </Form.Item>
-            {approveOrder && (
+            {isApproved && (
               <>
                 <Form.Item label="Fecha de venta (opcional)" name="approved_at">
                   <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
@@ -293,46 +300,21 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 </Form.Item>
               </>
             )}
-            <Form.Item label={'Modalidad de pago'} name={'payment_mode'}>
-              <Select
-                showSearch
-                placeholder={'Seleccione modalidad'}
-                options={[
-                  {value: 'first_30', label: 'Inicial de 30%'},
-                  {value: '1_pago', label: '1 Solo pago'},
-                  {value: '0', label: 'Ninguno'},
-                ]}
-              />
-            </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
-              <PaymentMethodTypesSelector />
+              <PaymentMethodTypesSelector/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
-              <Input.TextArea/>
+              <DefaultEditor/>
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
+              <DefaultEditor/>
+            </Form.Item>
+            <Form.Item label={'Información del presupuesto (opcional)'} name={'budget_details'}>
+              <DefaultEditor/>
+            </Form.Item>
+            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
-            {selectedStock ? (
-              <>
-                <h3 style={{fontWeight: 'bold'}}>Resumen</h3>
-                <strong>{selectedStock.product?.name}</strong>
-                {selectedStock.product?.description &&
-                  <div dangerouslySetInnerHTML={{__html: selectedStock.product?.description}}></div>
-                }
-                {selectedStock.product?.type == 'property' &&
-                  <StockViewerState stock={selectedStock}/>
-                }
-                <p>
-                  <strong>Precio de venta: </strong>
-                  <span>
-                    <MoneyString currency={selectedStock.currency} value={selectedStock?.sale_price}/>
-                  </span>
-                </p>
-              </>
-            ) : (
-              <EmptyMessage message={'Elige un producto para ver los detalles'}/>
-            )}
           </Col>
         </Row>
         <PrimaryButton

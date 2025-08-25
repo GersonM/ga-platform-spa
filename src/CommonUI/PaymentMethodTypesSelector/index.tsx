@@ -1,9 +1,10 @@
 import React from 'react';
 import {Select} from "antd";
 
-const PaymentMethodTypesSelector = () => {
+const PaymentMethodTypesSelector = ({...props}) => {
   return (
     <Select
+      {...props}
       showSearch
       options={[
       {label: 'Transferencia Bancaria', value:'bank_transfer'},

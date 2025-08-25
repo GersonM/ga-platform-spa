@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {TbAlertCircle, TbCheck, TbChevronRight, TbClock} from "react-icons/tb";
+import {TbAlertCircle, TbCheck, TbChevronCompactRight, TbClock} from "react-icons/tb";
 import './styles.less';
 
 interface StepNavigationProps {
@@ -18,6 +18,7 @@ const StepNavigation = ({items, current, style}: StepNavigationProps) => {
               {item.status ? <>
                 {item.status === 'finish' && <TbCheck size={20}/>}
                 {item.status === 'wait' && <TbClock size={20}/>}
+                {item.status === 'pending' && <TbClock size={20}/>}
                 {item.status === 'error' && <TbAlertCircle size={20} />}
                 </> :
                 index + 1
@@ -27,7 +28,7 @@ const StepNavigation = ({items, current, style}: StepNavigationProps) => {
               {item.title}
               <div className={'description'}>{item.description}</div>
             </div>
-            {index < (items.length - 1) && <div style={{marginRight: 10}}><TbChevronRight size={20} style={{opacity:0.6}}/></div>}
+            {index < (items.length - 1) && <div><TbChevronCompactRight size={28} style={{opacity:0.5}}/></div>}
           </div>
         </Fragment>
       })}

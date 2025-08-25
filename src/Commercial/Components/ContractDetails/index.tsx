@@ -1,12 +1,11 @@
-import {useEffect, useState} from 'react';
-import type {Contract, ContractItem} from '../../../Types/api';
-import {Descriptions, Divider, Statistic, Tag} from 'antd';
+import {useState} from 'react';
+import type {Contract} from '../../../Types/api';
+import {Divider} from 'antd';
 import axios from "axios";
 
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
-import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import StockViewerState from "../StockViewerState";
 import CommercialContractForm from "../CommercialContractForm";
 
@@ -43,16 +42,8 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
       </div>
       <CommercialContractForm contract={contract} onComplete={onChange} />
       <Divider />
+      <code>Deprecated</code>
       {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
-      <Divider>
-        Items de contrato
-      </Divider>
-      {contract?.items &&
-        <Descriptions items={
-          contract?.items?.map((item: ContractItem) => {
-            return {key: item.uuid, label: item.description, children: item.value};
-          })}/>
-      }
     </div>
   );
 };

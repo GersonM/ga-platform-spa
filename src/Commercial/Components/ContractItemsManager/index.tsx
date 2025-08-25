@@ -142,6 +142,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
   const totalRequired = contractItems?.filter(ci => ci.is_required).length || 0;
   const totalCompleted = contractItems?.filter(ci => ci.is_required)?.filter(ci => ci.approved_at).length || 0;
   const totalFilled = contractItems?.filter(ci => ci.is_required)?.filter(ci => ci.value).length || 0;
+  const percentFilled = (totalFilled / totalRequired) * 100;
   const percent = (totalCompleted / totalRequired) * 100;
 
   return (
@@ -149,7 +150,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       <div className={'title-container'}>
         <div>
           {totalFilled} de {totalRequired} completados | {totalFilled - totalCompleted} por aprobar
-          <Progress percent={contract.document_progress} success={{percent}} showInfo={true} strokeWidth={4}
+          <Progress percent={Math.round(percentFilled)} success={{percent}} showInfo={true} strokeWidth={4}
                     style={{marginRight: 10}}/>
         </div>
         <Space size={"small"}>

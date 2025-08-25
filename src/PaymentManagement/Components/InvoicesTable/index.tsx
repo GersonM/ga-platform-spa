@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Col, Empty, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
 import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
@@ -21,6 +21,7 @@ interface InvoicesProps {
   type: string;
   order?: string;
   refresh?: boolean;
+  allowCreate?: boolean;
   customer?: Profile | Company;
   customerType?: string;
   tools?: React.ReactNode;
@@ -36,7 +37,8 @@ const InvoicesTable = (
     order = 'older',
     tools,
     refresh,
-    showActions = true
+    showActions = true,
+    allowCreate = true,
   }: InvoicesProps) => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
@@ -182,7 +184,7 @@ const InvoicesTable = (
           </Popconfirm>
         </Space>
       ),
-    });
+    },);
   }
 
   return (
@@ -206,13 +208,14 @@ const InvoicesTable = (
             }}
           />
           <IconButton title={'Recargar lista de pagos'} icon={<TbRefresh/>} onClick={() => setReload(!reload)}/>
-          <PrimaryButton
-            size={'small'}
-            ghost
-            label={'Crear requerimiento de pago'}
-            onClick={() => setOpenInvoiceForm(true)}
-            icon={<PiPlusBold/>}
-          />
+          {allowCreate &&
+            <PrimaryButton
+              size={'small'}
+              ghost
+              label={'Crear requerimiento de pago'}
+              onClick={() => setOpenInvoiceForm(true)}
+              icon={<PiPlusBold/>}
+            />}
           {tools}
         </Space>
       }
