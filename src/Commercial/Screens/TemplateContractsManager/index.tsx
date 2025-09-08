@@ -105,7 +105,6 @@ const TemplateContractsManager = () => {
       <ModalView onCancel={() => setOpenNewTemplate(false)} open={openNewTemplate}>
         <ContractTemplateForm
           contract={selectedContract}
-          isTemplate
           onComplete={() => {
             setOpenNewTemplate(false);
             setReload(!reload);
