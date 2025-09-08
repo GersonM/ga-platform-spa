@@ -1,26 +1,28 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {DatePicker, Divider, Empty, Form, Input, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
-import {ArrowPathIcon} from '@heroicons/react/24/outline';
-import {CreditCardIcon, NoSymbolIcon} from '@heroicons/react/24/solid';
+import {Col, DatePicker, Empty, Form, Input, Pagination, Popconfirm, Row, Select, Space, Tooltip} from 'antd';
+import {TbCoins, TbPencil, TbTrash} from "react-icons/tb";
+import {Link} from "react-router-dom";
 import dayjs from 'dayjs';
 
+import logoSunat from '../../../Assets/sunat_icon.png';
+import type {Client, Contract, Invoice, InvoiceItem, ResponsePagination} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import IconButton from '../../../CommonUI/IconButton';
-import NavList, {NavListItem} from '../../../CommonUI/NavList';
-import type {Client, Invoice, InvoiceItem, ResponsePagination} from '../../../Types/api';
-import PersonSubscription from '../../Components/PersonSubscription';
 import ModuleContent from '../../../CommonUI/ModuleContent';
-import ProfileCard from '../../../AccountManagement/Components/ProfileCard';
 import TableList from '../../../CommonUI/TableList';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import FilterForm from "../../../CommonUI/FilterForm";
-import {PiPencilSimple} from "react-icons/pi";
-import {TbCashRegister, TbTrash} from "react-icons/tb";
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import CustomTag from "../../../CommonUI/CustomTag";
+import Config from "../../../Config.tsx";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import {ClientSelector} from "../../Components/ClientSelector";
+import InvoiceForm from "../../Components/InvoiceForm";
+import InvoiceTableDetails from "../../Components/InvoiceTableDetails";
+import ModalView from "../../../CommonUI/ModalView";
 import InvoiceTablePayments from "../../Components/InvoiceTablePayments";
 
 const Invoices = () => {
@@ -29,20 +31,25 @@ const Invoices = () => {
   const [reload, setReload] = useState(false);
   const [search, setSearch] = useState<string>();
   const [currentPage, setCurrentPage] = useState<number>();
-  const [filterSubscription, setFilterSubscription] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
-  const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
+  const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
+  const [filters, setFilters] = useState<any>();
 
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {page: currentPage, page_size: pageSize, voucher_code: search, subscription: filterSubscription},
+      params: {
+        ...filters,
+        page: currentPage,
+        page_size: pageSize,
+        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+      },
     };
     setLoading(true);
     axios
@@ -60,7 +67,7 @@ const Invoices = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload]);
+  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters]);
 
   const deleteInvoice = (uuid: string) => {
     axios
@@ -76,9 +83,43 @@ const Invoices = () => {
   const columns: any = [
     {
       title: 'N°',
-      width: 40,
-      dataIndex: 'tracking_id',
-      render: (tracking_id: string) => <code>{tracking_id}</code>,
+      width: 95,
+      align: 'center',
+      dataIndex: 'pending_payment',
+      render: (pending_payment: number, i: Invoice) => {
+        let status = null;
+        if (i.expires_on) {
+          const isExpired = dayjs(i.expires_on).isAfter(new Date());
+          status = (
+            <CustomTag color={isExpired ? 'orange' : 'red'}>
+              {isExpired ? 'Por cobrar' : 'Vencido'}
+            </CustomTag>
+          );
+        }
+        if (i.paid_at) {
+          status = <CustomTag color={'green'}>Pagado</CustomTag>;
+        }
+        return (<>
+          <code>{i.tracking_id}</code>
+          {status ||
+            <CustomTag color={i.paid_at ? 'green' : 'red'}>
+              {pending_payment > 0 ? 'Pendiente' : 'Pagado'}
+            </CustomTag>
+          }
+        </>);
+      },
+    },
+    {
+      title: 'F. emisión',
+      width: 110,
+      dataIndex: 'issued_on',
+      render: (date: string) => <code>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</code>,
+    },
+    {
+      title: 'Vencimiento',
+      width: 110,
+      dataIndex: 'expires_on',
+      render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
     },
     {
       title: 'Concepto',
@@ -88,19 +129,24 @@ const Invoices = () => {
       }
     },
     {
-      title: 'Observaciones',
-      dataIndex: 'concept',
-      render: (concept: string) => {
-        return concept;
+      title: 'Cliente',
+      dataIndex: 'client',
+      render: (client?: Client) => {
+        return client?.type.includes('Profile') ?
+          <ProfileChip profile={client?.entity}/> :
+          <CompanyChip company={client?.entity}/>;
       }
     },
     {
-      title: 'Cliente',
-      dataIndex: 'customer',
-      render: (customer: Client, invoice: Invoice) => {
-        return <>
-          {invoice.customer_type}
-        </>;
+      title: 'Contrato',
+      align: 'center',
+      dataIndex: 'contract',
+      render: (contract?: Contract) => {
+        return contract && <Tooltip title={contract.status}>
+          <Link target="_blank" to={`/commercial/contracts/${contract?.uuid}`}>
+            <code>{contract.tracking_id}</code>
+          </Link>
+        </Tooltip>
       }
     },
     {
@@ -115,41 +161,14 @@ const Invoices = () => {
       }
     },
     {
-      title: 'Creado',
-      width: 100,
-      dataIndex: 'issued_on',
-      render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
-    },
-    {
-      title: 'Expira',
-      width: 100,
-      dataIndex: 'expires_on',
-      render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
-    },
-    {
-      title: 'Estado',
-      width: 100,
-      dataIndex: 'pending_payment',
-      render: (pending_payment: number, i: Invoice) => {
-        if (i.paid_at) {
-          return <Tag color={'green'}>Pagado</Tag>;
-        }
-        if (i.expires_on) {
-          const isExpired = dayjs(i.expires_on).isAfter(new Date());
-          return (
-            <Tooltip title={'Fecha de vencimiento: ' + dayjs(i.expires_on).format('DD/MM/YYYY')}>
-              <Tag color={isExpired ? 'orange' : 'red'}>
-                {isExpired ? 'Por cobrar' : 'Vencido'}
-              </Tag>
-            </Tooltip>
-          );
-        }
-        return (
-          <Tag color={i.paid_at ? 'green' : 'red'}>
-            {pending_payment > 0 ? 'Pendiente' : 'Pagado'}
-          </Tag>
-        );
-      },
+      title: 'Documentos tributarios',
+      dataIndex: 'documents',
+      align: 'right',
+      render: (documents: any, row: Invoice) => {
+        return <>
+          <PrimaryButton disabled label={'Generar'} shape={'round'} ghost size={"small"}/>
+        </>;
+      }
     },
     {
       title: '',
@@ -157,12 +176,16 @@ const Invoices = () => {
       width: 75,
       render: (uuid: string, row: Invoice) => (
         <Space>
-          <IconButton small icon={<PiPencilSimple/>} onClick={() => {
+          <IconButton small icon={<TbPencil/>} onClick={() => {
             setSelectedInvoice(row);
             setOpenInvoiceForm(true);
           }}/>
-          <IconButton title={'Abrir ventana de pagos'} small icon={<TbCashRegister/>} onClick={() => {
+          <IconButton title={'Abrir ventana de pagos'} small icon={<TbCoins/>} onClick={() => {
             setSelectedInvoice(row);
+            setOpenPaymentsDetail(true);
+          }}/>
+          <IconButton disabled title={'Documentos SUNAT'} small
+                      icon={<img style={{width: 18}} src={logoSunat} alt={'Sunat'}/>} onClick={() => {
             setOpenPaymentsDetail(true);
           }}/>
           <Popconfirm
@@ -184,32 +207,30 @@ const Invoices = () => {
           title={'Pagos'}
           loading={loading}
           onRefresh={() => setReload(!reload)}
-          tools={`Total ${pagination?.total}`}/>
-        <FilterForm>
-          <Form.Item name={'Nombre'}>
-            <DatePicker.RangePicker format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
-          </Form.Item>
-          <Form.Item>
-            <Select options={[
-              {label:'Pagados', value:''},
-              {label:'Ver todo', value:''},
-            ]}/>
-          </Form.Item>
-          <Form.Item>
-            <Input.Search
-              allowClear
-              placeholder={'Voucher'}
-              onSearch={value => {
-                setSearch(value);
-                setCurrentPage(1);
-              }}
-            />
-          </Form.Item>
-        </FilterForm>
-        <TableList columns={columns} dataSource={invoices}/>
+          tools={`Total ${pagination?.total}`}>
+          <FilterForm onSubmit={values => setFilters(values)}>
+            <Form.Item label={'Cliente'} name={'client_uuid'}>
+              <ClientSelector/>
+            </Form.Item>
+            <Form.Item label={'Periodo'}>
+              <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
+            </Form.Item>
+            <Form.Item label={'Estado'} name={'status'}>
+              <Select popupMatchSelectWidth={false} allowClear placeholder={'Todo'} options={[
+                {label: 'Vencidos', value: 'expired'},
+                {label: 'Pagados', value: 'paid'},
+                {label: 'Pendientes', value: 'pending'},
+              ]}/>
+            </Form.Item>
+            <Form.Item name={'voucher_code'}>
+              <Input allowClear placeholder={'Voucher / ID Transacción'}/>
+            </Form.Item>
+          </FilterForm>
+        </ContentHeader>
+        <TableList scroll={{x: 1000}} customStyle={false} columns={columns} dataSource={invoices}/>
         <Pagination
+          style={{marginTop: 10}}
           align={'center'}
-          showSizeChanger={false}
           total={pagination?.total}
           pageSize={pagination?.per_page}
           current={pagination?.current_page}
@@ -218,30 +239,48 @@ const Invoices = () => {
             setPageSize(size);
           }}
         />
+      </ModuleContent>
+      <ModalView
+        width={1000}
+        open={openInvoiceForm}
+        onCancel={() => {
+          setSelectedInvoice(undefined);
+          setOpenInvoiceForm(false)
+        }}>
+        <Row gutter={[20, 20]}>
+          <Col span={10}>
+            <InvoiceForm
+              invoice={selectedInvoice}
+              onComplete={(invoice) => {
+                setReload(!reload);
+                setSelectedInvoice(invoice);
+              }}/>
+          </Col>
+          <Col span={14}>
+            {!selectedInvoice && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        description={'Guarda la solicitud de pago para poder agregar los items'}/>}
+            {selectedInvoice &&
+              <InvoiceTableDetails
+                onChange={() => {
+                  setReload(!reload);
+                }}
+                invoice={selectedInvoice}/>
+            }
+          </Col>
+        </Row>
+      </ModalView>
+      <ModalView
+        width={700}
+        onCancel={() => {
+          setOpenPaymentsDetail(false);
+        }} open={openPaymentsDetail}>
         {selectedInvoice && (
           <>
-            <ContentHeader
-              title={selectedInvoice?.concept + ' - ' + selectedInvoice?.amount_string}
-              description={`S/ ${selectedInvoice?.invoiceable.amount / 100}`}>
-              {selectedInvoice?.invoiceable.uuid} <br/>
-              <Tag color={selectedInvoice.pending_payment && selectedInvoice.pending_payment > 0 ? 'red' : 'green'}>
-                Pago pendiente: <MoneyString value={selectedInvoice.pending_payment}/>
-              </Tag>
-            </ContentHeader>
-            {selectedInvoice.customer_type?.includes('profile') ?
-              <ProfileCard profile={selectedInvoice?.customer}/> :
-              <CompanyChip company={selectedInvoice?.customer}/>
-            }
-            <InvoiceTableDetails invoice={selectedInvoice} invoiceOwnerUuid={'234'} invoiceOwnerType={'person'}/>
-            <Divider>Pagos</Divider>
-            <TableList columns={columns} dataSource={selectedInvoice.payments}/>
-            <InvoiceTablePayments invoice={selectedInvoice} />
-            <Divider>Otras subscripciones</Divider>
-            <PersonSubscription profileUuid={selectedInvoice.invoiceable_id}/>
+            <h3>Pagos</h3>
+            <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
           </>
         )}
-
-      </ModuleContent>
+      </ModalView>
     </>
   );
 };

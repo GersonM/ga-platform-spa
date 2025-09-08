@@ -7,13 +7,16 @@ import './App.less';
 import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
-import GuestLayout from './GuestLayout';
-import CompaniesManagement from "../HRManagement/Screens/CompaniesManagement";
-import PublicContainerViewer from "../FileManagement/Screens/PublicContainerViewer";
-import ProcessesManagement from "../CRMModule/Screens/ProcessesManagement";
-import WarehouseActivityManager from "../WarehouseManager/Screens/WarehouseActivityManager";
-import MonitorServicesManager from "../ServiceMonitoring/Screens/MonitorServicesManager";
 
+const CompaniesManagement = lazy(() => import("../HRManagement/Screens/CompaniesManagement"));
+const PublicContainerViewer = lazy(() => import("../FileManagement/Screens/PublicContainerViewer"));
+const ProcessesManagement = lazy(() => import("../CRMModule/Screens/ProcessesManagement"));
+const WarehouseActivityManager = lazy(() => import("../WarehouseManager/Screens/WarehouseActivityManager"));
+const MonitorServicesManager = lazy(() => import("../ServiceMonitoring/Screens/MonitorServicesManager"));
+const Wallets = lazy(() => import("../PaymentManagement/Screens/Wallets"));
+const WarehouseStockManager = lazy(() => import("../WarehouseManager/Screens/WarehouseStockManager"));
+
+const GuestLayout = lazy(() => import('./GuestLayout'));
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
 const CompanyContainers = lazy(() => import('../FileManagement/Screens/CompanyContainers'));
 const DashboardHome = lazy(() => import('../Dashboard/Screens/DashboardHome'));
@@ -77,7 +80,7 @@ const App = () => {
       console.error('Global error: ' + error.message);
       if (error.message === 'Network Error') {
         Modal.error({
-          icon: <span className="icon-cloud-crossed" style={{fontSize: 30}} />,
+          icon: <span className="icon-cloud-crossed" style={{fontSize: 30}}/>,
           title: 'Network error',
           centered: true,
           content: "Can't reach the service, please check your connection and try again",
@@ -100,112 +103,118 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path={'/auth'} element={<GuestLayout />}>
-        <Route path={'login'} element={<Login />} />
-        <Route path={'recover'} element={<PasswordRecovery />} />
-        <Route path={'verify-recovery'} element={<VerifyRecovery />} />
-        <Route path={'google/callback'} element={<GoogleCallback />} />
+      <Route path={'/auth'} element={<GuestLayout/>}>
+        <Route path={'login'} element={<Login/>}/>
+        <Route path={'recover'} element={<PasswordRecovery/>}/>
+        <Route path={'verify-recovery'} element={<VerifyRecovery/>}/>
+        <Route path={'google/callback'} element={<GoogleCallback/>}/>
       </Route>
-      <Route path={'/storage/files/:uuid'} element={<FileDetailViewer />} />
-      <Route path={'/storage/containers/:uuid'} element={<PublicContainerViewer />} />
-      <Route path={'/'} element={<AuthenticatedLayout />}>
-        <Route index element={<DashboardHome />} />
-        <Route path={'/my-tasks'} element={<MyTasks />} />
-        <Route path={'file-management'} element={<CompanyContainers />}>
-          <Route path={':uuid'} element={<CompanyContainers />} />
-          <Route path={':uuid/containers/:child_uuid'} element={<CompanyContainers />} />
+      <Route path={'/storage/files/:uuid'} element={<FileDetailViewer/>}/>
+      <Route path={'/storage/containers/:uuid'} element={<PublicContainerViewer/>}/>
+      <Route path={'/'} element={<AuthenticatedLayout/>}>
+        <Route index element={<DashboardHome/>}/>
+        <Route path={'/my-tasks'} element={<MyTasks/>}/>
+        <Route path={'file-management'} element={<CompanyContainers/>}>
+          <Route path={':uuid'} element={<CompanyContainers/>}/>
+          <Route path={':uuid/containers/:child_uuid'} element={<CompanyContainers/>}/>
         </Route>
-        <Route path={'inbox-management'} element={<InboxManager />}>
-          <Route path={'storage/:uuid'} element={<MailAccountStats />} />
-          <Route path={':account/:uuid/:message?'} element={<MailMessagesViewer />}>
-            <Route path={':tab'} />
+        <Route path={'inbox-management'} element={<InboxManager/>}>
+          <Route path={'storage/:uuid'} element={<MailAccountStats/>}/>
+          <Route path={':account/:uuid/:message?'} element={<MailMessagesViewer/>}>
+            <Route path={':tab'}/>
           </Route>
         </Route>
-        <Route path={'profiles'} element={<ProfilesManagement />} />
-        <Route path={'profiles/:uuid'} element={<UserProfileDetails />}>
-          <Route path={':tab'} />
+        <Route path={'profiles'} element={<ProfilesManagement/>}/>
+        <Route path={'profiles/:uuid'} element={<UserProfileDetails/>}>
+          <Route path={':tab'}/>
         </Route>
-        <Route path={'invoices'} element={<Invoices />}>
-          <Route path={':uuid'} />
-        </Route>
-        <Route path={'config'} element={<ModuleConfiguration />}>
-          <Route path={'workspaces'} element={<WorkspaceManagement />} />
-          <Route path={'workspaces/:workspace'} element={<PreferencesManager />} />
-          <Route path={'inbox-management'} element={<ConfigOptions />}>
-            <Route path={':tab'} element={null} />
+        <Route path={'finances'}>
+          <Route path={'invoices'} element={<Invoices/>}>
+            <Route path={':uuid'}/>
           </Route>
-          <Route path={'file-management'} element={<FileManagerPreferences />} />
-          <Route path={'preferences'} element={<PreferencesManager />} />
-          <Route path={'permissions'} element={<PermissionsManager />} />
-          <Route path={'taxonomy'} element={<TaxonomyManager />}>
-            <Route path={':taxonomy'} element={null} />
+          <Route path={'payments-in'} element={<Invoices/>}/>
+          <Route path={'payments-out'} element={<Invoices/>}/>
+          <Route path={'wallet-accounts'} element={<Wallets/>}/>
+        </Route>
+        <Route path={'config'} element={<ModuleConfiguration/>}>
+          <Route path={'workspaces'} element={<WorkspaceManagement/>}/>
+          <Route path={'workspaces/:workspace'} element={<PreferencesManager/>}/>
+          <Route path={'inbox-management'} element={<ConfigOptions/>}>
+            <Route path={':tab'} element={null}/>
+          </Route>
+          <Route path={'file-management'} element={<FileManagerPreferences/>}/>
+          <Route path={'preferences'} element={<PreferencesManager/>}/>
+          <Route path={'permissions'} element={<PermissionsManager/>}/>
+          <Route path={'taxonomy'} element={<TaxonomyManager/>}>
+            <Route path={':taxonomy'} element={null}/>
           </Route>
         </Route>
-        <Route path={'move'} element={<MoveLayout />}>
-          <Route path={'reservation'} element={<TripReservation />} />
-          <Route path={'trips'} element={<TicketsManager />} />
-          <Route path={'routes'} element={<MoveRoutesManager />} />
-          <Route path={'vehicles'} element={<MoveVehiclesManager />} />
-          <Route path={'schedule'} element={<TripsSchedule />} />
+        <Route path={'move'} element={<MoveLayout/>}>
+          <Route path={'reservation'} element={<TripReservation/>}/>
+          <Route path={'trips'} element={<TicketsManager/>}/>
+          <Route path={'routes'} element={<MoveRoutesManager/>}/>
+          <Route path={'vehicles'} element={<MoveVehiclesManager/>}/>
+          <Route path={'schedule'} element={<TripsSchedule/>}/>
         </Route>
         <Route path={'lms'}>
-          <Route path={'courses'} element={<CoursesManagement />} />
-          <Route path={'courses/:course'} element={<CourseDetail />} />
-          <Route path={'students'} element={<EnrollmentsManagement />} />
+          <Route path={'courses'} element={<CoursesManagement/>}/>
+          <Route path={'courses/:course'} element={<CourseDetail/>}/>
+          <Route path={'students'} element={<EnrollmentsManagement/>}/>
         </Route>
-        <Route path={'reservations'} element={<ReservationsLayout />}>
-          <Route path={'create'} element={<NewReservation />} />
-          <Route path={'manager'} element={<ReservationsManager />} />
-          <Route path={'routes'} element={<MoveRoutesManager />} />
-          <Route path={'vehicles'} element={<MoveVehiclesManager />} />
-          <Route path={'schedule'} element={<TripsSchedule />} />
+        <Route path={'reservations'} element={<ReservationsLayout/>}>
+          <Route path={'create'} element={<NewReservation/>}/>
+          <Route path={'manager'} element={<ReservationsManager/>}/>
+          <Route path={'routes'} element={<MoveRoutesManager/>}/>
+          <Route path={'vehicles'} element={<MoveVehiclesManager/>}/>
+          <Route path={'schedule'} element={<TripsSchedule/>}/>
         </Route>
-        <Route path={'hr'} element={<HRManagementLayout />}>
-          <Route path={'document-generator'} element={<DocumentGeneratorScreen />} />
+        <Route path={'hr'} element={<HRManagementLayout/>}>
+          <Route path={'document-generator'} element={<DocumentGeneratorScreen/>}/>
           <Route path={':uuid'}>
-            <Route path={':tab'} />
+            <Route path={':tab'}/>
           </Route>
         </Route>
         <Route path={'club'}>
-          <Route path={'subscriptions'} element={<ClubMembersManagement />} />
-          <Route path={'subscriptions/:subscription'} element={<ClubSubscriptionViewer />} />
-          <Route path={'payments-import'} element={<ImportPayments />} />
+          <Route path={'subscriptions'} element={<ClubMembersManagement/>}/>
+          <Route path={'subscriptions/:subscription'} element={<ClubSubscriptionViewer/>}/>
+          <Route path={'payments-import'} element={<ImportPayments/>}/>
         </Route>
         <Route path={'attendance'}>
-          <Route path={'dashboard'} element={<AttendanceDashboard />} />
-          <Route path={'management'} element={<AttendanceManager />} />
-          <Route path={'access-control'} element={<MembersAccessControl />} />
+          <Route path={'dashboard'} element={<AttendanceDashboard/>}/>
+          <Route path={'management'} element={<AttendanceManager/>}/>
+          <Route path={'access-control'} element={<MembersAccessControl/>}/>
         </Route>
         <Route path={'crm'}>
-          <Route path={'processes'} element={<ProcessesManagement />} />
+          <Route path={'processes'} element={<ProcessesManagement/>}/>
         </Route>
         <Route path={'commercial'}>
-          <Route path={'dashboard'} element={<CommercialDashboard />} />
-          <Route path={'incidents'} element={<CommercialIncidents />} />
-          <Route path={'leads/:campaign?'} element={<CommercialLeads />} />
-          <Route path={'clients'} element={<CommercialClients />} />
-          <Route path={'sales'} element={<CommercialSales />} />
-          <Route path={'contracts/:contract'} element={<CommercialContractDetail />} />
-          <Route path={'contract-templates/:contract_template?'} element={<TemplateContractsManager />} />
+          <Route path={'dashboard'} element={<CommercialDashboard/>}/>
+          <Route path={'incidents'} element={<CommercialIncidents/>}/>
+          <Route path={'leads/:campaign?'} element={<CommercialLeads/>}/>
+          <Route path={'clients'} element={<CommercialClients/>}/>
+          <Route path={'sales'} element={<CommercialSales/>}/>
+          <Route path={'contracts/:contract'} element={<CommercialContractDetail/>}/>
+          <Route path={'contract-templates/:contract_template?'} element={<TemplateContractsManager/>}/>
         </Route>
         <Route path={'warehouse'}>
-          <Route path={'products'} element={<WarehouseProductsManager />} />
-          <Route path={'activity'} element={<WarehouseActivityManager />} />
+          <Route path={'stock'} element={<WarehouseStockManager/>}/>
+          <Route path={'products'} element={<WarehouseProductsManager/>}/>
+          <Route path={'activity'} element={<WarehouseActivityManager/>}/>
         </Route>
         <Route path={'real-estate'}>
-          <Route path={'dashboard'} element={<RealEstateDashboard />} />
-          <Route path={'estates'} element={<EstatesManager />} />
-          <Route path={'estates/:state?'} element={<EstateDetailView />} />
-          <Route path={'providing'} element={<EstateProviding />} />
+          <Route path={'dashboard'} element={<RealEstateDashboard/>}/>
+          <Route path={'estates'} element={<EstatesManager/>}/>
+          <Route path={'estates/:state?'} element={<EstateDetailView/>}/>
+          <Route path={'providing'} element={<EstateProviding/>}/>
         </Route>
-        <Route path={'monitoring'} element={<MonitorServicesManager />} />
+        <Route path={'monitoring'} element={<MonitorServicesManager/>}/>
         <Route path={'workspaces'}>
-          <Route path={'dashboard'} element={<RealEstateDashboard />} />
+          <Route path={'dashboard'} element={<RealEstateDashboard/>}/>
         </Route>
-        {user && <Route path={'my-account'} element={<MyAccount />} />}
-        <Route path={'companies'} element={<CompaniesManagement />} />
-        <Route path={'companies/:uuid'} element={<CompanyDetails />}>
-          <Route path={':tab'} />
+        {user && <Route path={'my-account'} element={<MyAccount/>}/>}
+        <Route path={'companies'} element={<CompaniesManagement/>}/>
+        <Route path={'companies/:uuid'} element={<CompanyDetails/>}>
+          <Route path={':tab'}/>
         </Route>
         <Route
           path={'*'}

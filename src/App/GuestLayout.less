@@ -1,26 +1,74 @@
-.login-wrapper {
-  background: #72d3d1 url(./../Assets/bg_app.jpg) no-repeat center center fixed;
-  background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.auth-wrapper {
+  padding: 20px;
   height: 100dvh;
   width: 100%;
+  display: flex;
+
+  .version-info {
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    opacity: 0.5;
+    font-size: 11px;
+    display: block;
+
+    .logo {
+      width: 70px;
+      filter: grayscale();
+      transition: all 0.5s ease-out;
+
+      border-right: 1px solid #dfdfdf;
+      padding-right: 10px;
+      margin-right: 10px;
+
+      &:hover {
+        filter: grayscale(0);
+      }
+    }
+  }
 }
 
-.login-block {
+.login-image {
+  border-radius: 20px;
+  background: #72d3d1 no-repeat center center;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  animation-delay: 1s;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
+  animation-fill-mode: both;
+  animation-name: contentFadeIn;
+
+  cite {
+    padding: 5px 8px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+    display: block;
+    transition: all 1s;
+    text-align: right;
+    opacity: 0;
+  }
+
+  &:hover cite {
+    background: var(--background-color);
+    opacity: 0.8;
+  }
+}
+
+.auth-block {
+  flex: 1;
   align-items: center;
   justify-content: center;
   display: flex;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(15px);
-  box-shadow: 5px 10px 30px rgba(0, 0, 0, .2);
-  border-radius: 20px;
 
   .form-block {
-    padding: 30px;
-    width: 320px;
     text-align: center;
+    min-width: 270px;
 
     .logo {
       max-width: 140px;
@@ -53,23 +101,10 @@
     display: block;
     color: #000;
   }
-
-  .version-info {
-    opacity: 0.5;
-    font-size: 11px;
-    line-height: 11px;
-    display: block;
-    margin-top: 25px;
-  }
 }
 
-
 .dark-mode {
-  .login-block {
-    background: rgba(5, 17, 10, 0.5);
-    backdrop-filter: blur(25px);
-    box-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
-
+  .auth-block {
     .form-block {
       .input-large {
         background: rgba(0, 0, 0, 0.4);
@@ -90,6 +125,40 @@
     line-height: 20px;
     font-size: 18px;
     background: var(--background-color);
+  }
+}
+
+@media (max-width: 780px) {
+  body {
+    background: var(--primary-color) !important;
+  }
+
+  .auth-wrapper {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    margin-top: 100px;
+
+    .version-info {
+      position: relative;
+      display: block;
+      padding: 10px 15px 10px 10px;
+      background: rgba(0, 0, 0, 0.9);
+      left: 0;
+      bottom: 0;
+      margin-top: 15px;
+      border-radius: 40px;
+    }
+  }
+
+  .auth-block {
+    background: var(--background-color-body);
+    border-radius: 18px;
+    padding: 40px;
+  }
+
+  .login-image {
+    display: none;
   }
 }
 

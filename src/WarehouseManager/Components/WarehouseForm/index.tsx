@@ -1,18 +1,21 @@
 import React, {useEffect} from 'react';
-import {Checkbox, Form, Input} from "antd";
+import {Checkbox, Form, Input, Select} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
 
 import type {StorageWarehouse} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler";
+import WarehouseSelector from "../WarehouseSelector";
+import LocationsSelector from "../../../MoveManagement/Components/LocationsSelector";
+import ProductGroupsSelector from "../ProductGroupsSelector";
 
 interface WarehouseFormProps {
   warehouse?: StorageWarehouse;
   onComplete?: () => void;
 }
 
-const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
+export const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
   const [form] = useForm();
 
   useEffect(() => {
@@ -45,8 +48,20 @@ const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
       <Form.Item label="Nombre" name={'name'}>
         <Input/>
       </Form.Item>
+      <Form.Item label="Tipo (opcional)" name={'type'}>
+        <Input placeholder='Eje: Almacén, Archivero, Cajón, Estante, etc' />
+      </Form.Item>
+      <Form.Item label="Alcamen padre (opcional)" name={'fk_warehouse_uuid'}>
+        <WarehouseSelector />
+      </Form.Item>
+      <Form.Item label="Ubicación (opcional)" name={'fk_location_uuid'}>
+        <LocationsSelector />
+      </Form.Item>
       <Form.Item label="Dirección (opcional)" name={'address'}>
         <Input/>
+      </Form.Item>
+      <Form.Item label="Descripción (opcional)" name={'description'}>
+        <Input.TextArea />
       </Form.Item>
       <Form.Item label="¿Tene ubicación física?" name={'is_physical'} valuePropName={'checked'}>
         <Checkbox defaultChecked>
@@ -57,5 +72,3 @@ const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
     </Form>
   );
 };
-
-export default WarehouseForm;

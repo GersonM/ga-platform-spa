@@ -1,5 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {
+  Alert,
   Col,
   DatePicker, Divider,
   Form,
@@ -8,12 +9,12 @@ import {
   List,
   notification,
   Row,
-  Segmented,
   Select,
   Space,
   Tag
 } from 'antd';
 import {TbCheck, TbPencil, TbTrash} from "react-icons/tb";
+import {DefaultEditor} from "react-simple-wysiwyg";
 import axios from 'axios';
 
 import type {Contract, StorageContractCartItem, StorageStock} from '../../../Types/api';
@@ -24,25 +25,23 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import MoneyString from '../../../CommonUI/MoneyString';
 import MoneyInput from "../../../CommonUI/MoneyInput";
-import CompanySelector from "../../../HRManagement/Components/CompanySelector";
-import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
-import {DefaultEditor} from "react-simple-wysiwyg";
+import ContractTemplateSelector from "../../../Commercial/Components/ContractTemplateSelector";
+import dayjs from "dayjs";
+import Config from "../../../Config.tsx";
 
-interface NewSaleFormProps {
+interface NewSubscriptionFormProps {
   onComplete?: (data: Contract) => void;
   contract?: Contract;
   saleType?: 'subscription' | 'enrollment';
 }
 
-const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
+const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) => {
   const {user} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [clientType, setClientType] = useState<string>('Persona')
   const [chooseSeller, setChooseSeller] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
   const [shoppingCart, setShoppingCart] = useState<StorageContractCartItem[]>([]);
 
   /*useEffect(() => {
@@ -73,7 +72,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
 
   const submitForm = (data: any) => {
     if (!data.fk_company_uuid && !data.fk_profile_uuid) {
-      console.log(data);
       notification.info({
         description: 'Selecciona un cliente para poder registrar la venta',
         message: 'Elige un cliente'
@@ -82,7 +80,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
     }
 
     if (shoppingCart.length == 0) {
-      console.log(shoppingCart);
       notification.info({description: 'Agrega al menos un producto', message: 'El carrito está vació'})
       return;
     }
@@ -94,9 +91,9 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
         method: contract ? 'PUT' : 'POST',
         data: {
           ...data,
-          is_approved: isApproved,
           cart: shoppingCart,
-          client_type: clientType == 'Persona' ? 'profile' : 'company',
+          addon_service: 'subscription',
+          client_type: 'profile',
         }
       })
       .then(response => {
@@ -162,25 +159,54 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
 
   return (
     <div>
-      <h2>
-        <Space>
-          Nueva:
-          <Segmented
-            size={"large"}
-            options={[{label: 'propuesta', value: 'proposal'}, 'venta']}
-            onChange={value => setIsApproved(value != 'proposal')}
-          />
-        </Space>
-      </h2>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
-        <Row gutter={[20, 20]}>
+        <Row gutter={[30, 30]}>
           <Col span={14}>
+            <Row gutter={[20, 20]}>
+              <Col span={7}>
+                <Form.Item label={'Código de socio'} name={'tracking_id'} rules={[{required:true}]}>
+                  <InputNumber prefix={'N°'} style={{width:'100%'}}/>
+                </Form.Item>
+              </Col>
+              <Col span={17}>
+                <Form.Item label={'Socio titular'} name={'fk_profile_uuid'} rules={[{required:true}]}>
+                  <ProfileSelector placeholder={'Buscar persona'}/>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Alert
+              banner
+              style={{margin: '-15px 0 20px 0', borderRadius:6}} type={"info"} showIcon
+              message={'Los beneficiarios se podrán agregar posteriormente'}/>
+            <Row gutter={[20, 20]}>
+              <Col span={10}>
+                <Form.Item label={'Periodo'} name={'period'} initialValue={'monthly'}>
+                  <Select
+                    showSearch
+                    allowClear
+                    placeholder={'Único'}
+                    options={[
+                      {value: 'unique', label: 'Único'},
+                      {value: 'monthly', label: 'Mensual'},
+                      {value: 'annual', label: 'Anual'},
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={14}>
+                <Form.Item label={'Método de pago (opcional)'} name={'payment_type'} initialValue={'automatic_debit'}>
+                  <PaymentMethodTypesSelector/>
+                </Form.Item>
+              </Col>
+            </Row>
             <Row gutter={[15, 15]}>
               <Col xs={14}>
-                <Form.Item label={'Agregar producto'}>
-                  <StockSelector value={null} onChange={(_uuid, option) => {
-                    addStock(option.entity);
-                  }}/>
+                <Form.Item label={'Agregar servicio'}>
+                  <StockSelector
+                    placeholder={'Elige un servicio para agregar'} value={null}
+                    onChange={(_uuid, option) => {
+                      addStock(option.entity);
+                    }}/>
                 </Form.Item>
               </Col>
               <Col xs={10}>
@@ -228,49 +254,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                   </List.Item>;
                 }}/>
             </Form.Item>
-            <Row gutter={[20, 20]}>
-              <Col span={14}>
-                <Form.Item label={'Generar pagos (opcional)'} name={'payment_mode'}>
-                  <Select
-                    allowClear
-                    showSearch
-                    placeholder={'Se pueden generar posteriormente'}
-                    options={[
-                      {value: 'first_30', label: 'Inicial de 30%'},
-                      {value: '1_pago', label: '1 Solo pago'},
-                      {value: '0', label: 'Generar posteriormente'},
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={10}>
-                <Form.Item label={'Periodo'} name={'period'}>
-                  <Select
-                    showSearch
-                    allowClear
-                    placeholder={'Único'}
-                    options={[
-                      {value: 'unique', label: 'Único'},
-                      {value: 'monthly', label: 'Mensual'},
-                      {value: 'annual', label: 'Anual'},
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item label={'Cliente'} style={{marginBottom: 10}}>
-              <Segmented options={['Persona', 'Empresa']} onChange={value => setClientType(value)}/>
-            </Form.Item>
-            {clientType == 'Persona' && (
-              <Form.Item name={'fk_profile_uuid'}>
-                <ProfileSelector placeholder={'Buscar persona'}/>
-              </Form.Item>
-            )}
-            {clientType == 'Empresa' && (
-              <Form.Item name={'fk_company_uuid'}>
-                <CompanySelector/>
-              </Form.Item>
-            )}
             <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
               {chooseSeller ? (
                   <ProfileSelector/>
@@ -284,36 +267,29 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 </Space>
               }
             </Form.Item>
+            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
+              <Input.TextArea/>
+            </Form.Item>
           </Col>
           <Col span={10}>
             <Divider>Información opcional</Divider>
-            <Form.Item label={'Tipo de contrato / venta'} name={'fk_template_uuid'}>
+            <Form.Item label={'Formato de contrato (opcional)'} name={'fk_template_uuid'}>
               <ContractTemplateSelector/>
             </Form.Item>
-            {isApproved && (
-              <>
-                <Form.Item label="Fecha de venta (opcional)" name="approved_at">
-                  <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
-                </Form.Item>
-                <Form.Item label="Fecha de estimada de entrega (opcional)" name="dead_line">
-                  <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
-                </Form.Item>
-              </>
-            )}
-            <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
-              <PaymentMethodTypesSelector/>
+            <Form.Item label="Fecha de venta (opcional)" name="approved_at" initialValue={dayjs()}>
+              <DatePicker style={{width: '100%'}} format={Config.dateFormatUser}/>
+            </Form.Item>
+            <Form.Item label="Inicio de membresía (opcional)" name="date_start" tooltip={'Fecha desde cuando será válida la membresia'} initialValue={dayjs()}>
+              <DatePicker style={{width: '100%'}} format={Config.dateFormatUser}/>
+            </Form.Item>
+            <Form.Item label="Fecha de finalización de contrato (opcional)" name="terminated_at" tooltip={'El contrato y la subscripción será valida hasta esta fecha'}>
+              <DatePicker style={{width: '100%'}} placeholder={'Nunca'}/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
               <DefaultEditor/>
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
               <DefaultEditor/>
-            </Form.Item>
-            <Form.Item label={'Información del presupuesto (opcional)'} name={'budget_details'}>
-              <DefaultEditor/>
-            </Form.Item>
-            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-              <Input.TextArea/>
             </Form.Item>
           </Col>
         </Row>
@@ -325,4 +301,4 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
   );
 };
 
-export default NewSaleForm;
+export default NewSubscriptionForm;

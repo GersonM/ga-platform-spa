@@ -83,6 +83,7 @@ const Login = () => {
   return (
     <>
       <Form onFinish={login}>
+        <h2>Bienvenid@ de vuelta</h2>
         <div className={'input-large'}>
           <div className="icon">
             <TbAt size={20} />
@@ -99,7 +100,7 @@ const Login = () => {
             <Input.Password variant={'borderless'} placeholder={'Contraseña'} />
           </Form.Item>
         </div>
-        <Button type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
+        <Button block type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
           Ingresar <TbChevronRight />
         </Button>
       </Form>

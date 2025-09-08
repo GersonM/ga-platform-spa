@@ -1,6 +1,5 @@
 import {type ReactNode, useState} from 'react';
 import {NavLink} from 'react-router-dom';
-import {Badge} from 'antd';
 import {TbChevronDown} from "react-icons/tb";
 
 interface NavItemProps {
@@ -10,14 +9,12 @@ interface NavItemProps {
   path?: string;
   notifications?: number|string;
 }
-
 const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const content = (
     <>
       <span className={'label'}>{label}</span>
-      <Badge showZero={false} size={'small'} count={notifications} />
+      {(notifications != 0 && notifications != undefined) && <div className={'notification-badge'}>{notifications}</div>}
     </>
   );
 

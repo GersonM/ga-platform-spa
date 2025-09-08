@@ -1,7 +1,5 @@
 import {type ReactNode, useContext} from 'react';
 
-import logoDark from '../../Assets/ga_logo_white.webp';
-import logo from '../../Assets/ga_logo.webp';
 import AuthContext from '../../Context/AuthContext';
 import IconButton from '../IconButton';
 
@@ -15,8 +13,7 @@ interface ModuleContentProps {
 }
 
 const ModuleContent = ({children, opaque, withSidebar = false}: ModuleContentProps) => {
-  const {config, darkMode, openMenu, setOpenMenu} = useContext(AuthContext);
-  const navLogo = darkMode ? config?.dark_logo : config?.white_logo;
+  const {config, openMenu, setOpenMenu} = useContext(AuthContext);
 
   return (
     <>
@@ -26,7 +23,7 @@ const ModuleContent = ({children, opaque, withSidebar = false}: ModuleContentPro
           onClick={() => {
             setOpenMenu(!openMenu);
           }}>
-          <img src={navLogo || (darkMode ? logoDark : logo)} alt="Logo" />
+          <img src={config?.dark_logo} alt="Logo" />
         </div>
         <IconButton icon={<TbMenu2 />} onClick={() => setOpenMenu(!openMenu)} />
       </div>

@@ -13,15 +13,34 @@ import './styles.less';
 interface ActivityLogViewerProps {
   entity?: string;
   id?: string;
+  boxed?: boolean;
+  autoReload?: boolean;
+  numItems?: number;
 }
 
-const ActivityLogViewer = ({entity, id}: ActivityLogViewerProps) => {
+const ActivityLogViewer = ({entity, id, boxed = true, autoReload = false, numItems = 15}: ActivityLogViewerProps) => {
   const [loading, setLoading] = useState(false);
   const [activity, setActivity] = useState<any[]>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [reload, setReload] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState<number>()
+  const [currentPage, setCurrentPage] = useState<number>();
+
+  useEffect(
+    () => {
+      if (!autoReload) {
+        return;
+      }
+      const timer1 = setInterval(() => {
+        setReload(val => !val);
+      }, 10000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    [autoReload]
+  );
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -29,6 +48,7 @@ const ActivityLogViewer = ({entity, id}: ActivityLogViewerProps) => {
       cancelToken: cancelTokenSource.token,
       params: {
         page: currentPage,
+        per_page: numItems,
         type: entity,
         id
       },
@@ -65,9 +85,9 @@ const ActivityLogViewer = ({entity, id}: ActivityLogViewerProps) => {
   }
 
   return (
-    <div className="activity-log-viewer-container">
+    <div className={`activity-log-viewer-container ${boxed && 'boxed'}`}>
       <Flex align={'center'} justify="space-between">
-        Actividad
+        {boxed && 'Actividad'}
         <Space>
           <IconButton small icon={<TbReload/>} onClick={() => setReload(!reload)}/>
           <Button size={'small'} onClick={() => setOpen(!open)} variant={'link'} type={'text'}>
@@ -76,7 +96,7 @@ const ActivityLogViewer = ({entity, id}: ActivityLogViewerProps) => {
           </Button>
         </Space>
       </Flex>
-      {open && <>
+      {(open || !boxed) && <>
         <Divider size={"small"}/>
         <LoadingIndicator visible={loading}/>
         {activity?.map((item, index: number) => {

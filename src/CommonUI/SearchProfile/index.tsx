@@ -56,6 +56,7 @@ const SearchProfile = ({style, value, filter_type, exclude_type, mode, ...props}
     <Select
       loading={loading}
       mode={mode}
+      popupMatchSelectWidth={false}
       value={value}
       allowClear
       filterOption={false}

@@ -36,10 +36,8 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
       setSelectedSubscription({
         ...subscription,
         fk_profile_uuid: subscription.members.find(m => m.relation_type == 'SOCIO')?.profile.uuid,
-        fk_plan_uuid: subscription.plan.uuid,
         started_at: dayjs(subscription.started_at),
       });
-      setSelectedPlan(subscription.plan);
     }
   }, [subscription]);
 

@@ -21,6 +21,7 @@ import UserPermissionsManager from '../UserPermissionsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import AlertMessage from '../../../CommonUI/AlertMessage';
+import CountrySelector from "../../../CommonUI/CountrySelector";
 
 interface ProfileEditorProps {
   profileUuid: string;
@@ -246,18 +247,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
             <Row gutter={15}>
               <Col md={8}>
                 <Form.Item name={'fk_country_uuid'} label={'País de nacimiento'}>
-                  <Select
-                    aria-autocomplete={'none'}
-                    showSearch
-                    placeholder={'Buscar país'}
-                    options={[
-                      {label: 'Perú', value: 'PE'},
-                      {label: 'Venezuela', value: 'VEN'},
-                      {label: 'Ecuador', value: 'ECU'},
-                      {label: 'Chile', value: 'CL'},
-                      {label: 'Brasil', value: 'BR'},
-                    ]}
-                  />
+                  <CountrySelector />
                 </Form.Item>
               </Col>
               <Col md={8}>

@@ -42,6 +42,8 @@ import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import StorageStockChip from "../../Components/StorageStockChip";
+import Config from "../../../Config.tsx";
+import MetaTitle from "../../../CommonUI/MetaTitle";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -132,6 +134,20 @@ const CommercialContractDetail = () => {
       })
   }
 
+  const updateStock = (uuid: string) => {
+    setLoading(true);
+    axios
+      .post(`commercial/contracts/${contract?.uuid}/update-stock`, {stock_uuid: uuid})
+      .then(() => {
+        setLoading(false);
+        setReload(!reload);
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
+
   if (!contract) {
     return <LoadingIndicator message={'Cargando información de contrato'}/>;
   }
@@ -140,7 +156,6 @@ const CommercialContractDetail = () => {
 
   if (contract.cart) {
     for (const cartItem of contract.cart) {
-      console.log(cartItem.stock?.currency);
       if (cartItem.stock?.currency) {
         if (!totals[cartItem.stock.currency]) {
           totals[cartItem.stock.currency] = 0;
@@ -152,24 +167,41 @@ const CommercialContractDetail = () => {
 
   const contractDetails: DescriptionsProps['items'] = [
     {
-      key: '1',
+      key: 'tracking_id',
       label: 'ID',
       children: <code>{contract.tracking_id}</code>
     },
     {
-      key: '3',
+      key: 'created_at',
+      label: 'Propuesta',
+      children: contract?.created_at ? dayjs(contract?.created_at).format(Config.dateFormatUser) : 'Sin aprobación'
+    },
+    {
+      key: 'approved_at',
       label: 'Aprobación',
-      children: contract?.approved_at ? dayjs(contract?.approved_at).format('DD/MM/YYYY hh:mm a') : 'Sin aprobación'
+      children: contract?.approved_at ? dayjs(contract?.approved_at).format(Config.dateFormatUser) : 'Sin aprobación'
     },
     {
-      key: '4',
+      key: 'date_start',
       label: 'Fecha de inicio',
-      children: contract?.date_start ? dayjs(contract?.date_start).format('DD/MM/YYYY hh:mm a') : 'No iniciado'
+      children: contract?.date_start ? dayjs(contract?.date_start).format(Config.dateFormatUser) : 'No iniciado'
     },
     {
-      key: '3',
+      key: 'deadline',
+      label: 'Fecha estimada de entrega',
+      children: contract?.dead_line ? dayjs(contract?.dead_line).format(Config.dateFormatUser) :
+        <small>No terminado</small>
+    },
+    {
+      key: 'date_end',
+      label: 'Fecha de fin',
+      children: contract?.date_end ? dayjs(contract?.date_end).format(Config.dateFormatUser) :
+        <small>No terminado</small>
+    },
+    {
+      key: 'provided_at',
       label: 'Entrega',
-      children: contract?.provided_at ? dayjs(contract?.provided_at).format('DD/MM/YYYY hh:mm a') : 'No entregado'
+      children: contract?.provided_at ? dayjs(contract?.provided_at).format(Config.dateFormatUser) : 'No entregado'
     },
     {
       key: 'period',
@@ -182,7 +214,7 @@ const CommercialContractDetail = () => {
       children: contract?.payment_type
     },
     {
-      key: '2',
+      key: 'amount',
       label: 'Monto',
       children: <>
         <MoneyString currency={'PEN'} value={contract.totals?.PEN}/><br/>
@@ -190,7 +222,7 @@ const CommercialContractDetail = () => {
       </>
     },
     {
-      key: '6',
+      key: 'seller',
       label: 'Vendedor',
       children: <ProfileChip profile={contract?.created_by}/>
     },
@@ -199,6 +231,7 @@ const CommercialContractDetail = () => {
 
   return (
     <ModuleContent>
+      <MetaTitle title={`Contrato: ${contract?.tracking_id}`}/>
       <ContentHeader
         loading={loading}
         onRefresh={() => setReload(!reload)}
@@ -296,17 +329,11 @@ const CommercialContractDetail = () => {
         <Col md={24} lg={7}>
           <div style={{position: "sticky", top: 62}}>
             <Divider orientation={'left'}>Cliente</Divider>
-            <Card variant={"borderless"} size={"small"}>
-              {
-                contract?.client?.type.includes('Profile') ?
-                  <ProfileChip profile={contract?.client?.entity} showDocument/> :
-                  <CompanyChip company={contract?.client?.entity}/>
-              }
-            </Card>
-            <Divider orientation={'left'}>Detalles</Divider>
-            <Descriptions
-              column={1}
-              bordered layout={'horizontal'} size={"small"} items={contractDetails}/>
+            {
+              contract?.client?.type.includes('Profile') ?
+                <ProfileChip profile={contract?.client?.entity} showDocument/> :
+                <CompanyChip company={contract?.client?.entity}/>
+            }
             <Divider orientation={"left"}>Productos</Divider>
             <List
               bordered
@@ -323,7 +350,7 @@ const CommercialContractDetail = () => {
                         currency={cartItem.stock?.currency} value={cartItem.unit_amount}
                       />{' '}x {cartItem.quantity}
                     </small>
-                    {contract.status == 'proposal' &&
+                    {contract.status != 'provided' &&
                       <>
                         <IconButton icon={<TbPencil/>} small/>
                         <Popconfirm
@@ -337,6 +364,10 @@ const CommercialContractDetail = () => {
                   </Space>
                 </List.Item>;
               }}/>
+            <Divider orientation={'left'}>Detalles</Divider>
+            <Descriptions
+              column={1}
+              bordered layout={'horizontal'} size={"small"} items={contractDetails}/>
             {!contract.provided_at &&
               <PrimaryButton
                 danger
@@ -360,16 +391,14 @@ const CommercialContractDetail = () => {
                 children: <>
                   {contract &&
                     <InvoicesTable
-                      customerType={contract.client?.type.toLowerCase().includes('profile') ? 'profile' : 'company'}
-                      customer={contract.client?.entity}
-                      entityUuid={contract?.uuid}
+                      client={contract.client}
+                      contract={contract}
                       refresh={reload}
-                      type={'contract'}
                       tools={<>
                         <PrimaryButton
                           ghost
                           size={"small"}
-                          label={'Asignar plan de pagos'}
+                          label={'Crear plan de pagos'}
                           onClick={() => setOpenInstallmentFom(true)}
                           icon={<PiPlusBold/>}
                         />

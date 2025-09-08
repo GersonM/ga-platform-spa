@@ -1,24 +1,23 @@
 import React from 'react';
-import type {StorageStock} from "../../../Types/api.tsx";
 import {Space} from "antd";
+import type {StorageStock} from "../../../Types/api.tsx";
 
 interface StorageStockChipProps {
   storageStock?: StorageStock;
   quantity?: number;
+  showQuantity?: boolean;
 }
 
-const StorageStockChip = ({storageStock, quantity}: StorageStockChipProps) => {
+const StorageStockChip = ({storageStock, quantity, showQuantity = true}: StorageStockChipProps) => {
   return (
     <div>
       <Space>
         <div>
-          <code>{storageStock?.sku}</code>
+          <code style={{fontSize:13}}>{storageStock?.sku}</code>
           <small>{storageStock?.variation_name || storageStock?.product?.name}</small>
         </div>
-        {quantity !== undefined && (
-          <div>
-            x<code>{quantity}</code>
-          </div>
+        {showQuantity && quantity !== undefined && quantity > 1 && (
+          <code>x{quantity}</code>
         )}
       </Space>
     </div>

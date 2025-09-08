@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Progress,
-  Row,
-  Space,
-  Tag
-} from "antd";
+import {Checkbox, Col, DatePicker, Form, Row, Space, Tag} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
 import dayjs, {type Dayjs} from "dayjs";
@@ -23,20 +14,16 @@ import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer
 interface InvoiceFormProps {
   invoice?: Invoice;
   onComplete?: (invoice: Invoice) => void;
-  customerUuid?: string;
-  customerType?: string;
-  invoiceableUuid?: string;
-  invoiceableType?: string;
+  clientUuid?: string;
+  contractUuid?: string;
 }
 
 const InvoiceForm = (
   {
     invoice,
     onComplete,
-    customerType,
-    customerUuid,
-    invoiceableUuid,
-    invoiceableType
+    clientUuid,
+    contractUuid,
   }: InvoiceFormProps) => {
   const [form] = useForm();
   const [selectedCurrency, setSelectedCurrency] = useState<string>();
@@ -51,13 +38,7 @@ const InvoiceForm = (
     axios.request({
       method: invoice ? "PUT" : "POST",
       url: invoice ? "/payment-management/invoices/" + invoice.uuid : "/payment-management/invoices",
-      data: {
-        ...values,
-        invoice_customer_uuid: customerUuid,
-        invoice_customer_type: customerType,
-        invoiceable_uuid: invoiceableUuid,
-        invoiceable_type: invoiceableType,
-      }
+      data: {...values, client_uuid: clientUuid, contract_uuid: contractUuid,}
     })
       .then(res => {
         if (onComplete) onComplete(res.data);
@@ -69,19 +50,18 @@ const InvoiceForm = (
 
   return (
     <div>
-      <Tag color={'blue'}>{invoice?.tracking_id}</Tag>
-      {invoice && invoice.pending_payment != null &&
-        <Progress size={{height: 2}}
-                  percent={Math.round(((invoice.amount - invoice.pending_payment) / invoice.amount) * 100)}/>
-      }
+      <h2>
+        Solicitud de pago: {' '}
+        <Tag color={'blue'}>{invoice?.tracking_id}</Tag>
+      </h2>
       <Space>
-        Total: <Tag color={'blue'}><MoneyString currency={invoice?.currency} value={invoice?.amount}/></Tag>
-        <>
+        Total: <Tag color={'blue'}><MoneyString currency={invoice?.currency} value={invoice?.amount || 0}/></Tag>
+        {invoice && <>
           Pendiente: {invoice?.pending_payment && (invoice?.pending_payment != 0 ?
-              <Tag color={'orange'}><MoneyString currency={invoice?.currency} value={invoice?.pending_payment}/></Tag> :
-              <Tag color={'green'}>Pagado</Tag>
-          )}
-        </>
+            <Tag color={'orange'}><MoneyString currency={invoice?.currency} value={invoice?.pending_payment}/></Tag> :
+            <Tag color={'green'}>Pagado</Tag>
+        )}
+        </>}
       </Space>
       <br/>
       <br/>
@@ -109,19 +89,22 @@ const InvoiceForm = (
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Fecha de emisión'} name={'issued_on'}>
-              <DatePicker format={'DD/MM/YYYY'} showNow={false} onChange={d => setIssuedOn(d)} style={{width: '100%'}} placeholder={'Hoy'}/>
+              <DatePicker format={'DD/MM/YYYY'} showNow={false} onChange={d => setIssuedOn(d)} style={{width: '100%'}}
+                          placeholder={'Hoy'}/>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label={'Fecha de vencimiento'} name={'expires_on'}>
-              <DatePicker format={'DD/MM/YYYY'} showNow={false} minDate={issuedOn} style={{width: '100%'}} placeholder={'En 7 días'}/>
+              <DatePicker format={'DD/MM/YYYY'} showNow={false} minDate={issuedOn} style={{width: '100%'}}
+                          placeholder={'En 7 días'}/>
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={''} name={'include_taxes'} valuePropName={'checked'}>
-          <Checkbox>Incluir impuestos (IGV 18%)</Checkbox>
+        <Form.Item label={''} name={'apply_taxes'} valuePropName={'checked'}>
+          <Checkbox>Aplicar impuestos (IGV 18%)</Checkbox>
         </Form.Item>
-        <PrimaryButton disabled={!isModified && !!invoice} htmlType={"submit"} label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
+        <PrimaryButton disabled={!isModified && !!invoice} htmlType={"submit"}
+                       label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
       </Form>
       {invoice &&
         <ActivityLogViewer id={invoice?.uuid} entity={'invoice'}/>

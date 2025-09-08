@@ -150,8 +150,12 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       <div className={'title-container'}>
         <div>
           {totalFilled} de {totalRequired} completados | {totalFilled - totalCompleted} por aprobar
-          <Progress percent={Math.round(percentFilled)} success={{percent}} showInfo={true} strokeWidth={4}
-                    style={{marginRight: 10}}/>
+          <Progress
+            percent={Math.round(percentFilled)}
+            success={{percent}}
+            showInfo={true}
+            strokeWidth={4}
+            style={{marginRight: 10}}/>
         </div>
         <Space size={"small"}>
           <LoadingIndicator visible={loading}/>
@@ -204,7 +208,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
           setTempURL(undefined);
         }}>
         <LoadingIndicator visible={downloading}/>
-        {tempURL && <iframe src={tempURL} height={600} width={'100%'} style={{border:"none"}}/>}
+        {tempURL && <iframe src={tempURL} height={600} width={'100%'} style={{border: "none"}}/>}
       </ModalView>
       <ModalView
         title={selectedItem ? 'Editar item' : 'Agregar item'}

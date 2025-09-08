@@ -80,8 +80,8 @@ const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps)
         <PrimaryButton label={'Registrar ingreso'} htmlType={'submit'} block size={'large'}/>
         {member && (<>
             <Divider>Pagos</Divider>
-            {member.subscription &&
-              <InvoicesTable entityUuid={member.subscription?.uuid} order={'newest'} type={'subscription'} showActions={false}/>
+            {member.subscription?.contract &&
+              <InvoicesTable contract={member.subscription.contract} order={'newest'} showActions={false}/>
             }
           </>
         )}

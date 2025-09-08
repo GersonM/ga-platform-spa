@@ -76,6 +76,8 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   }, [selectedStockUUID]);
 
   const submitForm = (data: any) => {
+    console.log(data.date_start);
+    console.log(data.created_at);
     setLoading(true);
     axios
       .request({
@@ -159,16 +161,16 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               </Col>
             </Row>
             <Form.Item label="Fecha de propuesta (opcional)" name="created_at">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
             <Form.Item label="Fecha de venta (opcional)" name="approved_at">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
             <Form.Item label="Fecha de inicio (opcional)" name="date_start">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
             <Form.Item label="Fecha de finalización (opcional)" name="date_end">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'} format={'DD/MM/YYYY'}/>
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <PaymentMethodTypesSelector />

@@ -7,7 +7,7 @@ import type {StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
 import TableList from "../../../CommonUI/TableList";
 import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
-import WarehouseForm from "../WarehouseForm";
+import {WarehouseForm} from "../WarehouseForm";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 const WarehouseManager = () => {

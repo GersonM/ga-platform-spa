@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Select, Tooltip} from 'antd';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import {useDebounce} from '@uidotdev/usehooks';
@@ -89,7 +89,7 @@ const LocationsSelector = ({placeholder, mode, style, ...props}: LocationsSelect
           <small>{option.data.entity.address}</small>
         </div>
       )}
-      dropdownRender={menu => (
+      popupRender={menu => (
         <>
           {menu}
           {name.length > 2 && (

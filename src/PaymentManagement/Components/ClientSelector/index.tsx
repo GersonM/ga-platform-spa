@@ -1,23 +1,26 @@
-import {type CSSProperties, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import type {MoveLocation, StorageProduct} from '../../../Types/api';
-import ErrorHandler from '../../../Utils/ErrorHandler';
 
-interface WarehouseSelectorProps {
+import type {Client} from '../../../Types/api';
+import ErrorHandler from '../../../Utils/ErrorHandler';
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import CompanyChip from "../../../HRManagement/Components/CompanyChip";
+
+interface ClientSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
   value?: any;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelectorProps) => {
-  const [products, setProducts] = useState<StorageProduct[]>();
+export const ClientSelector = ({placeholder, mode, style, ...props}: ClientSelectorProps) => {
+  const [clients, setClients] = useState<Client | any>([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
@@ -29,17 +32,19 @@ const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelect
       cancelToken: cancelTokenSource.token,
       params: {
         search: lastSearchText,
+        short_list: 1,
+        page: 1
       },
     };
 
     axios
-      .get(`warehouses`, config)
+      .get(`/commercial/clients`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setProducts(
-            response.data.map((item: MoveLocation) => {
-              return {value: item.uuid, label: `${item.name}`, entity: item};
+          setClients(
+            response.data.data.map((item: Client) => {
+              return {value: item.uuid, label: `${item.entity.name}`, entity: item};
             }),
           );
         }
@@ -54,26 +59,26 @@ const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelect
 
   return (
     <Select
+      {...props}
       allowClear
-      placeholder={placeholder || 'Selecciona un almacén'}
+      placeholder={placeholder || 'Buscar cliente'}
       showSearch={true}
       onSearch={value => setName(value)}
       filterOption={false}
       loading={loading}
-      style={style ? style : {width: '100%'}}
-      options={products}
-      mode={mode}
-      optionRender={option => {
-        return <div>
-          {option.label}
-          <br/>
-          {/* @ts-ignore */}
-          <small>{option?.data.entity?.code}</small>
-        </div>;
+      onClear={() => {
+        setName('');
       }}
-      {...props}
+      style={style ? style : {width: '100%'}}
+      options={clients}
+      popupMatchSelectWidth={false}
+      mode={mode}
+      optionRender={option => (
+          option.data.entity.type.includes('Profile') ? <ProfileChip profile={option.data.entity.entity}/> :
+            <CompanyChip company={option.data.entity.entity}/>
+      )}
     />
   );
 };
 
-export default WarehouseSelector;
+

@@ -1,23 +1,27 @@
-import {type CSSProperties, useEffect, useState} from 'react';
-import {Select} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Select, Space, Tag} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import type {MoveLocation, StorageProduct} from '../../../Types/api';
-import ErrorHandler from '../../../Utils/ErrorHandler';
 
-interface WarehouseSelectorProps {
+import type {Client, Wallet} from '../../../Types/api';
+import ErrorHandler from '../../../Utils/ErrorHandler';
+import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import CompanyChip from "../../../HRManagement/Components/CompanyChip";
+import CustomTag from "../../../CommonUI/CustomTag";
+
+interface WalletSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
   value?: any;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelectorProps) => {
-  const [products, setProducts] = useState<StorageProduct[]>();
+export const WalletSelector = ({placeholder, mode, style, ...props}: WalletSelectorProps) => {
+  const [wallets, setWallets] = useState<Wallet | any>([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
@@ -33,13 +37,18 @@ const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelect
     };
 
     axios
-      .get(`warehouses`, config)
+      .get(`/payment-management/wallets`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setProducts(
-            response.data.map((item: MoveLocation) => {
-              return {value: item.uuid, label: `${item.name}`, entity: item};
+          setWallets(
+            response.data.map((item: Wallet) => {
+              return {
+                value: item.uuid,
+                label: <Space>
+                  <CustomTag color={'green'}>{item.bank_name}</CustomTag><code>{item.account_number}</code>
+                </Space>
+              };
             }),
           );
         }
@@ -54,26 +63,21 @@ const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelect
 
   return (
     <Select
+      {...props}
       allowClear
-      placeholder={placeholder || 'Selecciona un almacén'}
+      placeholder={placeholder || 'Elige cuenta'}
       showSearch={true}
       onSearch={value => setName(value)}
       filterOption={false}
       loading={loading}
-      style={style ? style : {width: '100%'}}
-      options={products}
-      mode={mode}
-      optionRender={option => {
-        return <div>
-          {option.label}
-          <br/>
-          {/* @ts-ignore */}
-          <small>{option?.data.entity?.code}</small>
-        </div>;
+      onClear={() => {
+        setName('');
       }}
-      {...props}
+      style={style ? style : {width: '100%'}}
+      options={wallets}
+      popupMatchSelectWidth={false}
     />
   );
 };
 
-export default WarehouseSelector;
+

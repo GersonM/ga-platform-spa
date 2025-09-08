@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
-import {Card, Col, Divider, Empty, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from 'antd';
+import {Card, Divider, Empty, Modal, Popconfirm, Select, Space, Switch, Tag, Tooltip} from 'antd';
 import {
   PiCalendarX,
   PiIdentificationCard,
@@ -17,10 +17,7 @@ import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ProfileEditor from '../../../AccountManagement/Components/ProfileEditor';
-import InvoicesTable from '../InvoicesTable';
 import InfoButton from '../../../CommonUI/InfoButton';
-import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AddMemberSubscription from '../AddMemberSubscription';
 
@@ -236,109 +233,84 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       )}
       {subscriptions?.map((subscription: Subscription) => (
         <div key={subscription.uuid}>
-          <ContentHeader
-            onEdit={() => {
-              setOpenEditSubscription(true);
-              setSelectedSubscription(subscription);
-            }}
-            onRefresh={() => setReload(!reload)}
-            title={subscription.plan.name}
-            showBack
-            tools={
-              <Space>
-                <Tag color={'blue'}>{subscription.code}</Tag>
-                <Tag color={subscription.is_active ? 'green' : 'red'}>
-                  {subscription.is_active ? 'ACTIVO' : 'SUSPENDIDO'}
-                </Tag>
-              </Space>
-            }>
-            <Space split={<Divider type={'vertical'}/>}>
+          <h2>{subscription?.code}
+            <Tag color={subscription.is_active ? 'green' : 'red'}>
+              {subscription.is_active ? 'ACTIVO' : 'SUSPENDIDO'}
+            </Tag>
+          </h2>
+          <Space split={<Divider type={'vertical'}/>}>
+            <InfoButton
+              icon={<TbCalendarUp className={'icon'}/>}
+              caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
+              label={'Inicio'}
+            />
+            {subscription.terminated_at ?
               <InfoButton
-                icon={<TbCalendarUp className={'icon'}/>}
-                caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
-                label={'Inicio'}
-              />
-              {subscription.terminated_at ?
-                <InfoButton
-                  icon={<PiCalendarX className={'icon'}/>}
-                  caption={
-                    subscription.terminated_at
-                      ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
-                      ' - ' +
-                      dayjs(subscription.started_at).diff(new Date(), 'days')
-                      : 'Indeterminado'
-                  }
-                  label={'Fin'}
-                /> :
-                <PrimaryButton icon={<TbCalendarX size={18}/>} disabled ghost danger label={'Terminar membresía'}/>
-              }
-              <InfoButton
-                label={'Precio del plan'}
-                icon={<TbReceipt2 className={'icon'}/>}
-                caption={<MoneyString value={subscription.amount || subscription.plan.price}
-                                      currency={subscription.billing_currency}/>}
-              />
-              <div>
-                <span>Marca de agua</span> <br/>
-                <Switch
-                  size={'small'}
-                  defaultValue={pdfWatermark}
-                  onChange={value => {
-                    setPdfWatermark(value);
-                    localStorage.setItem('field_watermark', value ? '1' : '0');
-                  }}
-                />
-              </div>
-              <div>
-                <Select
-                  defaultValue={carnetTemplate}
-                  placeholder={'Plantilla'}
-                  style={{width: 150}}
-                  onChange={value => {
-                    setCarnetTemplate(value);
-                    localStorage.setItem('field_template', value);
-                  }}
-                  options={[
-                    {value: 'ilo', label: 'Carnet Ilo'},
-                    {value: 'moquegua', label: 'Carnet Moquegua'},
-                  ]}
-                  size={'small'}
-                />
-              </div>
-            </Space>
-            <div style={{padding: '10px 0'}}>{subscription?.observations || 'Sin observaciones'}</div>
-          </ContentHeader>
-          <Row gutter={[20, 20]}>
-            <Col xs={16}>
-              <Card
-                title={'Miembros'}
-                variant={"borderless"}
+                icon={<PiCalendarX className={'icon'}/>}
+                caption={
+                  subscription.terminated_at
+                    ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
+                    ' - ' +
+                    dayjs(subscription.started_at).diff(new Date(), 'days')
+                    : 'Indeterminado'
+                }
+                label={'Fin'}
+              /> :
+              <PrimaryButton icon={<TbCalendarX size={18}/>} disabled ghost danger label={'Terminar membresía'}/>
+            }
+            <InfoButton
+              label={'Precio del plan'}
+              icon={<TbReceipt2 className={'icon'}/>}
+              caption={<MoneyString value={subscription?.amount || subscription?.contract?.totals?.PEN}
+                                    currency={subscription?.billing_currency}/>}
+            />
+            <div>
+              <span>Marca de agua</span> <br/>
+              <Switch
                 size={'small'}
-                extra={
-                  <PrimaryButton
-                    icon={<PiPlusBold size={13}/>}
-                    label={'Agregar miembro'}
-                    onClick={() => {
-                      setOpenAddMember(true);
-                      setSelectedSubscription(subscription);
-                    }}
-                    size={'small'}
-                  />
-                }>
-                <TableList loading={loading} columns={columns} dataSource={subscription.members}/>
-              </Card>
-              <Card
-                variant={"borderless"}
-                title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
-                <InvoicesTable entityUuid={subscription.uuid} type={'subscription'} customerType={'profile'}
-                               customer={subscription.holder_profile}/>
-              </Card>
-            </Col>
-            <Col xs={8}>
-              <h3>Actividad</h3>
-              <EntityActivityManager uuid={subscription.uuid} type={'subscription'}/>
-            </Col>
-          </Row>
+                defaultValue={pdfWatermark}
+                onChange={value => {
+                  setPdfWatermark(value);
+                  localStorage.setItem('field_watermark', value ? '1' : '0');
+                }}
+              />
+            </div>
+            <div>
+              <Select
+                defaultValue={carnetTemplate}
+                placeholder={'Plantilla'}
+                style={{width: 150}}
+                onChange={value => {
+                  setCarnetTemplate(value);
+                  localStorage.setItem('field_template', value);
+                }}
+                options={[
+                  {value: 'ilo', label: 'Carnet Ilo'},
+                  {value: 'moquegua', label: 'Carnet Moquegua'},
+                ]}
+                size={'small'}
+              />
+            </div>
+          </Space>
+          <div style={{padding: '10px 0'}}>{subscription?.observations || 'Sin observaciones'}</div>
+          <Card
+            title={'Miembros'}
+            variant={"borderless"}
+            size={'small'}
+            extra={
+              <PrimaryButton
+                icon={<PiPlusBold size={13}/>}
+                label={'Agregar miembro'}
+                onClick={() => {
+                  setOpenAddMember(true);
+                  setSelectedSubscription(subscription);
+                }}
+                size={'small'}
+              />
+            }>
+            <TableList loading={loading} columns={columns} dataSource={subscription.members}/>
+          </Card>
+          <Divider/>
         </div>
       ))}
       <Modal

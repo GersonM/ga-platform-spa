@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Col, Empty, Pagination, Popconfirm, Row, Space, Tag, Tooltip} from 'antd';
-import {PiPencilSimple, PiPlusBold} from 'react-icons/pi';
-import {TbCashRegister, TbRefresh, TbTrash} from 'react-icons/tb';
+import {PiPlusBold} from 'react-icons/pi';
+import {TbCoins, TbPencil, TbRefresh, TbTrash} from 'react-icons/tb';
 import dayjs from 'dayjs';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from '../../../CommonUI/IconButton';
-import type {Company, Invoice, InvoiceItem, Profile, ResponsePagination} from '../../../Types/api';
+import type {Client, Contract, Invoice, InvoiceItem, ResponsePagination} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import InvoiceTableDetails from '../../Components/InvoiceTableDetails';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -15,25 +15,22 @@ import InvoiceTablePayments from '../InvoiceTablePayments';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ModalView from "../../../CommonUI/ModalView";
 import InvoiceForm from "../InvoiceForm";
+import logoSunat from "../../../Assets/sunat_icon.png";
 
 interface InvoicesProps {
-  entityUuid: string;
-  type: string;
   order?: string;
   refresh?: boolean;
   allowCreate?: boolean;
-  customer?: Profile | Company;
-  customerType?: string;
+  contract: Contract;
+  client?: Client;
   tools?: React.ReactNode;
   showActions?: boolean;
 }
 
 const InvoicesTable = (
   {
-    entityUuid,
-    type,
-    customer,
-    customerType = 'profile',
+    client,
+    contract,
     order = 'older',
     tools,
     refresh,
@@ -60,7 +57,7 @@ const InvoicesTable = (
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        page: currentPage, page_size: pageSize, invoiceable_uuid: entityUuid,
+        page: currentPage, page_size: pageSize, contract_uuid: contract.uuid,
         order
       },
     };
@@ -122,7 +119,7 @@ const InvoicesTable = (
       }
     },
     {
-      title: 'Creado',
+      title: 'F. emisión',
       width: 100,
       dataIndex: 'issued_on',
       render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
@@ -160,19 +157,24 @@ const InvoicesTable = (
     },
   ];
 
-  if(showActions) {
+  if (showActions) {
     columns.push({
       title: '',
       dataIndex: 'uuid',
       width: 75,
       render: (uuid: string, row: Invoice) => (
         <Space>
-          <IconButton small icon={<PiPencilSimple/>} onClick={() => {
+          <IconButton small icon={<TbPencil/>} onClick={() => {
             setSelectedInvoice(row);
             setOpenInvoiceForm(true);
           }}/>
-          <IconButton title={'Abrir ventana de pagos'} small icon={<TbCashRegister/>} onClick={() => {
+          <IconButton title={'Abrir ventana de pagos'} small icon={<TbCoins/>} onClick={() => {
             setSelectedInvoice(row);
+            setOpenPaymentsDetail(true);
+          }}/>
+          <IconButton
+            disabled title={'Documentos SUNAT'} small
+            icon={<img style={{width: 18}} src={logoSunat} alt={'Sunat'}/>} onClick={() => {
             setOpenPaymentsDetail(true);
           }}/>
           <Popconfirm
@@ -194,7 +196,7 @@ const InvoicesTable = (
       ) : (
         <TableList loading={loading} columns={columns} dataSource={invoices}/>
       )}
-      {customer &&
+      {client &&
         <Space style={{marginTop: 10}}>
           <Pagination
             showSizeChanger={false}
@@ -233,7 +235,6 @@ const InvoicesTable = (
       </ModalView>
       <ModalView
         width={1000}
-        title={selectedInvoice ? 'Detalle de solicitud de pago' : 'Nueva solicitud de pago'}
         open={openInvoiceForm}
         onCancel={() => {
           setSelectedInvoice(undefined);
@@ -243,10 +244,8 @@ const InvoicesTable = (
           <Col span={10}>
             <InvoiceForm
               invoice={selectedInvoice}
-              customerType={customerType}
-              invoiceableUuid={entityUuid}
-              invoiceableType={type}
-              customerUuid={customer?.uuid}
+              contractUuid={contract.uuid}
+              clientUuid={client?.uuid}
               onComplete={(invoice) => {
                 setReload(!reload);
                 setSelectedInvoice(invoice);
@@ -255,17 +254,12 @@ const InvoicesTable = (
           <Col span={14}>
             {!selectedInvoice && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}
                                         description={'Guarda la solicitud de pago para poder agregar los items'}/>}
-            {customer && selectedInvoice &&
+            {client && selectedInvoice &&
               <InvoiceTableDetails
-                invoiceableUuid={entityUuid}
-                invoiceableType={type}
+                invoice={selectedInvoice}
                 onChange={() => {
-                  //setOpenInvoiceForm(false);
                   setReload(!reload);
                 }}
-                invoice={selectedInvoice}
-                invoiceOwnerUuid={customer?.uuid}
-                invoiceOwnerType={customerType}
               />
             }
           </Col>

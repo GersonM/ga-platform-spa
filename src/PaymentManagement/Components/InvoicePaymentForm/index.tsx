@@ -13,6 +13,8 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import dayjs from "dayjs";
 import Config from "../../../Config.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
+import {TbArrowRight} from "react-icons/tb";
+import {WalletSelector} from "../WalletSelector";
 
 interface InvoicePaymentProps {
   onCompleted: () => void;
@@ -53,8 +55,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
 
   return (
     <>
-      <h3>Registrar nuevo pago
-      </h3>
+      <h3>Registrar nuevo pago</h3>
       <p>
         <Tag bordered={false} color="blue">
           {invoice.tracking_id}
@@ -69,7 +70,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         onFinish={submitForm}>
         <Row gutter={[15, 15]}>
           <Col span={10}>
-            <Form.Item name={'payment_method'} label={'Método de pago'}>
+            <Form.Item name={'payment_channel'} label={'Método de pago'}>
               <PaymentMethodTypesSelector />
             </Form.Item>
           </Col>
@@ -84,8 +85,14 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'voucher_code'} label={'Número de comprobante / Transacción'}>
+        <Form.Item name={'wallet_uuid'} label={'Destino'}>
+          <WalletSelector />
+        </Form.Item>
+        <Form.Item name={'voucher_code'} label={'Número de comprobante'}>
           <Input />
+        </Form.Item>
+        <Form.Item name={'purchase_token'} label={'ID Transacción (opcional)'}>
+          <Input placeholder={'Autogenerado'} />
         </Form.Item>
         <Form.Item label={'Foto del comprobante'}>
           <FileUploader

@@ -383,11 +383,13 @@ export type Subscription = {
   email_verified_at: string;
   is_active: boolean;
   code: string;
-  plan: Plan;
+  //plan: Plan;
   observations: string;
   amount: number;
   started_at: string;
   terminated_at: string;
+  contract_uuid?: string;
+  contract?: Contract;
   members: SubscriptionMember[];
   holder_profile?: Profile;
 };
@@ -438,13 +440,7 @@ export type Invoice = {
   currency: string;
   pending_payment?: number;
   created_at: string;
-  customer: any; //TODO: use Customer Type
-  customer_id: string;
-  customer_type: string;
   expires_on: string;
-  invoiceable: Subscription | any;
-  invoiceable_id: string;
-  invoiceable_type: string;
   issued_on: string;
   paid_at?: string;
   payments?: InvoicePayment[];
@@ -463,6 +459,24 @@ export type InvoiceItem = {
   itemable_type: string;
   quantity: number;
   updated_at: string;
+};
+
+export type Wallet = {
+  uuid: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  description: string;
+  bank_name: string;
+  account_number: string;
+  currency: string;
+  international_account_number: string;
+  country_code: string;
+  balance: number;
+  holder: any;
+  holder_type: string;
+  issued_at: string;
+  disabled_at: string;
 };
 
 export type MoveLocation = {
@@ -666,8 +680,8 @@ export type StorageContractCartItem = {
   quantity: number;
   stock?: StorageStock;
   unit_amount: number;
-  amount_string: string;
-  created_at: string;
+  amount_string?: string;
+  created_at?: string;
 };
 
 export type StorageStock = {

@@ -1,7 +1,9 @@
 import React from 'react';
 import dayjs from "dayjs";
-import {Tag, Tooltip} from "antd";
+import {Tooltip} from "antd";
+
 import type {Contract} from "../../../Types/api.tsx";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ContractStatusProps {
   contract: Contract;
@@ -28,7 +30,7 @@ const ContractStatus = ({contract}: ContractStatusProps) => {
   return (
     <div>
       <Tooltip title={<code>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</code>}>
-        <Tag style={{marginRight:0}} bordered={false} color={colors[contract.status]}>{statuses[contract.status]}</Tag>
+        <CustomTag color={colors[contract.status]}>{statuses[contract.status]}</CustomTag>
       </Tooltip>
     </div>
   );

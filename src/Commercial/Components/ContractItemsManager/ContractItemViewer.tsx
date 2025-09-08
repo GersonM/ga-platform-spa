@@ -8,7 +8,7 @@ import {
   TbPencil,
   TbTrash, TbTrashX
 } from "react-icons/tb";
-import {Divider, Input, Popconfirm, Popover, Space, Switch} from "antd";
+import {Divider, Input, InputNumber, Popconfirm, Popover, Space, Switch} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -28,7 +28,7 @@ interface ContractItemViewerProps {
 const itemTypes: any = {boolean: 'Checkbox', file: 'Archivo', text: 'Texto', number: 'Número'};
 
 const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: ContractItemViewerProps) => {
-  const [value, setValue] = useState<string|undefined>(contractItem.value);
+  const [value, setValue] = useState<string | undefined>(contractItem.value);
   const [isModified, setIsModified] = useState(false);
 
   const saveValue = () => {
@@ -118,6 +118,11 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           unCheckedChildren={'No'}
           defaultValue={contractItem.value == '1'}
           onChange={value => updateValue(value ? '1' : '0')}/>;
+      case 'number':
+        return <InputNumber
+          placeholder={contractItem.description} value={value}
+          onChange={(e) => updateValue(e?.toString())}
+        />
       default:
         return <Input
           placeholder={contractItem.description} value={value}
@@ -156,8 +161,9 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           {editMode ? (<>
             {itemTypes[contractItem.type]}
             <IconButton icon={<TbPencil/>} onClick={onEdit}/>
-            <Popconfirm onConfirm={destroyItem} title={'¿Quieres eliminar este item?'} description={'Los valores almacenados también se eliminarán y no se pueden recuperar'}>
-              <IconButton icon={<TbTrash/>} danger />
+            <Popconfirm onConfirm={destroyItem} title={'¿Quieres eliminar este item?'}
+                        description={'Los valores almacenados también se eliminarán y no se pueden recuperar'}>
+              <IconButton icon={<TbTrash/>} danger/>
             </Popconfirm>
           </>) : <>
             {contractItem.approved_at ?
@@ -173,7 +179,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
                     danger
                     icon={<TbTrashX size={22}/>}
                     title={'Borrar valor'}
-                    onClick={removeValue}/>:
+                    onClick={removeValue}/> :
                   <IconButton
                     icon={<TbDeviceFloppy size={22}/>}
                     title={'Guardar'}

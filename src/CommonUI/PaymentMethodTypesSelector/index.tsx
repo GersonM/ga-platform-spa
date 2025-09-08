@@ -6,7 +6,9 @@ const PaymentMethodTypesSelector = ({...props}) => {
     <Select
       {...props}
       showSearch
+      popupMatchSelectWidth={false}
       options={[
+      {label: 'Débito automático', value:'automatic_debit'},
       {label: 'Transferencia Bancaria', value:'bank_transfer'},
       {label: 'Efectivo', value:'cash'},
       {label: 'Tarjeta crédito/débido', value:'credit_card'},

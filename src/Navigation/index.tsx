@@ -1,19 +1,15 @@
 import {useContext, useEffect} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {Avatar, Badge, Dropdown, notification, Popover, Space, Tag, Tooltip} from 'antd';
 import axios from 'axios';
 import {
   PiBooksLight,
   PiBuilding,
-  PiBuildingsLight,
-  PiBulldozerLight,
   PiCalendarCheckLight,
   PiCaretUpDown,
   PiCarLight,
   PiCarProfile,
-  PiCashRegister,
   PiClockUser,
-  PiDoorOpenLight,
   PiDotsThreeVerticalBold,
   PiFingerprint,
   PiGear,
@@ -25,26 +21,26 @@ import {
   PiPerson,
   PiPresentationChart,
   PiSignOut,
-  PiSquaresFour,
   PiStar,
   PiStudent,
   PiUserCircleCheck,
   PiUserFocus,
   PiUsers,
   PiUsersThree,
-  PiVectorThreeLight,
   PiWarningDiamond,
 } from 'react-icons/pi';
 import {MapPinIcon, QueueListIcon} from '@heroicons/react/24/outline';
 import {
-  TbActivityHeartbeat,
   TbBuilding,
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,
-  TbForklift, TbHeadset, TbHeartRateMonitor,
+  TbCurrencyDollar,
+  TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
   TbListCheck, TbMapPinBolt, TbMessageUser,
-  TbPackage, TbShieldCheck, TbShieldOff, TbShoppingCart, TbTicket,
+  TbPackage, TbPackageImport,
+  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket,
 } from 'react-icons/tb';
+import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
 import {FaChalkboardTeacher} from 'react-icons/fa';
 import type {ItemType} from 'antd/es/menu/interface';
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
@@ -89,7 +85,6 @@ const Navigation = () => {
     activityCount
   } = useContext(AuthContext);
   const {pathname} = useLocation();
-  const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
@@ -121,7 +116,6 @@ const Navigation = () => {
   };
 
   const handleUserMenuClick = (item: any) => {
-    navigate('/' + item.key);
     switch (item.key) {
       case 'logout':
         logout().then();
@@ -155,7 +149,7 @@ const Navigation = () => {
                                   options={{scrollbars: {autoHide: 'scroll'}}}>
         <nav>
           <ul className="navigation-list">
-            <NavItem label={'Dashboard'} icon={<PiSquaresFour/>} path={'/'}/>
+            <NavItem label={'Dashboard'} icon={<TbGridDots/>} path={'/'}/>
             <NavItem
               label={'Mis tareas'}
               icon={<TbListCheck/>}
@@ -195,11 +189,13 @@ const Navigation = () => {
                 <NavItem icon={<PiWarningDiamond/>} label={'Incidencias'} path={'/commercial/incidents'}/>
                 <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/commercial/leads'}/>
                 <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
-                <NavItem icon={<TbShoppingCart/>} label={'Ventas'} path={'/commercial/sales'}/>
+                <NavItem icon={<TbShoppingCartUp/>} label={'Ventas'} path={'/commercial/sales'}/>
+                <NavItem icon={<TbShoppingCartDown/>} label={'Compras'} path={'/commercial/purchases'}/>
                 <NavItem icon={<TbContract/>} label={'Plantillas de contrato'} path={'/commercial/contract-templates'}/>
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>
+              <NavItem icon={<TbPackageImport/>} label={'Stock'} path={'/warehouse/stock'}/>
               <NavItem icon={<TbPackage/>} label={'Productos'} path={'/warehouse/products'}/>
               <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/activity'}/>
             </NavItem>
@@ -243,9 +239,15 @@ const Navigation = () => {
                 <NavItem label={'Importar pagos'} icon={<PiMoney/>} path={'/club/payments-import'}/>
               </NavItem>
             )}
-
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree/>} path={'/hr'}/>}
-
+            {config?.modules.includes('payments') && (
+              <NavItem label={'Finanzas'} icon={<TbCurrencyDollar/>}>
+                <NavItem label={'Solicitudes de pago'} icon={<TbInvoice/>} path={'/finances/invoices'}/>
+                <NavItem label={'Cobros'} icon={<GiReceiveMoney/>} path={'/finances/payments/in'}/>
+                <NavItem label={'Pagos'} icon={<GiPayMoney/>} path={'/finances/payments/out'}/>
+                <NavItem label={'Cuentas'} icon={<TbPigMoney/>} path={'/finances/wallet-accounts'}/>
+              </NavItem>
+            )}
             {config?.modules.includes('lms') && (
               <NavItem label={'LMS'} icon={<PiGraduationCap/>}>
                 <NavItem label={'Cursos'} icon={<PiBooksLight/>} path={'/lms/courses'}/>
@@ -255,9 +257,6 @@ const Navigation = () => {
             )}
             {config?.modules.includes('inbox') && (
               <NavItem label={'E-mail'} icon={<PiMailboxDuotone/>} path={'/inbox-management'}/>
-            )}
-            {config?.modules.includes('payments') && (
-              <NavItem label={'Pagos'} icon={<PiCashRegister/>} path={'/invoices'}/>
             )}
             <NavItem label={'Monitor de servicios'} icon={<TbHeartRateMonitor/>} path={'/monitoring'}/>
             {user?.roles?.includes('admin') && (

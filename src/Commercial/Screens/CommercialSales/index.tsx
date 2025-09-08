@@ -133,11 +133,11 @@ const CommercialSales = () => {
     },
     {
       title: 'Documentos',
-      dataIndex: 'tracking_id',
+      dataIndex: 'document_progress',
       width: 120,
-      render: (tracking_id: number, row: Contract) => {
+      render: (document_progress?: number) => {
         return <>
-          {row.document_progress != null && <Progress size={{height: 3}} percent={row.document_progress}/>}
+          {document_progress != null ? <Progress size={{height: 3}} percent={document_progress}/> : <small>No asignado</small>}
         </>;
       }
     },
@@ -214,9 +214,10 @@ const CommercialSales = () => {
       title: 'Pagos vencidos',
       dataIndex: 'invoices',
       render: (invoices: Invoice[]) => {
-        return invoices?.map((i, _index) => {
+        return invoices?.map((i, index) => {
           return (
             <Tooltip
+              key={index}
               title={
                 <>
                   Total <MoneyString value={i.amount}/>
@@ -263,10 +264,11 @@ const CommercialSales = () => {
         }
         onRefresh={() => setReload(!reload)}>
         <FilterForm
-          onInitialValues={values => setFilters(values)}
           onSubmit={values => {
             setFilters(values);
-          }}>
+          }}
+          onInitialValues={values => setFilters(values)}
+        >
           <Form.Item name={'search'} label={'Buscar'}>
             <Input allowClear placeholder={'Buscar por nombre, dni o correo'}/>
           </Form.Item>

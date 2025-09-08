@@ -14,10 +14,6 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 
 interface InvoiceTableDetailsProps {
   invoice: Invoice;
-  invoiceOwnerUuid: string;
-  invoiceOwnerType: string;
-  invoiceableUuid?: string;
-  invoiceableType?: string;
   onChange?: () => void;
 }
 

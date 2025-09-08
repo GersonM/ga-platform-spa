@@ -7,6 +7,8 @@ import 'dayjs/locale/es.js';
 import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import '@ant-design/v5-patch-for-react-19';
 import {EditorProvider} from "react-simple-wysiwyg";
 import logo from './Assets/ga_logo.webp';
@@ -19,6 +21,9 @@ import './index.less';
 
 dayjs.locale('es');
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/Lima")
 
 const token = Cookies.get('session_token');
 const selectedWorkspace = Cookies.get('workspace');
