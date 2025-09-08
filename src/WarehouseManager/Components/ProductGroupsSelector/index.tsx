@@ -45,6 +45,7 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
   return (
     <AutoComplete
       {...props}
+      popupMatchSelectWidth={false}
       allowClear
       placeholder={placeholder || 'Elige un grupo'}
       showSearch={true}

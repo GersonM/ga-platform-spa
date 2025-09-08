@@ -79,6 +79,7 @@ const StockSelector = ({placeholder, currency, mode, refresh, ...props}: Product
       allowClear
       placeholder={placeholder || 'Elige un producto'}
       showSearch={true}
+      popupMatchSelectWidth={false}
       filterOption={false}
       loading={loading}
       options={stock}
