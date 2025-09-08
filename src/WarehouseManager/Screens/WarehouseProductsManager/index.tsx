@@ -98,7 +98,7 @@ const WarehouseProductsManager = () => {
     {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 150,
+      width: 180,
       render: (name: string, product: StorageProduct) => (
         <span>{name} <br/> <small>{product.description}</small></span>
       )
