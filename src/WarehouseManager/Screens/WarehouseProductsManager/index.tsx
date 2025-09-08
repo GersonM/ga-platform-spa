@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Pagination, Space, Tooltip, notification, Tag} from 'antd';
+import {Form, Input, Pagination, Space, Tooltip, notification, Tag, Popconfirm} from 'antd';
 import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import {PiShippingContainer} from "react-icons/pi";
 import axios from "axios";
@@ -18,6 +18,7 @@ import ProductStockManager from "../../Components/ProductStockManager";
 import WarehouseManager from "../../Components/WarehouseManager";
 import ModalView from "../../../CommonUI/ModalView";
 import pluralize from "pluralize";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 const WarehouseProductsManager = () => {
   const [loading, setLoading] = useState(false);
@@ -70,6 +71,18 @@ const WarehouseProductsManager = () => {
     setOpenAddProduct(true);
   };
 
+  const handleDeleteProduct = (uuid: string) => {
+    axios.delete(`warehouses/products/${uuid}`, {})
+      .then(response => {
+        if (response) {
+          setReload(!reload);
+        }
+      })
+      .catch((error) => {
+        ErrorHandler.showNotification(error);
+      });
+  }
+
   const columns = [
     {
       title: 'Código',
@@ -78,7 +91,7 @@ const WarehouseProductsManager = () => {
       render: (code: string) => (
         <small>
 
-        <code>{code}</code>
+          <code>{code}</code>
         </small>
       )
     },
@@ -114,11 +127,19 @@ const WarehouseProductsManager = () => {
       width: 120,
       dataIndex: 'available_stock',
       render: (available_stock: number, product: StorageProduct) => (
-        available_stock ? pluralize(product?.unit_type || 'unidad', available_stock, true) : ''
+        <>
+          {
+            available_stock ?
+              <>{pluralize('disponible', available_stock, true)} <br/></> :
+              <small>No disponible</small>
+          }
+          {product.total_stock} en total
+        </>
       )
     },
     {
       title: '',
+      dataIndex: 'uuid',
       width: 90,
       render: (uuid: string, p: StorageProduct) => {
         return <Space size={"small"}>
@@ -134,7 +155,12 @@ const WarehouseProductsManager = () => {
             onClick={() => handleEditProduct(p)}
             disabled={isUpdating}
           />
-          <IconButton small icon={<TbTrash/>} danger/>
+          <Popconfirm
+            title={'¿Quieres eliminar este producto?'}
+            description={<>Solo se pueden eliminar productos que no tengan stock vendido</>}
+            onConfirm={() => handleDeleteProduct(uuid)}>
+            <IconButton small icon={<TbTrash/>} danger/>
+          </Popconfirm>
         </Space>
       }
     }
@@ -174,7 +200,7 @@ const WarehouseProductsManager = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <TableList customStyle={false} scroll={{x:1000}} columns={columns} dataSource={products}/>
+      <TableList customStyle={false} scroll={{x: 1000}} columns={columns} dataSource={products}/>
       {pagination && (
         <Pagination
           showSizeChanger={false}
@@ -182,7 +208,8 @@ const WarehouseProductsManager = () => {
           onChange={(page) => {
             setCurrentPage(page);
           }}
-          size={"small"} total={pagination.total}
+          align={'center'}
+          total={pagination.total}
           showTotal={(total) => `${total} productos en total`}
           pageSize={pagination.per_page}
           current={pagination.current_page}/>

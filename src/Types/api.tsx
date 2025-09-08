@@ -667,6 +667,7 @@ export type StorageProduct = {
   excerpt?: string;
   manufacturer: string;
   available_stock?: number;
+  total_stock?: number;
   metadata?: any;
   model?: string;
   name: string;
