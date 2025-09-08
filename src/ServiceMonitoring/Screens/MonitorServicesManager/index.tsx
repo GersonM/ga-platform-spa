@@ -176,12 +176,6 @@ const MonitorServicesManager = () => {
           setSelectedProduct(undefined);
         }}/>
       </ModalView>
-      <ModalView width={800} open={openStockManager} onCancel={() => {
-        setOpenStockManager(false);
-        setSelectedProduct(undefined);
-      }}>
-        {selectedProduct && <ProductStockManager product={selectedProduct}/>}
-      </ModalView>
       <ModalView width={700} open={openWarehouseManager} onCancel={() => {
         setOpenWarehouseManager(false);
         setSelectedProduct(undefined);

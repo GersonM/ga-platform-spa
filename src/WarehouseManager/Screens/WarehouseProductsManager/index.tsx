@@ -74,7 +74,7 @@ const WarehouseProductsManager = () => {
     {
       title: 'Código',
       dataIndex: 'code',
-      width: 120,
+      width: 90,
       render: (code: string) => (
         <small>
 
@@ -85,7 +85,7 @@ const WarehouseProductsManager = () => {
     {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 200,
+      width: 150,
       render: (name: string, product: StorageProduct) => (
         <span>{name} <br/> <small>{product.description}</small></span>
       )
@@ -94,22 +94,19 @@ const WarehouseProductsManager = () => {
       title: 'Marca',
       dataIndex: 'brand',
       responsive: ['md'],
-      width: 120,
+      width: 100,
     },
     {
       title: 'Empresa',
-      width: 150,
       dataIndex: 'manufacturer',
     },
     {
       title: 'Variaciones',
       dataIndex: 'available_variations',
       render: (available_variations: string[]) => (
-        <Space wrap>
-          {available_variations && available_variations.map((value, index) => (
-            <Tag color={'blue'} bordered={false} key={index}>{value}</Tag>
-          ))}
-        </Space>
+        <small>
+          {available_variations && available_variations.join(', ')}
+        </small>
       )
     },
     {
@@ -210,7 +207,7 @@ const WarehouseProductsManager = () => {
             }, 3000);
           }}/>
       </ModalView>
-      <ModalView width={800} open={openStockManager} onCancel={() => {
+      <ModalView width={1000} open={openStockManager} onCancel={() => {
         setOpenStockManager(false);
         setSelectedProduct(undefined);
       }}>
