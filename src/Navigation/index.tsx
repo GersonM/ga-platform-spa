@@ -242,7 +242,7 @@ const Navigation = () => {
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree/>} path={'/hr'}/>}
             {config?.modules.includes('payments') && (
               <NavItem label={'Finanzas'} icon={<TbCurrencyDollar/>}>
-                <NavItem label={'Solicitudes de pago'} icon={<TbInvoice/>} path={'/finances/invoices'}/>
+                <NavItem label={'Req. de pago'} icon={<TbInvoice/>} path={'/finances/invoices'}/>
                 <NavItem label={'Cobros'} icon={<GiReceiveMoney/>} path={'/finances/payments/in'}/>
                 <NavItem label={'Pagos'} icon={<GiPayMoney/>} path={'/finances/payments/out'}/>
                 <NavItem label={'Cuentas'} icon={<TbPigMoney/>} path={'/finances/wallet-accounts'}/>
