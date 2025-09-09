@@ -13,6 +13,7 @@ const CountrySelector = ({...props}) => {
         {label: 'Venezuela', value: 'VEN'},
         {label: 'Ecuador', value: 'ECU'},
         {label: 'Chile', value: 'CL'},
+        {label: 'Colombia', value: 'CO'},
         {label: 'Brasil', value: 'BR'},
         {label: 'Estados Unidos', value: 'USA'},
         {label: 'Canadá', value: 'CAN'},

@@ -1,7 +1,20 @@
 import {useEffect, useState} from 'react';
-import {Divider, Form, Input, InputNumber, Modal, notification, Pagination, Popover, Space, Tag, Tooltip} from 'antd';
+import {
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  notification,
+  Pagination,
+  Popconfirm,
+  Popover,
+  Space,
+  Tag,
+  Tooltip
+} from 'antd';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {TbContract} from "react-icons/tb";
+import {TbContract, TbTrash} from "react-icons/tb";
 import dayjs from "dayjs";
 import axios from 'axios';
 
@@ -27,6 +40,7 @@ const ClubMembersManagement = () => {
   const [currentPage, setCurrentPage] = useState<number>();
   const [pageSize, setPageSize] = useState<number>();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -40,20 +54,36 @@ const ClubMembersManagement = () => {
       },
     };
 
+    setLoading(true);
     axios
       .get(`subscriptions`, config)
       .then(response => {
+        setLoading(false);
         if (response) {
           setSubscriptions(response.data.data);
           setPagination(response.data.meta);
         }
       })
       .catch(e => {
+        setLoading(false);
         ErrorHandler.showNotification(e);
       });
 
     return cancelTokenSource.cancel;
   }, [reload, pageSize, currentPage, filters]);
+
+  const deleteSubscription = (uuid: string) => {
+    setLoading(true);
+    axios.delete(`subscriptions/${uuid}`)
+      .then(() => {
+        setLoading(false);
+        setReload(!reload);
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      })
+  }
 
   const columns = [
     {
@@ -128,9 +158,15 @@ const ClubMembersManagement = () => {
     },
     {
       dataIndex: 'uuid',
-      width: 80,
+      width: 110,
       render: (uuid: string, row: Subscription) => (
         <>
+          <Popconfirm
+            onConfirm={() => deleteSubscription(uuid)}
+            title={'¿Seguro que quiere borrar esta subscripción?'}
+            description={'Esta acción no se puede revertir y se eliminará toda la información relacionada a esta subscripción'}>
+            <IconButton icon={<TbTrash/>} danger small/>
+          </Popconfirm>
           {row.contract_uuid &&
             <Tooltip title={'Contrato: ' + row.contract?.tracking_id}>
               <NavLink to={'/commercial/contracts/' + row.contract_uuid}>
