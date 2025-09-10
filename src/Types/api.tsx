@@ -405,6 +405,7 @@ export type InvoicePayment = {
   amount: number;
   created_at: string;
   description?: string;
+  payment_channel?: string;
   fk_invoice_uuid: string;
   fk_payment_method_uuid: string;
   purchase_token: string;
@@ -477,6 +478,21 @@ export type Wallet = {
   holder_type: string;
   issued_at: string;
   disabled_at: string;
+};
+
+export type WalletTransaction = {
+  uuid: string;
+  created_at: string;
+  amount: number;
+  exchange_rate: number;
+  type: string;
+  updated_at: string;
+  observations?: string;
+  profile?: Profile;
+  authorized_by?: Profile;
+  wallet_from?: Wallet;
+  wallet_to?: Wallet;
+  needsAuthorization?: boolean;
 };
 
 export type MoveLocation = {

@@ -11,6 +11,7 @@ const PaymentMethodTypesSelector = ({...props}) => {
       {label: 'Débito automático', value:'automatic_debit'},
       {label: 'Transferencia Bancaria', value:'bank_transfer'},
       {label: 'Efectivo', value:'cash'},
+      {label: 'Izipay', value:'izipay'},
       {label: 'Tarjeta crédito/débido', value:'credit_card'},
       {label: 'Yape', value:'yape'},
       {label: 'Plin', value:'plin'},

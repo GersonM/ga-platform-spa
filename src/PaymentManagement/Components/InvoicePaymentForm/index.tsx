@@ -55,7 +55,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
 
   return (
     <>
-      <h3>Registrar nuevo pago</h3>
+      <h3>{payment ? 'Editar pago': 'Registrar nuevo pago'}</h3>
       <p>
         <Tag bordered={false} color="blue">
           {invoice.tracking_id}
@@ -88,7 +88,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         <Form.Item name={'wallet_uuid'} label={'Destino'}>
           <WalletSelector />
         </Form.Item>
-        <Form.Item name={'voucher_code'} label={'Número de comprobante'}>
+        <Form.Item name={'voucher_code'} label={'N° Voucher / Operación'}>
           <Input />
         </Form.Item>
         <Form.Item name={'purchase_token'} label={'ID Transacción (opcional)'}>

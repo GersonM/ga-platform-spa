@@ -205,7 +205,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         <Col md={9}>
           {isConsumable &&
             <Form.Item label="Cantidad" name={'quantity'}>
-              <InputNumber style={{width:'100%'}} defaultValue={1}/>
+              <InputNumber style={{width: '100%'}} defaultValue={1}/>
             </Form.Item>
           }
         </Col>

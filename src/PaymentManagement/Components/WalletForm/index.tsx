@@ -47,6 +47,7 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
           <Col span={8}>
             <Form.Item label={'Entidad'} name={'bank_name'}>
               <Select options={[
+                {label: 'Interno', value: 'internal'},
                 {label: 'BCP', value: 'bcp'},
                 {label: 'Interbank', value: 'interbank'},
                 {label: 'PayPal', value: 'paypal'},

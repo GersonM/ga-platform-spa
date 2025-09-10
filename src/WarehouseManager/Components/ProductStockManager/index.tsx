@@ -178,6 +178,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
              columns={columns} dataSource={productStock}/>
       <ModalView
+        width={700}
         open={openStockForm}
         onCancel={() => {
           setOpenStockForm(false);
