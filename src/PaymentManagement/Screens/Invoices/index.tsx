@@ -1,6 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Col, DatePicker, Empty, Form, Input, Pagination, Popconfirm, Row, Select, Space, Tooltip} from 'antd';
+import {
+  Col,
+  DatePicker,
+  Empty,
+  Form,
+  Input,
+  InputNumber,
+  Pagination,
+  Popconfirm,
+  Row,
+  Select,
+  Space,
+  Tooltip
+} from 'antd';
 import {TbCoins, TbPencil, TbTrash} from "react-icons/tb";
 import {Link} from "react-router-dom";
 import dayjs from 'dayjs';
@@ -224,6 +237,9 @@ const Invoices = () => {
             </Form.Item>
             <Form.Item name={'voucher_code'}>
               <Input allowClear placeholder={'Voucher / ID Transacción'}/>
+            </Form.Item>
+            <Form.Item label={'Monto'} name={'amount'}>
+              <InputNumber/>
             </Form.Item>
           </FilterForm>
         </ContentHeader>
