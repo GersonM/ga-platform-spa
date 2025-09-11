@@ -6,6 +6,7 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from "../../../FileManagement/Components/FileUploader";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 const ImportPayments = () => {
   const [responseMessages, setResponseMessages] = useState<any>();
@@ -61,15 +62,21 @@ const ImportPayments = () => {
               Sube un archivo en excel con la información de los pagos, la fecha de pago se considerá la que se
               especifica en la columna "Fecha estimada de pago"
             </p>
-            <p><small>Orden de valores claves en el excel</small></p>
-            <Space split={<Divider type={'vertical'}/>}>
-              <div><Tag color={'purple'}>A</Tag> ID Transacción</div>
-              <div><Tag color={'purple'}>B</Tag> N° tarjeta</div>
-              <div><Tag color={'purple'}>C</Tag> Cod. Autorización</div>
-              <div><Tag color={'purple'}>F</Tag> DNI</div>
-              <div><Tag color={'purple'}>O</Tag> Fecha pago</div>
-              <div><Tag color={'purple'}>Y</Tag> Boleta</div>
-            </Space>
+            <p>
+              Orden de valores claves en el documento a subir, por favor, verifica que la información esté organizada de esta manera</p>
+            <code>
+              <Space>
+                <CustomTag color={'purple'}>A) ID Subscripción</CustomTag>
+                <CustomTag color={'purple'}>B) Nombres</CustomTag>
+                <CustomTag color={'purple'}>C) DNI</CustomTag>
+                <CustomTag color={'purple'}>D) Periodo</CustomTag>
+                <CustomTag color={'purple'}>E) Fecha de pago</CustomTag>
+                <CustomTag color={'purple'}>F) Médio de pago</CustomTag>
+                <CustomTag color={'purple'}>G) N° Operación</CustomTag>
+                <CustomTag color={'purple'}>H) Monto</CustomTag>
+                <CustomTag color={'purple'}>I) Boleta</CustomTag>
+              </Space>
+            </code>
             <br/>
             <br/>
             <FileUploader onChange={importDocument} onFilesUploaded={importDocument}/>

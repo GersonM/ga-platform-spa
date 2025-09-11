@@ -7,26 +7,19 @@ import {
   Form,
   Input,
   InputNumber,
-  Modal,
   Pagination,
   Popconfirm,
   Row,
-  Select,
   Space,
-  Tooltip
 } from 'antd';
-import {TbCoins, TbPencil, TbTrash} from "react-icons/tb";
+import {TbInfoCircle, TbPencil, TbTrash} from "react-icons/tb";
 import {Link} from "react-router-dom";
 import dayjs from 'dayjs';
 
-import logoSunat from '../../../Assets/sunat_icon.png';
 import type {
-  Contract,
   Invoice,
-  InvoiceItem,
   InvoicePayment,
   ResponsePagination,
-  Wallet,
   WalletTransaction
 } from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -57,6 +50,7 @@ const PaymentsManager = () => {
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<InvoicePayment>();
+  const [loadingDeleteSelection, setLoadingDeleteSelection] = useState(false);
   const [filters, setFilters] = useState<any>();
 
 
@@ -89,13 +83,27 @@ const PaymentsManager = () => {
     return cancelTokenSource.cancel;
   }, [pageSize, search, currentPage, reload, dateRangeFilter, filters]);
 
-  const deleteInvoice = (uuid: string) => {
+  const deletePayment = (uuid: string) => {
     axios
-      .delete('payment-management/invoices/' + uuid)
+      .delete('payment-management/payments/' + uuid)
       .then(() => {
         setReload(!reload);
       })
       .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
+  const deleteSelection = () => {
+    setLoadingDeleteSelection(true);
+    axios
+      .delete('payment-management/payments/delete-selection', {params: {...filters, date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,}})
+      .then(() => {
+        setReload(!reload);
+        setLoadingDeleteSelection(false);
+      })
+      .catch(error => {
+        setLoadingDeleteSelection(false);
         ErrorHandler.showNotification(error);
       });
   };
@@ -160,7 +168,7 @@ const PaymentsManager = () => {
           }}/>
           <Popconfirm
             title={'¿Quiere eliminar esta factura?'}
-            onConfirm={() => deleteInvoice(uuid)}
+            onConfirm={() => deletePayment(uuid)}
             okText={'Si'}
             cancelText={'No'}>
             <IconButton small danger icon={<TbTrash/>}/>
@@ -170,6 +178,8 @@ const PaymentsManager = () => {
     }
   ];
 
+  console.log({filters});
+
   return (
     <>
       <ModuleContent>
@@ -177,7 +187,21 @@ const PaymentsManager = () => {
           title={'Pagos'}
           loading={loading}
           onRefresh={() => setReload(!reload)}
-          tools={`Total ${pagination?.total}`}>
+          tools={<>
+            <div>
+              Total {pagination?.total}
+            </div>
+            <Popconfirm
+              title={'¿Seguro que quieres borrar esta selección?'} description={<>
+              Se eliminarán todos los {pagination?.total} pagos que están afectadas por el filtro actual
+            </>}
+              onConfirm={deleteSelection}
+            >
+              <PrimaryButton
+                loading={loadingDeleteSelection}
+                icon={<TbInfoCircle/>} label={'Borrar selección'} size={"small"} danger ghost/>
+            </Popconfirm>
+          </>}>
           <FilterForm onSubmit={values => setFilters(values)}>
             <Form.Item name={'voucher_code'} label={'N°'}>
               <Input allowClear placeholder={'N° Voucher/Transacción'}/>

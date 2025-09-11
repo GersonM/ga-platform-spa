@@ -7,8 +7,8 @@ import './App.less';
 import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
-import Payments from "../PaymentManagement/Screens/Payments";
 
+const PaymentsManager = lazy(() => import("../PaymentManagement/Screens/PaymentsManager"));
 const CompaniesManagement = lazy(() => import("../HRManagement/Screens/CompaniesManagement"));
 const PublicContainerViewer = lazy(() => import("../FileManagement/Screens/PublicContainerViewer"));
 const ProcessesManagement = lazy(() => import("../CRMModule/Screens/ProcessesManagement"));
@@ -133,8 +133,8 @@ const App = () => {
           <Route path={'invoices'} element={<Invoices/>}>
             <Route path={':uuid'}/>
           </Route>
-          <Route path={'payments/in'} element={<Payments/>}/>
-          <Route path={'payments/out'} element={<Payments/>}/>
+          <Route path={'payments/in'} element={<PaymentsManager/>}/>
+          <Route path={'payments/out'} element={<PaymentsManager/>}/>
           <Route path={'wallet-accounts'} element={<Wallets/>}/>
         </Route>
         <Route path={'config'} element={<ModuleConfiguration/>}>
