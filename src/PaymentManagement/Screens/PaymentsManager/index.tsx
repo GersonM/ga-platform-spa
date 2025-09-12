@@ -202,7 +202,9 @@ const PaymentsManager = () => {
                 icon={<TbInfoCircle/>} label={'Borrar selección'} size={"small"} danger ghost/>
             </Popconfirm>
           </>}>
-          <FilterForm onSubmit={values => setFilters(values)}>
+          <FilterForm
+            onInitialValues={values => setFilters(values)}
+            onSubmit={values => setFilters(values)}>
             <Form.Item name={'voucher_code'} label={'N°'}>
               <Input allowClear placeholder={'N° Voucher/Transacción'}/>
             </Form.Item>

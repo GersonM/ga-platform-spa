@@ -52,7 +52,30 @@ const CommercialSales = () => {
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
   const [filters, setFilters] = useState<any>();
-  const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>()
+  const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
+  const [contractStats, setContractStats] = useState<any>();
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token, params: {
+        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+      }
+    };
+
+    axios
+      .get(`commercial/contracts/stats`, config)
+      .then(response => {
+        if (response) {
+          console.log(response.data);
+          setContractStats(response.data);
+        }
+      })
+      .catch(() => {
+      });
+
+    return cancelTokenSource.cancel;
+  }, [reload]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -137,7 +160,8 @@ const CommercialSales = () => {
       width: 120,
       render: (document_progress?: number) => {
         return <>
-          {document_progress != null ? <Progress size={{height: 3}} percent={document_progress}/> : <small>No asignado</small>}
+          {document_progress != null ? <Progress size={{height: 3}} percent={document_progress}/> :
+            <small>No asignado</small>}
         </>;
       }
     },
@@ -250,7 +274,6 @@ const CommercialSales = () => {
         title={'Ventas'}
         tools={
           <>
-            Total: {pagination?.total}
             <Tooltip title={'Exportar listado actual en formato excel'}>
               <PrimaryButton
                 icon={<RiFileExcel2Fill size={18}/>}
@@ -260,6 +283,7 @@ const CommercialSales = () => {
                 label={'Exportar'}
               />
             </Tooltip>
+            {contractStats?.approved} ventas | {contractStats?.active} activas y {contractStats.proposals} propuestas
           </>
         }
         onRefresh={() => setReload(!reload)}>
@@ -308,6 +332,7 @@ const CommercialSales = () => {
             setCurrentPage(page);
             setPageSize(size);
           }}
+          showTotal={total => `Total ${total}`}
           total={pagination.total}
           current={pagination.current_page}
           pageSize={pagination.per_page}
