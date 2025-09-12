@@ -283,7 +283,8 @@ const CommercialSales = () => {
                 label={'Exportar'}
               />
             </Tooltip>
-            {contractStats?.approved} ventas | {contractStats?.active} activas y {contractStats?.proposals} propuestas
+            {contractStats?.approved} ventas | {contractStats?.active} activas, {contractStats?.proposals} propuestas
+            , {contractStats?.cancelled} canceladas y {contractStats?.provided} entregadas
           </>
         }
         onRefresh={() => setReload(!reload)}>
