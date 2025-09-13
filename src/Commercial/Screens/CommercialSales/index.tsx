@@ -4,7 +4,7 @@ import {
   Form,
   Input,
   Modal,
-  Pagination, Popover,
+  Pagination, Popconfirm, Popover,
   Progress,
   Select,
   Space,
@@ -40,6 +40,7 @@ import NewSaleForm from "../../Components/NewSaleForm";
 import StorageStockChip from "../../Components/StorageStockChip";
 import './styles.less';
 import {LuCircleChevronRight} from "react-icons/lu";
+import {TbTrash} from "react-icons/tb";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -144,6 +145,16 @@ const CommercialSales = () => {
         ErrorHandler.showNotification(e);
       });
   };
+
+  const deleteContract = (uuid: string) => {
+    axios.delete(`/commercial/contracts/${uuid}`)
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch(e => {
+        ErrorHandler.showNotification(e);
+      });
+  }
 
   const columns = [
     {
@@ -262,8 +273,15 @@ const CommercialSales = () => {
     },
     {
       dataIndex: 'uuid',
-      render: (uuid: string) => {
-        return <IconButton icon={<LuCircleChevronRight/>} onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>;
+      render: (uuid: string, contract: Contract) => {
+        return <Space>
+          {(contract.status == 'cancelled' || contract.status == 'proposal') &&
+            <Popconfirm title={'¿Seguro que quieres eliminar esta propuesta?'} onConfirm={() => deleteContract(uuid)}>
+              <IconButton icon={<TbTrash/>} danger small/>
+            </Popconfirm>
+          }
+          <IconButton icon={<LuCircleChevronRight/>} small onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>
+        </Space>;
       }
     }
   ];
