@@ -24,7 +24,7 @@ const UploadContext = createContext<UploadContextDefaults>({
   isUploading: false,
 });
 
-const chunkSize = 10 * 1024 * 1024; // 5MB (adjust based on your requirements)
+const chunkSize = 50 * 1024 * 1024; // 5MB (adjust based on your requirements)
 
 const UploadContextProvider = ({children}: UploadContextProp) => {
   const [fileList, setFileList] = useState<UploadQueueFile[]>();
