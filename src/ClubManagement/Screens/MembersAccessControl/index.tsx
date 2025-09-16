@@ -28,7 +28,11 @@ const MembersAccessControl = () => {
       .get(`hr-management/profiles/external-search`, config)
       .then(response => {
         if (response) {
-          setProfileFound(response.data);
+          if (Array.isArray(response.data)) {
+            setProfileFound(response.data[0]);
+          } else {
+            setProfileFound(response.data);
+          }
         }
         setInProcess(true);
         setDocumentSearching(false);

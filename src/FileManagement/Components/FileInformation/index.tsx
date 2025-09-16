@@ -103,6 +103,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
             placeholder={'Imagen'}
             title={f.name}
             src={f.thumbnail}
+            preview={{src: f.source}}
             style={{margin: '0 auto'}}
             wrapperStyle={{marginBottom: 10}}
           />
@@ -120,7 +121,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
         return (
           <div className={'file-preview-item'}>
             <p>Vista previa no disponible para este tipo de archivos</p>
-            <pre style={{textWrap: 'wrap'}}><FileIcon file={f}/>{f.type}</pre>
+            <code><FileIcon size={35} file={f}/> <br/>{f.type}</code>
           </div>
         );
     }
@@ -178,14 +179,14 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
               </Space>
               <div className={'links-container'}>
                 <span className="label">
-                  Información de archivo:{' '}
+                  Información de archivo:
                   <Button size={'small'} type={'link'} onClick={() => copyText(detailImageLink)}>
                     Copiar
                   </Button>
                 </span>
                 <pre>{detailImageLink}</pre>
                 <span className="label">
-                  Enlace el archivo:{' '}
+                  Enlace el archivo:
                   <Button type={'link'} size={'small'} onClick={() => copyText(files[0].public)}>
                     Copiar
                   </Button>
@@ -194,7 +195,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                   <>
                     <pre>{files[0].public}</pre>
                     <span className="label">
-                      URL pública:{' '}
+                      URL pública:
                       <Button type={'link'} size={'small'} onClick={() => copyText(files[0].source)}>
                         Copiar
                       </Button>
@@ -204,7 +205,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                 <pre>{files[0].source}</pre>
                 {files[0].thumbnail && <>
                   <div className="label">
-                    URL miniatura:{' '}
+                    URL miniatura:
                     <Button size={'small'} type={'link'} onClick={() => copyText(files[0].thumbnail)}>
                       Copiar
                     </Button>

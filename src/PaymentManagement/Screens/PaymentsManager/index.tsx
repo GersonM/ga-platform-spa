@@ -178,8 +178,6 @@ const PaymentsManager = () => {
     }
   ];
 
-  console.log({filters});
-
   return (
     <>
       <ModuleContent>

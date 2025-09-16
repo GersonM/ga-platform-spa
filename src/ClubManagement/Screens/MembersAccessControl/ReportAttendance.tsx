@@ -16,8 +16,10 @@ interface ReportAttendanceProps {
 }
 
 const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps) => {
+
   const registerVisit = (values: any) => {
     const currentProfile = profile || member?.profile;
+    console.log('registerVisit', currentProfile);
     axios
       .post('attendances', {...values, profile_uuid: currentProfile?.uuid})
       .then(() => {
@@ -30,9 +32,10 @@ const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps)
   };
 
   const currentProfile = profile || member?.profile;
+  console.log({currentProfile}, profile, member?.profile);
   return (
     <div>
-      {currentProfile && currentProfile.uuid &&
+      {currentProfile && currentProfile?.uuid &&
         <Space>
           <Avatar size={80} src={currentProfile.avatar?.thumbnail}/> <br/>
           <div>
@@ -42,10 +45,10 @@ const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps)
           </div>
         </Space>
       }
-      {!currentProfile.uuid &&
+      {!currentProfile?.uuid &&
         <Alert message={'Esta persona no está registrada, completa sus datos para registrarla como invitado'} showIcon/>
       }
-      <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit} initialValues={profile}>
+      <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit} initialValues={currentProfile}>
         {!currentProfile?.uuid && <>
           <Form.Item label={'Nombre'} name={'name'}>
             <Input/>
