@@ -19,6 +19,7 @@ import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import MailAccountSelector from '../../Components/MailAccountSelector';
 import type {MailAccount, MailFolder} from '../../../Types/api';
 import MailSetupForm from '../../Components/MailSetupForm';
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 const InboxManager = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const InboxManager = () => {
   const [reload, setReload] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<MailAccount>();
   const [selectedFolder, setSelectedFolder] = useState<MailFolder>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (selectedAccount && params.uuid) {
@@ -38,9 +40,16 @@ const InboxManager = () => {
 
   const syncFolders = () => {
     if (selectedAccount) {
-      axios.post(`inbox-management/accounts/${selectedAccount.uuid}/sync-folders`).then(() => {
-        setReload(!reload);
-      });
+      setLoading(true);
+      axios.post(`inbox-management/accounts/${selectedAccount.uuid}/sync-folders`)
+        .then(() => {
+          setLoading(false);
+          setReload(!reload);
+        })
+        .catch((error) => {
+          setLoading(false);
+          ErrorHandler.showNotification(error);
+        });
     }
   };
 
@@ -48,22 +57,22 @@ const InboxManager = () => {
     path = path.toLowerCase();
     switch (true) {
       case path.includes('drafts'):
-        return <PencilSquareIcon />;
+        return <PencilSquareIcon/>;
       case path.includes('spam'):
-        return <ExclamationTriangleIcon />;
+        return <ExclamationTriangleIcon/>;
       case path.includes('junk'):
-        return <TrashIcon />;
+        return <TrashIcon/>;
       case path.includes('trash'):
-        return <TrashIcon />;
+        return <TrashIcon/>;
       case path.includes('sent'):
-        return <PaperAirplaneIcon />;
+        return <PaperAirplaneIcon/>;
       case path.includes('archive'):
-        return <PaperClipIcon />;
+        return <PaperClipIcon/>;
       case path.includes('inbox'):
-        return <InboxIcon />;
+        return <InboxIcon/>;
     }
 
-    return <InboxIcon />;
+    return <InboxIcon/>;
   };
 
   return (
@@ -84,13 +93,13 @@ const InboxManager = () => {
           <>
             {!selectedAccount.setup_completed && (
               <div style={{padding: 15}}>
-                <Alert message={'Ingresa la contraseña para activar esta cuenta'} type={'warning'} showIcon />
-                <MailSetupForm mailAccount={selectedAccount} />
+                <Alert message={'Ingresa la contraseña para activar esta cuenta'} type={'warning'} showIcon/>
+                <MailSetupForm mailAccount={selectedAccount}/>
               </div>
             )}
             {selectedAccount.setup_completed && selectedAccount.folders.length === 0 && (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay carpetas creadas esta cuenta'}>
-                <Button type={'primary'} ghost icon={<ArrowPathIcon className={'button-icon'} />} onClick={syncFolders}>
+                <Button type={'primary'} loading={loading} ghost icon={<ArrowPathIcon className={'button-icon'}/>} onClick={syncFolders}>
                   Sincronizar carpetas
                 </Button>
               </Empty>
@@ -110,7 +119,7 @@ const InboxManager = () => {
               })}
               <NavListItem
                 key={'storage'}
-                icon={<CircleStackIcon />}
+                icon={<CircleStackIcon/>}
                 height={45}
                 name={'Almacenamiento'}
                 path={'/inbox-management/storage/' + selectedAccount.uuid}
@@ -120,7 +129,7 @@ const InboxManager = () => {
         )}
       </ModuleSidebar>
       <ModuleContent>
-        <Outlet context={{folder: selectedFolder}} />
+        <Outlet context={{folder: selectedFolder}}/>
       </ModuleContent>
     </>
   );

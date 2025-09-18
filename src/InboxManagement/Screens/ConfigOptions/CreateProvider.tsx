@@ -1,8 +1,9 @@
 import {useState} from 'react';
 import {Button, Flex, Form, Input, Steps} from 'antd';
-import {ArrowLeftIcon, ArrowRightIcon, CheckIcon} from '@heroicons/react/24/solid';
-import axios from 'axios';
+import {CheckIcon} from '@heroicons/react/24/solid';
+import {TbArrowLeft, TbArrowRight, TbCheck, TbReload} from "react-icons/tb";
 import {useForm} from 'antd/lib/form/Form';
+import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -10,7 +11,6 @@ import webMailImg from '../../Assets/webmail-logo.svg';
 import gmailImg from '../../Assets/gmail_Logo.png';
 import type {MailProvider} from '../../../Types/api';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
-import {ArrowPathIcon} from '@heroicons/react/24/outline';
 import AlertMessage from '../../../CommonUI/AlertMessage';
 
 interface CreateProviderProps {
@@ -63,15 +63,9 @@ const CreateProvider = ({onFinish}: CreateProviderProps) => {
         style={{margin: '20px 0'}}
         current={currentStep}
         items={[
-          {
-            title: 'Tipo de proveedor',
-          },
-          {
-            title: 'Datos de conexión',
-          },
-          {
-            title: 'Validación',
-          },
+          {title: 'Tipo de proveedor',},
+          {title: 'Datos de conexión',},
+          {title: 'Validación',},
         ]}
       />
       {currentStep === 0 && (
@@ -79,10 +73,20 @@ const CreateProvider = ({onFinish}: CreateProviderProps) => {
           <div
             className="provider-button"
             onClick={() => {
+              setProviderType('smtp');
+              setCurrentStep(1);
+            }}>
+            <code>
+              SMTP/POP3
+            </code>
+          </div>
+          <div
+            className="provider-button"
+            onClick={() => {
               setProviderType('webmail');
               setCurrentStep(1);
             }}>
-            <img src={webMailImg} alt="Webmail" />
+            <img src={webMailImg} alt="Webmail"/>
           </div>
           <div
             className="provider-button"
@@ -90,7 +94,7 @@ const CreateProvider = ({onFinish}: CreateProviderProps) => {
               setProviderType('gmail');
               setCurrentStep(1);
             }}>
-            <img src={gmailImg} alt="Webmail" />
+            <img src={gmailImg} alt="Webmail"/>
           </div>
         </div>
       )}
@@ -98,47 +102,60 @@ const CreateProvider = ({onFinish}: CreateProviderProps) => {
       {currentStep === 1 && (
         <>
           <Form form={form} layout={'vertical'} onFinish={onSubmitForm}>
+            {providerType === 'smtp' && (
+              <>
+                <Form.Item name={'name'} label={'Nombre de la cuenta'}>
+                  <Input/>
+                </Form.Item>
+                <Form.Item name={'host'} label={'Servidor IMAP'} tooltip={'Incluir el puerto de ser necesario'}>
+                  <Input placeholder={'imap.domain.com'}/>
+                </Form.Item>
+                <Form.Item name={'api_endpoint'} label={'Servidor SMTP (opcional)'}>
+                  <Input placeholder={'smtp.domain.com'}/>
+                </Form.Item>
+              </>
+            )}
             {providerType === 'webmail' && (
               <>
-                <Form.Item name={'name'} label={'Nombre'}>
-                  <Input />
+                <Form.Item name={'name'} label={'Nombre de la cuenta'}>
+                  <Input/>
                 </Form.Item>
                 <Form.Item name={'host'} label={'Dominio'}>
-                  <Input />
+                  <Input/>
                 </Form.Item>
-                <Form.Item name={'username'} label={'Usuario'}>
-                  <Input />
+                <Form.Item name={'username'} label={'Nombre de usuario'}>
+                  <Input/>
                 </Form.Item>
-                <Form.Item name={'key'} label={'Key'}>
-                  <Input />
+                <Form.Item name={'key'} label={'API Key'}>
+                  <Input/>
                 </Form.Item>
               </>
             )}
             {providerType === 'gmail' && (
               <>
                 <Form.Item name={'name'} label={'Nombre'}>
-                  <Input />
+                  <Input/>
                 </Form.Item>
                 <Form.Item name={'host'} label={'Host'}>
-                  <Input />
+                  <Input/>
                 </Form.Item>
                 <Form.Item name={'username'} label={'App / Usuario'}>
-                  <Input />
+                  <Input/>
                 </Form.Item>
                 <Form.Item name={'key'} label={'Key / Password'}>
-                  <Input />
+                  <Input/>
                 </Form.Item>
                 <Form.Item name={'api_endpoint'} label={'Endpoint'}>
-                  <Input />
+                  <Input/>
                 </Form.Item>
               </>
             )}
             <Flex justify={'space-between'}>
-              <Button icon={<ArrowLeftIcon />} onClick={() => setCurrentStep(currentStep - 1)}>
+              <Button icon={<TbArrowLeft/>} onClick={() => setCurrentStep(currentStep - 1)}>
                 Volver
               </Button>
               <PrimaryButton htmlType={'submit'}>
-                Registrar proveedor <ArrowRightIcon />
+                Registrar proveedor <TbArrowRight/>
               </PrimaryButton>
             </Flex>
           </Form>
@@ -147,24 +164,32 @@ const CreateProvider = ({onFinish}: CreateProviderProps) => {
 
       {currentStep === 2 && (
         <div className={'providers-wrapper'}>
-          <LoadingIndicator visible={syncing} message={'Verificando conexión'} />
+          <LoadingIndicator visible={syncing} message={'Verificando conexión'}/>
           <div style={{textAlign: 'center'}}>
-            <p>El proveedor fue registrado correctamente, haz clic en sincronizar para comprobar la conexión</p>
-            {!syncResponse && (
+            {providerType === 'smtp' ? (
               <>
-                <PrimaryButton icon={<ArrowPathIcon />} label={'Sincronizar'} onClick={testNewProvider} />
-                <br />
+                <p>El proveedor fue registrado correctamente, ahora puedes agregar cuentas de correo</p>
+                <PrimaryButton icon={<TbCheck/>} label={'Terminar'} onClick={onFinish}/>
+                <br/>
               </>
-            )}
-            {syncResponse && (
-              <>
-                <AlertMessage type={'success'} caption={syncResponse.accounts_created} message={'Cuentas creadas'} />
-                <PrimaryButton icon={<CheckIcon />} label={'Terminar'} onClick={onFinish} />
-                <br />
-              </>
-            )}
-            <br />
-            <Button icon={<ArrowLeftIcon />} onClick={() => setCurrentStep(currentStep - 1)}>
+            ) : <>
+              {!syncResponse && (
+                <>
+                  <p>El proveedor fue registrado correctamente, haz clic en sincronizar para comprobar la conexión</p>
+                  <PrimaryButton icon={<TbReload/>} label={'Sincronizar'} onClick={testNewProvider}/>
+                  <br/>
+                </>
+              )}
+              {syncResponse && (
+                <>
+                  <AlertMessage type={'success'} caption={syncResponse.accounts_created} message={'Cuentas creadas'}/>
+                  <PrimaryButton icon={<CheckIcon/>} label={'Terminar'} onClick={onFinish}/>
+                  <br/>
+                </>
+              )}
+            </>}
+            <br/>
+            <Button icon={<TbArrowLeft/>} onClick={() => setCurrentStep(currentStep - 1)}>
               Volver
             </Button>
           </div>

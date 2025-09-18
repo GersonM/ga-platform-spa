@@ -339,7 +339,7 @@ const CommercialContractDetail = () => {
               bordered
               size={"small"}
               dataSource={contract.cart}
-              renderItem={(cartItem, index) => {
+              renderItem={(cartItem) => {
                 return <List.Item>
                   <List.Item.Meta
                     title={<StorageStockChip storageStock={cartItem.stock}/>}
