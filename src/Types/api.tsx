@@ -726,6 +726,7 @@ export type MetadataField = {
   key: string;
   value: string;
   id: string;
+  code?: string;
 }
 export type StorageWarehouse = {
   uuid: string;

@@ -80,6 +80,7 @@
 
   .file-item {
     background: var(--background-color);
+    font-size: 13px;
     outline: 2px solid var(--background-color);
     outline-offset: -2px;
     display: flex;
@@ -99,7 +100,7 @@
 
     &.selected {
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-      transform: translateY(-5px);
+      transform: translateY(5px);
       outline-color: var(--primary-color);
     }
 
@@ -138,10 +139,15 @@
     }
 
     .file-caption {
+      display: flex;
       user-select: none;
       font-size: 11px;
       color: #999999;
-      display: block;
+      align-items: center;
+
+      svg {
+        margin-right: 5px;
+      }
     }
   }
 }

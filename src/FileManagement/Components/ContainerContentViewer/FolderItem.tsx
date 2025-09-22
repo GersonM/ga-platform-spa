@@ -1,6 +1,6 @@
-
 import dayjs from 'dayjs';
-import {PiFolderLockLight, PiFolderOpenLight} from 'react-icons/pi';
+import {FcFolder, FcOpenedFolder} from "react-icons/fc";
+import {TbLock, TbWorldCheck} from "react-icons/tb";
 
 import type {Container} from '../../../Types/api';
 import IconItem from './IconItem';
@@ -22,9 +22,13 @@ const FolderItem = ({container, onDoubleClick, onClick, size = 35, onChange, sel
         <IconItem
           selected={selected}
           onDoubleClick={onDoubleClick}
-          caption={dayjs(container.created_at).format(' D/MM/YYYY H:mm')}
+          caption={<>
+            {container.is_public ?
+              <TbWorldCheck title={'Público'} color={'#009322'}/> :
+              <TbLock color={'#008ccc'}/>} {dayjs(container.created_at).format(' D/MM/YYYY H:mm')}
+          </>}
           onClick={onClick}
-          icon={container.is_public ? <PiFolderOpenLight size={size} /> : <PiFolderLockLight size={size} />}
+          icon={container.is_public ? <FcOpenedFolder size={size}/> : <FcFolder size={size}/>}
           name={container.name}
         />
       </div>

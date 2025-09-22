@@ -41,13 +41,25 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           ? JSON.parse(stock.metadata)
           : stock.metadata;
 
-        const fields = Object.entries(parsedMetadata || {}).map(([key, value], index) => ({
-          key,
-          value: String(value),
-          id: `field_${index}`
-        }));
-
-        setMetadataFields(fields.length > 0 ? fields : [{key: '', value: '', id: 'field_0'}]);
+        /*const fields = Object.entries(parsedMetadata || {})
+          .map(([key, value, code], index) => ({
+            key,
+            value: String(value),
+            code: code,
+            id: `field_${index}`
+          }));*/
+        console.log({parsedMetadata});
+        if(Array.isArray(parsedMetadata)) {
+          setMetadataFields(parsedMetadata);
+        }else{
+          const fields = Object.entries(parsedMetadata || {})
+            .map(([key, value], index) => ({
+              key,
+              value: String(value),
+              id: `field_${index}`
+            }));
+          setMetadataFields(fields.length > 0 ? fields : [{key: '', value: '', id: 'field_0'}]);
+        }
       } catch (error) {
         console.error('Error parsing metadata:', error);
         setMetadataFields([{key: '', value: '', id: 'field_0'}]);
@@ -68,17 +80,18 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
     }
   };
 
-  const updateField = (id: string, type: 'key' | 'value', newValue: string) => {
-    setMetadataFields(metadataFields.map(field =>
-      field.id === id ? {...field, [type]: newValue} : field
+  const updateField = (i: any, id: string, type: 'key' | 'value' | 'code', newValue: string) => {
+    setMetadataFields(metadataFields.map((field, index) =>
+      index === i ? {...field, [type]: newValue} : field
     ));
   };
 
   const buildMetadataObject = () => {
-    const metadata: Record<string, string> = {};
+    const metadata: any[] = [];
     metadataFields.forEach(field => {
       if (field.key.trim() && field.value.trim()) {
-        metadata[field.key.trim()] = field.value.trim();
+        metadata.push(field);
+        //metadata[field.key.trim()] = field.value.trim();
       }
     });
     return metadata;
@@ -214,20 +227,27 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
       <Divider>Avanzado</Divider>
       <Form.Item label="Metadata (Información adicional del stock)">
         <div style={{marginBottom: '16px'}}>
-          {metadataFields.map((field, index) => (
+          {metadataFields?.map((field, index) => (
             <Row key={index} gutter={8} style={{marginBottom: '8px'}}>
-              <Col span={10}>
+              <Col span={4}>
                 <Input
-                  placeholder="Campo (ej: ubicacion)"
-                  value={field.key}
-                  onChange={(e) => updateField(field.id, 'key', e.target.value)}
+                  placeholder="Código"
+                  value={field.code}
+                  onChange={(e) => updateField(index, field.id, 'code', e.target.value)}
                 />
               </Col>
-              <Col span={12}>
+              <Col span={8}>
+                <Input
+                  placeholder="Campo (ej: Ubicacion)"
+                  value={field.key}
+                  onChange={(e) => updateField(index, field.id, 'key', e.target.value)}
+                />
+              </Col>
+              <Col span={10}>
                 <Input
                   placeholder="Valor (ej: A1-B2)"
                   value={field.value}
-                  onChange={(e) => updateField(field.id, 'value', e.target.value)}
+                  onChange={(e) => updateField(index, field.id, 'value', e.target.value)}
                 />
               </Col>
               <Col span={2}>

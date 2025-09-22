@@ -1,7 +1,9 @@
 import {VideoCameraIcon} from '@heroicons/react/24/outline';
-import {PiFileDoc, PiFilePdf, PiFilePpt, PiFileSql, PiFileTxt, PiFileZip, PiSpeakerHigh, PiVectorThree} from 'react-icons/pi';
+import {PiFileDoc, PiFilePdf, PiFileSql, PiFileTxt, PiSpeakerHigh, PiVectorThree} from 'react-icons/pi';
 import {DiPhotoshop} from 'react-icons/di';
-import {TbFile, TbFileTypeXls, TbPhoto} from "react-icons/tb";
+import {TbFile, TbPhoto} from "react-icons/tb";
+import {RiFileExcel2Line, RiFilePpt2Line, RiFileWord2Line} from "react-icons/ri";
+import {GrDocumentZip} from "react-icons/gr";
 
 import type {ApiFile} from '../../../Types/api';
 
@@ -22,17 +24,17 @@ const FileIcon = ({file, size = 18, width = 28}: FileIconProps) => {
     case file.name.includes('sql'):
       return <PiFileSql className={'icon'} size={size} />;
     case file.name.includes('csv') || file.name.includes('xlsx'):
-      return <TbFileTypeXls className={'icon'} size={size} />;
+      return <RiFileExcel2Line color={'#148914'} className={'icon'} size={size} />;
     case file.type.includes('presentation') || file.name.includes('pptx'):
-      return <PiFilePpt className={'icon'} size={size} />;
+      return <RiFilePpt2Line color={'#ff5711'} className={'icon'} size={size} />;
     case file.type.includes('document') || file.name.includes('docx'):
-      return <PiFileDoc className={'icon'} size={size} />;
+      return <RiFileWord2Line color={'#0064b5'} className={'icon'} size={size} />;
     case file.name.includes('.doc'):
       return <PiFileDoc className={'icon'} size={size} />;
     case file.type.includes('image'):
       return <TbPhoto className={'icon'} size={size}  />;
     case file.type.includes('zip') || file.name.includes('zip'):
-      return <PiFileZip className={'icon'} size={size} />;
+      return <GrDocumentZip color={'#ffba18'} className={'icon'} size={size} />;
     case file.type.includes('text'):
       return <PiFileTxt className={'icon'} size={size} />;
     case file.type.includes('video'):

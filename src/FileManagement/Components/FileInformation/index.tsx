@@ -121,7 +121,10 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
         return (
           <div className={'file-preview-item'}>
             <p>Vista previa no disponible para este tipo de archivos</p>
-            <code><FileIcon size={35} file={f}/> <br/>{f.type}</code>
+            <FileIcon size={35} file={f}/>
+            <br/>
+            <br/>
+            <code>{f.type}</code>
           </div>
         );
     }

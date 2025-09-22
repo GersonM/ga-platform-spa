@@ -4,7 +4,7 @@ import type {ReactNode} from "react";
 interface IconItemProps {
   size?: number;
   name: string;
-  caption?: string;
+  caption?: ReactNode;
   selected?: boolean;
   icon?: ReactNode;
   image?: string;
@@ -30,7 +30,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
       </div>
       <div className={'file-item-info'}>
         <span className={'file-name'}>{name}</span>
-        {caption && <span className={'file-caption'}>{caption}</span>}
+        {caption && <code className={'file-caption'}>{caption}</code>}
       </div>
     </div>
   );
