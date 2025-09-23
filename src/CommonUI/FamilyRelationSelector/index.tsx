@@ -13,6 +13,7 @@ const FamilyRelationSelector = ({...props}) => {
         {label: 'Sobrino', value: 'SOBRINO'},
         {label: 'Cónyuge', value: 'CÓNYUGE'},
         {label: 'Hermano', value: 'HERMANO'},
+        {label: 'Hermana', value: 'HERMANA'},
         {label: 'Papá', value: 'PAPÁ'},
         {label: 'Mamá', value: 'MAMÁ'},
         {label: 'Nieto', value: 'NIETO'},
