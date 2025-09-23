@@ -16,6 +16,10 @@ import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
 import './styles.less';
 import ModalView from "../../../CommonUI/ModalView";
 import MailAccountForm from "../../Components/MailAccountForm";
+import {GoogleLogin, GoogleOAuthProvider, useGoogleLogin} from "@react-oauth/google";
+import Cookies from "js-cookie";
+import IconButton from "../../../CommonUI/IconButton";
+import {BsGoogle} from "react-icons/bs";
 
 const ConfigOptions = () => {
   const [providers, setProviders] = useState<MailProvider[]>();
@@ -28,6 +32,11 @@ const ConfigOptions = () => {
   const [syncing, setSyncing] = useState(false);
   const [openCreateProvider, setOpenCreateProvider] = useState(false);
   const [openAccountForm, setOpenAccountForm] = useState(false);
+  const login = useGoogleLogin({
+    onSuccess: codeResponse => console.log(codeResponse),
+    scope: 'https://mail.google.com/',
+    flow: 'auth-code',
+  });
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -101,6 +110,18 @@ const ConfigOptions = () => {
     setSelectedProvider(providers?.find(p => p.uuid === item));
   };
 
+  const handleGoogleLogin = (credentialResponse: any) => {
+    console.log({credentialResponse});
+    axios.post('authenticate/service/google', {token:credentialResponse.credential})
+      .then(({data}) => {
+        axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
+        Cookies.set('session_token', data.token);
+        document.location.href = '/';
+      })
+      .catch(error => {
+      })
+  };
+
   const columns = [
     {title: 'Nombre', dataIndex: 'contact_name'},
     {title: 'Correo', dataIndex: 'address'},
@@ -128,14 +149,17 @@ const ConfigOptions = () => {
     {
       title: '',
       render: (_id: any, account: any) => (
+        <Space>
+          <IconButton icon={<BsGoogle />} onClick={() => login()}/>
         <Button
-          size={'small'}
-          type={'primary'}
+          variant={'solid'}
           ghost
+          type={'link'}
           onClick={() => setSelectedAccount(account)}
           icon={<ChartPieIcon className={'button-icon'}/>}>
           Liberar espacio
         </Button>
+        </Space>
       ),
     },
   ];

@@ -6,10 +6,11 @@ import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import NavList, {NavListItem} from '../../../CommonUI/NavList';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 const ModuleConfiguration = () => {
   return (
-    <>
+    <GoogleOAuthProvider clientId="733096536847-fr419pjj6ev3rm5kb273gog2gctfmg9s.apps.googleusercontent.com">
       <ModuleSidebar title={'Configuración de módulos'}>
         <NavList>
           <NavListItem icon={<TbSpaces />} name={'Workspaces'} path={'/config/workspaces'} />
@@ -25,7 +26,7 @@ const ModuleConfiguration = () => {
           <Outlet />
         </Suspense>
       </ModuleContent>
-    </>
+    </GoogleOAuthProvider>
   );
 };
 
