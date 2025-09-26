@@ -32,11 +32,35 @@ const ConfigOptions = () => {
   const [syncing, setSyncing] = useState(false);
   const [openCreateProvider, setOpenCreateProvider] = useState(false);
   const [openAccountForm, setOpenAccountForm] = useState(false);
+
+  const [pendingAccountUuid, setPendingAccountUuid] = useState<string | null>(null);
+
   const login = useGoogleLogin({
-    onSuccess: codeResponse => console.log(codeResponse),
-    scope: 'https://mail.google.com/',
     flow: 'auth-code',
+    scope: 'https://mail.google.com/',
+    onSuccess: async (codeResponse) => {
+      try {
+        const accountUuid = pendingAccountUuid || selectedAccount?.uuid;
+        if (!accountUuid) return;
+        await axios.post(
+          `inbox-management/accounts/${accountUuid}/oauth/google/code`,
+          { code: (codeResponse as any).code }
+        );
+        setReloadAccounts(prev => !prev);
+        setPendingAccountUuid(null);
+      } catch (e) {
+        ErrorHandler.showNotification(e);
+      }
+    },
+    onError: (err) => {
+      ErrorHandler.showNotification(err);
+    },
   });
+
+  const connectGoogle = (accountUuid: string) => {
+    setPendingAccountUuid(accountUuid);
+    login();
+  };
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -111,15 +135,13 @@ const ConfigOptions = () => {
   };
 
   const handleGoogleLogin = (credentialResponse: any) => {
-    console.log({credentialResponse});
     axios.post('authenticate/service/google', {token:credentialResponse.credential})
       .then(({data}) => {
         axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
         Cookies.set('session_token', data.token);
         document.location.href = '/';
       })
-      .catch(error => {
-      })
+      .catch(() => {})
   };
 
   const columns = [
@@ -150,15 +172,15 @@ const ConfigOptions = () => {
       title: '',
       render: (_id: any, account: any) => (
         <Space>
-          <IconButton icon={<BsGoogle />} onClick={() => login()}/>
-        <Button
-          variant={'solid'}
-          ghost
-          type={'link'}
-          onClick={() => setSelectedAccount(account)}
-          icon={<ChartPieIcon className={'button-icon'}/>}>
-          Liberar espacio
-        </Button>
+          <IconButton icon={<BsGoogle />} onClick={() => connectGoogle(account.uuid)}/>
+          <Button
+            variant={'solid'}
+            ghost
+            type={'link'}
+            onClick={() => setSelectedAccount(account)}
+            icon={<ChartPieIcon className={'button-icon'}/>}>
+            Liberar espacio
+          </Button>
         </Space>
       ),
     },
