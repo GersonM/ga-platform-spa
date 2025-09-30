@@ -17,6 +17,7 @@ import UploadContext from '../../../Context/UploadContext';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import IconButton from '../../../CommonUI/IconButton';
 import './styles.less';
+import MetaTitle from "../../../CommonUI/MetaTitle";
 
 interface ContainerContentViewerProps {
   containerUuid: string;
@@ -129,6 +130,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
 
   return (
     <div {...getRootProps()} className={'content-viewer-wrapper'}>
+      <MetaTitle title={containerContent.container?.name + ' - Gestor de archivos'} />
       <iframe id="my_iframe" style={{display: 'none'}}></iframe>
       <input {...getInputProps()} />
       {containerContent && (

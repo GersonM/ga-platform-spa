@@ -1,4 +1,3 @@
-
 import {Descriptions, type DescriptionsProps, Divider} from 'antd';
 import type {StorageStock} from '../../../Types/api';
 
@@ -7,13 +6,21 @@ interface StockViewerStateProps {
 }
 
 const StockViewerState = ({stock}: StockViewerStateProps) => {
-  const items: DescriptionsProps['items'] = [
-    {key: '4', label: 'SKU', span: 2, children: stock?.sku},
-    {key: '5', label: 'Estado', children: <p>{stock?.status}</p>},
-    {key: '1', label: 'Etapa', children: stock?.metadata?.etapa},
-    {key: '2', label: 'Mz', children: stock?.metadata?.manzana},
-    {key: '3', label: 'Lote', children: stock?.metadata?.lote},
-  ];
+  let items: DescriptionsProps['items'] = [];
+  if (typeof stock.metadata === 'string' ) {
+    const stockMetadata = JSON.parse(stock.metadata);
+    items = stockMetadata.map((item: any, index:number) => {
+      return {key: index, label: item.key, span: 2, children: item.value};
+    });
+  } else {
+    items = [
+      {key: '4', label: 'SKU', span: 2, children: stock?.sku},
+      {key: '5', label: 'Estado', children: <p>{stock?.status}</p>},
+      {key: '1', label: 'Etapa', children: stock?.metadata?.etapa},
+      {key: '2', label: 'Mz', children: stock?.metadata?.manzana},
+      {key: '3', label: 'Lote', children: stock?.metadata?.lote},
+    ];
+  }
 
   const itemsProduct: DescriptionsProps['items'] = [
     {key: '10', label: 'Área', children: stock?.product?.metadata?.area + ' m2'},
@@ -30,9 +37,9 @@ const StockViewerState = ({stock}: StockViewerStateProps) => {
   ];
   return (
     <div>
-      <Descriptions title="Dirección" items={items} />
-      <Divider />
-      <Descriptions layout={'vertical'} size={'small'} title="Dimensiones" items={itemsProduct} />
+      <Descriptions title="Dirección" items={items}/>
+      <Divider/>
+      <Descriptions layout={'vertical'} size={'small'} title="Dimensiones" items={itemsProduct}/>
     </div>
   );
 };

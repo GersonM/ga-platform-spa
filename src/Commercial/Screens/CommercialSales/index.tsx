@@ -40,7 +40,7 @@ import NewSaleForm from "../../Components/NewSaleForm";
 import StorageStockChip from "../../Components/StorageStockChip";
 import './styles.less';
 import {LuCircleChevronRight} from "react-icons/lu";
-import {TbTrash} from "react-icons/tb";
+import {TbCancel, TbTrash} from "react-icons/tb";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -166,6 +166,11 @@ const CommercialSales = () => {
         <ContractStatus contract={row}/></>,
     },
     {
+      title: 'ID',
+      width: 120,
+      dataIndex: 'title',
+    },
+    {
       title: 'Documentos',
       dataIndex: 'document_progress',
       width: 120,
@@ -277,7 +282,7 @@ const CommercialSales = () => {
         return <Space>
           {(contract.status == 'cancelled' || contract.status == 'proposal') &&
             <Popconfirm title={'¿Seguro que quieres eliminar esta propuesta?'} onConfirm={() => deleteContract(uuid)}>
-              <IconButton icon={<TbTrash/>} danger small/>
+              <IconButton icon={contract.cancelled_at ? <TbTrash/> : <TbCancel />} danger small/>
             </Popconfirm>
           }
           <IconButton icon={<LuCircleChevronRight/>} small onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>

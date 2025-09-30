@@ -18,6 +18,7 @@ import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
 import AuthContext from '../../../Context/AuthContext';
 import './styles.less';
+import MetaTitle from "../../../CommonUI/MetaTitle";
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();

@@ -2,6 +2,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {Divider, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import {PiWarning} from "react-icons/pi";
+import pluralize from "pluralize";
+import dayjs from "dayjs";
 import axios from "axios";
 
 import type {StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
@@ -13,8 +15,6 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
 import ModalView from "../../../CommonUI/ModalView";
 import StockStatus from "./StockStatus.tsx";
-import dayjs from "dayjs";
-import pluralize from "pluralize";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -25,6 +25,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(false);
   const [stockState, setStockState] = useState<string>();
+  const [variations, setVariations] = useState()
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [openStockForm, setOpenStockForm] = useState(false)
   const {user} = useContext(AuthContext);
@@ -33,16 +34,16 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {status: stockState}
+      params: {status: stockState, product_uuid: product.uuid}
     };
 
     setLoading(true);
 
     axios
-      .get(`warehouses/products/${product.uuid}/stock`, config)
+      .get(`warehouses/variations`, config)
       .then(response => {
         if (response) {
-          setProductStock(response.data);
+          setVariations(response.data);
         }
         setLoading(false);
       })
@@ -156,7 +157,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
 
   return (
     <div>
-      <h2>Existencias para {product.name} <Tag color={'blue'} bordered={false}>{product.code}</Tag></h2>
+      <h2>Variaciones para {product.name} <Tag color={'blue'} bordered={false}>{product.code}</Tag></h2>
       <p>{product.excerpt}</p>
       <Space split={<Divider type={"vertical"}/>}>
         <Select

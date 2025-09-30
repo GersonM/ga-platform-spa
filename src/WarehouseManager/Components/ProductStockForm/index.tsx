@@ -25,7 +25,7 @@ interface ProductStockFormProps {
 const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) => {
   const [form] = useForm();
   const [currentCurrency, setCurrentCurrency] = useState<string>();
-  const [isConsumable, setIsConsumable] = useState(stock?.is_consumable);
+  const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
   const [metadataFields, setMetadataFields] = useState<MetadataField[]>([]);
 
   useEffect(() => {
@@ -49,9 +49,9 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
             id: `field_${index}`
           }));*/
         console.log({parsedMetadata});
-        if(Array.isArray(parsedMetadata)) {
+        if (Array.isArray(parsedMetadata)) {
           setMetadataFields(parsedMetadata);
-        }else{
+        } else {
           const fields = Object.entries(parsedMetadata || {})
             .map(([key, value], index) => ({
               key,
@@ -198,6 +198,11 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
             tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
             <MoneyInput currency={currentCurrency || stock?.currency}/>
           </Form.Item>
+          {stock &&
+            <Form.Item name={'update_sales'} valuePropName={'checked'}>
+              <Checkbox>Actualizar ventas con precio fijo</Checkbox>
+            </Form.Item>
+          }
         </Col>
       </Row>
       <Form.Item label="Observaciones (opcional)" name={'observations'}>
@@ -223,6 +228,9 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
           }
         </Col>
       </Row>
+      <Form.Item label="Orden" name={'order'}>
+        <InputNumber/>
+      </Form.Item>
 
       <Divider>Avanzado</Divider>
       <Form.Item label="Metadata (Información adicional del stock)">

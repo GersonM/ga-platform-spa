@@ -128,7 +128,7 @@ const FileDetailViewer = () => {
                 {getViewer(file)}
                 <div style={{marginTop: 15, textAlign: 'center'}}>
                   <PrimaryButton
-                    icon={<PiDownloadDuotone className={'button-icon'} />}
+                    icon={<PiDownloadDuotone size={19} />}
                     label={'Descargar'}
                     href={file?.download}
                   />
@@ -139,7 +139,7 @@ const FileDetailViewer = () => {
         </Row>
       </div>
       <div className={'footer'}>
-        {config?.config.name} | V{version}
+        {config?.config.name} | v{version}
       </div>
     </div>
   );

@@ -118,7 +118,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
     if (index !== -1) {
       newCart[index].quantity++;
     } else {
-      newCart.push({uuid: data.uuid, unit_amount: data.sale_price || 0, quantity: 1, stock: data});
+      newCart.push({uuid: data.uuid, unit_amount: null, quantity: 1, stock: data});
     }
     setShoppingCart(newCart);
   }
@@ -218,7 +218,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                         }}/>
                       <MoneyInput
                         min={0}
-                        block={false} currency={cartItem.stock?.currency} value={cartItem.stock?.sale_price}
+                        block={false} currency={cartItem.stock?.currency} placeholder={cartItem.stock?.sale_price ? (cartItem.stock?.sale_price / 100).toString() : '0'}
                         onChange={value => {
                           updateAmount(cartItem, value);
                         }}

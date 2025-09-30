@@ -109,6 +109,7 @@ export type Contract = {
   payment_conditions?: string;
   payment_type?: string;
   period: string;
+  billing_period: string;
   proposal?: string;
   provided_at?: string;
   service_details?: string;
@@ -696,9 +697,27 @@ export type StorageContractCartItem = {
   uuid: string;
   quantity: number;
   stock?: StorageStock;
-  unit_amount: number;
+  unit_amount?: number|null;
   amount_string?: string;
   created_at?: string;
+};
+
+export type StorageProductVariation = {
+  uuid: string;
+  sku: string;
+  unit_type?: string;
+  variation_name: string;
+  currency: string;
+  is_consumable?: boolean;
+  created_at: string;
+  fk_product_uuid: string;
+  fk_warehouse_uuid: string;
+  metadata?: any;
+  observations?: string;
+  expiration_date?: string;
+  status: string;
+  updated_at: string;
+  product?: StorageProduct;
 };
 
 export type StorageStock = {
@@ -722,12 +741,14 @@ export type StorageStock = {
   warehouse?: StorageWarehouse;
   provider?: Provider;
 };
+
 export type MetadataField = {
   key: string;
   value: string;
   id: string;
   code?: string;
 }
+
 export type StorageWarehouse = {
   uuid: string;
   name: string;

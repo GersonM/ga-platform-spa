@@ -11,14 +11,14 @@ import {
   Input,
   List, Popconfirm,
   Row, Space,
-  Tabs,
+  Tabs, Tooltip,
 } from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
-import {TbCancel, TbCheck, TbChevronCompactRight, TbPencil, TbTrash} from "react-icons/tb";
+import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbPlus, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import type {Contract} from '../../../Types/api';
+import type {Contract, StorageContractCartItem, StorageStock} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
@@ -44,6 +44,9 @@ import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import StorageStockChip from "../../Components/StorageStockChip";
 import Config from "../../../Config.tsx";
 import MetaTitle from "../../../CommonUI/MetaTitle";
+import ProductStockForm from "../../../WarehouseManager/Components/ProductStockForm";
+import CartItemForm from "../../Components/CartItemForm";
+import InvoiceResumen from "../../../PaymentManagement/Components/InvoiceResumen";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -55,6 +58,10 @@ const CommercialContractDetail = () => {
   const [openCancelContract, setOpenCancelContract] = useState(false);
   const [openEditContract, setOpenEditContract] = useState(false);
   const [openInstallmentFom, setOpenInstallmentFom] = useState(false);
+  const [selectedStock, setSelectedStock] = useState<StorageStock>();
+  const [openEditStock, setOpenEditStock] = useState(false);
+  const [selectedCartItem, setSelectedCartItem] = useState<StorageContractCartItem>();
+  const [openCartItemForm, setOpenCartItemForm] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -160,7 +167,8 @@ const CommercialContractDetail = () => {
         if (!totals[cartItem.stock.currency]) {
           totals[cartItem.stock.currency] = 0;
         }
-        totals[cartItem.stock.currency] += cartItem.unit_amount * cartItem.quantity;
+        const amount = cartItem.unit_amount || cartItem.stock.sale_price
+        totals[cartItem.stock.currency] += (amount || 0) * cartItem.quantity;
       }
     }
   }
@@ -205,21 +213,18 @@ const CommercialContractDetail = () => {
     },
     {
       key: 'period',
-      label: 'Periodo',
+      label: 'Periodo de contrato',
       children: contract?.period
+    },
+    {
+      key: 'period',
+      label: 'Periodo de pago',
+      children: contract?.billing_period
     },
     {
       key: 'payment_type',
       label: 'Método de pago',
       children: contract?.payment_type
-    },
-    {
-      key: 'amount',
-      label: 'Monto',
-      children: <>
-        <MoneyString currency={'PEN'} value={contract.totals?.PEN}/><br/>
-        <MoneyString currency={'USD'} value={contract.totals?.USD}/>
-      </>
     },
     {
       key: 'seller',
@@ -342,17 +347,31 @@ const CommercialContractDetail = () => {
               renderItem={(cartItem) => {
                 return <List.Item>
                   <List.Item.Meta
-                    title={<StorageStockChip storageStock={cartItem.stock}/>}
+                    title={<div>
+                      <Tooltip title={'Editar stock'}>
+                        <a onClick={() => {
+                          setOpenEditStock(true);
+                          setSelectedStock(cartItem.stock);
+                        }}>
+                          {cartItem.stock?.sku}
+                        </a>
+                      </Tooltip>
+                      <small>{cartItem.stock?.variation_name || cartItem.stock?.product?.name}</small>
+                    </div>}
                   />
                   <Space>
-                    <small>
+                    <small style={{display:'flex', alignItems:'center'}}>
+                      {cartItem.unit_amount && <TbLock />}
                       <MoneyString
-                        currency={cartItem.stock?.currency} value={cartItem.unit_amount}
+                        currency={cartItem.stock?.currency} value={cartItem.unit_amount || cartItem.stock?.sale_price}
                       />{' '}x {cartItem.quantity}
                     </small>
                     {contract.status != 'provided' &&
                       <>
-                        <IconButton icon={<TbPencil/>} small/>
+                        <IconButton icon={<TbPencil/>} small onClick={() => {
+                          setOpenCartItemForm(true);
+                          setSelectedCartItem(cartItem);
+                        }}/>
                         <Popconfirm
                           title={'¿Seguro que quieres eliminar este producto?'}
                           description={'Esto modificará el monto total del contrato'}
@@ -364,6 +383,17 @@ const CommercialContractDetail = () => {
                   </Space>
                 </List.Item>;
               }}/>
+            {contract.totals?.PEN &&
+              <InvoiceResumen showTotal={false} items={[{label: 'Total', amount: contract.totals?.PEN},]}
+                              currency={'PEN'}/>}
+            {contract.totals?.USD &&
+              <InvoiceResumen items={[{label: 'Total', amount: contract.totals?.USD},]} currency={'USD'}/>}
+
+            {/*
+            <PrimaryButton
+              icon={<TbPlus/>} style={{marginTop: 10}} label={'Agregar productos'} block ghost
+              size={'small'}/>
+            */}
             <Divider orientation={'left'}>Detalles</Divider>
             <Descriptions
               column={1}
@@ -478,6 +508,20 @@ const CommercialContractDetail = () => {
             }}
           />
         )}
+      </ModalView>
+      <ModalView open={openEditStock} onCancel={() => setOpenEditStock(false)}>
+        <ProductStockForm stock={selectedStock} onComplete={() => {
+          setReload(!reload);
+          setOpenEditStock(false);
+        }}/>
+      </ModalView>
+      <ModalView title={'Editar item de contrato'} open={openCartItemForm} onCancel={() => setOpenCartItemForm(false)}>
+        {selectedCartItem &&
+          <CartItemForm cartItem={selectedCartItem} onComplete={() => {
+            setOpenCartItemForm(false);
+            setReload(!reload);
+          }}/>
+        }
       </ModalView>
     </ModuleContent>
   );
