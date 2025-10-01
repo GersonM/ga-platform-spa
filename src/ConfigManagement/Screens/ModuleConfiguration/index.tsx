@@ -10,7 +10,7 @@ import {GoogleOAuthProvider} from "@react-oauth/google";
 
 const ModuleConfiguration = () => {
   return (
-    <GoogleOAuthProvider clientId="314663048086-frm8l4r8tptkdkkpvpa54dluip3m466r.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="733096536847-fr419pjj6ev3rm5kb273gog2gctfmg9s.apps.googleusercontent.com">
       <ModuleSidebar title={'Configuración de módulos'}>
         <NavList>
           <NavListItem icon={<TbSpaces />} name={'Workspaces'} path={'/config/workspaces'} />

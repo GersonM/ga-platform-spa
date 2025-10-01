@@ -1,12 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
-import {Divider, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
+import {Divider, Pagination, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import {PiWarning} from "react-icons/pi";
 import pluralize from "pluralize";
 import dayjs from "dayjs";
 import axios from "axios";
 
-import type {StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
+import type {
+  ResponsePagination,
+  StorageProduct,
+  StorageProductVariation,
+  StorageStock,
+  StorageWarehouse
+} from "../../../Types/api.tsx";
 import MoneyString from "../../../CommonUI/MoneyString";
 import ProductStockForm from "../ProductStockForm";
 import IconButton from "../../../CommonUI/IconButton";
@@ -15,6 +21,8 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
 import ModalView from "../../../CommonUI/ModalView";
 import StockStatus from "./StockStatus.tsx";
+import ProductVariationForm from "../ProductVariationForm";
+import TableList from "../../../CommonUI/TableList";
 
 interface ProductStockManagerProps {
   product: StorageProduct;
@@ -27,7 +35,11 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
   const [stockState, setStockState] = useState<string>();
   const [variations, setVariations] = useState()
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
-  const [openStockForm, setOpenStockForm] = useState(false)
+  const [openStockForm, setOpenStockForm] = useState(false);
+  const [selectedVariation, setSelectedVariation] = useState<StorageProductVariation>();
+  const [openVariationForm, setOpenVariationForm] = useState(false);
+  const [pagination, setPagination] = useState<ResponsePagination>()
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const {user} = useContext(AuthContext);
 
   useEffect(() => {
@@ -43,7 +55,8 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       .get(`warehouses/variations`, config)
       .then(response => {
         if (response) {
-          setVariations(response.data);
+          setVariations(response.data.data);
+          setPagination(response.data.meta);
         }
         setLoading(false);
       })
@@ -64,11 +77,21 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       });
   }
 
+  const deleteVariation = (uuid: string, force: boolean = false) => {
+    axios.delete(`warehouses/variations/${uuid}`, {params: {force: force ? 1 : 0}})
+      .then(() => {
+        setReload(!reload);
+      })
+      .catch((error) => {
+        ErrorHandler.showNotification(error);
+      });
+  }
+
   const columns: any[] = [
     {
       title: 'SKU',
       dataIndex: 'sku',
-      render: (sku: string, row: StorageStock) => {
+      render: (sku: string, row: StorageProductVariation) => {
         return <>
           {sku} <br/>
           <small>
@@ -78,69 +101,23 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       }
     },
     {
-      title: 'Vence',
-      dataIndex: 'expiration_date',
-      render: (expiration_date:string) => {
-        return expiration_date ? dayjs(expiration_date).fromNow() : '';
-      }
-    },
-    {
       title: 'Estado',
-      dataIndex: 'status',
+      dataIndex: 'is_public',
       width: 100,
-      render: (status:string) => {
-        return <StockStatus status={status} />;
-      }
-    },
-    {
-      title: 'Almacén',
-      dataIndex: 'warehouse',
-      responsive: ['md'],
-      render: (warehouse: StorageWarehouse) => <>
-        {warehouse.name} <br/>
-        <small>{warehouse.address}</small>
-      </>
-    },
-    {
-      title: 'Cantidad',
-      dataIndex: 'is_consumable',
-      render: (is_consumable: boolean, row: StorageStock) =>
-        is_consumable ? pluralize(row.product?.unit_type || 'unidad', row.quantity, true) : 'Sin límite'
     },
     {
       title: 'Precios',
-      dataIndex: 'sale_price',
-      render: (sale_price: number, row: StorageStock) => {
-        const earn = (row.sale_price || 0) - (row.cost_price || 0);
-        return <>
-          <Popover content={<>
-            Ganancia: <MoneyString value={earn} currency={row.currency}/> <br/>
-            Porcentaje: {((earn * 100) / (row.sale_price || 1)).toFixed(2)}%
-          </>}>
-            <Space>
-              <div>
-                {sale_price != null ?
-                  <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
-                }
-                {row.cost_price != null && <small>
-                  Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
-                </small>}
-              </div>
-              {earn < 0 && <PiWarning size={18} color="red"/>}
-            </Space>
-          </Popover>
-        </>;
-      }
+      dataIndex: 'uuid',
     },
     {
       title: '',
       dataIndex: 'uuid',
       width: 70,
-      render: (uuid: string, stock: StorageStock) => {
+      render: (uuid: string, stock: StorageProductVariation) => {
         return <Space>
           <IconButton small icon={<TbPencil/>} onClick={() => {
-            setSelectedStock(stock);
-            setOpenStockForm(true);
+            setSelectedVariation(stock);
+            setOpenVariationForm(true);
           }}/>
           {user?.roles?.includes('admin') &&
             <Tooltip title={'Destruir registro'}>
@@ -172,12 +149,25 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
           {label: 'Merma', value: 'wasted'},
         ]}/>
         <PrimaryButton icon={<TbPlus/>} ghost label={'Agregar stock'} onClick={() => {
-          setOpenStockForm(true);
-          setSelectedStock(undefined);
+          setSelectedVariation(undefined);
+          setOpenVariationForm(true);
         }}/>
       </Space>
-      <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
-             columns={columns} dataSource={productStock}/>
+      <TableList customStyle={false} style={{marginTop: 15}} loading={loading}
+             columns={columns} dataSource={variations}/>
+      {pagination && (
+        <Pagination
+          align={'center'}
+          showSizeChanger={false}
+          style={{marginTop: 10}}
+          onChange={(page) => {
+            setCurrentPage(page);
+          }}
+          size={"small"} total={pagination.total}
+          showTotal={(total) => `${total} productos en total`}
+          pageSize={pagination.per_page}
+          current={pagination.current_page}/>
+      )}
       <ModalView
         width={700}
         open={openStockForm}
@@ -189,6 +179,19 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
           setReload(!reload);
           setOpenStockForm(false);
           setSelectedStock(undefined);
+        }}/>
+      </ModalView>
+      <ModalView
+        width={900}
+        open={openVariationForm}
+        onCancel={() => {
+          setOpenVariationForm(false);
+          setSelectedVariation(undefined);
+        }}>
+        <ProductVariationForm product={product} stock={selectedVariation} onComplete={() => {
+          setReload(!reload);
+          setOpenVariationForm(false);
+          setSelectedVariation(undefined);
         }}/>
       </ModalView>
     </div>
