@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
-import {Divider, Pagination, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
+import {Divider, Input, Pagination, Popover, Select, Space, Table, Tag, Tooltip} from "antd";
 import {PiWarning} from "react-icons/pi";
 import pluralize from "pluralize";
 import dayjs from "dayjs";
@@ -134,27 +134,30 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
 
   return (
     <div>
-      <h2>Variaciones para {product.name} <Tag color={'blue'} bordered={false}>{product.code}</Tag></h2>
-      <p>{product.excerpt}</p>
-      <Space split={<Divider type={"vertical"}/>}>
+      <Space>
+
+        <h2 style={{margin: 0}}>Variaciones para {product.name}</h2>
+        <Tag color={'blue'} bordered={false}>{product.code}</Tag>
+      </Space>
+      <p>{product.excerpt || <small>Sin descripción</small>}</p>
+      <Space split={<Divider type={"vertical"}/>} style={{marginBottom: '10px'}}>
+        <Input.Search placeholder={'Buscar nombre o SKU'}/>
         <Select
           placeholder={'Filtrar por estado'}
           style={{width: 200}}
           onChange={value => {
             setStockState(value);
           }} options={[
-          {label: 'Vendidos', value: 'sold'},
-          {label: 'Disponible', value: 'available'},
-          {label: 'Reservados', value: 'reserved'},
-          {label: 'Merma', value: 'wasted'},
+          {label: 'Publicos', value: 'public'},
+          {label: 'Privados', value: 'private'},
         ]}/>
-        <PrimaryButton icon={<TbPlus/>} ghost label={'Agregar stock'} onClick={() => {
+        <PrimaryButton icon={<TbPlus/>} ghost label={'Nueva variación'} onClick={() => {
           setSelectedVariation(undefined);
           setOpenVariationForm(true);
         }}/>
       </Space>
-      <TableList customStyle={false} style={{marginTop: 15}} loading={loading}
-             columns={columns} dataSource={variations}/>
+      <TableList customStyle={false} loading={loading}
+                 columns={columns} dataSource={variations}/>
       {pagination && (
         <Pagination
           align={'center'}
