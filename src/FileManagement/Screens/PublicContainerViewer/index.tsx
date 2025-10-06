@@ -67,7 +67,7 @@ const PublicContainerViewer = () => {
           </div>
         </Space>
         {errorMessage ? (
-            <Empty description={errorMessage} style={{padding: '100px 0'}}/>
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={errorMessage} style={{padding: '100px 0'}}/>
           ) :
           <div className={'container-files-wrapper'}>
             {containers?.map((c: Container, index: number) => (

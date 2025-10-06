@@ -704,40 +704,42 @@ export type StorageContractCartItem = {
 
 export type StorageProductVariation = {
   uuid: string;
-  sku: string;
+  variation_name?: string;
+  description?: string;
   unit_type?: string;
-  variation_name: string;
-  currency: string;
-  is_consumable?: boolean;
-  created_at: string;
-  fk_product_uuid: string;
-  fk_warehouse_uuid: string;
-  metadata?: any;
-  observations?: string;
-  expiration_date?: string;
-  status: string;
-  updated_at: string;
+  sku: string;
+  order: number;
+  group?: string;
+  is_public?: boolean;
   product?: StorageProduct;
+  attachments?: ApiFile[];
+  container_uuid?: string;
+  fk_product_uuid: string;
+  metadata?: any;
+  commercial_description?: string;
+  excerpt?: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export type StorageStock = {
   uuid: string;
-  sku: string;
-  variation_name: string;
+  sku?: string;
+  serial_number?: string;
   currency: string;
   cost_price?: number;
   sale_price?: number;
   quantity?: number;
   is_consumable?: boolean;
   created_at: string;
-  fk_product_uuid: string;
+  fk_product_variation_uuid: string;
   fk_warehouse_uuid: string;
   metadata?: any;
   observations?: string;
   expiration_date?: string;
   status: string;
   updated_at: string;
-  product?: StorageProduct;
+  variation?: StorageProductVariation;
   warehouse?: StorageWarehouse;
   provider?: Provider;
 };

@@ -353,10 +353,10 @@ const CommercialContractDetail = () => {
                           setOpenEditStock(true);
                           setSelectedStock(cartItem.stock);
                         }}>
-                          {cartItem.stock?.sku}
+                          {cartItem.stock?.serial_number}
                         </a>
                       </Tooltip>
-                      <small>{cartItem.stock?.variation_name || cartItem.stock?.product?.name}</small>
+                      <small>{cartItem.stock?.variation?.variation_name || cartItem.stock?.variation?.product?.name}</small>
                     </div>}
                   />
                   <Space>

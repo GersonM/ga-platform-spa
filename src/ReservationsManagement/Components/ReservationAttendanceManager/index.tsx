@@ -1,10 +1,10 @@
 import {useContext, useEffect, useState} from 'react';
-import {Button, Drawer, Empty, Modal, Space, Tooltip} from 'antd';
+import {Button, Drawer, Empty, Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {TrashIcon, CheckIcon} from '@heroicons/react/24/solid';
 import {FaUserTie} from 'react-icons/fa6';
 import {PiEnvelope, PiPhoneCall, PiUserPlusBold} from 'react-icons/pi';
 import {Link} from 'react-router-dom';
-import {TbBuildingEstate, TbClock} from 'react-icons/tb';
+import {TbBuildingEstate, TbClock, TbLink, TbTrash, TbUserPlus} from 'react-icons/tb';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -93,12 +93,12 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
 
   const isAbleToAssignDriver = user?.roles?.includes('admin');
   const driver = trip.driver || trip.vehicle?.driver;
-  const driverCaption = driver ? <ProfileDocument profile={driver?.profile} /> : '';
+  const driverCaption = driver ? <ProfileDocument profile={driver?.profile}/> : '';
   const driverLabel = driver ? (
     `${driver.profile?.name} ${driver.profile?.last_name}`
   ) : isAbleToAssignDriver ? (
     <>
-      Asignar <br /> encargado
+      Asignar <br/> encargado
     </>
   ) : (
     'Sin asesor'
@@ -106,26 +106,26 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
 
   return (
     <div className={'travel-info-wrapper'}>
-      <LoadingIndicator fitBox={false} visible={loading} />
+      <LoadingIndicator fitBox={false} visible={loading}/>
 
       <div className="tools-container">
         <Space wrap>
           <Tooltip title={'Conductor'}>
             <InfoButton
               onEdit={isAbleToAssignDriver ? () => setOpenAssignDriver(true) : undefined}
-              icon={<FaUserTie className={'icon'} />}
+              icon={<FaUserTie className={'icon'}/>}
               caption={driverCaption}
               label={driverLabel}
             />
           </Tooltip>
           <InfoButton
-            icon={<TbClock className={'icon'} />}
+            icon={<TbClock className={'icon'}/>}
             onEdit={() => setOpenEditTime(true)}
             caption={dayjs(trip.arrival_time).format('hh:mm a')}
             label={dayjs(trip.departure_time).format('hh:mm a')}
           />
           <InfoButton
-            icon={<TbBuildingEstate className={'icon'} />}
+            icon={<TbBuildingEstate className={'icon'}/>}
             label={`${trip.vehicle?.model} ${trip.vehicle?.color}`}
             caption={trip.vehicle?.brand}
           />
@@ -136,17 +136,17 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
               ghost
               size={'small'}
               disabled={!trip.vehicle || !(trip.total_passengers < trip.vehicle?.max_capacity)}
-              icon={<PiUserPlusBold size={18} />}
+              icon={<TbUserPlus />}
               onClick={() => setOpenPassengerModal(true)}
               label={'Agregar persona'}
             />
           )}
-          <TripControls trip={trip} onChange={onChange} />
+          <TripControls trip={trip} onChange={onChange}/>
         </Space>
       </div>
 
       {passengers && passengers.length == 0 && (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'} />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay pasajeros para este viaje'}/>
       )}
 
       {passengers?.map((p, index) => {
@@ -157,9 +157,9 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
               <div className={'content'}>
                 <div className={'passenger-label'}>
                   <div>
-                    <ProfileDocument profile={p.profile} /> | {p.profile?.name} {p.profile?.last_name}
+                    <ProfileDocument profile={p.profile}/> | {p.profile?.name} {p.profile?.last_name}
                     <span className={'caption'}>
-                      <PiEnvelope /> {p.profile?.personal_email || 'Sin correo'} | <PiPhoneCall /> {p.profile?.phone}
+                      <PiEnvelope/> {p.profile?.personal_email || 'Sin correo'} | <PiPhoneCall/> {p.profile?.phone}
                     </span>
                   </div>
                 </div>
@@ -178,9 +178,16 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
                     );
                   })}
                   {user?.roles?.includes('driver') && (
-                    <IconButton icon={<CheckIcon />} onClick={() => removePassenger(p.uuid)} />
+                    <IconButton icon={<CheckIcon/>} onClick={() => removePassenger(p.uuid)}/>
                   )}
-                  <IconButton danger icon={<TrashIcon />} onClick={() => removePassenger(p.uuid)} />
+                  <IconButton icon={<TbLink/>} title={'Copiar link de invitación'}/>
+                  <Popconfirm
+                    title={'¿Quieres quitar esta persona?'}
+                    description={'Si cambias de opinión, puedes volver a invitarla'}
+                    onConfirm={() => removePassenger(p.uuid)}
+                  >
+                    <IconButton danger icon={<TbTrash/>}/>
+                  </Popconfirm>
                 </Space>
               </div>
 
@@ -221,7 +228,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
           onChange={(_value, item) => setSelectedDriver(item.entity)}
           style={{width: '100%', marginBottom: 15}}
         />
-        <PrimaryButton disabled={!selectedDriver} block label={'Asignar encargado'} onClick={assignDriver} />
+        <PrimaryButton disabled={!selectedDriver} block label={'Asignar encargado'} onClick={assignDriver}/>
       </Modal>
       <Modal
         footer={false}
@@ -260,7 +267,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
         destroyOnHidden
         title={
           <Link to={`/commercial/contracts/${selectedContract?.uuid}`} target={'_blank'}>
-            <EstateContractAddress contract={selectedContract} tooltip={'Abrir en otra pestaña'} />
+            <EstateContractAddress contract={selectedContract} tooltip={'Abrir en otra pestaña'}/>
           </Link>
         }
         onClose={() => setOpenContractIncidents(false)}>
@@ -268,7 +275,7 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
           <Button type={'primary'} ghost size={'small'} block>
             Registrar entrega
           </Button>
-          {selectedContract && <EntityActivityManager uuid={selectedContract?.uuid} type={'commercial-contract'} />}
+          {selectedContract && <EntityActivityManager uuid={selectedContract?.uuid} type={'commercial-contract'}/>}
         </>
       </Drawer>
     </div>

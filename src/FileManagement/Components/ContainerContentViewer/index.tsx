@@ -35,6 +35,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
   const [orderBy, setOrderBy] = useState('name');
   const [searchValue, setSearchValue] = useState<string>();
   const {addFile, lastFileCompleted} = useContext(UploadContext);
+  const [selectedContainer, setSelectedContainer] = useState<Container>();
 
   useEffect(() => {
     setReload(!reload);
@@ -83,6 +84,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
 
   const navigateToFolder = (container: Container) => {
     setSelectedFiles([]);
+    setSelectedContainer(undefined);
     if (onChange) {
       onChange(container.uuid, container);
     }
@@ -124,13 +126,13 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
       });
   };
 
-  if(!containerContent) {
-    return <LoadingIndicator  visible={true} message={'Listando contenido...'} />;
+  if (!containerContent) {
+    return <LoadingIndicator visible={true} message={'Listando contenido...'}/>;
   }
 
   return (
     <div {...getRootProps()} className={'content-viewer-wrapper'}>
-      <MetaTitle title={containerContent.container?.name + ' - Gestor de archivos'} />
+      <MetaTitle title={containerContent.container?.name + ' - Gestor de archivos'}/>
       <iframe id="my_iframe" style={{display: 'none'}}></iframe>
       <input {...getInputProps()} />
       {containerContent && (
@@ -163,15 +165,16 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                       setSearchValue(value);
                     }}
                   />
-                  <IconButton title={'Volver'} icon={<PiArrowLeft />} onClick={() => setSearchValue(undefined)} />
+                  <IconButton title={'Volver'} icon={<PiArrowLeft/>} onClick={() => setSearchValue(undefined)}/>
                 </Space>
               }
             />
           )}
           <div className="file-navigator-wrapper">
-            {isDragActive && <DropMessage />}
+            {isDragActive && <DropMessage/>}
             {showFileInformation && (
               <FileInformation
+                container={selectedContainer}
                 fileContainer={containerContent.container}
                 files={selectedFiles}
                 onChange={() => {
@@ -181,7 +184,7 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
             )}
             {containerUuid === 'trash' && (
               <div style={{marginBottom: 15}}>
-                <PrimaryButton label={'Vaciar papelera'} icon={<PiRecycle />} onClick={emptyTrash} />
+                <PrimaryButton label={'Vaciar papelera'} icon={<PiRecycle/>} onClick={emptyTrash}/>
               </div>
             )}
             {containerContent.containers.length === 0 && containerContent.files.length === 0 ? (
@@ -190,13 +193,13 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description={
                     <>
-                      <span>No hay archivos en esta ubicación</span> <br />
-                      <br />
+                      <span>No hay archivos en esta ubicación</span> <br/>
+                      <br/>
                       {allowUpload && !searchValue && (
                         <>
-                          <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br />
-                          <br />
-                          <Button ghost icon={<PiUploadBold />} onClick={open} shape={'round'} type={'primary'}>
+                          <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br/>
+                          <br/>
+                          <Button ghost icon={<PiUploadBold/>} onClick={open} shape={'round'} type={'primary'}>
                             Cargar archivos
                           </Button>
                         </>
@@ -207,13 +210,21 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
               </div>
             ) : (
               <div className={`files-container mode-${viewMode}`}>
-                <LoadingIndicator visible={loading} />
+                <LoadingIndicator visible={loading}/>
                 {containerContent.containers.map(c => (
                   <FolderItem
+                    selected={selectedContainer?.uuid == c.uuid}
                     size={viewMode == 'grid' ? 45 : 28}
                     key={c.uuid}
                     container={c}
                     onDoubleClick={() => navigateToFolder(c)}
+                    onClick={(selected) => {
+                      if (selected) {
+                        setSelectedContainer(c);
+                      } else {
+                        setSelectedContainer(undefined);
+                      }
+                    }}
                     onChange={() => setReload(!reload)}
                   />
                 ))}

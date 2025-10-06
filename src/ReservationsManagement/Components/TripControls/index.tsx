@@ -8,6 +8,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {MoveTrip} from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import AuthContext from '../../../Context/AuthContext';
+import {TbTrash} from "react-icons/tb";
 
 interface TripControlsProps {
   onChange?: () => void;
@@ -21,7 +22,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
     axios
       .post(`move/trips/${trip.uuid}/cancel`)
       .then(() => {
-        onChange && onChange();
+        if(onChange) onChange();
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -32,7 +33,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
     axios
       .post(`move/trips/${trip.uuid}/confirm`)
       .then(() => {
-        onChange && onChange();
+        if(onChange) onChange();
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -43,7 +44,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
     axios
       .post(`move/trips/${trip.uuid}/start`)
       .then(() => {
-        onChange && onChange();
+        if(onChange) onChange();
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -54,7 +55,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
     axios
       .post(`move/trips/${trip.uuid}/complete`)
       .then(() => {
-        onChange && onChange();
+        if(onChange) onChange();
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -65,7 +66,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
     axios
       .delete(`move/trips/${trip.uuid}`)
       .then(() => {
-        onChange && onChange();
+        if(onChange) onChange();
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -80,7 +81,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
             ghost
             size={'small'}
             disabled={!trip.vehicle}
-            icon={<PiCheckBold size={17} />}
+            icon={<PiCheckBold />}
             onClick={confirmTrip}
             label={'Confirmar'}
           />
@@ -91,7 +92,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
             ghost
             size={'small'}
             disabled={!trip.vehicle}
-            icon={<PiCheckBold size={17} />}
+            icon={<PiCheckBold />}
             onClick={startTrip}
             label={'Iniciar servicio'}
           />
@@ -102,7 +103,7 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
             ghost
             size={'small'}
             disabled={!trip.vehicle}
-            icon={<PiCheckBold size={17} />}
+            icon={<PiCheckBold />}
             onClick={completeTrip}
             label={'Completar viaje'}
           />
@@ -115,15 +116,15 @@ const TripControls = ({onChange, trip}: TripControlsProps) => {
       {(user?.roles?.includes('driver') || user?.roles?.includes('admin')) && !trip.arrived_at && getTripButton()}
 
       {!trip.arrived_at && (
-        <Popconfirm title={'¿Seguro que quieres cancelar este viaje?'} onConfirm={cancelTrip}>
-          <Button size={'small'} ghost type={'primary'} icon={<PiCalendarXBold size={18} />} danger>
+        <Popconfirm title={'¿Seguro que quieres cancelar esta reserva?'} onConfirm={cancelTrip}>
+          <Button size={'small'} ghost type={'primary'} icon={<PiCalendarXBold />} danger>
             Cancelar
           </Button>
         </Popconfirm>
       )}
       {user?.roles?.includes('admin') && (
-        <Popconfirm title={'¿Seguro que quieres borrar este viaje?'} onConfirm={deleteTrip}>
-          <Button size={'small'} type={'primary'} icon={<TrashIcon />} danger>
+        <Popconfirm title={'¿Seguro que quieres borrar esta reserva?'} onConfirm={deleteTrip}>
+          <Button size={'small'} type={'primary'} icon={<TbTrash />} danger>
             Borrar
           </Button>
         </Popconfirm>

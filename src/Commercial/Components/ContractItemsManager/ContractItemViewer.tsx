@@ -161,8 +161,9 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
           {editMode ? (<>
             {itemTypes[contractItem.type]}
             <IconButton icon={<TbPencil/>} onClick={onEdit}/>
-            <Popconfirm onConfirm={destroyItem} title={'¿Quieres eliminar este item?'}
-                        description={'Los valores almacenados también se eliminarán y no se pueden recuperar'}>
+            <Popconfirm
+              onConfirm={destroyItem} title={'¿Quieres eliminar este item?'}
+              description={'Los valores almacenados también se eliminarán y no se pueden recuperar'}>
               <IconButton icon={<TbTrash/>} danger/>
             </Popconfirm>
           </>) : <>

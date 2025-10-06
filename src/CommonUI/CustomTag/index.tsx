@@ -6,9 +6,9 @@ interface CustomTagProps {
   color?: string;
 }
 
-const CustomTag = ({children, ...props}:CustomTagProps) => {
+const CustomTag = ({children, color='blue', ...props}:CustomTagProps) => {
   return (
-    <Tag bordered={false} style={{ margin: 0 }} {...props}>
+    <Tag bordered={false} style={{ margin: 0 }} color={color} {...props}>
       {children}
     </Tag>
   );

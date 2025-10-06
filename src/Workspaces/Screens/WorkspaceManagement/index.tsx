@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {TbBuilding, TbPencil, TbStarFilled, TbTrash} from 'react-icons/tb';
-import {Modal, Popconfirm, Space, Tag, Tooltip} from 'antd';
+import {Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
@@ -10,6 +10,7 @@ import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import WorkspaceForm from '../../Components/WorkspaceForm';
+import CustomTag from "../../../CommonUI/CustomTag";
 
 const WorkspaceManagement = () => {
   const [workspaces, setWorkspaces] = useState<TenantConfig[]>();
@@ -79,7 +80,7 @@ const WorkspaceManagement = () => {
       title: 'Color',
       dataIndex: 'primary_color',
       responsive: ['md'],
-      render: (primary_color: string) => (primary_color ? <Tag color={primary_color}>{primary_color}</Tag> : 'Default'),
+      render: (primary_color: string) => (primary_color ? <CustomTag color={primary_color}>{primary_color}</CustomTag> : 'Default'),
     },
     {
       title: 'Personas',

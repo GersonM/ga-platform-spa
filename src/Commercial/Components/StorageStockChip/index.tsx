@@ -10,17 +10,15 @@ interface StorageStockChipProps {
 
 const StorageStockChip = ({storageStock, quantity, showQuantity = true}: StorageStockChipProps) => {
   return (
-    <div>
-      <Space>
-        <div>
-          <code style={{fontSize:13}}>{storageStock?.sku}</code>
-          <small>{storageStock?.variation_name || storageStock?.product?.name}</small>
-        </div>
-        {showQuantity && quantity !== undefined && quantity > 1 && (
-          <code>x{quantity}</code>
-        )}
-      </Space>
-    </div>
+    <Space>
+      <div>
+        <code style={{fontSize: 13}}>{storageStock?.variation?.sku}</code>
+        <small>{storageStock?.variation?.variation_name || storageStock?.variation?.product?.name}</small>
+      </div>
+      {showQuantity && quantity !== undefined && quantity > 1 && (
+        <code>x{quantity}</code>
+      )}
+    </Space>
   );
 };
 

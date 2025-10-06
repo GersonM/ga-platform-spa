@@ -1,12 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {Divider, Form, Input, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
-import {PiWarning} from "react-icons/pi";
 import dayjs from "dayjs";
 import pluralize from "pluralize";
 import axios from "axios";
 
-import type {ResponsePagination, StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
+import type {
+  ResponsePagination,
+  StorageStock,
+  StorageWarehouse
+} from "../../../Types/api.tsx";
 import MoneyString from "../../../CommonUI/MoneyString";
 import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
@@ -19,6 +22,9 @@ import ModuleContent from "../../../CommonUI/ModuleContent";
 import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
 import FilterForm from "../../../CommonUI/FilterForm";
 import WarehouseSelector from "../../Components/WarehouseSelector";
+import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
+import CustomTag from "../../../CommonUI/CustomTag";
+import ProductVariationSelector from "../../Components/ProductVariationSelector";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -89,22 +95,17 @@ const WarehouseStockManager = () => {
 
   const columns: any[] = [
     {
-      title: 'SKU',
-      dataIndex: 'sku',
-      render: (sku: string, row: StorageStock) => {
-        return <>
-          {sku} <br/>
-          <small>
-            {row.variation_name ? row.variation_name : row.product?.name}
-          </small>
-        </>;
+      title: 'N° Serie',
+      dataIndex: 'serial_number',
+      render: (serial_number: string) => {
+        return <code>{serial_number}</code>;
       }
     },
     {
       title: 'Vence',
       dataIndex: 'expiration_date',
       render: (expiration_date: string) => {
-        return expiration_date ? dayjs(expiration_date).fromNow() : '';
+        return expiration_date ? dayjs(expiration_date).fromNow() : <small>No vence</small>;
       }
     },
     {
@@ -117,10 +118,9 @@ const WarehouseStockManager = () => {
     },
     {
       title: 'Producto',
-      dataIndex: 'product',
-      render: (product?: StorageProduct) => <>
-        {product?.name} <br/>
-        <small>{product?.code}</small>
+      dataIndex: 'uuid',
+      render: (_uuid: string, row: StorageStock) => <>
+        <StorageStockChip storageStock={row}/>
       </>
     },
     {
@@ -136,10 +136,12 @@ const WarehouseStockManager = () => {
       title: 'Cantidad',
       dataIndex: 'is_consumable',
       render: (is_consumable: boolean, row: StorageStock) =>
-        is_consumable ? pluralize(row.product?.unit_type || 'unidad', row.quantity, true) : 'Sin límite'
+        is_consumable ?
+          pluralize(row.variation?.product?.unit_type || 'unidad', row.quantity, true) :
+          <CustomTag>Sin límite</CustomTag>
     },
     {
-      title: 'Precios',
+      title: 'Precio de venta',
       dataIndex: 'sale_price',
       render: (sale_price: number, row: StorageStock) => {
         const earn = (row.sale_price || 0) - (row.cost_price || 0);
@@ -148,17 +150,15 @@ const WarehouseStockManager = () => {
             Ganancia: <MoneyString value={earn} currency={row.currency}/> <br/>
             Porcentaje: {((earn * 100) / (row.sale_price || 1)).toFixed(2)}%
           </>}>
-            <Space>
-              <div>
-                {sale_price != null ?
-                  <MoneyString value={sale_price} currency={row.currency}/> : 'No se vende'
-                }
-                {row.cost_price != null && <small>
-                  Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
-                </small>}
-              </div>
-              {earn < 0 && <PiWarning size={18} color="red"/>}
-            </Space>
+            <div>
+              {sale_price != null ?
+                <MoneyString value={sale_price} currency={row.currency}/> :
+                <CustomTag color={'orange'}>Sin precio de venta</CustomTag>
+              }
+              {row.cost_price != null && <small>
+                Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
+              </small>}
+            </div>
           </Popover>
         </>;
       }
@@ -192,6 +192,10 @@ const WarehouseStockManager = () => {
     <ModuleContent>
       <ContentHeader
         onRefresh={() => setReload(!reload)}
+        onAdd={() => {
+          setOpenStockForm(true);
+          setSelectedStock(undefined);
+        }}
         title={'Existencias'}
         tools={<>
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
@@ -201,6 +205,9 @@ const WarehouseStockManager = () => {
         <FilterForm onSubmit={values => setFilters(values)}>
           <Form.Item label="Nombre" name={'search'}>
             <Input/>
+          </Form.Item>
+          <Form.Item label="Producto" name={'variation_uuid'}>
+            <ProductVariationSelector/>
           </Form.Item>
           <Form.Item label="Estado" name={'status'}>
             <Select
@@ -213,7 +220,7 @@ const WarehouseStockManager = () => {
               {label: 'Vendidos', value: 'sold'},
               {label: 'Disponible', value: 'available'},
               {label: 'Reservados', value: 'reserved'},
-              {label: 'Merma', value: 'wasted'},
+              {label: 'Dañados', value: 'damaged'},
             ]}/>
           </Form.Item>
           <Form.Item label={'Almacén'} name={'storage_uuid'}>
@@ -221,12 +228,6 @@ const WarehouseStockManager = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <Space split={<Divider type={"vertical"}/>}>
-        <PrimaryButton icon={<TbPlus/>} ghost label={'Agregar stock'} onClick={() => {
-          setOpenStockForm(true);
-          setSelectedStock(undefined);
-        }}/>
-      </Space>
       <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
              columns={columns} dataSource={productStock}/>
       {pagination && (
@@ -245,6 +246,7 @@ const WarehouseStockManager = () => {
       )}
       <ModalView
         open={openStockForm}
+        width={700}
         onCancel={() => {
           setOpenStockForm(false);
           setSelectedStock(undefined);

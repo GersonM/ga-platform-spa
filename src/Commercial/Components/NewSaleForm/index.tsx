@@ -30,6 +30,7 @@ import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import {DefaultEditor} from "react-simple-wysiwyg";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
@@ -45,32 +46,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
   const [isApproved, setIsApproved] = useState(false);
   const [shoppingCart, setShoppingCart] = useState<StorageContractCartItem[]>([]);
 
-  /*useEffect(() => {
-    if (!selectedStockUUID) {
-      return;
-    }
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-
-    setLoading(true);
-
-    axios
-      .get(`warehouses/stock/${selectedStockUUID}`, config)
-      .then(response => {
-        if (response) {
-          setSelectedStock(response.data);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-
-    return cancelTokenSource.cancel;
-  }, [selectedStockUUID]);*/
-
   const submitForm = (data: any) => {
     if (!data.fk_company_uuid && !data.fk_profile_uuid) {
       console.log(data);
@@ -82,7 +57,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
     }
 
     if (shoppingCart.length == 0) {
-      console.log(shoppingCart);
       notification.info({description: 'Agrega al menos un producto', message: 'El carrito está vació'})
       return;
     }
@@ -151,12 +125,12 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
   }
 
   const cartTotalAmountPen = shoppingCart.reduce((s, item) => {
-    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : 0);
+    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : (item.stock?.sale_price || 0));
     return s + (item.stock?.currency == 'PEN' ? itemAmount : 0);
   }, 0);
 
   const cartTotalAmountUSD = shoppingCart.reduce((s, item) => {
-    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : 0);
+    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : (item.stock?.sale_price || 0));
     return s + (item.stock?.currency == 'USD' ? itemAmount : 0);
   }, 0);
 
@@ -206,8 +180,8 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 renderItem={(cartItem) => {
                   return <List.Item>
                     <List.Item.Meta
-                      title={cartItem.stock?.variation_name || cartItem.stock?.product?.name}
-                      description={<Tag bordered={false} color={'blue'}>{cartItem.stock?.sku}</Tag>}
+                      title={cartItem.stock?.variation?.variation_name || cartItem.stock?.variation?.product?.name}
+                      description={<CustomTag><code>{cartItem.stock?.serial_number}</code></CustomTag>}
                     />
                     <Space>
                       <InputNumber
@@ -218,7 +192,8 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                         }}/>
                       <MoneyInput
                         min={0}
-                        block={false} currency={cartItem.stock?.currency} placeholder={cartItem.stock?.sale_price ? (cartItem.stock?.sale_price / 100).toString() : '0'}
+                        block={false} currency={cartItem.stock?.currency}
+                        placeholder={cartItem.stock?.sale_price ? (cartItem.stock?.sale_price / 100).toString() : '0'}
                         onChange={value => {
                           updateAmount(cartItem, value);
                         }}

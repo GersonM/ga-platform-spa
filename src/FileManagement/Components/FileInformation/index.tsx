@@ -19,15 +19,17 @@ import MediaPlayer from '../../../CommonUI/MediaPlayer';
 import FileIcon from '../FileIcon';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import './styles.less';
+import ContainerDropdownActions from "../ContainerDropdownActions";
 
 interface FileInformationProps {
   file?: ApiFile;
   files?: ApiFile[];
   fileContainer?: Container;
+  container?: Container;
   onChange?: () => void;
 }
 
-const FileInformation = ({fileContainer, files, onChange}: FileInformationProps) => {
+const FileInformation = ({fileContainer, files, onChange, container}: FileInformationProps) => {
   const [fileActivity, setFileActivity] = useState<Array<FileActivity>>();
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -131,9 +133,50 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
   };
 
   const detailImageLink = files?.length == 1 ? location.origin + '/storage/files/' + files[0]?.uuid : '';
+  const containerLink = container ? location.origin + '/storage/containers/' + container.uuid : '';
 
   return (
     <div className={'file-information-wrapper'}>
+      {container && (
+        <>
+          <div className={'information-header'}>
+            <div className={'file-name'}>
+              <span className={'label'}>
+                {container.name}
+                <small>
+                  {dayjs(container.created_at).format(' D/MM/YYYY [a las] H:mm')}
+                </small>
+              </span>
+            </div>
+            <ContainerDropdownActions
+              onChange={() => {
+                if (onChange) onChange();
+              }}
+              trigger={['click']}
+              container={container}>
+              <IconButton icon={<BsThreeDotsVertical/>}/>
+            </ContainerDropdownActions>
+          </div>
+          <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
+            <div className="information-content">
+              <p>Link para compartir</p>
+              <pre>
+                <small>
+                  {containerLink}
+                </small>
+              </pre>
+              <div className={'links-container'}>
+                <span className="label">
+                  <Button size={'small'} type={'link'} onClick={() => copyText(containerLink)}>
+                    Copiar enlace
+                  </Button>
+                </span>
+              </div>
+            </div>
+          </OverlayScrollbarsComponent>
+        </>
+      )}
+
       {files?.length == 1 && (
         <>
           <div className={'information-header'}>
@@ -225,7 +268,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
                   fileActivity.map(a => (
                     <div key={a.uuid} className={`activity ${a.action}`}>
                       {(a.comment || a.time) && <>
-                      {a.comment} {a.time}{a.verified_at && <TbCheck color={'green'} />}
+                        {a.comment} {a.time}{a.verified_at && <TbCheck color={'green'}/>}
                       </>}
                       <small>
                         {a.action} por {a.user?.profile?.name} - <span
@@ -300,7 +343,7 @@ const FileInformation = ({fileContainer, files, onChange}: FileInformationProps)
           </OverlayScrollbarsComponent>
         </>
       )}
-      {files?.length == 0 && <EmptyMessage message={'Seleccionar un archivo para ver su información'}/>}
+      {(files?.length == 0 && !container) && <EmptyMessage message={'Seleccionar un archivo para ver su información'}/>}
     </div>
   );
 };

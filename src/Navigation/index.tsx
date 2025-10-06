@@ -37,7 +37,7 @@ import {
   TbCurrencyDollar,
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
   TbListCheck, TbMapPinBolt, TbMessageUser,
-  TbPackage, TbPackageImport,
+  TbPackage, TbPackageImport, TbPercentage,
   TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket,
 } from 'react-icons/tb';
 import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
@@ -145,8 +145,9 @@ const Navigation = () => {
           </Tooltip>
         </Dropdown>
       </div>
-      <OverlayScrollbarsComponent style={{flex: 1}} className={'scroll-content'} defer
-                                  options={{scrollbars: {autoHide: 'scroll'}}}>
+      <OverlayScrollbarsComponent
+        style={{flex: 1}} className={'scroll-content'} defer
+        options={{scrollbars: {autoHide: 'scroll'}}}>
         <nav>
           <ul className="navigation-list">
             <NavItem label={'Dashboard'} icon={<TbGridDots/>} path={'/'}/>
@@ -192,6 +193,7 @@ const Navigation = () => {
                 <NavItem icon={<TbShoppingCartUp/>} label={'Ventas'} path={'/commercial/sales'}/>
                 <NavItem icon={<TbShoppingCartDown/>} label={'Compras'} path={'/commercial/purchases'}/>
                 <NavItem icon={<TbContract/>} label={'Plantillas de contrato'} path={'/commercial/contract-templates'}/>
+                <NavItem icon={<TbPercentage/>} label={'Comisiones'} path={'/commercial/comissions'}/>
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>

@@ -100,7 +100,7 @@ const WarehouseProductsManager = () => {
       dataIndex: 'name',
       width: 180,
       render: (name: string, product: StorageProduct) => (
-        <span>{name} <br/> <small>{product.description}</small></span>
+        <span>{name} <br/> <small>{product.excerpt}</small></span>
       )
     },
     {
@@ -123,7 +123,7 @@ const WarehouseProductsManager = () => {
       )
     },
     {
-      title: 'Existencias disponibles',
+      title: 'Existencias',
       width: 120,
       dataIndex: 'available_stock',
       render: (available_stock: number, product: StorageProduct) => (

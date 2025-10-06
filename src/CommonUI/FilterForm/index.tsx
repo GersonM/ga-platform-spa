@@ -13,11 +13,12 @@ interface FilterFormProps {
   onInitialValues?: (values: any) => void;
   onSubmit?: (values: any) => void;
   liveUpdate?: boolean;
+  updateUrl?: boolean;
 }
 
 let timer: any = null;
 
-const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: FilterFormProps) => {
+const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true, updateUrl = true}: FilterFormProps) => {
   const [searchParams] = useSearchParams();
   const [initialValues, setInitialValues] = useState<any>();
   const [loading, setLoading] = useState(false);
@@ -46,15 +47,17 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
   }, [initialValues]);
 
   const onSubmitHandler = (values: any) => {
-    const url = new URL(window.location.href);
-    Object.keys(values).forEach(k => {
-      if (values[k]) {
-        url.searchParams.set(k, values[k]);
-      } else {
-        url.searchParams.delete(k);
-      }
-    });
-    history.pushState(null, '', url);
+    if (updateUrl) {
+      const url = new URL(window.location.href);
+      Object.keys(values).forEach(k => {
+        if (values[k]) {
+          url.searchParams.set(k, values[k]);
+        } else {
+          url.searchParams.delete(k);
+        }
+      });
+      history.pushState(null, '', url);
+    }
     if (onSubmit) {
       onSubmit({...values});
     }
@@ -84,7 +87,8 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true}: Fi
             onFinish={onSubmitHandler}
             layout={'inline'}>
             {children}
-            <PrimaryButton className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'} htmlType={'submit'}/>
+            <PrimaryButton className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'}
+                           htmlType={'submit'}/>
           </Form>
         </div>
       )}

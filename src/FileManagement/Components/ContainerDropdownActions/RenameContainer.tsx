@@ -1,9 +1,10 @@
 
-import {Button, Form, Input} from 'antd';
+import {Form, Input} from 'antd';
 import axios from 'axios';
 
 import type {Container} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
 
 interface RenameFileProps {
   container: Container;
@@ -25,14 +26,14 @@ const RenameContainer = ({container, onCompleted}: RenameFileProps) => {
   };
   return (
     <Form layout={'vertical'} onFinish={sendForm} initialValues={{name: container.name}}>
-      <h3>Cambiar nombre</h3>
+      <h3>Editar nombre</h3>
+      <p>Puedes usar caracteres especiales, tildes, etc. Esto no afectar a la accesibilidad del archivo</p>
       <Form.Item
         name={'name'}
-        label={'Nombre'}
-        tooltip={'Puedes usar caracteres especiales, tildes, etc. Esto no afectar a la accesibilidad del archivo'}>
+        label={'Nombre'}>
         <Input placeholder={'Nombre'} />
       </Form.Item>
-      <Button htmlType={'submit'}>Guardar</Button>
+      <PrimaryButton block htmlType={'submit'}>Guardar</PrimaryButton>
     </Form>
   );
 };

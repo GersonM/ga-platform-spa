@@ -20,6 +20,7 @@ import LoadTripsTemplate from '../../Components/LoadTripsTemplate';
 import Config from '../../../Config';
 import PrintContractsDocuments from '../../Components/PrintContractsDocuments';
 import './styles.less';
+import FilterForm from "../../../CommonUI/FilterForm";
 
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
@@ -108,8 +109,10 @@ const ReservationsManager = () => {
         }
         onRefresh={() => setReload(!reload)}
         onAdd={() => setOpenTripModal(true)}>
-        <Space wrap>
-          <DatePicker style={{width: 130}} onChange={val => setSelectedDate(val)} />
+        <FilterForm>
+          <Form.Item label={'Fecha'}>
+            <DatePicker style={{width: 130}} onChange={val => setSelectedDate(val)} />
+          </Form.Item>
           <VehicleSelector placeholder={'Equipo'} style={{width: 190}} onChange={value => setSelectedVehicle(value)} />
           <RouteSelector
             placeholder={'Tipo'}
@@ -130,7 +133,7 @@ const ReservationsManager = () => {
               {label: 'Confirmados', value: 'confirmed'},
             ]}
           />
-        </Space>
+        </FilterForm>
       </ContentHeader>
       <LoadingIndicator visible={loading} fitBox={false} message={'Listando reservas...'} />
       {trips && trips.length === 0 && (

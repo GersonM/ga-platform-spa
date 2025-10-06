@@ -5,7 +5,7 @@ import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import axios from "axios";
 import dayjs from "dayjs";
 
-import type {MetadataField, StorageProduct, StorageStock} from "../../../Types/api.tsx";
+import type {MetadataField, StorageProductVariation, StorageStock} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler";
 import ProductSelector from "../ProductSelector";
@@ -18,11 +18,11 @@ import Config from "../../../Config.tsx";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
-  product?: StorageProduct;
+  variation?: StorageProductVariation;
   onComplete?: () => void;
 }
 
-const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) => {
+const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps) => {
   const [form] = useForm();
   const [currentCurrency, setCurrentCurrency] = useState<string>();
   const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
@@ -40,14 +40,6 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
         const parsedMetadata = typeof stock.metadata === 'string'
           ? JSON.parse(stock.metadata)
           : stock.metadata;
-
-        /*const fields = Object.entries(parsedMetadata || {})
-          .map(([key, value, code], index) => ({
-            key,
-            value: String(value),
-            code: code,
-            id: `field_${index}`
-          }));*/
         console.log({parsedMetadata});
         if (Array.isArray(parsedMetadata)) {
           setMetadataFields(parsedMetadata);
@@ -102,7 +94,7 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
 
     const data = {
       ...values,
-      product_uuid: product ? product.uuid : values.product_uuid,
+      variation_uuid: variation ? variation.uuid : values.variation_uuid,
       cost_price: values.cost_price,
       sale_price: values.sale_price,
       metadata: JSON.stringify(metadata),
@@ -131,55 +123,32 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
       expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
     }} onFinish={submit}>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
-      <Form.Item label="Producto" name={'product_uuid'}>
-        {product ?
-          <div>
-            {product.name} <small style={{marginTop: -4, display: 'block'}}>{product.code}</small>
-          </div>
-          : <ProductSelector/>}
-      </Form.Item>
-      <Row gutter={15}>
-        <Col md={15} xs={13}>
-          <Form.Item label="Nombre de la variación (opcional)" name={'variation_name'}>
-            <Input placeholder={product?.name}/>
-          </Form.Item>
-        </Col>
-        <Col md={9}>
-          <Form.Item label="Estado" name={'status'}>
-            <Select
-              placeholder={'Disponible'}
-              popupMatchSelectWidth={false}
-              style={{width: '100%'}}
-              options={[
-                {label: 'Vendidos', value: 'sold'},
-                {label: 'Disponible', value: 'available'},
-                {label: 'Reservados', value: 'reserved'},
-                {label: 'Merma', value: 'wasted'},
-              ]}/>
-          </Form.Item>
-        </Col>
-      </Row>
       <Row gutter={15}>
         <Col md={8} xs={12}>
-          <Form.Item label="SKU" name={'sku'} rules={[{required: true}]}>
-            <Input/>
-          </Form.Item>
-        </Col>
-        <Col md={7} xs={12}>
-          <Form.Item label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
-                     rules={[{required: true}]}>
+          <Form.Item
+            label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
+            rules={[{required: true}]}>
             <WarehouseSelector/>
           </Form.Item>
         </Col>
-        <Col md={9} xs={24}>
-          <Form.Item label="Fecha de vencimiento" name={'expiration_date'}>
-            <DatePicker style={{width: '100%'}} format={Config.dateFormatUser}/>
+        <Col md={16} xs={12}>
+          <Form.Item label="Proveedor" name={'provider_uuid'} rules={!stock ? [{required: true}] : undefined}>
+            <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item label="Proveedor" name={'provider_uuid'} rules={!stock ? [{required: true}] : undefined}>
-        <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
-      </Form.Item>
+      <Row gutter={15}>
+        <Col md={9} xs={12}>
+          <Form.Item label="Número de serie" name={'serial_number'}>
+            <Input/>
+          </Form.Item>
+        </Col>
+        <Col md={15} xs={12}>
+          <Form.Item label="Fecha de vencimiento (opcional)" name={'expiration_date'}>
+            <DatePicker placeholder={'No caduca'} style={{width: '100%'}} format={Config.dateFormatUser}/>
+          </Form.Item>
+        </Col>
+      </Row>
       <Row gutter={15}>
         <Col md={6}>
           <Form.Item label="Moneda" name={'currency'}>
@@ -231,7 +200,6 @@ const ProductStockForm = ({product, stock, onComplete}: ProductStockFormProps) =
       <Form.Item label="Orden" name={'order'}>
         <InputNumber/>
       </Form.Item>
-
       <Divider>Avanzado</Divider>
       <Form.Item label="Metadata (Información adicional del stock)">
         <div style={{marginBottom: '16px'}}>

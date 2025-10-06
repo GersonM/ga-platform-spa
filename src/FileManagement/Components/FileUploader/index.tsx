@@ -11,6 +11,7 @@ interface FileUploaderProps {
   showPreview?: boolean;
   imagePath?: string;
   fileUuid?: string;
+  targetContainerUuid?: string;
   height?: number;
   maxWidth?: number;
   small?: boolean;
@@ -25,6 +26,7 @@ const FileUploader = (
     onChange,
     multiple = false,
     small = false,
+    targetContainerUuid,
     imagePath,
     showPreview = false,
   }: FileUploaderProps) => {
@@ -46,7 +48,7 @@ const FileUploader = (
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     for (const acceptedFilesKey in acceptedFiles) {
-      const fileId = addFile(acceptedFiles[acceptedFilesKey]);
+      const fileId = addFile(acceptedFiles[acceptedFilesKey], targetContainerUuid);
       setOwnedFiles(prev => [...prev, fileId]);
     }
   }, []);
@@ -73,9 +75,7 @@ const FileUploader = (
           </div>
         )}
         {showPreview && uploadedFile && (
-          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.thumbnail + ')'}}>
-            {uploadedFile.thumbnail}
-          </div>
+          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.thumbnail + ')'}}/>
         )}
         {showPreview && imagePath && (
           <>

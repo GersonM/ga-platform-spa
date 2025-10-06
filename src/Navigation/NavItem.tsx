@@ -1,5 +1,5 @@
 import {type ReactNode, useState} from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useLocation} from 'react-router-dom';
 import {TbChevronDown} from "react-icons/tb";
 
 interface NavItemProps {
@@ -10,7 +10,10 @@ interface NavItemProps {
   notifications?: number|string;
 }
 const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const {pathname} = useLocation();
+  const [isOpen, setIsOpen] = useState(pathname==path);
+
+
   const content = (
     <>
       <span className={'label'}>{label}</span>

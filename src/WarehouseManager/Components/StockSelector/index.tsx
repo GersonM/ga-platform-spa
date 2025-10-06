@@ -56,8 +56,8 @@ const StockSelector = ({placeholder, currency, mode, refresh, ...props}: Product
                 title: item.status,
                 label: (
                   <>
-                    <Tag bordered={false} color={'blue'}>{item.sku}</Tag>
-                    <MoneyString currency={item.currency} value={item.sale_price}/> - {item?.variation_name || item?.product?.name}
+                    <Tag bordered={false} color={'blue'}>{item.serial_number}</Tag>
+                    <MoneyString currency={item.currency} value={item.sale_price}/> - {item?.variation?.variation_name || item?.variation?.product?.name}
                   </>
                 ),
               };
@@ -86,10 +86,10 @@ const StockSelector = ({placeholder, currency, mode, refresh, ...props}: Product
       optionRender={option => {
         // @ts-ignore
         const stock: StorageStock = option.data.entity;
-        const units = stock.is_consumable ? pluralize(stock.product?.unit_type || 'unit', stock.quantity, true) : 'Ilimitado';
+        const units = stock.is_consumable ? pluralize(stock.variation?.product?.unit_type || 'unit', stock.quantity, true) : 'Ilimitado';
         return <div>
-          <code style={{fontSize:13}}>{stock.sku}</code> <Divider type={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
-          <small>{stock?.variation_name || stock?.product?.name}</small>
+          <code style={{fontSize:13}}>{stock.serial_number}</code> <Divider type={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
+          <small><code>{stock.variation?.sku}</code> <Divider type={'vertical'} /> {stock?.variation?.variation_name || stock?.variation?.product?.name}</small>
         </div>;
       }}
       mode={mode || undefined}

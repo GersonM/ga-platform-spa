@@ -110,7 +110,7 @@ const WarehouseActivityManager = () => {
   return (
     <ModuleContent>
       <ContentHeader
-        title={'Actividad'}
+        title={'Actividad del inventario'}
         loading={loading}
         onRefresh={() => setReload(!reload)}
         tools={<Space>

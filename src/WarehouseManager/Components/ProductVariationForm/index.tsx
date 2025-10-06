@@ -1,55 +1,40 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Button, Divider} from "antd";
+import {Col, Form, Input, InputNumber, Row, Select, Button, Divider, Image} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import {DefaultEditor} from "react-simple-wysiwyg";
 import axios from "axios";
-import dayjs from "dayjs";
 
-import type {MetadataField, StorageProduct, StorageStock} from "../../../Types/api.tsx";
+import type {MetadataField, StorageProduct, StorageProductVariation} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler";
 import ProductSelector from "../ProductSelector";
-import WarehouseSelector from "../WarehouseSelector";
-import MoneyInput from "../../../CommonUI/MoneyInput";
-import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
-import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
-import Config from "../../../Config.tsx";
 import FileUploader from "../../../FileManagement/Components/FileUploader";
 
 interface ProductVariationFormProps {
-  stock?: StorageStock;
+  variation?: StorageProductVariation;
   product?: StorageProduct;
   onComplete?: () => void;
 }
 
-const ProductVariationForm = ({product, stock, onComplete}: ProductVariationFormProps) => {
+const ProductVariationForm = ({product, variation, onComplete}: ProductVariationFormProps) => {
   const [form] = useForm();
-  const [currentCurrency, setCurrentCurrency] = useState<string>();
-  const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
   const [metadataFields, setMetadataFields] = useState<MetadataField[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (form) {
       form.resetFields();
     }
-  }, [stock, form]);
+  }, [variation, form]);
 
   useEffect(() => {
-    if (stock?.metadata) {
+    if (variation?.metadata) {
       try {
-        const parsedMetadata = typeof stock.metadata === 'string'
-          ? JSON.parse(stock.metadata)
-          : stock.metadata;
-
-        /*const fields = Object.entries(parsedMetadata || {})
-          .map(([key, value, code], index) => ({
-            key,
-            value: String(value),
-            code: code,
-            id: `field_${index}`
-          }));*/
-        console.log({parsedMetadata});
+        const parsedMetadata = typeof variation.metadata === 'string'
+          ? JSON.parse(variation.metadata)
+          : variation.metadata;
         if (Array.isArray(parsedMetadata)) {
           setMetadataFields(parsedMetadata);
         } else {
@@ -68,7 +53,7 @@ const ProductVariationForm = ({product, stock, onComplete}: ProductVariationForm
     } else {
       setMetadataFields([{key: '', value: '', id: 'field_0'}]);
     }
-  }, [stock]);
+  }, [variation]);
 
   const addField = () => {
     const newId = `field_${Date.now()}`;
@@ -99,46 +84,38 @@ const ProductVariationForm = ({product, stock, onComplete}: ProductVariationForm
   };
 
   const submit = (values: any) => {
-    const metadata = buildMetadataObject();
-
+    setLoading(true);
     const data = {
       ...values,
-      product_uuid: product ? product.uuid : values.product_uuid,
-      //metadata: JSON.stringify(metadata),
+      product_uuid: values.product_uuid ? values.product_uuid : product?.uuid,
     }
 
     axios
       .request({
-        url: stock ? `warehouses/variations/${stock.uuid}` : "warehouses/variations",
-        method: stock ? 'PUT' : 'POST',
+        url: variation ? `warehouses/variations/${variation.uuid}` : "warehouses/variations",
+        method: variation ? 'PUT' : 'POST',
         data
       })
       .then(() => {
-        form.resetFields();
+        setLoading(false);
         if (onComplete) {
           onComplete();
         }
       })
       .catch(err => {
+        setLoading(false);
         ErrorHandler.showNotification(err);
       });
   };
 
   return (
-    <Form form={form} layout="vertical" initialValues={{
-      ...stock,
-      expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
-    }} onFinish={submit}>
-      <h2>{stock ? 'Editar variación de' : 'Registrar variación de'} {product?.name}</h2>
+    <Form form={form} layout="vertical" initialValues={variation} onFinish={submit}>
+      <h2>{variation ? 'Editar variación de' : 'Registrar variación de'} {product?.name}</h2>
       <Row gutter={20}>
         <Col xs={12}>
           <Divider>Información general</Divider>
-          <Form.Item label="Producto" name={'product_uuid'}>
-            {product ?
-              <div>
-                {product.name} <small style={{marginTop: -4, display: 'block'}}>{product.code}</small>
-              </div>
-              : <ProductSelector/>}
+          <Form.Item label="Producto" name={'product_uuid'} initialValue={product?.uuid}>
+            <ProductSelector/>
           </Form.Item>
           <Row gutter={15}>
             <Col md={15} xs={13}>
@@ -171,10 +148,30 @@ const ProductVariationForm = ({product, stock, onComplete}: ProductVariationForm
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item label="Observaciones (opcional)" name={'description'}>
+          <Form.Item label="Descripción interna (opcional)" name={'description'}>
             <Input.TextArea/>
           </Form.Item>
-
+          <Form.Item label="Descripción publica corta (opcional)" name={'excerpt'}>
+            <Input.TextArea/>
+          </Form.Item>
+          <Form.Item label="Descripción pública (opcional)" name={'commercial_description'}>
+            <DefaultEditor style={{height: 130}}/>
+          </Form.Item>
+        </Col>
+        <Col xs={12}>
+          <Divider>Imagenes</Divider>
+          <Form.Item name={'file_cover_uuid'} label={'Portada'}>
+            <FileUploader showPreview
+                          imagePath={variation?.attachments?.length ? variation.attachments[0].thumbnail : undefined}/>
+          </Form.Item>
+          <Form.Item label={'Galería'}>
+            {variation?.attachments?.map((attachment: any) => (
+              <Image src={attachment.thumbnail} width={50}/>
+            ))}
+          </Form.Item>
+          <Form.Item name={'gallery'}>
+            <FileUploader multiple targetContainerUuid={variation?.container_uuid}/>
+          </Form.Item>
           <Divider>Avanzado</Divider>
           <Form.Item label="Metadata (Información adicional del stock)">
             <div style={{marginBottom: '16px'}}>
@@ -213,7 +210,6 @@ const ProductVariationForm = ({product, stock, onComplete}: ProductVariationForm
                   </Col>
                 </Row>
               ))}
-
               <Button
                 type="dashed"
                 onClick={addField}
@@ -231,20 +227,11 @@ const ProductVariationForm = ({product, stock, onComplete}: ProductVariationForm
             </small>
           </Form.Item>
         </Col>
-        <Col xs={12}>
-          <Divider>Imagenes</Divider>
-          <Form.Item name={'file_cover_uuid'} label={'Portada'}>
-            <FileUploader />
-          </Form.Item>
-          <Form.Item name={'gallery'} label={'Galería'}>
-            <FileUploader multiple />
-          </Form.Item>
-        </Col>
       </Row>
 
-      <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
-      {stock &&
-        <ActivityLogViewer id={stock?.uuid} entity={'storage_stock'}/>
+      <PrimaryButton loading={loading} block htmlType={'submit'} label={'Guardar'}/>
+      {variation &&
+        <ActivityLogViewer id={variation?.uuid} entity={'storage_product_variation'}/>
       }
     </Form>
   );

@@ -2,13 +2,14 @@ import {type CSSProperties, useEffect, useState} from 'react';
 import {Select} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import type {MoveLocation, StorageProduct} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import type {StorageProduct, StorageProductVariation} from '../../../Types/api';
 
-interface ProductSelectorProps {
+interface ProductVariationSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
+  product?: StorageProduct;
   disabled?: boolean;
   value?: any;
   style?: CSSProperties;
@@ -16,8 +17,8 @@ interface ProductSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorProps) => {
-  const [products, setProducts] = useState<StorageProduct[]>();
+const ProductVariationSelector = ({placeholder, mode, style, ...props}: ProductVariationSelectorProps) => {
+  const [variations, setVariations] = useState<StorageProductVariation[]>();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
@@ -34,13 +35,13 @@ const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorPr
     };
 
     axios
-      .get(`warehouses/products`, config)
+      .get(`warehouses/variations`, config)
       .then(response => {
         setLoading(false);
         if (response) {
-          setProducts(
-            response.data.data.map((item: MoveLocation) => {
-              return {value: item.uuid, label: `${item.name}`, entity: item};
+          setVariations(
+            response.data.data.map((item: StorageProductVariation) => {
+              return {value: item.uuid, label: `${item.variation_name}`, entity: item};
             }),
           );
         }
@@ -63,14 +64,14 @@ const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorPr
       filterOption={false}
       loading={loading}
       style={style ? style : {width: '100%'}}
-      options={products}
+      options={variations}
       mode={mode}
       optionRender={option => {
         return <div>
           {option.label}
           <br/>
           {/* @ts-ignore */}
-          <small>{option?.data.entity?.code}</small>
+          <small>{option?.data.entity?.product.name}</small>
         </div>;
       }
       }
@@ -78,4 +79,4 @@ const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorPr
   );
 };
 
-export default ProductSelector;
+export default ProductVariationSelector;
