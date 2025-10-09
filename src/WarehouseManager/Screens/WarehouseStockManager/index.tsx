@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TbPencil, TbPlus, TbRecycleOff, TbShredder} from "react-icons/tb";
-import {Divider, Form, Input, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
+import {TbPencil, TbRecycleOff, TbShredder} from "react-icons/tb";
+import {Drawer, Form, Input, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
 import dayjs from "dayjs";
 import pluralize from "pluralize";
 import axios from "axios";
@@ -12,7 +12,6 @@ import type {
 } from "../../../Types/api.tsx";
 import MoneyString from "../../../CommonUI/MoneyString";
 import IconButton from "../../../CommonUI/IconButton";
-import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
 import ModalView from "../../../CommonUI/ModalView";
@@ -25,6 +24,7 @@ import WarehouseSelector from "../../Components/WarehouseSelector";
 import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
 import CustomTag from "../../../CommonUI/CustomTag";
 import ProductVariationSelector from "../../Components/ProductVariationSelector";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -39,6 +39,7 @@ const WarehouseStockManager = () => {
   const [pageSize, setPageSize] = useState(20);
   const [stockStats, setStockStats] = useState<any>();
   const {user} = useContext(AuthContext);
+  const [openStockReport, setOpenStockReport] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -95,10 +96,10 @@ const WarehouseStockManager = () => {
 
   const columns: any[] = [
     {
-      title: 'N° Serie',
+      title: 'N° Serie / ID',
       dataIndex: 'serial_number',
       render: (serial_number: string) => {
-        return <code>{serial_number}</code>;
+        return <small><code>{serial_number}</code></small>;
       }
     },
     {
@@ -200,6 +201,7 @@ const WarehouseStockManager = () => {
         tools={<>
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
           <Progress percent={Math.round(percent)} style={{width: '200px'}}/>
+          <PrimaryButton label={'Exportar reporte'} onClick={() => setOpenStockReport(true)}/>
         </>}
       >
         <FilterForm onSubmit={values => setFilters(values)}>
@@ -228,6 +230,9 @@ const WarehouseStockManager = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
+      <Drawer open={openStockReport} title={'Filtros'} onClose={() => setOpenStockReport(false)}>
+
+      </Drawer>
       <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
              columns={columns} dataSource={productStock}/>
       {pagination && (
@@ -246,7 +251,7 @@ const WarehouseStockManager = () => {
       )}
       <ModalView
         open={openStockForm}
-        width={700}
+        width={900}
         onCancel={() => {
           setOpenStockForm(false);
           setSelectedStock(undefined);

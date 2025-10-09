@@ -122,15 +122,15 @@ export type Contract = {
   cart?: StorageContractCartItem[];
   invoices?: Invoice[];
   items?: ContractItem[];
-  totals?: {PEN: number, USD: number};
+  totals?: { PEN: number, USD: number };
   title: string;
   is_template?: boolean;
   template?: Contract;
   fk_template_uuid?: string;
   tracking_id?: number;
-  document_progress?:number;
-  items_required?:number;
-  items_completed?:number;
+  document_progress?: number;
+  items_required?: number;
+  items_completed?: number;
 };
 export type ContractItem = {
   uuid: string;
@@ -675,6 +675,27 @@ export type EntityActivity = {
   uuid: string;
 };
 
+export type EntityField = {
+  uuid: string;
+  type: string;
+  name: string;
+  code: string;
+  unit_type: string;
+  description: string;
+  group: string;
+  created_at: string;
+  entity?: any;
+  entity_type: string;
+};
+
+export type EntityFieldValue = {
+  uuid: string;
+  value: string;
+  entity?: any;
+  entity_type: string;
+  field: EntityField;
+};
+
 export type StorageProduct = {
   uuid: string;
   brand: string;
@@ -697,7 +718,7 @@ export type StorageContractCartItem = {
   uuid: string;
   quantity: number;
   stock?: StorageStock;
-  unit_amount?: number|null;
+  unit_amount?: number | null;
   amount_string?: string;
   created_at?: string;
 };
@@ -716,6 +737,7 @@ export type StorageProductVariation = {
   container_uuid?: string;
   fk_product_uuid: string;
   metadata?: any;
+  attributes?: EntityFieldValue[];
   commercial_description?: string;
   excerpt?: string;
   created_at: string;
@@ -739,6 +761,7 @@ export type StorageStock = {
   expiration_date?: string;
   status: string;
   updated_at: string;
+  attributes?: EntityFieldValue[];
   variation?: StorageProductVariation;
   warehouse?: StorageWarehouse;
   provider?: Provider;

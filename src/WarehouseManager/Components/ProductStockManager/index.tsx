@@ -96,9 +96,9 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       title: 'Portada',
       dataIndex: 'attachments',
       width: 90,
-      render: (attachments: ApiFile[]) => {
+      render: (attachments?: ApiFile[]) => {
         const cover = attachments?.filter(f => f.code == 'cover');
-        return cover.length ? <Image preview={false} src={cover[0].source} width={70}/> : <small>Sin imagen</small>;
+        return cover?.length ? <Image preview={false} src={cover[0].source} width={70}/> : <small>Sin imagen</small>;
       }
     },
     {

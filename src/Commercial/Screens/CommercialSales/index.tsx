@@ -167,8 +167,9 @@ const CommercialSales = () => {
     },
     {
       title: 'ID',
-      width: 120,
+      width: 180,
       dataIndex: 'title',
+      render: (tracking_id: string) => <small style={{lineBreak:'anywhere'}}><code>{tracking_id}</code></small>
     },
     {
       title: 'Documentos',
@@ -235,7 +236,7 @@ const CommercialSales = () => {
       align: 'right',
       render: (totals: any) =>
         <>
-          <MoneyString currency={'PEN'} value={totals?.PEN}/><br/>
+          <MoneyString currency={'PEN'} value={totals?.PEN}/>
           <MoneyString currency={'USD'} value={totals?.USD}/>
         </>,
     },

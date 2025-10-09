@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Button, Divider} from "antd";
+import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Button, Divider} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import axios from "axios";
@@ -8,13 +8,13 @@ import dayjs from "dayjs";
 import type {MetadataField, StorageProductVariation, StorageStock} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler";
-import ProductSelector from "../ProductSelector";
 import WarehouseSelector from "../WarehouseSelector";
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
 import Config from "../../../Config.tsx";
+import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -118,149 +118,165 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   };
 
   return (
-    <Form form={form} layout="vertical" initialValues={{
-      ...stock,
-      expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
-    }} onFinish={submit}>
+    <>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
-      <Row gutter={15}>
-        <Col md={8} xs={12}>
-          <Form.Item
-            label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
-            rules={[{required: true}]}>
-            <WarehouseSelector/>
-          </Form.Item>
-        </Col>
-        <Col md={16} xs={12}>
-          <Form.Item label="Proveedor" name={'provider_uuid'} rules={!stock ? [{required: true}] : undefined}>
-            <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={15}>
-        <Col md={9} xs={12}>
-          <Form.Item label="Número de serie" name={'serial_number'}>
-            <Input/>
-          </Form.Item>
-        </Col>
-        <Col md={15} xs={12}>
-          <Form.Item label="Fecha de vencimiento (opcional)" name={'expiration_date'}>
-            <DatePicker placeholder={'No caduca'} style={{width: '100%'}} format={Config.dateFormatUser}/>
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={15}>
-        <Col md={6}>
-          <Form.Item label="Moneda" name={'currency'}>
-            <CurrencySelector defaultValue={'PEN'} onChange={(value: string) => setCurrentCurrency(value)}/>
-          </Form.Item>
-        </Col>
-        <Col md={9}>
-          <Form.Item label="Costo" name={'cost_price'}>
-            <MoneyInput currency={currentCurrency || stock?.currency}/>
-          </Form.Item>
-        </Col>
-        <Col md={9}>
-          <Form.Item
-            label="Venta"
-            name={'sale_price'}
-            tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
-            <MoneyInput currency={currentCurrency || stock?.currency}/>
-          </Form.Item>
-          {stock &&
-            <Form.Item name={'update_sales'} valuePropName={'checked'}>
-              <Checkbox>Actualizar ventas con precio fijo</Checkbox>
-            </Form.Item>
-          }
-        </Col>
-      </Row>
-      <Form.Item label="Observaciones (opcional)" name={'observations'}>
-        <Input.TextArea/>
-      </Form.Item>
-      <Row gutter={15}>
-        <Col md={15}>
-          <Form.Item
-            name={'is_consumable'}
-            valuePropName={'checked'}>
-            <Checkbox onChange={(value) => setIsConsumable(value.target.checked)}>
-              Limitar stock
-              <small>Controlar la cantidad de productos disponibles</small>
-            </Checkbox>
-          </Form.Item>
-          <Button size={'small'} disabled block>Registrar números de serie</Button>
-        </Col>
-        <Col md={9}>
-          {isConsumable &&
-            <Form.Item label="Cantidad" name={'quantity'}>
-              <InputNumber style={{width: '100%'}} defaultValue={1}/>
-            </Form.Item>
-          }
-        </Col>
-      </Row>
-      <Form.Item label="Orden" name={'order'}>
-        <InputNumber/>
-      </Form.Item>
-      <Divider>Avanzado</Divider>
-      <Form.Item label="Metadata (Información adicional del stock)">
-        <div style={{marginBottom: '16px'}}>
-          {metadataFields?.map((field, index) => (
-            <Row key={index} gutter={8} style={{marginBottom: '8px'}}>
-              <Col span={4}>
-                <Input
-                  placeholder="Código"
-                  value={field.code}
-                  onChange={(e) => updateField(index, field.id, 'code', e.target.value)}
-                />
+      <Row gutter={[20, 20]}>
+        <Col xs={13}>
+          <Form form={form} layout="vertical" initialValues={{
+            ...stock,
+            expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
+          }} onFinish={submit}>
+            <Row gutter={15}>
+              <Col md={8} xs={12}>
+                <Form.Item
+                  label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
+                  rules={[{required: true}]}>
+                  <WarehouseSelector/>
+                </Form.Item>
               </Col>
-              <Col span={8}>
-                <Input
-                  placeholder="Campo (ej: Ubicacion)"
-                  value={field.key}
-                  onChange={(e) => updateField(index, field.id, 'key', e.target.value)}
-                />
-              </Col>
-              <Col span={10}>
-                <Input
-                  placeholder="Valor (ej: A1-B2)"
-                  value={field.value}
-                  onChange={(e) => updateField(index, field.id, 'value', e.target.value)}
-                />
-              </Col>
-              <Col span={2}>
-                <Button
-                  type="text"
-                  danger
-                  icon={<DeleteOutlined/>}
-                  onClick={() => removeField(field.id)}
-                  disabled={metadataFields.length === 1}
-                  style={{height: '32px'}}
-                />
+              <Col md={16} xs={12}>
+                <Form.Item label="Proveedor" name={'provider_uuid'} rules={!stock ? [{required: true}] : undefined}>
+                  <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
+                </Form.Item>
               </Col>
             </Row>
-          ))}
+            <Row gutter={15}>
+              <Col md={9} xs={12}>
+                <Form.Item label="Número de serie" name={'serial_number'}>
+                  <Input/>
+                </Form.Item>
+              </Col>
+              <Col md={15} xs={12}>
+                <Form.Item label="Fecha de vencimiento (opcional)" name={'expiration_date'}>
+                  <DatePicker placeholder={'No caduca'} style={{width: '100%'}} format={Config.dateFormatUser}/>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={15}>
+              <Col md={6}>
+                <Form.Item label="Moneda" name={'currency'}>
+                  <CurrencySelector defaultValue={'PEN'} onChange={(value: string) => setCurrentCurrency(value)}/>
+                </Form.Item>
+              </Col>
+              <Col md={9}>
+                <Form.Item label="Costo" name={'cost_price'}>
+                  <MoneyInput currency={currentCurrency || stock?.currency}/>
+                </Form.Item>
+              </Col>
+              <Col md={9}>
+                <Form.Item
+                  label="Venta"
+                  name={'sale_price'}
+                  tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
+                  <MoneyInput currency={currentCurrency || stock?.currency}/>
+                </Form.Item>
+                {stock &&
+                  <Form.Item name={'update_sales'} valuePropName={'checked'}>
+                    <Checkbox>Actualizar ventas con precio fijo</Checkbox>
+                  </Form.Item>
+                }
+              </Col>
+            </Row>
+            <Form.Item label="Observaciones (opcional)" name={'observations'}>
+              <Input.TextArea/>
+            </Form.Item>
+            <Row gutter={15}>
+              <Col md={15}>
+                <Form.Item
+                  name={'is_consumable'}
+                  valuePropName={'checked'}>
+                  <Checkbox onChange={(value) => setIsConsumable(value.target.checked)}>
+                    Limitar stock
+                    <small>Controlar la cantidad de productos disponibles</small>
+                  </Checkbox>
+                </Form.Item>
+              </Col>
+              <Col md={9}>
+                <Form.Item name={'quantity'}>
+                  <InputNumber addonBefore={'Cantidad'} style={{width: '100%'}}
+                               placeholder={isConsumable ? '1' : 'Sin límite'}/>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Form.Item label="Orden" name={'order'}>
+              <InputNumber/>
+            </Form.Item>
+            <Divider>Avanzado</Divider>
+            <Form.Item label="Metadata (Información adicional del stock)">
+              <div style={{marginBottom: '16px'}}>
+                {metadataFields?.map((field, index) => (
+                  <Row key={index} gutter={8} style={{marginBottom: '8px'}}>
+                    <Col span={4}>
+                      <Input
+                        placeholder="Código"
+                        value={field.code}
+                        onChange={(e) => updateField(index, field.id, 'code', e.target.value)}
+                      />
+                    </Col>
+                    <Col span={8}>
+                      <Input
+                        placeholder="Campo (ej: Ubicacion)"
+                        value={field.key}
+                        onChange={(e) => updateField(index, field.id, 'key', e.target.value)}
+                      />
+                    </Col>
+                    <Col span={10}>
+                      <Input
+                        placeholder="Valor (ej: A1-B2)"
+                        value={field.value}
+                        onChange={(e) => updateField(index, field.id, 'value', e.target.value)}
+                      />
+                    </Col>
+                    <Col span={2}>
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined/>}
+                        onClick={() => removeField(field.id)}
+                        disabled={metadataFields.length === 1}
+                        style={{height: '32px'}}
+                      />
+                    </Col>
+                  </Row>
+                ))}
 
-          <Button
-            type="dashed"
-            onClick={addField}
-            icon={<PlusOutlined/>}
-            style={{width: '100%', marginTop: '8px'}}
-          >
-            Agregar campo
-          </Button>
-        </div>
+                <Button
+                  type="dashed"
+                  onClick={addField}
+                  icon={<PlusOutlined/>}
+                  style={{width: '100%', marginTop: '8px'}}
+                >
+                  Agregar campo
+                </Button>
+              </div>
 
-        <small style={{color: '#a6a6a6', display: 'block', lineHeight: '1.4'}}>
-          <strong>Agrega información adicional específica de este stock.</strong>
-          <br/>
-          Campos sugeridos: ubicación, lote, proveedor ref, test realizado, condition, vencimiento proximo.
-        </small>
-      </Form.Item>
+              <small style={{color: '#a6a6a6', display: 'block', lineHeight: '1.4'}}>
+                <strong>Agrega información adicional específica de este stock.</strong>
+                <br/>
+                Campos sugeridos: ubicación, lote, proveedor ref, test realizado, condition, vencimiento proximo.
+              </small>
+            </Form.Item>
 
-      <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
-      {stock &&
-        <ActivityLogViewer id={stock?.uuid} entity={'storage_stock'}/>
-      }
-    </Form>
+            <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
+            {stock &&
+              <ActivityLogViewer id={stock?.uuid} entity={'storage_stock'}/>
+            }
+          </Form>
+        </Col>
+        <Col xs={11}>
+          <Divider orientation={'left'}>Información adicional</Divider>
+          <div style={{marginBottom: '16px'}}>
+            {stock?.attributes &&
+              <EntityFieldsEditor
+                fieldValues={stock?.attributes} entity={stock}
+                onChange={(values) => {
+                  console.log(values);
+                }}/>
+            }
+          </div>
+        </Col>
+      </Row>
+    </>
   );
 };
 

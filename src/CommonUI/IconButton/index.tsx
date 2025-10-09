@@ -11,6 +11,7 @@ interface IconButtonProps {
   small?: boolean;
   title?: string;
   disabled?: boolean;
+  htmlType?: 'button' | 'submit';
   type?: 'text' | 'link' | 'default' | 'dashed' | 'primary';
   onClick?: () => void;
 }
