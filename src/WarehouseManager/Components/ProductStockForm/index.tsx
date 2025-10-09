@@ -136,7 +136,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               </Col>
               <Col md={16} xs={12}>
                 <Form.Item label="Proveedor" name={'provider_uuid'} rules={!stock ? [{required: true}] : undefined}>
-                  <CompanySelector filter={'providers'} placeholder={stock?.provider?.company?.name}/>
+                  <CompanySelector style={{maxWidth:190}} filter={'providers'} placeholder={stock?.provider?.company?.name}/>
                 </Form.Item>
               </Col>
             </Row>

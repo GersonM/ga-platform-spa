@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import type {EntityFieldValue} from "../../../Types/api.tsx";
-import {Button, Col, Input, Row, Space} from "antd";
-import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
-import axios from "axios";
-import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import IconButton from "../../../CommonUI/IconButton";
-import {TbCheck, TbTrash} from "react-icons/tb";
+import {Button} from "antd";
+import {PlusOutlined} from "@ant-design/icons";
 import EntityFieldValueForm from "../EntityFieldValueForm";
 
 interface EntityFieldsEditorProps {
@@ -53,12 +49,6 @@ const EntityFieldsEditor = ({entity, fieldValues, onChange, onComplete}: EntityF
       >
         Agregar campo
       </Button>
-      <small>
-
-      <pre>
-        {JSON.stringify(metadata, null, 2)}
-      </pre>
-      </small>
     </div>
   );
 };
