@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import type {EntityFieldValue} from "../../../Types/api.tsx";
 import {Button} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
+
+import type {EntityFieldValue} from "../../../Types/api.tsx";
 import EntityFieldValueForm from "../EntityFieldValueForm";
 
 interface EntityFieldsEditorProps {
@@ -32,11 +33,12 @@ const EntityFieldsEditor = ({entity, fieldValues, onChange, onComplete}: EntityF
           fieldValue={fieldValue}
           onRemove={() => {
             const newMetadata = [...metadata];
-            setMetadata(newMetadata.splice(index, 1));
+            const deleted = newMetadata.splice(index, 1);
           }}
-          onChange={(key, value) => {
+          onComplete={onComplete}
+          onChange={(value) => {
             const newMetadata = [...metadata];
-            newMetadata[index][key] = value;
+            newMetadata[index] = value;
             setMetadata(newMetadata);
           }}
         />
