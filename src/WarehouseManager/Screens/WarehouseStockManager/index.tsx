@@ -205,8 +205,8 @@ const WarehouseStockManager = () => {
         </>}
       >
         <FilterForm onSubmit={values => setFilters(values)}>
-          <Form.Item label="Nombre" name={'search'}>
-            <Input/>
+          <Form.Item label="Buscar" name={'search'}>
+            <Input placeholder={'Buscar por variación o producto'}/>
           </Form.Item>
           <Form.Item label="Producto" name={'variation_uuid'}>
             <ProductVariationSelector/>
@@ -214,7 +214,7 @@ const WarehouseStockManager = () => {
           <Form.Item label="Estado" name={'status'}>
             <Select
               allowClear
-              placeholder={'Filtrar por estado'}
+              placeholder={'No vendidos'}
               style={{width: 200}}
               onChange={value => {
                 setStockState(value);
