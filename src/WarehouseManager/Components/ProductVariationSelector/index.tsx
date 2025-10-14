@@ -17,12 +17,11 @@ interface ProductVariationSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProductVariationSelector = ({placeholder, mode, style, ...props}: ProductVariationSelectorProps) => {
+const ProductVariationSelector = ({placeholder, mode, style, product, ...props}: ProductVariationSelectorProps) => {
   const [variations, setVariations] = useState<StorageProductVariation[]>();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -31,6 +30,7 @@ const ProductVariationSelector = ({placeholder, mode, style, ...props}: ProductV
       cancelToken: cancelTokenSource.token,
       params: {
         search: lastSearchText,
+        product_uuid: product?.uuid,
       },
     };
 
@@ -41,7 +41,7 @@ const ProductVariationSelector = ({placeholder, mode, style, ...props}: ProductV
         if (response) {
           setVariations(
             response.data.data.map((item: StorageProductVariation) => {
-              return {value: item.uuid, label: `${item.variation_name}`, entity: item};
+              return {value: item.uuid, label: `${item.variation_name || item.product?.name}`, entity: item};
             }),
           );
         }
@@ -52,7 +52,7 @@ const ProductVariationSelector = ({placeholder, mode, style, ...props}: ProductV
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, lastSearchText]);
+  }, [lastSearchText, product]);
 
   return (
     <Select

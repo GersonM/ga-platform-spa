@@ -27,7 +27,7 @@ import type {
   Invoice,
   Profile,
   ResponsePagination,
-  StorageContractCartItem,
+  StorageContractCartItem, StorageProduct, StorageProductVariation,
 } from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import MoneyString from '../../../CommonUI/MoneyString';
@@ -42,6 +42,9 @@ import './styles.less';
 import {LuCircleChevronRight} from "react-icons/lu";
 import {TbCancel, TbTrash} from "react-icons/tb";
 import WarehouseSelector from "../../../WarehouseManager/Components/WarehouseSelector";
+import StockSelector from "../../../WarehouseManager/Components/StockSelector";
+import ProductSelector from "../../../WarehouseManager/Components/ProductSelector";
+import ProductVariationSelector from "../../../WarehouseManager/Components/ProductVariationSelector";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -56,6 +59,8 @@ const CommercialSales = () => {
   const [filters, setFilters] = useState<any>();
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
   const [contractStats, setContractStats] = useState<any>();
+  const [filterProduct, setFilterProduct] = useState<StorageProduct>();
+  const [filterVariation, setFilterVariation] = useState<StorageProductVariation>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -170,7 +175,7 @@ const CommercialSales = () => {
       title: 'ID',
       width: 180,
       dataIndex: 'title',
-      render: (tracking_id: string) => <small style={{lineBreak:'anywhere'}}><code>{tracking_id}</code></small>
+      render: (tracking_id: string) => <small style={{lineBreak: 'anywhere'}}><code>{tracking_id}</code></small>
     },
     {
       title: 'Documentos',
@@ -284,7 +289,7 @@ const CommercialSales = () => {
         return <Space>
           {(contract.status == 'cancelled' || contract.status == 'proposal') &&
             <Popconfirm title={'¿Seguro que quieres eliminar esta propuesta?'} onConfirm={() => deleteContract(uuid)}>
-              <IconButton icon={contract.cancelled_at ? <TbTrash/> : <TbCancel />} danger small/>
+              <IconButton icon={contract.cancelled_at ? <TbTrash/> : <TbCancel/>} danger small/>
             </Popconfirm>
           }
           <IconButton icon={<LuCircleChevronRight/>} small onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>
@@ -318,8 +323,18 @@ const CommercialSales = () => {
             setFilters(values);
           }}
           additionalChildren={<>
-            <Form.Item label={'Almacen'} name={'warehouse_uuid'}>
-              <WarehouseSelector />
+            <Form.Item layout={'vertical'} label={'Almacen'} name={'warehouse_uuid'}>
+              <WarehouseSelector/>
+            </Form.Item>
+            <Form.Item layout={'vertical'} label={'Producto'} name={'product_uuid'}>
+              <ProductSelector onChange={(_v, option) => setFilterProduct(option.entity)}/>
+            </Form.Item>
+            <Form.Item layout={'vertical'} label={'Variación'} name={'variation_uuid'}>
+              <ProductVariationSelector product={filterProduct}
+                                        onChange={(_v, option) => setFilterVariation(option.entity)}/>
+            </Form.Item>
+            <Form.Item layout={'vertical'} label={'Stock'} name={'stock_uuid'}>
+              <StockSelector product={filterProduct} variation={filterVariation} status={'sold'}/>
             </Form.Item>
           </>}
           onInitialValues={values => setFilters(values)}

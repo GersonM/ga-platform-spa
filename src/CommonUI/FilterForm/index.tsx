@@ -19,7 +19,15 @@ interface FilterFormProps {
 
 let timer: any = null;
 
-const FilterForm = ({children, additionalChildren, onInitialValues, onSubmit, liveUpdate = true, updateUrl = true}: FilterFormProps) => {
+const FilterForm = (
+  {
+    children,
+    additionalChildren,
+    onInitialValues,
+    onSubmit,
+    liveUpdate = true,
+    updateUrl = true
+  }: FilterFormProps) => {
   const [searchParams] = useSearchParams();
   const [initialValues, setInitialValues] = useState<any>();
   const [loading, setLoading] = useState(false);
@@ -89,18 +97,26 @@ const FilterForm = ({children, additionalChildren, onInitialValues, onSubmit, li
             onFinish={onSubmitHandler}
             layout={'inline'}>
             {children}
-            <Drawer
-              title={'Filtros avanzados'}
-              open={openMoreFilters} onClose={() => setOpenMoreFilters(false)}>
-              {additionalChildren}
-            </Drawer>
+            {additionalChildren &&
+              <Drawer
+                title={'Filtros avanzados'}
+                className={'additional-fields'}
+                open={openMoreFilters} onClose={() => setOpenMoreFilters(false)}>
+                {additionalChildren}
+                <PrimaryButton
+                  className={'primary-button'} block loading={loading} icon={<TbFilter/>} label={'Aplica filtro'}
+                  htmlType={'submit'}/>
+              </Drawer>
+            }
             <Space>
-
-            <PrimaryButton className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'}
-                           htmlType={'submit'}/>
-            <Button type={"link"} onClick={() => setOpenMoreFilters(true)}>
-              Más filtros
-            </Button>
+              <PrimaryButton
+                className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'}
+                htmlType={'submit'}/>
+              {additionalChildren &&
+                <Button type={"link"} onClick={() => setOpenMoreFilters(true)}>
+                  Más filtros
+                </Button>
+              }
             </Space>
           </Form>
         </div>

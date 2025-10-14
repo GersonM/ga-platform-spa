@@ -4,13 +4,15 @@ import axios from 'axios';
 import {Divider, Select, Tag} from 'antd';
 import pluralize from 'pluralize';
 
-import type {StorageStock} from '../../../Types/api';
+import type {StorageProduct, StorageProductVariation, StorageStock} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import MoneyString from '../../../CommonUI/MoneyString';
 
 interface ProductSelectorProps {
   placeholder?: string;
   currency?: string;
+  product?: StorageProduct;
+  variation?: StorageProductVariation;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
@@ -18,10 +20,11 @@ interface ProductSelectorProps {
   style?: any;
   value?: any;
   size?: 'small' | 'large';
+  status?: 'sold' | 'available' | 'reserved';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const StockSelector = ({placeholder, currency, mode, refresh, ...props}: ProductSelectorProps) => {
+const StockSelector = ({placeholder, currency, mode, refresh, product, status = 'available', variation, ...props}: ProductSelectorProps) => {
   const [stock, setStock] = useState<StorageStock[]>([]);
   const [loading, setLoading] = useState(false);
   const [stockSearch, setStockSearch] = useState<string>();
@@ -32,7 +35,13 @@ const StockSelector = ({placeholder, currency, mode, refresh, ...props}: Product
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {search: lastSearchText},
+      params: {
+        page:1,
+        search: lastSearchText,
+        product_uuid: product?.uuid,
+        variation_uuid: variation?.uuid,
+        status: status
+      },
     };
 
     axios
@@ -45,7 +54,7 @@ const StockSelector = ({placeholder, currency, mode, refresh, ...props}: Product
               .data
               .filter((item: StorageStock) => !currency || item.currency === currency)
               .map((item: StorageStock) => {
-              let disabled = item.status != 'available';
+              let disabled = status && item.status != status;
               if(currency != null) {
                 disabled = currency != item.currency
               }
