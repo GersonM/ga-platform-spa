@@ -6,7 +6,7 @@ import pluralize from "pluralize";
 import axios from "axios";
 
 import type {
-  ResponsePagination,
+  ResponsePagination, StorageProduct, StorageProductVariation,
   StorageStock,
   StorageWarehouse
 } from "../../../Types/api.tsx";
@@ -25,6 +25,8 @@ import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
 import CustomTag from "../../../CommonUI/CustomTag";
 import ProductVariationSelector from "../../Components/ProductVariationSelector";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ProductSelector from "../../Components/ProductSelector";
+import StockSelector from "../../Components/StockSelector";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -40,6 +42,9 @@ const WarehouseStockManager = () => {
   const [stockStats, setStockStats] = useState<any>();
   const {user} = useContext(AuthContext);
   const [openStockReport, setOpenStockReport] = useState(false);
+  const [filterWarehouse, setFilterWarehouse] = useState<StorageWarehouse>();
+  const [filterProduct, setFilterProduct] = useState<StorageProduct>();
+  const [filterVariation, setFilterVariation] = useState<StorageProductVariation>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -204,12 +209,28 @@ const WarehouseStockManager = () => {
           <PrimaryButton label={'Exportar reporte'} onClick={() => setOpenStockReport(true)}/>
         </>}
       >
-        <FilterForm onSubmit={values => setFilters(values)}>
+        <FilterForm
+          onSubmit={values => setFilters(values)}
+          additionalChildren={
+            <>
+              <Form.Item layout={'vertical'} label={'Almacen'} name={'warehouse_uuid'}>
+                <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
+              </Form.Item>
+              <Form.Item layout={'vertical'} label={'Producto'} name={'product_uuid'}>
+                <ProductSelector warehouse={filterWarehouse} onChange={(_v, option) => setFilterProduct(option.entity)}/>
+              </Form.Item>
+              <Form.Item layout={'vertical'} label={'Variación'} name={'variation_uuid'}>
+                <ProductVariationSelector product={filterProduct}
+                                          onChange={(_v, option) => setFilterVariation(option.entity)}/>
+              </Form.Item>
+              <Form.Item layout={'vertical'} label={'Stock'} name={'stock_uuid'}>
+                <StockSelector product={filterProduct} variation={filterVariation} status={'sold'}/>
+              </Form.Item>
+            </>
+          }
+        >
           <Form.Item label="Buscar" name={'search'}>
             <Input placeholder={'Buscar por variación o producto'}/>
-          </Form.Item>
-          <Form.Item label="Producto" name={'variation_uuid'}>
-            <ProductVariationSelector/>
           </Form.Item>
           <Form.Item label="Estado" name={'status'}>
             <Select
@@ -223,10 +244,8 @@ const WarehouseStockManager = () => {
               {label: 'Disponible', value: 'available'},
               {label: 'Reservados', value: 'reserved'},
               {label: 'Dañados', value: 'damaged'},
+              {label: 'Todos', value: 'all'},
             ]}/>
-          </Form.Item>
-          <Form.Item label={'Almacén'} name={'storage_uuid'}>
-            <WarehouseSelector/>
           </Form.Item>
         </FilterForm>
       </ContentHeader>

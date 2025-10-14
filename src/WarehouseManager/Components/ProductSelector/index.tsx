@@ -2,7 +2,7 @@ import {type CSSProperties, useEffect, useState} from 'react';
 import {Select} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
-import type {MoveLocation, StorageProduct} from '../../../Types/api';
+import type {MoveLocation, StorageProduct, StorageWarehouse} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
 interface ProductSelectorProps {
@@ -10,18 +10,18 @@ interface ProductSelectorProps {
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
   disabled?: boolean;
+  warehouse?: StorageWarehouse;
   value?: any;
   style?: CSSProperties;
   size?: 'small' | 'large';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorProps) => {
+const ProductSelector = ({placeholder, mode, warehouse, style, ...props}: ProductSelectorProps) => {
   const [products, setProducts] = useState<StorageProduct[]>();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const lastSearchText = useDebounce(name, 300);
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -30,6 +30,7 @@ const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorPr
       cancelToken: cancelTokenSource.token,
       params: {
         search: lastSearchText,
+        warehouse_uuid: warehouse,
       },
     };
 
@@ -51,7 +52,7 @@ const ProductSelector = ({placeholder, mode, style, ...props}: ProductSelectorPr
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, lastSearchText]);
+  }, [lastSearchText, warehouse]);
 
   return (
     <Select
