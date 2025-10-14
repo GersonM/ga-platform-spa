@@ -48,7 +48,7 @@ const InvoiceItemForm = ({
   return (
     <Form form={form} initialValues={invoiceItem} onFinish={submitForm} layout={'vertical'}>
       <Form.Item name={'concept'} label={'Concepto'}>
-        <Input placeholder={selectedStock?.product?.name}/>
+        <Input placeholder={selectedStock?.variation?.product?.name}/>
       </Form.Item>
       <Row gutter={20}>
         <Col sm={11}>

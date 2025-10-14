@@ -41,6 +41,7 @@ import StorageStockChip from "../../Components/StorageStockChip";
 import './styles.less';
 import {LuCircleChevronRight} from "react-icons/lu";
 import {TbCancel, TbTrash} from "react-icons/tb";
+import WarehouseSelector from "../../../WarehouseManager/Components/WarehouseSelector";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -316,6 +317,11 @@ const CommercialSales = () => {
           onSubmit={values => {
             setFilters(values);
           }}
+          additionalChildren={<>
+            <Form.Item label={'Almacen'} name={'warehouse_uuid'}>
+              <WarehouseSelector />
+            </Form.Item>
+          </>}
           onInitialValues={values => setFilters(values)}
         >
           <Form.Item name={'search'} label={'Buscar'}>

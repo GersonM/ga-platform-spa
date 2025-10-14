@@ -14,7 +14,7 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
   return (
     <div>
       <CommercialContractForm contract={contract} onComplete={onChange} />
-      <Divider />
+      <Divider>Detalle de productos</Divider>
       {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
     </div>
   );

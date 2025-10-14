@@ -3,13 +3,14 @@ import {useSearchParams} from 'react-router-dom';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCaretDown, PiCaretUp} from 'react-icons/pi';
 import {TbFilter} from "react-icons/tb";
-import {Button, Form} from 'antd';
+import {Button, Drawer, Form, Space} from 'antd';
 
 import PrimaryButton from '../PrimaryButton';
 import './styles.less';
 
 interface FilterFormProps {
   children?: ReactNode;
+  additionalChildren?: ReactNode;
   onInitialValues?: (values: any) => void;
   onSubmit?: (values: any) => void;
   liveUpdate?: boolean;
@@ -18,12 +19,13 @@ interface FilterFormProps {
 
 let timer: any = null;
 
-const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true, updateUrl = true}: FilterFormProps) => {
+const FilterForm = ({children, additionalChildren, onInitialValues, onSubmit, liveUpdate = true, updateUrl = true}: FilterFormProps) => {
   const [searchParams] = useSearchParams();
   const [initialValues, setInitialValues] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
   const [open, setOpen] = useState(true);
+  const [openMoreFilters, setOpenMoreFilters] = useState(false);
 
   useEffect(() => {
     if (searchParams) {
@@ -87,8 +89,19 @@ const FilterForm = ({children, onInitialValues, onSubmit, liveUpdate = true, upd
             onFinish={onSubmitHandler}
             layout={'inline'}>
             {children}
+            <Drawer
+              title={'Filtros avanzados'}
+              open={openMoreFilters} onClose={() => setOpenMoreFilters(false)}>
+              {additionalChildren}
+            </Drawer>
+            <Space>
+
             <PrimaryButton className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'}
                            htmlType={'submit'}/>
+            <Button type={"link"} onClick={() => setOpenMoreFilters(true)}>
+              Más filtros
+            </Button>
+            </Space>
           </Form>
         </div>
       )}

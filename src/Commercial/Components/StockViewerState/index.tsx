@@ -23,17 +23,17 @@ const StockViewerState = ({stock}: StockViewerStateProps) => {
   }
 
   const itemsProduct: DescriptionsProps['items'] = [
-    {key: '10', label: 'Área', children: stock?.product?.metadata?.area + ' m2'},
+    {key: '10', label: 'Área', children: stock?.variation?.metadata?.area + ' m2'},
     {
       key: '11',
       label: 'Módulo',
-      children: stock?.product?.metadata?.module ? stock?.product?.metadata?.module + ' m2' : 'Sin módulo',
+      children: stock?.variation?.metadata?.module ? stock?.variation?.metadata?.module + ' m2' : 'Sin módulo',
     },
-    {key: '12', label: 'Frente', children: stock?.product?.metadata?.front + 'm'},
-    {key: '13', label: 'Izquierda', children: stock?.product?.metadata?.left + 'm'},
-    {key: '14', label: 'Derecha', children: stock?.product?.metadata?.right + 'm'},
-    {key: '15', label: 'Fondo', children: <p>{stock?.product?.metadata?.back} m</p>},
-    {key: '16', label: 'Habitaciones', children: <p>{stock?.product?.metadata?.rooms}</p>},
+    {key: '12', label: 'Frente', children: stock?.variation?.metadata?.front + 'm'},
+    {key: '13', label: 'Izquierda', children: stock?.variation?.metadata?.left + 'm'},
+    {key: '14', label: 'Derecha', children: stock?.variation?.metadata?.right + 'm'},
+    {key: '15', label: 'Fondo', children: <p>{stock?.variation?.metadata?.back} m</p>},
+    {key: '16', label: 'Habitaciones', children: <p>{stock?.variation?.metadata?.rooms}</p>},
   ];
   return (
     <div>

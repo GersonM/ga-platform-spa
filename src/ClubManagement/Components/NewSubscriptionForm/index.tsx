@@ -232,7 +232,7 @@ const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) =
                 renderItem={(cartItem) => {
                   return <List.Item>
                     <List.Item.Meta
-                      title={cartItem.stock?.variation_name || cartItem.stock?.product?.name}
+                      title={cartItem.stock?.variation?.variation_name || cartItem.stock?.variation?.product?.name}
                       description={<Tag bordered={false} color={'blue'}>{cartItem.stock?.sku}</Tag>}
                     />
                     <Space>
