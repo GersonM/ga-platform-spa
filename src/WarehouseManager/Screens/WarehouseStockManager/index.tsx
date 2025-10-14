@@ -187,6 +187,19 @@ const WarehouseStockManager = () => {
     }
   ]
 
+  const getStockReport = () => {
+    axios.get("/warehouses/stock/report")
+    .then(response=>{
+      console.log("salio bien");
+      
+    })
+    .catch(response=>{
+      console.log("error");
+    });    
+  }
+
+
+
   const percent = stockStats ? (stockStats.sold / stockStats.total) * 100 : 0;
 
   return (
@@ -201,7 +214,7 @@ const WarehouseStockManager = () => {
         tools={<>
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
           <Progress percent={Math.round(percent)} style={{width: '200px'}}/>
-          <PrimaryButton label={'Exportar reporte'} onClick={() => setOpenStockReport(true)}/>
+          <PrimaryButton label={'Exportar reporte'} onClick={getStockReport}/>
         </>}
       >
         <FilterForm onSubmit={values => setFilters(values)}>
