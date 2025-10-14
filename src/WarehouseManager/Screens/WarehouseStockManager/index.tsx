@@ -45,6 +45,9 @@ const WarehouseStockManager = () => {
   const [filterWarehouse, setFilterWarehouse] = useState<StorageWarehouse>();
   const [filterProduct, setFilterProduct] = useState<StorageProduct>();
   const [filterVariation, setFilterVariation] = useState<StorageProductVariation>();
+  const [selectedRows, setSelectedRows] = useState<string[]>();
+  const [downloadingReport, setDownloadingReport] = useState(false);
+  const [tempURL, setTempURL] = useState<string>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -193,23 +196,27 @@ const WarehouseStockManager = () => {
   ]
 
   const getStockReport = () => {
-    axios.get("/warehouses/stock/report")
-    .then(response=>{      
-      console.log(response);
-      /*
-       if (response) {
-          setProductStock(response.data.data);
-          setPagination(response.data.meta);
-        }
-          */
-      
+    setDownloadingReport(true);
+    axios({
+      url: "/warehouses/stock/report",
+      method: 'GET',
+      params: {
+        selected_stock: selectedRows,
+      },
+      responseType: 'blob',
     })
-    .catch(response=>{
-      console.log("error");
-    });    
-  }
-
-
+      .then(response => {
+        setDownloadingReport(false);
+        if (response) {
+          const url = window.URL.createObjectURL(response.data);
+          setTempURL(url);
+        }
+      })
+      .catch(e => {
+        setDownloadingReport(false);
+        ErrorHandler.showNotification(e);
+      });
+  };
 
   const percent = stockStats ? (stockStats.sold / stockStats.total) * 100 : 0;
 
@@ -225,14 +232,9 @@ const WarehouseStockManager = () => {
         tools={<>
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
           <Progress percent={Math.round(percent)} style={{width: '200px'}}/>
-          <PrimaryButton label={'Exportar reporte'} onClick={getStockReport}/>
+          <PrimaryButton disabled={!selectedRows?.length} loading={downloadingReport} label={'Generar reporte'} onClick={getStockReport}/>
         </>}
       >
-<<<<<<< HEAD
-        <FilterForm onSubmit={values => setFilters(values)}>
-          <Form.Item label="Nombre" name={'search'}>
-            <Input/>
-=======
         <FilterForm
           onSubmit={values => setFilters(values)}
           additionalChildren={
@@ -241,7 +243,8 @@ const WarehouseStockManager = () => {
                 <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
               </Form.Item>
               <Form.Item layout={'vertical'} label={'Producto'} name={'product_uuid'}>
-                <ProductSelector warehouse={filterWarehouse} onChange={(_v, option) => setFilterProduct(option.entity)}/>
+                <ProductSelector warehouse={filterWarehouse}
+                                 onChange={(_v, option) => setFilterProduct(option.entity)}/>
               </Form.Item>
               <Form.Item layout={'vertical'} label={'Variación'} name={'variation_uuid'}>
                 <ProductVariationSelector product={filterProduct}
@@ -255,7 +258,6 @@ const WarehouseStockManager = () => {
         >
           <Form.Item label="Buscar" name={'search'}>
             <Input placeholder={'Buscar por variación o producto'}/>
->>>>>>> de47a1c9de0e27006f892ab58a1534c328bd4d23
           </Form.Item>
           <Form.Item label="Estado" name={'status'}>
             <Select
@@ -277,8 +279,14 @@ const WarehouseStockManager = () => {
       <Drawer open={openStockReport} title={'Filtros'} onClose={() => setOpenStockReport(false)}>
 
       </Drawer>
-      <Table pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
-             columns={columns} dataSource={productStock}/>
+      <Table
+        rowSelection={{
+          onChange: (rows: any[]) => {
+            setSelectedRows(rows);
+          }
+        }}
+        pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
+        columns={columns} dataSource={productStock}/>
       {pagination && (
         <Pagination
           style={{marginTop: 15}}
@@ -305,6 +313,15 @@ const WarehouseStockManager = () => {
           setOpenStockForm(false);
           setSelectedStock(undefined);
         }}/>
+      </ModalView>
+      <ModalView
+        width={1200}
+        title={'Proforma'}
+        open={!!tempURL}
+        onCancel={() => {
+          setTempURL(undefined);
+        }}>
+        {tempURL && <iframe src={tempURL} height={600} width={'100%'} style={{border: 0}}></iframe>}
       </ModalView>
     </ModuleContent>
   );
