@@ -189,8 +189,14 @@ const WarehouseStockManager = () => {
 
   const getStockReport = () => {
     axios.get("/warehouses/stock/report")
-    .then(response=>{
-      console.log("salio bien");
+    .then(response=>{      
+      console.log(response);
+      /*
+       if (response) {
+          setProductStock(response.data.data);
+          setPagination(response.data.meta);
+        }
+          */
       
     })
     .catch(response=>{
@@ -218,8 +224,8 @@ const WarehouseStockManager = () => {
         </>}
       >
         <FilterForm onSubmit={values => setFilters(values)}>
-          <Form.Item label="Buscar" name={'search'}>
-            <Input placeholder={'Buscar por variación o producto'}/>
+          <Form.Item label="Nombre" name={'search'}>
+            <Input/>
           </Form.Item>
           <Form.Item label="Producto" name={'variation_uuid'}>
             <ProductVariationSelector/>
@@ -227,7 +233,7 @@ const WarehouseStockManager = () => {
           <Form.Item label="Estado" name={'status'}>
             <Select
               allowClear
-              placeholder={'No vendidos'}
+              placeholder={'Filtrar por estado'}
               style={{width: 200}}
               onChange={value => {
                 setStockState(value);
