@@ -38,7 +38,7 @@ import {
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
   TbListCheck, TbMapPinBolt, TbMessageUser,
   TbPackage, TbPackageImport, TbPercentage,
-  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket,
+  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUsersGroup,
 } from 'react-icons/tb';
 import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
 import {FaChalkboardTeacher} from 'react-icons/fa';
@@ -193,7 +193,8 @@ const Navigation = () => {
                 <NavItem icon={<TbShoppingCartUp/>} label={'Ventas'} path={'/commercial/sales'}/>
                 <NavItem icon={<TbShoppingCartDown/>} label={'Compras'} path={'/commercial/purchases'}/>
                 <NavItem icon={<TbContract/>} label={'Plantillas de contrato'} path={'/commercial/contract-templates'}/>
-                <NavItem icon={<TbPercentage/>} label={'Comisiones'} path={'/commercial/comissions'}/>
+                <NavItem icon={<TbUsersGroup/>} label={'Vendedores'} path={'/commercial/sellers'}/>
+                <NavItem icon={<TbPercentage/>} label={'Comisiones'} path={'/commercial/quotes'}/>
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>

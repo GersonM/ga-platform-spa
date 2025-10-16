@@ -171,13 +171,14 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                   tooltip={'Stock sin precio no podrá ser vendido, para vender gratis poner 0'}>
                   <MoneyInput currency={currentCurrency || stock?.currency}/>
                 </Form.Item>
-                {stock &&
-                  <Form.Item name={'update_sales'} valuePropName={'checked'}>
-                    <Checkbox>Actualizar ventas con precio fijo</Checkbox>
-                  </Form.Item>
-                }
               </Col>
             </Row>
+            <Form.Item name={'has_commissions'}>
+              <Checkbox>
+                Habilitar comisiones <br/>
+                <small>Los porcentajes de las comisiones se ajustan según la categoría del venedor</small>
+              </Checkbox>
+            </Form.Item>
             <Form.Item label="Observaciones (opcional)" name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
@@ -203,6 +204,11 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <InputNumber/>
             </Form.Item>
             <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
+            {stock &&
+              <Form.Item name={'update_sales'} valuePropName={'checked'}>
+                <Checkbox>Actualizar ventas con precio fijo</Checkbox>
+              </Form.Item>
+            }
             {stock &&
               <ActivityLogViewer id={stock?.uuid} entity={'storage_stock'}/>
             }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Form, Input, InputNumber, Row, Select, Button, Divider, Image} from "antd";
+import {Col, Form, Input, InputNumber, Row, Select, Button, Divider, Image, Switch, Checkbox} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {DefaultEditor} from "react-simple-wysiwyg";
@@ -173,6 +173,12 @@ const ProductVariationForm = ({product, variation, onComplete}: ProductVariation
             <FileUploader multiple targetContainerUuid={variation?.container_uuid}/>
           </Form.Item>
           <Divider>Avanzado</Divider>
+          <Form.Item name={'has_commissions'}>
+            <Checkbox>
+              Habilitar comisiones <br/>
+              <small>Los porcentajes de las comisiones se ajustan según la categoría del venedor</small>
+            </Checkbox>
+          </Form.Item>
           <Form.Item label="Metadata (Información adicional del stock)">
             <div style={{marginBottom: '16px'}}>
               {metadataFields?.map((field, index) => (

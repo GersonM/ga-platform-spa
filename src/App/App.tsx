@@ -7,6 +7,7 @@ import './App.less';
 import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
+import CommercialSeller from "../Commercial/Screens/CommercialSeller";
 
 const PaymentsManager = lazy(() => import("../PaymentManagement/Screens/PaymentsManager"));
 const CompaniesManagement = lazy(() => import("../HRManagement/Screens/CompaniesManagement"));
@@ -196,6 +197,7 @@ const App = () => {
           <Route path={'sales'} element={<CommercialSales/>}/>
           <Route path={'contracts/:contract'} element={<CommercialContractDetail/>}/>
           <Route path={'contract-templates/:contract_template?'} element={<TemplateContractsManager/>}/>
+          <Route path={'sellers'} element={<CommercialSeller/>}/>
         </Route>
         <Route path={'warehouse'}>
           <Route path={'stock'} element={<WarehouseStockManager/>}/>
