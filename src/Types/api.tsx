@@ -411,6 +411,7 @@ export type InvoicePayment = {
   fk_payment_method_uuid: string;
   purchase_token: string;
   transaction_info: string;
+  transaction_date: string;
   updated_at: string;
   uuid: string;
   voucher_code: string;

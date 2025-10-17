@@ -123,7 +123,7 @@ const PaymentsManager = () => {
     {
       title: 'F. de pago',
       width: 180,
-      dataIndex: 'created_at',
+      dataIndex: 'transaction_date',
       render: (date: string) => <code>{date ? dayjs(date).format(Config.datetimeFormatUser) : ''}</code>,
     },
     {
