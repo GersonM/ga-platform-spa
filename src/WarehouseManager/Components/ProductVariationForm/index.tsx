@@ -138,8 +138,8 @@ const ProductVariationForm = ({product, variation, onComplete}: ProductVariation
           </Row>
           <Row gutter={15}>
             <Col md={8} xs={12}>
-              <Form.Item label="SKU" name={'sku'} rules={[{required: true}]}>
-                <Input/>
+              <Form.Item label="SKU" name={'sku'} tooltip={'Si se deja vacío, el sistema generar uno'}>
+                <Input placeholder={'Autogenerar'}/>
               </Form.Item>
             </Col>
             <Col md={4} xs={12}>

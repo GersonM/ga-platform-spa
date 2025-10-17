@@ -102,17 +102,17 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
       }
     },
     {
-      title: 'SKU',
+      title: 'Nombre / SKU',
       dataIndex: 'sku',
       render: (sku: string, row: StorageProductVariation) => {
-        return <>
+        return <Space>
           {row.variation_name || row.product?.name}
           <CustomTag>
             <code>
               {sku}
             </code>
           </CustomTag>
-        </>;
+        </Space>;
       }
     },
     {

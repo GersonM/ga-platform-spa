@@ -60,6 +60,7 @@ export type Profile = {
   login_method?: string;
   user?: User;
   active_subscriptions?: Subscription[];
+  memberships?: SubscriptionMember[];
   avatar?: ApiFile;
 };
 

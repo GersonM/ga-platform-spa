@@ -82,7 +82,7 @@ const AttendanceManagement = () => {
       render: (profile: Profile) => {
         return (
           <>
-            {profile.active_subscriptions && profile.active_subscriptions?.length > 0 ? 'Si' : ''}
+            {profile.active_subscriptions && profile.active_subscriptions?.length > 0 ? 'Si' : profile.memberships && profile.memberships?.length > 0 ? 'Si' : ''}
           </>
         );
       },
@@ -90,8 +90,8 @@ const AttendanceManagement = () => {
     {
       title: 'Nombre',
       dataIndex: 'profile',
-      render: (area: any) => {
-        return <ProfileChip profile={area}/>;
+      render: (profile: any) => {
+        return <ProfileChip profile={profile} showDocument/>;
       },
     },
     {
@@ -152,7 +152,7 @@ const AttendanceManagement = () => {
       />
       {pagination && (
         <Pagination
-          style={{marginTop:10}}
+          style={{marginTop: 10}}
           align={'center'}
           onChange={(page, size) => {
             setCurrentPage(page);
