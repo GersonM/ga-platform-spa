@@ -1,7 +1,7 @@
 {
   "name": "ga-platform-spa",
   "private": true,
-  "version": "1.12.3",
+  "version": "1.13.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -41,12 +41,16 @@
     "react-simple-wysiwyg": "^3.4.0",
     "react-stack-grid": "^0.7.1",
     "recharts": "^2.15.3",
+    "slate": "^0.118.1",
+    "slate-dom": "^0.118.1",
+    "slate-react": "^0.117.4",
     "timestring": "^7.0.0",
     "tinycolor2": "^1.6.0",
     "voca": "^1.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/draft-js": "^0.11.18",
     "@types/js-cookie": "^3.0.6",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^19.1.2",
