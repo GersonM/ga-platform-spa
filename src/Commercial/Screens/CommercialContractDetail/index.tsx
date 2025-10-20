@@ -509,7 +509,7 @@ const CommercialContractDetail = () => {
           />
         )}
       </ModalView>
-      <ModalView open={openEditStock} onCancel={() => setOpenEditStock(false)}>
+      <ModalView width={900} open={openEditStock} onCancel={() => setOpenEditStock(false)}>
         <ProductStockForm stock={selectedStock} onComplete={() => {
           setReload(!reload);
           setOpenEditStock(false);

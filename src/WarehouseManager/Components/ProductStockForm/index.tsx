@@ -64,6 +64,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   return (
     <>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
+      {stock?.status}
       <Form form={form} layout="vertical" initialValues={{
         ...stock,
         expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
@@ -96,13 +97,13 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <Input placeholder={variation?.variation_name}/>
             </Form.Item>
             <Row gutter={15}>
-              <Col md={9}>
+              <Col md={13}>
                 <Form.Item label="Número de serie" name={'serial_number'}>
                   <Input/>
                 </Form.Item>
               </Col>
-              <Col md={15}>
-                <Form.Item label="Fecha de vencimiento (opcional)" name={'expiration_date'}>
+              <Col md={11}>
+                <Form.Item label="F. de vencimiento" name={'expiration_date'}>
                   <DatePicker placeholder={'No caduca'} style={{width: '100%'}} format={Config.dateFormatUser}/>
                 </Form.Item>
               </Col>
