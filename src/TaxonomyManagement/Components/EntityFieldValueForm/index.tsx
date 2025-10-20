@@ -49,7 +49,9 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
           style={{width: '100%'}}
           value={selectedFieldValue?.value}
           placeholder={'Valor'}
-          onChange={(e: any) => saveValue('value', e.target.value)}
+          onChange={(v: any) => {
+            saveValue('value', v);
+          }}
           suffix={selectedFieldValue?.field?.unit_type}
         />
       default:
