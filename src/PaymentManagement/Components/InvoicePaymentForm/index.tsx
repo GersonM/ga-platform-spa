@@ -1,7 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Col, DatePicker, Form, Input, Row, Select, Tag} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCheck} from 'react-icons/pi';
+import dayjs from "dayjs";
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -10,10 +11,8 @@ import type {Invoice, InvoicePayment} from '../../../Types/api';
 import FileUploader from '../../../CommonUI/FileUploader';
 import MoneyString from '../../../CommonUI/MoneyString';
 import MoneyInput from "../../../CommonUI/MoneyInput";
-import dayjs from "dayjs";
 import Config from "../../../Config.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
-import {TbArrowRight} from "react-icons/tb";
 import {WalletSelector} from "../WalletSelector";
 
 interface InvoicePaymentProps {
@@ -98,7 +97,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
           <FileUploader
             onFilesUploaded={file => {
               setFileUuid(file.uuid);
-              console.log(file);
             }}
           />
         </Form.Item>

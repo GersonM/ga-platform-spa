@@ -217,7 +217,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
           current={pagination.current_page}/>
       )}
       <ModalView
-        width={700}
+        width={900}
         open={openStockForm}
         onCancel={() => {
           setOpenStockForm(false);

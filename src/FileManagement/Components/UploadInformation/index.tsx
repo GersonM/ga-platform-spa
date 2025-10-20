@@ -1,15 +1,18 @@
 import {useContext, useEffect, useState} from 'react';
-import {Progress} from 'antd';
+import {Progress, Space} from 'antd';
 import {PiCheckCircleFill, PiXCircle} from 'react-icons/pi';
 
 import './styles.less';
 import FileSize from '../../../CommonUI/FileSize';
 import UploadContext from '../../../Context/UploadContext';
 import IconButton from '../../../CommonUI/IconButton';
+import {TbFolder} from "react-icons/tb";
+import {useNavigate} from "react-router-dom";
 
 const UploadInformation = () => {
   const [open, setOpen] = useState(true);
   const {fileList, progress} = useContext(UploadContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setOpen(true);
@@ -44,7 +47,9 @@ const UploadInformation = () => {
                         {f.fileData ? <FileSize size={f.fileData.size}/> : 'Cargando...'}
                       </small>
                     </span>
-                    {f.fileData && <PiCheckCircleFill color={'#00d800'} size={20}/>}
+                    {f.fileData && <Space>
+                      <IconButton title={'Navegar a la carpeta'} icon={<TbFolder/>} onClick={() => navigate('/file-mangement/'+f.fileData?.container?.uuid)} small />
+                      <PiCheckCircleFill color={'#00d800'} size={20}/></Space>}
                   </span>
                   {!f.fileData && progress && f.hash == progress.hash &&
                     <Progress size={'small'} percent={Math.round(progress.percent * 100)}/>}

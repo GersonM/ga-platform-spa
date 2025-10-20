@@ -79,7 +79,7 @@ const ImportPayments = () => {
             </code>
             <br/>
             <br/>
-            <FileUploader onChange={importDocument} onFilesUploaded={importDocument}/>
+            <FileUploader onChange={importDocument}/>
             <br/>
             <PrimaryButton
               disabled={!fileLoaded}

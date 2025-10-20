@@ -1,101 +1,41 @@
-import React, {useState, useEffect} from 'react';
-import {Col, Divider, Form, Input, Row, Button, notification} from "antd";
-import {DefaultEditor} from "react-simple-wysiwyg";
+import React, {useState} from 'react';
+import {Col, Divider, Form, Input, Row, notification} from "antd";
 import axios from "axios";
 
-import type {MetadataField, StorageProduct} from "../../../Types/api.tsx";
+import type {StorageProduct} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import ProductBrandSelector from "../ProductBrandSelector";
 import ProductManufacturerSelector from "../ProductManufacturerSelector";
 import ProductGroupsSelector from "../ProductGroupsSelector";
 import ProductUnitTypesSelector from "../ProductUnitTypesSelector";
-import IconButton from "../../../CommonUI/IconButton";
-import {TbPlus, TbTrash} from "react-icons/tb";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
+import HtmlEditor from "../../../CommonUI/HtmlEditor";
 
 interface ProductFormProps {
   product?: StorageProduct;
   onComplete?: () => void;
+  onChange?: () => void;
 }
 
-const ProductForm = ({product, onComplete}: ProductFormProps) => {
+const ProductForm = ({product, onComplete, onChange}: ProductFormProps) => {
   const [form] = Form.useForm();
-  const [metadataFields, setMetadataFields] = useState<MetadataField[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModified, setIsModified] = useState(false);
 
-  useEffect(() => {
-    if (product?.metadata) {
-      try {
-        const parsedMetadata = typeof product.metadata === 'string'
-          ? JSON.parse(product.metadata)
-          : product.metadata;
-
-        const fields = Object.entries(parsedMetadata || {}).map(([key, value], index) => ({
-          key,
-          value: String(value),
-          id: `field_${index}`
-        }));
-
-        setMetadataFields(fields.length > 0 ? fields : [{key: '', value: '', id: 'field_0'}]);
-      } catch (error) {
-        console.error('Error parsing metadata:', error);
-        setMetadataFields([{key: '', value: '', id: 'field_0'}]);
-      }
-    } else {
-      setMetadataFields([{key: '', value: '', id: 'field_0'}]);
-    }
-  }, [product]);
-
-  const addField = () => {
-    const newId = `field_${Date.now()}`;
-    setMetadataFields([...metadataFields, {key: '', value: '', id: newId}]);
-  };
-
-  const removeField = (id: string) => {
-    if (!isModified) {
-      setIsModified(true);
-    }
-    if (metadataFields.length > 1) {
-      setMetadataFields(metadataFields.filter(field => field.id !== id));
-    }
-  };
-
-  const updateField = (id: string, type: 'key' | 'value', newValue: string) => {
-    if (!isModified) {
-      setIsModified(true);
-    }
-    setMetadataFields(metadataFields.map(field =>
-      field.id === id ? {...field, [type]: newValue} : field
-    ));
-  };
-
-  const buildMetadataObject = () => {
-    const metadata: Record<string, string> = {};
-    metadataFields.forEach(field => {
-      metadata[field.key.trim()] = field.value.trim();
-    });
-    return metadata;
-  };
-
   const submit = (values: any) => {
-    const metadata = buildMetadataObject();
     setLoading(true);
-    const formData = {
-      ...values,
-      metadata: JSON.stringify(metadata)
-    };
 
     axios
       .request({
         url: product ? `warehouses/products/${product.uuid}` : "warehouses/products",
         method: product ? 'PUT' : 'POST',
-        data: formData
+        data: values
       })
       .then(() => {
         setLoading(false);
-        notification.success({message:'Información guardada', description: 'La información se guardo correctamente'});
+        notification.success({message: 'Información guardada', description: 'La información se guardo correctamente'});
         if (onComplete) {
           onComplete();
         }
@@ -114,7 +54,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
       onValuesChange={() => setIsModified(true)}
       onFinish={submit}
     >
-      <LoadingIndicator visible={loading} overlay />
+      <LoadingIndicator visible={loading} overlay/>
       <h2>{product ? 'Editar producto' : 'Registrar nuevo producto'}</h2>
       <Row gutter={[25, 25]}>
         <Col span={13}>
@@ -125,7 +65,7 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
             <Input.TextArea/>
           </Form.Item>
           <Form.Item label="Descripción comercial" name={'description'}>
-            <DefaultEditor/>
+            <HtmlEditor />
           </Form.Item>
           <Row gutter={[15, 15]}>
             <Col md={12}>
@@ -164,49 +104,8 @@ const ProductForm = ({product, onComplete}: ProductFormProps) => {
           </Form.Item>
           <Divider>Avanzado</Divider>
 
-          <Form.Item label="Metadata (Información técnica adicional)">
-            <div style={{marginBottom: '16px'}}>
-              {metadataFields.map((field, index) => (
-                <Row key={index} gutter={8} style={{marginBottom: '8px'}}>
-                  <Col span={10}>
-                    <Input
-                      placeholder="Campo (ej: categoria)"
-                      value={field.key}
-                      onChange={(e) => updateField(field.id, 'key', e.target.value)}
-                    />
-                  </Col>
-                  <Col span={12}>
-                    <Input
-                      placeholder="Valor (ej: informatica)"
-                      value={field.value}
-                      onChange={(e) => updateField(field.id, 'value', e.target.value)}
-                    />
-                  </Col>
-                  <Col span={2}>
-                    <IconButton
-                      danger
-                      icon={<TbTrash/>}
-                      onClick={() => removeField(field.id)}
-                      disabled={metadataFields.length === 1}
-                    />
-                  </Col>
-                </Row>
-              ))}
-              <Button
-                type="dashed"
-                onClick={addField}
-                icon={<TbPlus/>}
-                style={{width: '100%', marginTop: '8px'}}
-              >
-                Agregar campo
-              </Button>
-            </div>
-
-            <small style={{color: '#a6a6a6', display: 'block', lineHeight: '1.4'}}>
-              <strong>Agrega información técnica adicional del producto.</strong>
-              <br/>
-              Campos sugeridos: categoria, peso, dimensiones, color, material, garantia, especificaciones tecnicas.
-            </small>
+          <Form.Item label="Metadata (Información técnica adicional)" name={'attributes'}>
+            <EntityFieldsEditor entity={product} onComplete={onChange} />
           </Form.Item>
         </Col>
       </Row>

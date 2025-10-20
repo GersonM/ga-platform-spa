@@ -1,12 +1,12 @@
 import {useState} from 'react';
 import {Form, Input} from 'antd';
+import {CheckIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
 import type {TaxonomyDefinition, ApiFile} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import FileUploader from '../../../CommonUI/FileUploader';
-import {CheckIcon} from '@heroicons/react/24/solid';
 
 interface TaxonomyFormProps {
   entity?: TaxonomyDefinition;
@@ -24,14 +24,12 @@ const TaxonomyForm = ({entity, onComplete, parentUuid}: TaxonomyFormProps) => {
         data: {...values, parent_uuid: parentUuid, cover_uuid: uploadedFile?.uuid},
       })
       .then(res => {
-        onComplete && onComplete(res.data);
+        if(onComplete) onComplete(res.data);
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
   };
-
-  console.log(entity?.cover?.thumbnail);
 
   return (
     <Form onFinish={onSubmit} layout="vertical" initialValues={entity}>
@@ -50,7 +48,6 @@ const TaxonomyForm = ({entity, onComplete, parentUuid}: TaxonomyFormProps) => {
           imagePath={entity?.cover?.thumbnail}
           onFilesUploaded={file => {
             setUploadedFile(file);
-            console.log(file);
           }}
         />
       </Form.Item>

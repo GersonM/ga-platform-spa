@@ -1,0 +1,39 @@
+.file-gallery-editor {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
+  grid-gap: 15px;
+  position: relative;
+  margin-top: 20px;
+
+  .file-gallery-item {
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: no-repeat center center;
+    background-size: contain;
+    display: flex;
+
+    &.cover {
+      border-color: var(--primary-color);
+    }
+
+    .actions {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+    }
+
+    &:hover {
+      .actions {
+        opacity: 1;
+      }
+    }
+
+  }
+}

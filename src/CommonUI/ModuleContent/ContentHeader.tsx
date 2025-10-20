@@ -5,12 +5,14 @@ import {PiPencilSimple} from 'react-icons/pi';
 import {TbArrowLeft, TbPlus, TbRefresh} from "react-icons/tb";
 
 import IconButton from '../IconButton';
+import PrimaryButton from "../PrimaryButton";
 
 interface ContentHeaderProps {
   title?: string | ReactNode;
   description?: string | ReactNode;
   backLocation?: string;
   tools?: ReactNode;
+  largeTools?: boolean;
   children?: ReactNode;
   onAdd?: () => void;
   onEdit?: () => void;
@@ -34,10 +36,10 @@ const ContentHeader = (
     onAdd,
     loading,
     showBack,
+    largeTools = false,
     bordered = false,
   }: ContentHeaderProps) => {
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const shortcutHandler = (e: KeyboardEvent) => {
@@ -89,18 +91,19 @@ const ContentHeader = (
             />
           </Tooltip>
         )}
-        <div>
+        <div className={'header-content-title'}>
           <h1 className={'title'}>{title}</h1>
         </div>
         {onAdd && (
-          <Tooltip title={'Nuevo'}>
-            <IconButton icon={<TbPlus/>} onClick={onAdd}/>
-          </Tooltip>
+          largeTools ?
+            <PrimaryButton icon={<TbPlus/>} ghost size={'small'} shape={'round'} label={'Nuevo'} onClick={onAdd}/> :
+            <IconButton title={'Nuevo'} icon={<TbPlus/>} onClick={onAdd}/>
         )}
         {onRefresh && (
-          <Tooltip title={'Actualizar'}>
-            <IconButton icon={<TbRefresh className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
-          </Tooltip>
+          largeTools ?
+            <PrimaryButton icon={<TbRefresh className={loading ? 'spin' : ''}/>} ghost size={'small'} shape={'round'}
+                           label={'Recargar'} onClick={onRefresh}/> :
+            <IconButton title={'Actualizar'} icon={<TbRefresh className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
         )}
         {onEdit && (
           <Tooltip title={'Editar'}>

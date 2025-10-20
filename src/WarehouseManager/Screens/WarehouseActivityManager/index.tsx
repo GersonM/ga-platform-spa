@@ -1,24 +1,18 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Pagination, Space, Tooltip} from 'antd';
-import {PiShippingContainer} from "react-icons/pi";
+import {Form, Input, Pagination, Select} from 'antd';
+import dayjs from "dayjs";
 import axios from "axios";
 
+import type {Profile, ResponsePagination, StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import type {Profile, ResponsePagination, StorageProduct, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
 import TableList from "../../../CommonUI/TableList";
-import IconButton from "../../../CommonUI/IconButton";
-import ProductForm from "../../Components/ProductForm";
 import FilterForm from "../../../CommonUI/FilterForm";
-import ProductGroupsSelector from "../../Components/ProductGroupsSelector";
-import ProductBrandSelector from "../../Components/ProductBrandSelector";
-import ProductManufacturerSelector from "../../Components/ProductManufacturerSelector";
-import ProductStockManager from "../../Components/ProductStockManager";
-import WarehouseManager from "../../Components/WarehouseManager";
-import ModalView from "../../../CommonUI/ModalView";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
-import dayjs from "dayjs";
 import StockActivityActionChip from "../../Components/StockActivityActionChip";
+import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
+import CustomTag from "../../../CommonUI/CustomTag";
+import WarehouseSelector from "../../Components/WarehouseSelector";
 
 const WarehouseActivityManager = () => {
   const [loading, setLoading] = useState(false);
@@ -26,11 +20,7 @@ const WarehouseActivityManager = () => {
   const [reload, setReload] = useState(false);
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [openAddProduct, setOpenAddProduct] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<StorageProduct>();
-  const [openStockManager, setOpenStockManager] = useState(false);
   const [filters, setFilters] = useState<any>()
-  const [openWarehouseManager, setOpenWarehouseManager] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -64,18 +54,18 @@ const WarehouseActivityManager = () => {
       align: 'center',
       width: 100,
       render: (action: string) => (
-        <StockActivityActionChip action={action} />
+        <StockActivityActionChip action={action}/>
       )
     },
     {
       title: 'Usuario',
       dataIndex: 'profile',
       render: (profile: Profile) => (
-        <ProfileChip profile={profile} />
+        <ProfileChip profile={profile}/>
       )
     },
     {
-      title: 'Motivo',
+      title: 'Comentarios',
       dataIndex: 'reason',
     },
     {
@@ -86,10 +76,21 @@ const WarehouseActivityManager = () => {
       )
     },
     {
+      title: 'ID / N° Serie',
+      dataIndex: 'stock',
+      render: (stock: StorageStock) => (
+        <CustomTag>
+          <code>
+            {stock?.serial_number}
+          </code>
+        </CustomTag>
+      )
+    },
+    {
       title: 'Producto',
       dataIndex: 'stock',
       render: (stock: StorageStock) => (
-        <span>{stock.sku}</span>
+        <StorageStockChip storageStock={stock}/>
       )
     },
     {
@@ -113,12 +114,7 @@ const WarehouseActivityManager = () => {
         title={'Actividad del inventario'}
         loading={loading}
         onRefresh={() => setReload(!reload)}
-        tools={<Space>
-          <Tooltip title={'Gestionar almacenes'}>
-            <IconButton icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
-          </Tooltip>
-        </Space>}
-        onAdd={() => setOpenAddProduct(true)}/>
+        />
       <FilterForm
         onInitialValues={values => setFilters(values)}
         onSubmit={values => setFilters(values)}
@@ -129,14 +125,22 @@ const WarehouseActivityManager = () => {
             placeholder={'Buscar por nombre, código o descripción'}
           />
         </Form.Item>
-        <Form.Item name={'group'} label={'Grupo'}>
-          <ProductGroupsSelector/>
+        <Form.Item name={'warehouse_uuid'} label={'Almacen'}>
+          <WarehouseSelector />
         </Form.Item>
-        <Form.Item name={'brand'}>
-          <ProductBrandSelector/>
-        </Form.Item>
-        <Form.Item name={'manufacturer'}>
-          <ProductManufacturerSelector/>
+        <Form.Item name={'action'} label={'Acción'}>
+          <Select
+            allowClear
+            popupMatchSelectWidth={false}
+            placeholder={'Todos'}
+            options={[
+            {label:'Venta', value:'outlet'},
+            {label:'Ingreso', value:'entrance'},
+            {label:'Reserva', value:'reserve'},
+            {label:'Perdida', value:'waste'},
+            {label:'Transporte Salida', value:'moving_out'},
+            {label:'Transporte Ingreso', value:'moving_in'},
+          ]}/>
         </Form.Item>
       </FilterForm>
       <TableList columns={columns} dataSource={products}/>
@@ -147,36 +151,12 @@ const WarehouseActivityManager = () => {
           onChange={(page) => {
             setCurrentPage(page);
           }}
-          size={"small"} total={pagination.total}
+          align={'center'}
+          total={pagination.total}
           showTotal={(total) => `${total} productos en total`}
           pageSize={pagination.per_page}
           current={pagination.current_page}/>
       )}
-      <ModalView
-        width={900}
-        open={openAddProduct}
-        onCancel={() => {
-          setOpenAddProduct(false);
-          setSelectedProduct(undefined);
-        }}>
-        <ProductForm product={selectedProduct} onComplete={() => {
-          setReload(!reload);
-          setOpenAddProduct(false);
-          setSelectedProduct(undefined);
-        }}/>
-      </ModalView>
-      <ModalView width={800} open={openStockManager} onCancel={() => {
-        setOpenStockManager(false);
-        setSelectedProduct(undefined);
-      }}>
-        {selectedProduct && <ProductStockManager product={selectedProduct}/>}
-      </ModalView>
-      <ModalView width={700} open={openWarehouseManager} onCancel={() => {
-        setOpenWarehouseManager(false);
-        setSelectedProduct(undefined);
-      }}>
-        <WarehouseManager/>
-      </ModalView>
     </ModuleContent>
   );
 };

@@ -2,6 +2,7 @@ import {type CSSProperties, useEffect, useState} from 'react';
 import {Select} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
+
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {StorageProduct, StorageProductVariation} from '../../../Types/api';
 
@@ -41,7 +42,7 @@ const ProductVariationSelector = ({placeholder, mode, style, product, ...props}:
         if (response) {
           setVariations(
             response.data.data.map((item: StorageProductVariation) => {
-              return {value: item.uuid, label: `${item.variation_name || item.product?.name}`, entity: item};
+              return {value: item.uuid, label: `${item.product?.name} ${item.variation_name || ''}`, entity: item};
             }),
           );
         }
@@ -68,10 +69,11 @@ const ProductVariationSelector = ({placeholder, mode, style, product, ...props}:
       mode={mode}
       optionRender={option => {
         return <div>
-          {option.label}
-          <br/>
-          {/* @ts-ignore */}
-          <small>{option?.data.entity?.product.name}</small>
+          {option.label} <br/>
+          <small>
+            {/* @ts-ignore */}
+            <code>{option.data.entity.sku}</code>
+          </small>
         </div>;
       }
       }

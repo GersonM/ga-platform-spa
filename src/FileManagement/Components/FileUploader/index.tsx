@@ -5,9 +5,9 @@ import {useDropzone} from 'react-dropzone';
 
 import UploadContext from '../../../Context/UploadContext';
 import './styles.less';
+import type {ApiFile} from "../../../Types/api.tsx";
 
 interface FileUploaderProps {
-  onFilesUploaded?: (file: any) => void;
   showPreview?: boolean;
   imagePath?: string;
   fileUuid?: string;
@@ -15,8 +15,9 @@ interface FileUploaderProps {
   height?: number;
   maxWidth?: number;
   small?: boolean;
+  clearOnFinish?: boolean;
   multiple?: boolean;
-  onChange?: (uuid: string) => void;
+  onChange?: (uuid: string, fileUploaded: ApiFile) => void;
 }
 
 const FileUploader = (
@@ -29,6 +30,7 @@ const FileUploader = (
     targetContainerUuid,
     imagePath,
     showPreview = false,
+    clearOnFinish = true,
   }: FileUploaderProps) => {
 
   const [uploadedFile, setUploadedFile] = useState<any>();
@@ -38,9 +40,9 @@ const FileUploader = (
   useEffect(() => {
     if (lastFileCompleted && lastFileCompleted.fileData) {
       if (ownedFiles.includes(lastFileCompleted.id)) {
-        setUploadedFile(lastFileCompleted.fileData);
+        setUploadedFile(clearOnFinish ? undefined : lastFileCompleted.fileData);
         if (onChange) {
-          onChange(lastFileCompleted.fileData?.uuid);
+          onChange(lastFileCompleted.fileData?.uuid, lastFileCompleted.fileData);
         }
       }
     }

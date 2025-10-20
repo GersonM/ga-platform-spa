@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Pagination, Space, Tooltip, notification, Tag, Popconfirm} from 'antd';
+import {Form, Input, Pagination, Space, Tooltip, Popconfirm} from 'antd';
 import {TbPencil, TbStack2, TbTrash} from "react-icons/tb";
 import {PiShippingContainer} from "react-icons/pi";
+import pluralize from "pluralize";
 import axios from "axios";
 
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -17,8 +18,8 @@ import ProductManufacturerSelector from "../../Components/ProductManufacturerSel
 import ProductStockManager from "../../Components/ProductStockManager";
 import WarehouseManager from "../../Components/WarehouseManager";
 import ModalView from "../../../CommonUI/ModalView";
-import pluralize from "pluralize";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
 
 const WarehouseProductsManager = () => {
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,6 @@ const WarehouseProductsManager = () => {
   const [openStockManager, setOpenStockManager] = useState(false);
   const [filters, setFilters] = useState<any>()
   const [openWarehouseManager, setOpenWarehouseManager] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -58,19 +58,6 @@ const WarehouseProductsManager = () => {
     return cancelTokenSource.cancel;
   }, [reload, currentPage, filters]);
 
-  const handleEditProduct = (product: StorageProduct) => {
-    if (isUpdating) {
-      notification.warning({
-        message: 'Por favor espere',
-        description: 'Los cambios se están aplicando. Intente nuevamente en unos segundos.'
-      });
-      return;
-    }
-
-    setSelectedProduct(product);
-    setOpenAddProduct(true);
-  };
-
   const handleDeleteProduct = (uuid: string) => {
     axios.delete(`warehouses/products/${uuid}`, {})
       .then(response => {
@@ -85,22 +72,11 @@ const WarehouseProductsManager = () => {
 
   const columns = [
     {
-      title: 'Código',
-      dataIndex: 'code',
-      width: 90,
-      render: (code: string) => (
-        <small>
-
-          <code>{code}</code>
-        </small>
-      )
-    },
-    {
-      title: 'Nombre',
+      title: 'Nombre / Código',
       dataIndex: 'name',
-      width: 180,
+      width: 270,
       render: (name: string, product: StorageProduct) => (
-        <span>{name} <br/> <small>{product.excerpt}</small></span>
+        <>{name} <br/><code> <small>{product.code}</small></code></>
       )
     },
     {
@@ -117,9 +93,7 @@ const WarehouseProductsManager = () => {
       title: 'Variaciones',
       dataIndex: 'available_variations',
       render: (available_variations: string[]) => (
-        <small>
-          {available_variations && available_variations.join(', ')}
-        </small>
+        <code><small>{available_variations && available_variations.join(', ')}</small></code>
       )
     },
     {
@@ -143,7 +117,7 @@ const WarehouseProductsManager = () => {
       width: 90,
       render: (uuid: string, p: StorageProduct) => {
         return <Space size={"small"}>
-          <Tooltip title={'Gestionar stock'}>
+          <Tooltip title={'Gestionar variaciones'}>
             <IconButton small icon={<TbStack2/>} onClick={() => {
               setOpenStockManager(true);
               setSelectedProduct(p);
@@ -152,8 +126,10 @@ const WarehouseProductsManager = () => {
           <IconButton
             small
             icon={<TbPencil/>}
-            onClick={() => handleEditProduct(p)}
-            disabled={isUpdating}
+            onClick={() => {
+              setOpenAddProduct(true);
+              setSelectedProduct(p);
+            }}
           />
           <Popconfirm
             title={'¿Quieres eliminar este producto?'}
@@ -174,7 +150,7 @@ const WarehouseProductsManager = () => {
         onRefresh={() => setReload(!reload)}
         tools={<Space>
           <Tooltip title={'Gestionar almacenes'}>
-            <IconButton icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
+            <PrimaryButton ghost label={'Almacenes'} shape={'round'} size={"small"} icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
           </Tooltip>
         </Space>}
         onAdd={() => setOpenAddProduct(true)}
@@ -224,14 +200,11 @@ const WarehouseProductsManager = () => {
         <ProductForm
           key={selectedProduct?.uuid || 'new'}
           product={selectedProduct}
+          onChange={() => setReload(!reload)}
           onComplete={() => {
             setOpenAddProduct(false);
             setSelectedProduct(undefined);
             setReload(!reload);
-            setIsUpdating(true);
-            setTimeout(() => {
-              setIsUpdating(false);
-            }, 3000);
           }}/>
       </ModalView>
       <ModalView width={1000} open={openStockManager} onCancel={() => {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Col, Form, Input, InputNumber, Popconfirm, Row} from "antd";
 import {TbTrash} from "react-icons/tb";
 import axios from "axios";
@@ -17,27 +17,18 @@ interface EntityFieldValueFormProps {
 
 const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: EntityFieldValueFormProps) => {
   const [editFieldMode, setEditFieldMode] = useState(false);
-  const [wasChanged, setWasChanged] = useState(false);
   const [selectedFieldValue, setSelectedFieldValue] = useState<EntityFieldValue | undefined>(fieldValue);
+  const [deleting, setDeleting] = useState(false);
 
-  const submitForm = (values: any) => {
-    axios.request({
-      method: fieldValue ? 'PUT' : 'POST',
-      url: fieldValue ? `/taxonomy/entity-fields/values/${fieldValue.uuid}` : '/taxonomy/entity-fields/values',
-    })
-      .then(() => {
-        if (onComplete) onComplete();
-      })
-      .catch(err => {
-        ErrorHandler.showNotification(err);
-      });
-  }
+  useEffect(() => {
+    if (onChange) onChange(selectedFieldValue);
+  }, [selectedFieldValue])
 
   const removeField = () => {
-    if (fieldValue?.uuid && fieldValue.uuid?.length > 4) {
+    if (fieldValue?.uuid && fieldValue.uuid?.length > 10) {
       axios.delete(`/taxonomy/entity-fields/values/${fieldValue?.uuid}`)
         .then(() => {
-          if (onComplete) onComplete();
+          if (onRemove) onRemove();
         })
         .catch(err => {
           ErrorHandler.showNotification(err);
@@ -51,60 +42,61 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
     switch (selectedFieldValue?.field?.type) {
       case 'number':
         return <InputNumber
+          value={selectedFieldValue?.value}
           placeholder={'Valor'}
+          onChange={(e: any) => saveValue('value', e.target.value)}
           suffix={selectedFieldValue?.field?.unit_type}
         />
       default:
         return <Input
+          value={selectedFieldValue?.value}
           placeholder={'Valor'}
+          onChange={(e: any) => saveValue('value', e.target.value)}
           suffix={selectedFieldValue?.field?.unit_type}
         />
     }
   }
 
+  const saveValue = (field: string, value: any) => {
+    const newFV: any = {...selectedFieldValue};
+    newFV[field] = value;
+    setSelectedFieldValue(newFV);
+  }
+
   return (
-    <Form
-      initialValues={fieldValue}
-      onValuesChange={(values, all) => {
-        if (onChange) onChange({...fieldValue, ...all, field: selectedFieldValue?.field});
-      }}
-      onFinish={submitForm}
-    >
+    <div className={'entity-fields-editor-row'}>
       <Row gutter={[10, 10]}>
-        <Col span={10}>
+        <Col span={12}>
           {(selectedFieldValue?.field && !editFieldMode) ? <>
               <a href="#" onClick={() => setEditFieldMode(!editFieldMode)}>
                 {selectedFieldValue.field.name}
               </a>
               <small>{selectedFieldValue.field.description || selectedFieldValue.field.code}</small>
             </> :
-            <Form.Item name={'fk_entity_field_uuid'}>
-              <EntityFieldSelector
-                onChange={(value, option) => {
-                  setEditFieldMode(false);
-                  const newFV: any = {...selectedFieldValue};
-                  newFV.field = option.entity;
-                  setSelectedFieldValue(newFV);
-                }}
-                onClear={() => setEditFieldMode(!editFieldMode)}/>
-            </Form.Item>}
+            <EntityFieldSelector
+              value={selectedFieldValue?.field?.uuid}
+              onChange={(value, option) => {
+                setEditFieldMode(false);
+                saveValue('field', option.entity)
+              }}
+              onClear={() => setEditFieldMode(!editFieldMode)}/>
+          }
         </Col>
-        <Col span={10}>
-          <Form.Item name={'value'}>
-            {getField()}
-          </Form.Item>
+        <Col span={9}>
+          {getField()}
         </Col>
-        <Col span={2}>
+        <Col span={3}>
           <Popconfirm title={'¿Quieres eliminar este campo?'} onConfirm={removeField}>
             <IconButton
               small
               danger
+              loading={deleting}
               icon={<TbTrash/>}
             />
           </Popconfirm>
         </Col>
       </Row>
-    </Form>
+    </div>
   );
 };
 

@@ -28,7 +28,6 @@ const MonitorServicesManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [openAddProduct, setOpenAddProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StorageProduct>();
-  const [openStockManager, setOpenStockManager] = useState(false);
   const [filters, setFilters] = useState<any>()
   const [openWarehouseManager, setOpenWarehouseManager] = useState(false);
 

@@ -34,7 +34,6 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
             showPreview
             imagePath={value}
             onChange={fileUuid => onChangeValue(fileUuid)}
-            onFilesUploaded={file => onChangeValue(file.uuid)}
           />
         );
       case 'boolean':

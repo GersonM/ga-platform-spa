@@ -54,8 +54,8 @@ const FileUploader = ({
       });
 
       setUploadedFile(_response.data);
-      onFilesUploaded && onFilesUploaded(_response.data);
-      onChange && onChange(_response.data.uuid);
+      if(onFilesUploaded) onFilesUploaded(_response.data);
+      if(onChange) onChange(_response.data.uuid);
 
       setLoading(false);
       message.success('Archivo cargado!');
@@ -79,9 +79,6 @@ const FileUploader = ({
           setProgress(percentCompleted);
         },
       });
-
-      //setUploadedFile(_response.data);
-      //onFilesUploaded && onFilesUploaded(_response.data);
 
       setLoading(false);
       message.success('Archivo cargado!');
