@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Form, Input, InputNumber, Popconfirm, Row} from "antd";
+import {Checkbox, Col, Form, Input, InputNumber, Popconfirm, Row} from "antd";
 import {TbTrash} from "react-icons/tb";
 import axios from "axios";
 
@@ -40,8 +40,13 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
 
   const getField = () => {
     switch (selectedFieldValue?.field?.type) {
+      case 'boolean':
+        return <Checkbox checked={selectedFieldValue.value == '1'} onChange={(e: any) => {
+          saveValue('value', e.target.checked ? 1 : 0);
+        }}/>;
       case 'number':
         return <InputNumber
+          style={{width: '100%'}}
           value={selectedFieldValue?.value}
           placeholder={'Valor'}
           onChange={(e: any) => saveValue('value', e.target.value)}
