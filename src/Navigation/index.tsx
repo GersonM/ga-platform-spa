@@ -38,7 +38,7 @@ import {
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
   TbListCheck, TbMapPinBolt, TbMessageUser,
   TbPackage, TbPackageImport, TbPercentage,
-  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUsersGroup,
+  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
 } from 'react-icons/tb';
 import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
 import {FaChalkboardTeacher} from 'react-icons/fa';
@@ -264,7 +264,8 @@ const Navigation = () => {
             <NavItem label={'Monitor de servicios'} icon={<TbHeartRateMonitor/>} path={'/monitoring'}/>
             {user?.roles?.includes('admin') && (
               <>
-                <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/profiles'}/>
+                <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/users'}/>
+                <NavItem label={'Personas'} icon={<TbUser/>} path={'/profiles'}/>
                 <NavItem label={'Empresas'} icon={<PiBuilding/>} path={'/companies'}/>
                 <NavItem label={'Administración'} icon={<PiGear/>} path={'/config'}/>
               </>

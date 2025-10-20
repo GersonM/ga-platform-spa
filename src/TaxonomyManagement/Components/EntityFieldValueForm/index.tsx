@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, Form, Input, InputNumber, Popconfirm, Row} from "antd";
+import {Checkbox, Col, Input, InputNumber, Popconfirm, Row} from "antd";
 import {TbTrash} from "react-icons/tb";
 import axios from "axios";
 
@@ -25,12 +25,15 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
   }, [selectedFieldValue])
 
   const removeField = () => {
+    setDeleting(true);
     if (fieldValue?.uuid && fieldValue.uuid?.length > 10) {
       axios.delete(`/taxonomy/entity-fields/values/${fieldValue?.uuid}`)
         .then(() => {
+          setDeleting(false);
           if (onRemove) onRemove();
         })
         .catch(err => {
+          setDeleting(false);
           ErrorHandler.showNotification(err);
         })
     } else {

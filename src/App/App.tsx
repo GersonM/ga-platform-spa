@@ -128,6 +128,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path={'profiles'} element={<ProfilesManagement/>}/>
+        <Route path={'users'} element={<ProfilesManagement type={'user'}/>}/>
         <Route path={'profiles/:uuid'} element={<UserProfileDetails/>}>
           <Route path={':tab'}/>
         </Route>

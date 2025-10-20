@@ -92,6 +92,9 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item label="Nombre (opcional)" name={'variation_name'}>
+              <Input placeholder={variation?.variation_name}/>
+            </Form.Item>
             <Row gutter={15}>
               <Col md={9}>
                 <Form.Item label="Número de serie" name={'serial_number'}>

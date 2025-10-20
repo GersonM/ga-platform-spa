@@ -18,7 +18,11 @@ import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import './styles.less';
 
-const ProfilesManagement = () => {
+interface ProfilesManagementProps {
+  type?:string;
+}
+
+const ProfilesManagement = ({type}:ProfilesManagementProps) => {
   const navigate = useNavigate();
   const [profiles, setProfiles] = useState<Profile[]>();
   const [reload, setReload] = useState(false);
@@ -34,7 +38,10 @@ const ProfilesManagement = () => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {page: currentPage, page_size: pageSize, search, subscription: filterSubscription},
+      params: {
+        page: currentPage, page_size: pageSize, search, subscription: filterSubscription,
+        filter: type
+      },
     };
     setLoading(true);
     axios
@@ -52,7 +59,7 @@ const ProfilesManagement = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, currentPage, pageSize, search, filterSubscription]);
+  }, [reload, currentPage, pageSize, search, filterSubscription, type]);
 
   const columns = [
     {

@@ -750,6 +750,7 @@ export type StorageStock = {
   uuid: string;
   sku?: string;
   serial_number?: string;
+  variation_name?: string;
   currency: string;
   cost_price?: number;
   sale_price?: number;
