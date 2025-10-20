@@ -70,7 +70,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
       }} onFinish={submit}>
         <Row gutter={[20, 20]}>
           <Col md={13}>
-            {!variation && (
+            {!variation && !stock && (
               <Form.Item
                 label="Variación" name={'variation_uuid'}
                 rules={[{required: true}]}>

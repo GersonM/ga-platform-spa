@@ -7,7 +7,8 @@ import './App.less';
 import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
-import CommercialSeller from "../Commercial/Screens/CommercialSeller";
+const CommercialSeller = lazy(() => import("../Commercial/Screens/CommercialSeller"));
+const EntityFieldManager = lazy(() => import("../TaxonomyManagement/Screens/EntityFieldManager"));
 
 const PaymentsManager = lazy(() => import("../PaymentManagement/Screens/PaymentsManager"));
 const CompaniesManagement = lazy(() => import("../HRManagement/Screens/CompaniesManagement"));
@@ -147,6 +148,7 @@ const App = () => {
           <Route path={'file-management'} element={<FileManagerPreferences/>}/>
           <Route path={'preferences'} element={<PreferencesManager/>}/>
           <Route path={'permissions'} element={<PermissionsManager/>}/>
+          <Route path={'fields'} element={<EntityFieldManager />}/>
           <Route path={'taxonomy'} element={<TaxonomyManager/>}>
             <Route path={':taxonomy'} element={null}/>
           </Route>

@@ -66,7 +66,7 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
   return (
     <div className={'entity-fields-editor-row'}>
       <Row gutter={[10, 10]}>
-        <Col span={12}>
+        <Col span={11}>
           {(selectedFieldValue?.field && !editFieldMode) ? <>
               <a href="#" onClick={() => setEditFieldMode(!editFieldMode)}>
                 {selectedFieldValue.field.name}
@@ -82,7 +82,7 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
               onClear={() => setEditFieldMode(!editFieldMode)}/>
           }
         </Col>
-        <Col span={9}>
+        <Col span={10}>
           {getField()}
         </Col>
         <Col span={3}>

@@ -1,6 +1,15 @@
 import {Suspense} from 'react';
 import {Outlet} from 'react-router-dom';
-import {TbBrush, TbMailbox, TbServerCog, TbShieldCheck, TbSpaces, TbTagStarred} from 'react-icons/tb';
+import {
+  TbBrush,
+  TbDatabaseEdit,
+  TbMailbox,
+  TbServerCog,
+  TbShieldCheck,
+  TbSoccerField,
+  TbSpaces,
+  TbTagStarred
+} from 'react-icons/tb';
 
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -19,6 +28,7 @@ const ModuleConfiguration = () => {
           <NavListItem icon={<TbBrush />} name={'Preferencias'} path={'/config/preferences'} />
           <NavListItem icon={<TbShieldCheck />} name={'Roles y permisos'} path={'/config/permissions'} />
           <NavListItem icon={<TbTagStarred />} name={'Taxonomías'} path={'/config/taxonomy'} />
+          <NavListItem icon={<TbDatabaseEdit />} name={'Tipos de datos'} path={'/config/fields'} />
         </NavList>
       </ModuleSidebar>
       <ModuleContent withSidebar>
