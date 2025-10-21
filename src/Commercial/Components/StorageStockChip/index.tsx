@@ -13,7 +13,7 @@ const StorageStockChip = ({storageStock, quantity, showQuantity = true}: Storage
   return (
     <Space>
       <div>
-        {storageStock?.variation_name || name}
+        {storageStock?.name || name}
         <small>
           <code style={{fontSize: 13}}>{storageStock?.variation?.sku}</code>
         </small>

@@ -252,6 +252,7 @@ export type ApiFile = {
   type: string;
   created_at: string;
   size: number;
+  container_uuid?: string;
   container?: Container;
   activity?: Array<FileActivity>;
   source: string;
@@ -750,7 +751,9 @@ export type StorageStock = {
   uuid: string;
   sku?: string;
   serial_number?: string;
-  variation_name?: string;
+  name?: string;
+  excerpt?: string;
+  commercial_description?: string;
   currency: string;
   cost_price?: number;
   sale_price?: number;

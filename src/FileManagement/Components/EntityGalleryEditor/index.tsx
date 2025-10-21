@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
+import {TbEye, TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
 import {Popconfirm, Space} from "antd";
 import axios from "axios";
 
@@ -8,6 +8,7 @@ import FileUploader from "../FileUploader";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
+import {NavLink, useNavigate} from "react-router-dom";
 
 interface EntityGalleryEditorProps {
   value?: ApiFile[];
@@ -16,6 +17,7 @@ interface EntityGalleryEditorProps {
 
 const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) => {
   const [gallery, setGallery] = useState<ApiFile[] | undefined | null>(value);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (onChange && gallery) {
@@ -58,11 +60,14 @@ const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) =
             <Space>
               {item.code != 'cover' ?
                 <IconButton
-                  icon={<TbPhotoCheck/>} title={'Usar imagen como portada'}
+                  icon={<TbPhotoCheck color={'#ffffff'}/>} title={'Usar imagen como portada'}
                   onClick={() => setAsCover(item, 'cover')}/> :
                 <IconButton icon={<TbPhotoCancel/>} title={'Quitar imagen como portada'}
                             onClick={() => setAsCover(item, 'public')}/>
               }
+              <NavLink target={'_blank'} to={`/file-management/${item.container_uuid}`}>
+                <IconButton icon={<TbEye color={'#ffffff'}/>} title={'Ver carpeta'} />
+              </NavLink>
               <Popconfirm title={'¿Quiere eliminar esta imagen?'} onConfirm={() => deleteImage(item)}>
                 <IconButton icon={<TbTrash/>} danger/>
               </Popconfirm>
@@ -70,7 +75,7 @@ const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) =
           </div>
         </div>;
       })}
-      <FileUploader multiple clearOnFinish showPreview={false} onChange={(fileUuid, fileData) => {
+      <FileUploader small multiple clearOnFinish showPreview={false} onChange={(fileUuid, fileData) => {
         const newGallery = gallery ? [...gallery] : [];
         newGallery.push(fileData);
         setGallery(newGallery);

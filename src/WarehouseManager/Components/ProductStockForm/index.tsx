@@ -16,6 +16,7 @@ import Config from "../../../Config.tsx";
 import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
 import EntityGalleryEditor from "../../../FileManagement/Components/EntityGalleryEditor";
 import ProductVariationSelector from "../ProductVariationSelector";
+import HtmlEditor from "../../../CommonUI/HtmlEditor";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -93,7 +94,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="Nombre (opcional)" name={'variation_name'}>
+            <Form.Item label="Nombre (opcional)" name={'name'}>
               <Input placeholder={variation?.variation_name}/>
             </Form.Item>
             <Row gutter={15}>
@@ -161,6 +162,12 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
           <Col md={11}>
             <Form.Item name={'attachments'} label={'Galería de imagenes'}>
               <EntityGalleryEditor/>
+            </Form.Item>
+            <Form.Item name={'excerpt'} label={'Resumen'}>
+              <Input.TextArea/>
+            </Form.Item>
+            <Form.Item name={'commercial_description'} label={'Información adicional'}>
+              <HtmlEditor height={120} />
             </Form.Item>
             <Divider orientation={'left'}>Información adicional</Divider>
             <Form.Item name={'attributes'}>

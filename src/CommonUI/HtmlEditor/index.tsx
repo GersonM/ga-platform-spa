@@ -13,11 +13,12 @@ import {
 interface HtmlEditorProps {
   title?: string;
   value?: string;
+  height?: number;
 }
 
-const HtmlEditor = ({...props}:HtmlEditorProps) => {
+const HtmlEditor = ({height = 100, ...props}:HtmlEditorProps) => {
   return (
-      <DefaultEditor {...props}>
+      <DefaultEditor {...props} style={{height: height}}>
         <Toolbar>
           <BtnStyles style={{color:'#000000', marginLeft:'3px'}} />
           <BtnBold/>
