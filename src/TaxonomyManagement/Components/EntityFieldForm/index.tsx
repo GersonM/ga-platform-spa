@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import type {EntityField} from "../../../Types/api.tsx";
 import {Form, Input, Select} from "antd";
-import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import axios from "axios";
-import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import {TbCheck} from "react-icons/tb";
+import voca from 'voca';
+
+import type {EntityField} from "../../../Types/api.tsx";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 interface EntityFieldFormProps {
   entityField?: EntityField;
@@ -14,6 +16,7 @@ interface EntityFieldFormProps {
 const EntityFieldForm = ({entityField, onComplete}: EntityFieldFormProps) => {
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState<string>();
+  const [name, setName] = useState<string>();
 
   const submitForm = (values: any) => {
     setLoading(true);
@@ -39,19 +42,20 @@ const EntityFieldForm = ({entityField, onComplete}: EntityFieldFormProps) => {
     <Form layout="vertical" initialValues={entityField} onFinish={submitForm}>
       <h3>{entityField ? 'Editar campo' : 'Crear nuevo campo'}</h3>
       <Form.Item label={'Nombre'} name={'name'}>
-        <Input/>
+        <Input onChange={(evt) => setName(evt.target.value)}/>
       </Form.Item>
       <Form.Item label={'Descripción (opcional)'} name={'description'}>
         <Input.TextArea/>
       </Form.Item>
       <Form.Item label={'Código'} name={'code'}>
-        <Input/>
+        <Input placeholder={voca.slugify(name)}/>
       </Form.Item>
       <Form.Item label={'Grupo'} name={'group'}>
         <Input/>
       </Form.Item>
       <Form.Item label={'Tipo'} name={'type'}>
         <Select
+          placeholder={'Texto'}
           onChange={value => setType(value)}
           options={[
             {label: 'Texto', value: 'text'},

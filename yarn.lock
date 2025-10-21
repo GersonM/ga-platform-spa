@@ -2282,14 +2282,6 @@ json-buffer@3.0.1:
   resolved "https://registry.npmjs.org/json-buffer/-/json-buffer-3.0.1.tgz"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
 
-json-edit-react@^1.27.2:
-  version "1.29.0"
-  resolved "https://registry.npmjs.org/json-edit-react/-/json-edit-react-1.29.0.tgz"
-  integrity sha512-qxho/m0w6GCaKLic6XsZgmCrKKwluMvoy92teRBRus1PRHJQiP4pkFQJ90lmrno1KNgSePYIG0mcscS0GjdH3A==
-  dependencies:
-    object-property-assigner "^1.3.5"
-    object-property-extractor "^1.0.13"
-
 json-schema-traverse@^0.4.1:
   version "0.4.1"
   resolved "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz"
@@ -2558,16 +2550,6 @@ object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
   integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
-
-object-property-assigner@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.npmjs.org/object-property-assigner/-/object-property-assigner-1.3.5.tgz"
-  integrity sha512-DIzHzNSTnpoG8QPQCDNrHa6O3vLMhktK3Igirqpk523UYIVe8JNCKcn5C9WyLQxJc58EGsAIiiEu10gqPrud8w==
-
-object-property-extractor@^1.0.13:
-  version "1.0.13"
-  resolved "https://registry.npmjs.org/object-property-extractor/-/object-property-extractor-1.0.13.tgz"
-  integrity sha512-9kgEjTWDhTPuPn7nyof+5mLmCKBPKdU0c7IVpTbOvYKYSdXQ5skH4Pa/8MPbZXeyXBGrqS82JyWecsh6tMxiLw==
 
 once@^1.3.1, once@^1.4.0:
   version "1.4.0"
@@ -3565,18 +3547,6 @@ slate-dom@^0.118.1:
     direction "^1.0.4"
     is-hotkey "^0.2.0"
     is-plain-object "^5.0.0"
-    lodash "^4.17.21"
-    scroll-into-view-if-needed "^3.1.0"
-    tiny-invariant "1.3.1"
-
-slate-react@^0.117.4:
-  version "0.117.4"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.117.4.tgz#04c925b41e9cc507937819b4d7192e1fc2bb85a9"
-  integrity sha512-9ckilyUzQS1VHJnstIpgInhcWnTDgv2Cd7m1HOQVl3zasChoapPSMftzT/wl/48grZaZYZIi4xVuzGTcFRUWFg==
-  dependencies:
-    "@juggle/resize-observer" "^3.4.0"
-    direction "^1.0.4"
-    is-hotkey "^0.2.0"
     lodash "^4.17.21"
     scroll-into-view-if-needed "^3.1.0"
     tiny-invariant "1.3.1"

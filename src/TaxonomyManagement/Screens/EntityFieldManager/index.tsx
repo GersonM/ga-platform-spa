@@ -90,8 +90,11 @@ const EntityFieldManager = () => {
   return (
     <>
       <ContentHeader
-        title={'Datos adicionales'} description={'Agrega tipos de datos adicionales disponibles en el sistema'}
-        onAdd={() => setOpenFieldForm(true)}
+        title={'Tipos de datos'} description={'Agrega tipos de datos adicionales disponibles en el sistema'}
+        onAdd={() => {
+          setOpenFieldForm(true);
+          setSelectedField(undefined);
+        }}
         onRefresh={() => setReload(!reload)}/>
       <TableList dataSource={fields} columns={columns}/>
       <ModalView open={openFieldForm} onCancel={() => setOpenFieldForm(false)}>
