@@ -145,6 +145,28 @@ export type ContractItem = {
   approved_at?: string;
   approved_by?: Profile;
 };
+export type CommercialCategory = {
+  uuid: string;
+  name: string;
+  description: string;
+  code: string;
+  created_at: string;
+}
+export type CommercialCategoryFee = {
+  uuid: string;
+  stock: StorageStock;
+  category: CommercialCategory;
+  amount: number;
+  type: string;
+  rules?: string[];
+  created_at: string;
+}
+export type CommercialSeller = {
+  uuid: string;
+  profile: Profile;
+  category: CommercialCategory;
+  created_at: string;
+};
 export type Employee = {
   uuid: string;
   bank_account?: string;

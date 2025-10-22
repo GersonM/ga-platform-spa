@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
+import {Drawer, Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
 import {TbIdBadge2, TbLockCog, TbPencil, TbTrash, TbUser, TbUserOff, TbUserShield} from 'react-icons/tb';
 import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -17,12 +17,13 @@ import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import './styles.less';
+import UpdateUserPassword from "../../Components/UpdateUserPassword";
 
 interface ProfilesManagementProps {
-  type?:string;
+  type?: string;
 }
 
-const ProfilesManagement = ({type}:ProfilesManagementProps) => {
+const ProfilesManagement = ({type}: ProfilesManagementProps) => {
   const navigate = useNavigate();
   const [profiles, setProfiles] = useState<Profile[]>();
   const [reload, setReload] = useState(false);
@@ -33,6 +34,8 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState<string>();
   const [filterSubscription, setFilterSubscription] = useState<string>();
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<Profile>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -64,7 +67,7 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: '_name',
+      dataIndex: 'name',
       width: 280,
       render: (_name: string, row: Profile) => {
         return <ProfileChip profile={row}/>;
@@ -137,29 +140,31 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
     },
     {
       dataIndex: 'uuid',
-      responsive: ['lg'],
-      width: 230,
-      render: (uuid: string) => {
+      width: 175,
+      render: (uuid: string, row: Profile) => {
         return (
           <Space wrap>
             <Tooltip title={'Editar'}>
-              <IconButton icon={<TbPencil/>} onClick={() => navigate(`/profiles/${uuid}`)}/>
+              <IconButton small icon={<TbPencil/>} onClick={() => navigate(`/profiles/${uuid}`)}/>
             </Tooltip>
             <Tooltip title={'Cambiar contraseña'}>
-              <IconButton icon={<TbLockCog/>} disabled/>
+              <IconButton small icon={<TbLockCog/>} onClick={() => {
+                setSelectedProfile(row);
+                setOpenChangePassword(true);
+              }}/>
             </Tooltip>
             <Tooltip title={'Editar roles'}>
-              <IconButton icon={<TbUserShield/>} disabled/>
+              <IconButton small icon={<TbUserShield/>} disabled/>
             </Tooltip>
             <Tooltip title={'Bloquear usuario'}>
-              <IconButton icon={<TbUserOff/>} danger disabled/>
+              <IconButton small icon={<TbUserOff/>} danger disabled/>
             </Tooltip>
             <Tooltip title={'Eliminar usuario'}>
               <Popconfirm
                 title={'¿Quieres eliminar este usuario?'}
                 description={'Toda la información relacionada será eliminada también'}
                 onConfirm={() => setReload(!reload)}>
-                <IconButton icon={<TbTrash/>} danger disabled/>
+                <IconButton small icon={<TbTrash/>} danger disabled/>
               </Popconfirm>
             </Tooltip>
           </Space>
@@ -176,7 +181,7 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
           onRefresh={() => {
             setReload(!reload);
           }}
-          title={'Usuarios'}
+          title={type == 'user' ? 'Usuarios' : 'Personas'}
           tools={`${pagination?.total} personas encontradas`}
           onAdd={() => setOpenCreateUser(true)}
         >
@@ -184,7 +189,7 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
             <Form.Item label={'Buscar'}>
               <Input.Search
                 allowClear
-                placeholder={'por nombre'}
+                placeholder={'por nombre, documento o correo'}
                 onSearch={value => {
                   setSearch(value);
                   setCurrentPage(1);
@@ -206,7 +211,7 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
             </Form.Item>
           </FilterForm>
         </ContentHeader>
-        <TableList columns={columns} dataSource={profiles}/>
+        <TableList scroll={{x:900}} columns={columns} dataSource={profiles}/>
         <Pagination
           align={'center'}
           showSizeChanger={false}
@@ -226,6 +231,20 @@ const ProfilesManagement = ({type}:ProfilesManagementProps) => {
             }}
           />
         </Modal>
+        <Drawer
+          destroyOnHidden
+          open={openChangePassword}
+          title={'Actualizar contraseña para ' + selectedProfile?.name}
+          onClose={() => setOpenChangePassword(false)}>
+          {selectedProfile && (
+            <UpdateUserPassword
+              onChange={() => {
+                setOpenChangePassword(false);
+              }}
+              profile={selectedProfile}
+            />
+          )}
+        </Drawer>
       </ModuleContent>
     </>
   );

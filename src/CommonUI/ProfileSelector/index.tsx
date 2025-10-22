@@ -24,6 +24,7 @@ interface ProfileSelectorProps {
 const ProfileSelector = ({
   onChange,
   placeholder,
+  disabled,
   allowCreate = true
 }: ProfileSelectorProps) => {
   const [openCreateProfile, setOpenCreateProfile] = useState(false);
@@ -44,6 +45,7 @@ const ProfileSelector = ({
         />
         {allowCreate && (
           <PrimaryButton
+            disabled={disabled}
             onClick={() => setOpenCreateProfile(true)}
             icon={<PiPlusBold size={14} />}
             style={{marginLeft: 8}}

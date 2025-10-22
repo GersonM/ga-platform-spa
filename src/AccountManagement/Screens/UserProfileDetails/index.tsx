@@ -17,7 +17,7 @@ const UserProfileDetails = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title={'Información del usuario'} onBack={() => navigate('/profiles')} />
+      <ContentHeader title={'Información del usuario'} showBack/>
       <div>
         {params.uuid && (
           <Tabs

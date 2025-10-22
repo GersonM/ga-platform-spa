@@ -1,40 +1,54 @@
-import React from 'react';
-import {Button, Col, Divider, Form, Input, InputNumber, Row, Select} from "antd";
-import ProfileSelector from "../../../CommonUI/ProfileSelector";
-import PrimaryButton from "../../../CommonUI/PrimaryButton";
-import StockSelector from "../../../WarehouseManager/Components/StockSelector";
+import React, {useEffect} from 'react';
+import {Form, Input} from "antd";
+import {useForm} from "antd/lib/form/Form";
+import axios from "axios";
 
-const SellerCategoryForm = () => {
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import type {CommercialCategory} from "../../../Types/api.tsx";
+
+interface SellerCategoryFormProps {
+  sellerCategory?: CommercialCategory;
+  onComplete?: () => void;
+}
+
+const SellerCategoryForm = ({sellerCategory, onComplete}: SellerCategoryFormProps) => {
+  const [form] = useForm<CommercialCategory>();
+
+  useEffect(() => {
+    form.resetFields();
+  }, [sellerCategory])
+
+  const submitForm = (values: any) => {
+    axios
+      .request({
+        url: sellerCategory ? `commercial/seller-category/${sellerCategory.uuid}` : "commercial/seller-category",
+        method: sellerCategory ? 'PUT' : 'POST',
+        data: values
+      })
+      .then(() => {
+        if (onComplete) {
+          form.resetFields();
+          onComplete();
+        }
+      })
+      .catch(err => {
+        ErrorHandler.showNotification(err);
+      });
+  };
+
   return (
-    <Form layout="vertical">
-      <h3>Categorías de vendedor</h3>
-      <Row gutter={[20, 20]}>
-        <Col span={10}>
-          <Form.Item name={'name'} label={'Nombre'}>
-            <Input />
-          </Form.Item>
-          <Form.Item label={'Categoría'} name={'comission'}>
-            <Select options={[
-              {label:'A', value:'1'},
-              {label:'B', value:'1'},
-              {label:'C', value:'1'},
-            ]} />
-          </Form.Item>
-        </Col>
-        <Col span={14}>
-          <Divider>Productos en categoría</Divider>
-          <Row gutter={[20, 20]}>
-            <Col span={16}>
-              <StockSelector style={{width:'100%'}}  />
-            </Col>
-            <Col span={8}>
-              <InputNumber suffix={'%'} />
-            </Col>
-          </Row>
-          <Button type="dashed" htmlType="submit" block>Agregar nuevo</Button>
-        </Col>
-      </Row>
-      <PrimaryButton block label={'Guardar'} />
+    <Form form={form} layout="vertical" onFinish={submitForm} initialValues={sellerCategory}>
+      <Form.Item name={'name'} label={'Nombre'} rules={[{required:true}]}>
+        <Input/>
+      </Form.Item>
+      <Form.Item name={'code'} label={'Código (opcional)'}>
+        <Input/>
+      </Form.Item>
+      <Form.Item name={'description'} label={'Descripción'}>
+        <Input.TextArea/>
+      </Form.Item>
+      <PrimaryButton htmlType={'submit'} block label={sellerCategory?'Guardar cambio':'Crear categoría'}/>
     </Form>
   );
 };

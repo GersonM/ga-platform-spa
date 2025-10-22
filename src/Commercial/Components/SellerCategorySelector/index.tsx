@@ -1,0 +1,69 @@
+import {useEffect, useState} from 'react';
+import {Select} from 'antd';
+import axios from 'axios';
+
+import type {Campaign} from '../../../Types/api';
+import ErrorHandler from '../../../Utils/ErrorHandler';
+
+interface CampaignSelectorProps {
+  placeholder?: string;
+  onChange?: (value: any, option: any) => void;
+  bordered?: boolean;
+  disabled?: boolean;
+  refresh?: boolean;
+  style?: any;
+  value?: any;
+  size?: 'small' | 'large';
+  mode?: 'multiple' | 'tags' | undefined;
+}
+
+const SellerCategorySelector = ({placeholder, mode, refresh, ...props}: CampaignSelectorProps) => {
+  const [campaign, setCampaign] = useState<Campaign | any>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+    };
+
+    axios
+      .get(`commercial/seller-category`, config)
+      .then(response => {
+        setLoading(false);
+        if (response) {
+          setCampaign(
+            response.data.map((item: Campaign) => {
+              return {
+                value: item.uuid,
+                entity: item,
+                label: <>{item.name}</>,
+              };
+            }),
+          );
+        }
+      })
+      .catch(e => {
+        setLoading(false);
+        ErrorHandler.showNotification(e);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [refresh]);
+
+  return (
+    <Select
+      {...props}
+      allowClear
+      placeholder={placeholder || 'Elige una categoría'}
+      showSearch={true}
+      optionFilterProp={'label'}
+      loading={loading}
+      options={campaign}
+      mode={mode || undefined}
+    />
+  );
+};
+
+export default SellerCategorySelector;
