@@ -144,6 +144,7 @@ const LeadMessagesManager = () => {
         </ContentHeader>
         <ChatBox
           disabled={user?.profile.uuid != currentLead?.referer?.uuid}
+          profile={currentLead?.profile}
         />
       </ModuleContent>
       <ModalView

@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Input, Select} from "antd";
+import {Image, Input, Select} from "antd";
 import {TbSend} from "react-icons/tb";
 import dayjs from "dayjs";
 import axios from "axios";
 
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
-import type {ChatRoom} from "../../../Types/api.tsx";
+import type {ChatRoom, Profile} from "../../../Types/api.tsx";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
 
 interface ChatBoxProps {
   disabled?: boolean;
+  profile?: Profile;
 }
 
-const ChatBox = ({disabled}: ChatBoxProps) => {
+const ChatBox = ({disabled, profile}: ChatBoxProps) => {
   const [loading, setLoading] = useState(false);
   const [chatRoom, setChatRoom] = useState<ChatRoom>();
   const [reload, setReload] = useState(false);
@@ -59,22 +60,24 @@ const ChatBox = ({disabled}: ChatBoxProps) => {
     <div className={'chat-box-container'}>
       <div className={'message-list'}>
         <div className={'message-bubble'}>Hola <div className={'message-time'}>{dayjs().format('h:m a')}</div></div>
-        <div className={'message-bubble'}>Hola <br/> Este es un mensaje
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble'}>Hola <br/> Este es ua sdfad fasdf adasd n mensaje
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble'}>Hola <br/> Este es un mensaje
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble own'}>Hola <br/> Este es un mensaje
+        <div className={'message-bubble'}>Busco información sobre un producto
           <div className={'message-time'}>{dayjs().format('h:m a')}</div>
         </div>
         <div className={'message-bubble own'}>
-          <img
-            src="https://platform.geekadvice.pe/wayra/storage/file-management/files/f07043f7-7884-4cfe-88f0-76669f8b628b/view?token=121%7CocVgXMbXeda3RK9BVnOvid3ELlGZhyDunnt3ld1R"
-            alt=""/>
+          Buenos días {profile?.name} <br/> <br/>
+          Tenemos información para ofrecerle sobre las propiedad en nuestro Proyecto TERRA
+
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
+        <div className={'message-bubble'}>Si, donde est+a ubicado?
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
+        <div className={'message-bubble own'}>
+          Le adjunto un mapa de la ubicación
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
+        <div className={'message-bubble own'}>
+          <Image src={'https://platform.geekadvice.pe/wayra/storage/file-management/files/f07043f7-7884-4cfe-88f0-76669f8b628b/view?token=121%7CocVgXMbXeda3RK9BVnOvid3ELlGZhyDunnt3ld1R'}/>
           <div className={'message-time'}>{dayjs().format('h:mm a')}</div>
         </div>
       </div>
