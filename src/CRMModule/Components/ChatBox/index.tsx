@@ -1,29 +1,100 @@
-import React from 'react';
-import {Input, Space} from "antd";
-import {TbBrandWhatsapp, TbSend} from "react-icons/tb";
+import React, {useEffect, useState} from 'react';
+import {Input, Select} from "antd";
+import {TbSend} from "react-icons/tb";
+import dayjs from "dayjs";
+import axios from "axios";
 
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import type {ChatRoom} from "../../../Types/api.tsx";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
-import dayjs from "dayjs";
 
 const ChatBox = () => {
+  const [loading, setLoading] = useState(false);
+  const [chatRoom, setChatRoom] = useState<ChatRoom>();
+  const [reload, setReload] = useState(false);
+  const [message, setMessage] = useState<string>()
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+    };
+
+    setLoading(true);
+
+    axios
+      .get(`communication/chat-rooms`, config)
+      .then(response => {
+        if (response) {
+          setChatRoom(response.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [reload]);
+
+  const sendMessage = (messageInput:string) => {
+    axios.post(`communication/chat-messages`, {
+      message: messageInput,
+      content: messageInput
+    })
+      .then(response => {
+        console.log('response', response);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  }
+
   return (
     <div className={'chat-box-container'}>
       <div className={'message-list'}>
-        <div className={'message-bubble'}>Hola <span className={'message-time'}>{dayjs().format('h:m a')}</span></div>
-        <div className={'message-bubble'}>Hola <br/> Este es un mensaje<span className={'message-time'}>{dayjs().format('h:m a')}</span></div>
-        <div className={'message-bubble'}>Hola <br/> Este es ua sdfad fasdf adasd n mensaje<span className={'message-time'}>{dayjs().format('h:m a')}</span></div>
-        <div className={'message-bubble'}>Hola <br/> Este es un mensaje<span className={'message-time'}>{dayjs().format('h:m a')}</span></div>
-        <div className={'message-bubble own'}>Hola <br/> Este es un mensaje<span className={'message-time'}>{dayjs().format('h:m a')}</span></div>
+        <div className={'message-bubble'}>Hola <div className={'message-time'}>{dayjs().format('h:m a')}</div></div>
+        <div className={'message-bubble'}>Hola <br/> Este es un mensaje
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
+        <div className={'message-bubble'}>Hola <br/> Este es ua sdfad fasdf adasd n mensaje
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
+        <div className={'message-bubble'}>Hola <br/> Este es un mensaje
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
+        <div className={'message-bubble own'}>Hola <br/> Este es un mensaje
+          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
+        </div>
         <div className={'message-bubble own'}>
           <img
             src="https://platform.geekadvice.pe/wayra/storage/file-management/files/f07043f7-7884-4cfe-88f0-76669f8b628b/view?token=121%7CocVgXMbXeda3RK9BVnOvid3ELlGZhyDunnt3ld1R"
             alt=""/>
-          <span className={'message-time'}>{dayjs().format('h:m a')}</span></div>
+          <div className={'message-time'}>{dayjs().format('h:mm a')}</div>
+        </div>
       </div>
       <div className={'message-box'}>
-          <Input.TextArea slot={'asdfsf'} placeholder={'Escribe un mensaje y presiona enter para enviar'} />
-          <PrimaryButton icon={<TbBrandWhatsapp size={20}/>}/>
+        <div>
+        </div>
+        <Input.TextArea
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          onPressEnter={value => {
+            // @ts-ignore
+            sendMessage(value.target.value);
+            setMessage(undefined);
+            value.preventDefault();
+          }}
+          placeholder={'Escribe un mensaje y presiona enter para enviar'}/>
+
+        <PrimaryButton style={{width:100}} icon={<TbSend size={20}/>}/>
+        <Select
+          placeholder={'Enviar plantilla'}
+          style={{width: 90}}
+          options={[
+            {value: 'bienvenida', label: 'Bienvenida'},
+          ]}/>
       </div>
     </div>
   );

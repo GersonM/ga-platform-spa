@@ -107,9 +107,9 @@ const CommercialLeads = () => {
               value={params.campaign}
               onChange={value => {
                 if (!value) {
-                  navigate(`/commercial/leads`);
+                  navigate(`/crm/leads`);
                 } else {
-                  navigate(`/commercial/leads/${value}`);
+                  navigate(`/crm/leads/${value}`);
                 }
               }}
             />

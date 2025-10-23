@@ -85,6 +85,7 @@ export type Lead = {
   profile: Profile;
   referer?: Profile;
   campaign?: Campaign;
+  created_at: string;
 };
 export type Campaign = {
   uuid: string;

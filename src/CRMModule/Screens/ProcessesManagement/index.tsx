@@ -1,49 +1,13 @@
 import React, {useState} from 'react';
+import {TbPlus} from "react-icons/tb";
+import {Card, Checkbox, Form, Input, Select, Space} from "antd";
+
 import ModuleContent from "../../../CommonUI/ModuleContent";
 import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
 import FilterForm from "../../../CommonUI/FilterForm";
-import {Card, Checkbox, Form, Input, Select, Space, Tag} from "antd";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import CustomTag from "../../../CommonUI/CustomTag";
 import ModalView from "../../../CommonUI/ModalView";
-import {TbPlus} from "react-icons/tb";
-
-const stepsList: any[] = [
-  {
-    uuid: '34kjh2345-234523-fasd345',
-    name: 'Saludo baja',
-    description: 'Baja de opciones',
-    code: 'step_1',
-    options: [
-      {label: 'Más información', value: '1'},
-      {label: 'No quiero más mensajes', value: '1'},
-    ],
-    steps: [
-      {
-        uuid: '34kjh2345-234523-fasd345',
-        name: 'Enviar más información',
-        description: 'Baja de opciones',
-        code: 'mas_info',
-        steps: null,
-        options: [
-          {label: 'Si', value: '1'},
-          {label: 'No', value: '1'},
-        ],
-      },
-      {
-        uuid: '34kjh2345-234523-fasd345',
-        name: 'Enviar más información',
-        description: 'Baja de opciones',
-        code: 'step_2',
-        steps: null,
-        options: [
-          {label: 'Si', value: '1'},
-          {label: 'No', value: '1'},
-        ],
-      }
-    ],
-  }
-];
 
 const ProcessesManagement = () => {
   const [openProcessForm, setOpenProcessForm] = useState(false);
