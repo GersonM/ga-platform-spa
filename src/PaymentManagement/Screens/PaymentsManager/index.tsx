@@ -83,7 +83,7 @@ const PaymentsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters]);
+  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters, dateCreatedRangeFilter]);
 
   const deletePayment = (uuid: string) => {
     axios
@@ -103,6 +103,7 @@ const PaymentsManager = () => {
         params: {
           ...filters,
           date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+          create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
         }
       })
       .then(() => {
@@ -224,9 +225,10 @@ const PaymentsManager = () => {
             onInitialValues={values => setFilters(values)}
             onSubmit={values => setFilters(values)}
             additionalChildren={<>
-              <Form.Item label={'Fecha de creación'} name={'create_date_range'}>
-                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'}
-                                        onChange={value => setDateCreatedRangeFilter(value)}/>
+              <Form.Item label={'Fecha de creación'}>
+                <DatePicker.RangePicker
+                  showNow format={'DD/MM/YYYY'}
+                  onChange={value => setDateCreatedRangeFilter(value)}/>
               </Form.Item>
             </>}
           >
