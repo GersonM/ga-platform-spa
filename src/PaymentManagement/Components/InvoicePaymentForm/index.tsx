@@ -63,7 +63,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       </p>
       <Form
         form={form}
-        initialValues={payment ? {...payment, created_at: dayjs(payment.created_at)} : {amount: invoice.pending_payment}}
+        initialValues={payment ? {...payment, transaction_date: dayjs(payment.transaction_date)} : {amount: invoice.pending_payment}}
         requiredMark={false}
         layout={'vertical'}
         onFinish={submitForm}>
@@ -79,7 +79,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
             </Form.Item>
           </Col>
           <Col span={7}>
-            <Form.Item name={'created_at'} label={'Fecha de pago'}>
+            <Form.Item name={'transaction_date'} label={'Fecha de pago'}>
               <DatePicker placeholder={'Hoy'} format={Config.dateFormatUser} />
             </Form.Item>
           </Col>

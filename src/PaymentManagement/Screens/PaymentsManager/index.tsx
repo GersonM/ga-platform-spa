@@ -132,8 +132,8 @@ const PaymentsManager = () => {
       title: 'F. de pago',
       width: 180,
       dataIndex: 'transaction_date',
-      render: (date: string, row: InvoicePayment) => <code>{date ? dayjs(date).format(Config.datetimeFormatUser) : ''}
-        <small>{dayjs(row.created_at).format(Config.datetimeFormatUser)}</small>
+      render: (date: string, row: InvoicePayment) => <code>{date ? dayjs(date).format(Config.dateFormatUser) : ''}
+        <small title={'Fecha de creación'}>{dayjs(row.created_at).format(Config.datetimeFormatUser)}</small>
       </code>,
     },
     {
