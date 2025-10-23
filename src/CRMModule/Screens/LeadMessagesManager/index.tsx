@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   TbArrowRightBar,
   TbArrowRightCircle,
@@ -27,6 +27,7 @@ import CreateLeadForm from "../../../Commercial/Components/CreateLeadForm";
 import IconButton from "../../../CommonUI/IconButton";
 import {useParams} from "react-router-dom";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
+import AuthContext from "../../../Context/AuthContext.tsx";
 
 const LeadMessagesManager = () => {
   const [leads, setLeads] = useState<Lead[]>();
@@ -37,6 +38,7 @@ const LeadMessagesManager = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<string>();
   const [currentLead, setCurrentLead] = useState<Lead>();
   const params = useParams();
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -140,7 +142,9 @@ const LeadMessagesManager = () => {
           </Space>}
         >
         </ContentHeader>
-        <ChatBox/>
+        <ChatBox
+          disabled={user?.profile.uuid != currentLead?.referer?.uuid}
+        />
       </ModuleContent>
       <ModalView
         title={'Nuevo lead'}

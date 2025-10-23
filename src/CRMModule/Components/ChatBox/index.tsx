@@ -9,11 +9,15 @@ import type {ChatRoom} from "../../../Types/api.tsx";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
 
-const ChatBox = () => {
+interface ChatBoxProps {
+  disabled?: boolean;
+}
+
+const ChatBox = ({disabled}: ChatBoxProps) => {
   const [loading, setLoading] = useState(false);
   const [chatRoom, setChatRoom] = useState<ChatRoom>();
   const [reload, setReload] = useState(false);
-  const [message, setMessage] = useState<string>()
+  const [message, setMessage] = useState<string>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -38,7 +42,7 @@ const ChatBox = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
-  const sendMessage = (messageInput:string) => {
+  const sendMessage = (messageInput: string) => {
     axios.post(`communication/chat-messages`, {
       message: messageInput,
       content: messageInput
@@ -78,6 +82,7 @@ const ChatBox = () => {
         <div>
         </div>
         <Input.TextArea
+          disabled={disabled}
           value={message}
           onChange={e => setMessage(e.target.value)}
           onPressEnter={value => {
@@ -88,7 +93,9 @@ const ChatBox = () => {
           }}
           placeholder={'Escribe un mensaje y presiona enter para enviar'}/>
 
-        <PrimaryButton style={{width:100}} icon={<TbSend size={20}/>}/>
+        <PrimaryButton
+          disabled={disabled}
+          style={{width: 100}} icon={<TbSend size={20}/>}/>
         <Select
           placeholder={'Enviar plantilla'}
           style={{width: 90}}
