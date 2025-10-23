@@ -1,4 +1,4 @@
-import {type ReactNode, useEffect} from 'react';
+import React, {type ReactNode, useEffect} from 'react';
 import {Space, Tooltip} from 'antd';
 import {useNavigate} from 'react-router-dom';
 import {PiPencilSimple} from 'react-icons/pi';
@@ -92,7 +92,7 @@ const ContentHeader = (
           </Tooltip>
         )}
         <div className={'header-content-title'}>
-          <h1 className={'title'}>{title}</h1>
+          {React.isValidElement(title) ? title : (<h1 className={'title'}>{title}</h1>)}
         </div>
         {onAdd && (
           largeTools ?

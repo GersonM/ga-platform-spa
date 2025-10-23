@@ -150,7 +150,7 @@ const WarehouseProductsManager = () => {
         onRefresh={() => setReload(!reload)}
         tools={<Space>
           <Tooltip title={'Gestionar almacenes'}>
-            <PrimaryButton ghost label={'Almacenes'} shape={'round'} size={"small"} icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
+            <PrimaryButton ghost label={'Proyectos / Almacenes'} shape={'round'} size={"small"} icon={<PiShippingContainer/>} onClick={() => setOpenWarehouseManager(true)}/>
           </Tooltip>
         </Space>}
         onAdd={() => setOpenAddProduct(true)}

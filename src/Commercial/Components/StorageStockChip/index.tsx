@@ -9,13 +9,13 @@ interface StorageStockChipProps {
 }
 
 const StorageStockChip = ({storageStock, quantity, showQuantity = true}: StorageStockChipProps) => {
-  const name = storageStock?.variation?.product?.name + ' ' + (storageStock?.variation?.variation_name || '');
+  const name = storageStock?.name || (storageStock?.variation?.product?.name + ' ' + (storageStock?.variation?.variation_name || ''));
   return (
     <Space>
       <div>
-        {storageStock?.name || name}
+        {name || 'Sin nombre'}
         <small>
-          <code style={{fontSize: 13}}>{storageStock?.variation?.sku}</code>
+          <code style={{fontSize: 13}}>{storageStock?.variation?.sku || 'No SKU'}</code>
         </small>
       </div>
       {showQuantity && quantity !== undefined && quantity > 1 && (

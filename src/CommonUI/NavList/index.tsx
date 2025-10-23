@@ -6,9 +6,11 @@ import {EllipsisVerticalIcon} from '@heroicons/react/24/solid';
 
 import IconButton from '../IconButton';
 import './styles.less';
+import {TbDotsVertical} from "react-icons/tb";
 
 interface NavItemProps {
   name: string | ReactNode;
+  tools?: string | ReactNode;
   caption?: string;
   path: string;
   image?: string;
@@ -18,7 +20,7 @@ interface NavItemProps {
   menuItems?: MenuProps;
 }
 
-const NavListItem = ({image, name, caption, icon, onClick, path, menuItems, height}: NavItemProps) => {
+const NavListItem = ({image, name, caption, icon, tools, onClick, path, menuItems, height}: NavItemProps) => {
   return (
     <li className={'nav-list-item'}>
       <NavLink to={path} onClick={onClick} style={{height}}>
@@ -28,9 +30,10 @@ const NavListItem = ({image, name, caption, icon, onClick, path, menuItems, heig
           {caption && <span className={'caption'}>{caption}</span>}
         </div>
       </NavLink>
+      {tools && <div className={'tools'}>{tools}</div>}
       {menuItems && (
         <Dropdown trigger={['click']} menu={menuItems} arrow={true}>
-          <IconButton icon={<EllipsisVerticalIcon />} />
+          <IconButton icon={<TbDotsVertical />} />
         </Dropdown>
       )}
     </li>

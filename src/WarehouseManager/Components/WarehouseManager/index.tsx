@@ -69,7 +69,12 @@ const WarehouseManager = () => {
     {
       title: 'Dirección física',
       dataIndex: 'is_physical',
-      render: (is_physical: boolean) => is_physical ? 'SI' : 'No'
+      render: (is_physical: number) => is_physical == 1 ? 'SI' : 'No'
+    },
+    {
+      title: 'Tipo',
+      dataIndex: 'is_physical',
+      render: (is_physical: number) => is_physical == 1 ? 'Almacen' : 'Proyecto'
     },
     {
       title: '',
@@ -89,13 +94,14 @@ const WarehouseManager = () => {
 
   return (
     <div>
-      <h2>Almacenes</h2>
-      <p>
+      <Space align={'start'}>
+        <h2>Proyectos / Almacenes</h2>
         <PrimaryButton icon={<TbPlus/>} ghost label={'Crear nuevo almacen'} onClick={() => {
           setOpenWarehouseForm(true);
           setSelectedWarehouse(undefined);
         }}/>
-      </p>
+      </Space>
+      <p>Proyecto o ubicaciones donde se agrupan bienes o servicios</p>
       <TableList loading={loading} columns={columns} dataSource={productStock}/>
       <Modal footer={null} open={openWarehouseForm} onCancel={() => {
         setOpenWarehouseForm(false);

@@ -37,7 +37,7 @@ import {
   TbCurrencyDollar,
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
   TbListCheck, TbMapPinBolt, TbMessageUser,
-  TbPackage, TbPackageImport, TbPercentage,
+  TbPackage, TbPackageImport,
   TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
 } from 'react-icons/tb';
 import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
@@ -178,9 +178,8 @@ const Navigation = () => {
             {config?.modules.includes('commercial') && (
               <NavItem label={'CRM'} icon={<TbHeadset/>} notifications={'Beta'}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/crm/dashboard'}/>
-                <NavItem icon={<TbMessageUser/>} label={'Chat'} path={'/crm/incidents'}/>
-                <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/crm/leads'}/>
-                <NavItem icon={<PiUserFocus/>} label={'Campañas'} path={'/crm/leads'}/>
+                <NavItem icon={<PiUserFocus/>} label={'Leads & campañas'} path={'/crm/leads'}/>
+                <NavItem icon={<TbMessageUser/>} label={'Mensajería'} path={'/crm/chat'}/>
                 <NavItem icon={<TbContract/>} label={'Procesos'} path={'/crm/processes'}/>
               </NavItem>
             )}
@@ -188,13 +187,11 @@ const Navigation = () => {
               <NavItem label={'Comercial'} icon={<PiHandshake/>}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/commercial/dashboard'}/>
                 <NavItem icon={<PiWarningDiamond/>} label={'Incidencias'} path={'/commercial/incidents'}/>
-                <NavItem icon={<PiUserFocus/>} label={'Leads'} path={'/commercial/leads'}/>
                 <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
                 <NavItem icon={<TbShoppingCartUp/>} label={'Ventas'} path={'/commercial/sales'}/>
                 <NavItem icon={<TbShoppingCartDown/>} label={'Compras'} path={'/commercial/purchases'}/>
                 <NavItem icon={<TbContract/>} label={'Plantillas de contrato'} path={'/commercial/contract-templates'}/>
                 <NavItem icon={<TbUsersGroup/>} label={'Vendedores'} path={'/commercial/sellers'}/>
-                <NavItem icon={<TbPercentage/>} label={'Comisiones'} path={'/commercial/quotes'}/>
               </NavItem>
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>

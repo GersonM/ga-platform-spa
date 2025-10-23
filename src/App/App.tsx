@@ -7,6 +7,7 @@ import './App.less';
 import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
+import LeadMessagesManager from "../CRMModule/Screens/LeadMessagesManager";
 
 const CommercialSellersManager = lazy(() => import("../Commercial/Screens/CommercialSellersManager"));
 const EntityFieldManager = lazy(() => import("../TaxonomyManagement/Screens/EntityFieldManager"));
@@ -192,11 +193,12 @@ const App = () => {
         </Route>
         <Route path={'crm'}>
           <Route path={'processes'} element={<ProcessesManagement/>}/>
+          <Route path={'chat/:lead?'} element={<LeadMessagesManager />}/>
+          <Route path={'leads/:campaign?'} element={<CommercialLeads/>}/>
         </Route>
         <Route path={'commercial'}>
           <Route path={'dashboard'} element={<CommercialDashboard/>}/>
           <Route path={'incidents'} element={<CommercialIncidents/>}/>
-          <Route path={'leads/:campaign?'} element={<CommercialLeads/>}/>
           <Route path={'clients'} element={<CommercialClients/>}/>
           <Route path={'sales'} element={<CommercialSales/>}/>
           <Route path={'contracts/:contract'} element={<CommercialContractDetail/>}/>

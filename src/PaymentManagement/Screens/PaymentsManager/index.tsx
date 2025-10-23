@@ -47,6 +47,7 @@ const PaymentsManager = () => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
+  const [dateCreatedRangeFilter, setDateCreatedRangeFilter] = useState<any[] | null>();
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<InvoicePayment>();
@@ -63,6 +64,7 @@ const PaymentsManager = () => {
         page: currentPage,
         page_size: pageSize,
         date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+        create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
     setLoading(true);
@@ -97,7 +99,12 @@ const PaymentsManager = () => {
   const deleteSelection = () => {
     setLoadingDeleteSelection(true);
     axios
-      .delete('payment-management/payments/delete-selection', {params: {...filters, date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,}})
+      .delete('payment-management/payments/delete-selection', {
+        params: {
+          ...filters,
+          date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+        }
+      })
       .then(() => {
         setReload(!reload);
         setLoadingDeleteSelection(false);
@@ -124,7 +131,9 @@ const PaymentsManager = () => {
       title: 'F. de pago',
       width: 180,
       dataIndex: 'transaction_date',
-      render: (date: string) => <code>{date ? dayjs(date).format(Config.datetimeFormatUser) : ''}</code>,
+      render: (date: string, row: InvoicePayment) => <code>{date ? dayjs(date).format(Config.datetimeFormatUser) : ''}
+        <small>{dayjs(row.created_at).format(Config.datetimeFormatUser)}</small>
+      </code>,
     },
     {
       title: 'Cuenta',
@@ -144,6 +153,17 @@ const PaymentsManager = () => {
       dataIndex: 'invoice',
       render: (invoice: Invoice) => {
         return <Link to={'finances/invoices'}>{invoice.tracking_id}</Link>;
+      }
+    },
+    {
+      title: 'Info',
+      dataIndex: 'transaction_info',
+      render: (transaction_info?: string) => {
+        try {
+          return transaction_info ? JSON.parse(transaction_info).invoice_document : null;
+        } catch (e) {
+          return null;
+        }
       }
     },
     {
@@ -202,14 +222,21 @@ const PaymentsManager = () => {
           </>}>
           <FilterForm
             onInitialValues={values => setFilters(values)}
-            onSubmit={values => setFilters(values)}>
+            onSubmit={values => setFilters(values)}
+            additionalChildren={<>
+              <Form.Item label={'Fecha de creación'} name={'create_date_range'}>
+                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'}
+                                        onChange={value => setDateCreatedRangeFilter(value)}/>
+              </Form.Item>
+            </>}
+          >
             <Form.Item name={'voucher_code'} label={'N°'}>
               <Input allowClear placeholder={'N° Voucher/Transacción'}/>
             </Form.Item>
-            <Form.Item label={'Cliente'} name={'client_uuid'}>
-              <ClientSelector/>
+            <Form.Item name={'client_uuid'}>
+              <ClientSelector placeholder={'Filtrar por cliente'}/>
             </Form.Item>
-            <Form.Item label={'Rango de fechas'}>
+            <Form.Item label={'Fecha de pago'}>
               <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
             </Form.Item>
             <Form.Item label={'Monto'} name={'amount'}>
