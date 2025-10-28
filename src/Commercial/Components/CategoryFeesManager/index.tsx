@@ -17,6 +17,9 @@ const CategoryFeesManager = ({category}: CategoryFeesManagerProps) => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
+      params: {
+        category_uuid: category.uuid,
+      }
     };
 
     setLoading(true);

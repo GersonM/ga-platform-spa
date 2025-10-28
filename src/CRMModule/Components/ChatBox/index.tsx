@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Image, Input, Select} from "antd";
 import {TbSend} from "react-icons/tb";
 import dayjs from "dayjs";
 import axios from "axios";
+import {useEcho, echo } from "@laravel/echo-react";
 
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {ChatRoom, Profile} from "../../../Types/api.tsx";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import AuthContext from "../../../Context/AuthContext.tsx";
 import './styles.less';
 
 interface ChatBoxProps {
@@ -19,6 +21,16 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
   const [chatRoom, setChatRoom] = useState<ChatRoom>();
   const [reload, setReload] = useState(false);
   const [message, setMessage] = useState<string>();
+  const {user} = useContext(AuthContext);
+
+  useEcho(
+    `chat-rooms.20`,
+    "NewChatMessageEvent",
+    (e: any) => {
+      console.log('mensaje', e);
+    },
+  );
+
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -42,6 +54,7 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
 
     return cancelTokenSource.cancel;
   }, [reload]);
+
 
   const sendMessage = (messageInput: string) => {
     axios.post(`communication/chat-messages`, {
@@ -77,7 +90,8 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
           <div className={'message-time'}>{dayjs().format('h:m a')}</div>
         </div>
         <div className={'message-bubble own'}>
-          <Image src={'https://platform.geekadvice.pe/wayra/storage/file-management/files/f07043f7-7884-4cfe-88f0-76669f8b628b/view?token=121%7CocVgXMbXeda3RK9BVnOvid3ELlGZhyDunnt3ld1R'}/>
+          <Image
+            src={'https://platform.geekadvice.pe/wayra/storage/file-management/files/f07043f7-7884-4cfe-88f0-76669f8b628b/view?token=121%7CocVgXMbXeda3RK9BVnOvid3ELlGZhyDunnt3ld1R'}/>
           <div className={'message-time'}>{dayjs().format('h:mm a')}</div>
         </div>
       </div>
@@ -85,9 +99,11 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
         <div>
         </div>
         <Input.TextArea
-          disabled={disabled}
           value={message}
-          onChange={e => setMessage(e.target.value)}
+          onChange={e => {
+            setMessage(e.target.value);
+            //channel().whisper('typing', {name: user?.profile.name});
+          }}
           onPressEnter={value => {
             // @ts-ignore
             sendMessage(value.target.value);

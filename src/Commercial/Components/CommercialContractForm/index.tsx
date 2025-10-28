@@ -115,22 +115,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 ]}
               />
             </Form.Item>
-            <Row gutter={[15, 15]}>
-              <Col xs={10}>
-                <Form.Item label={'Moneda'} name={'currency'}>
-                  <CurrencySelector
-                    placeholder={contract?.contractable?.currency}
-                    onChange={(value: string) => setSelectedCurrency(value)}/>
-                </Form.Item>
-              </Col>
-              <Col xs={14}>
-                <Form.Item label={'Precio de venta'} name={'amount'}>
-                  <MoneyInput
-                    currency={contract?.contractable?.currency}
-                    placeholder={contract?.amount ? contract.amount + '' : contract?.contractable?.currency}/>
-                </Form.Item>
-              </Col>
-            </Row>
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>

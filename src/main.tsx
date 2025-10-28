@@ -11,13 +11,16 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import '@ant-design/v5-patch-for-react-19';
 import {EditorProvider} from "react-simple-wysiwyg";
-import logo from './Assets/ga_logo.webp';
+import {configureEcho} from "@laravel/echo-react";
 
 import {AuthContextProvider} from './Context/AuthContext';
 import {UploadContextProvider} from './Context/UploadContext';
 import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
+import logo from './Assets/ga_logo.webp';
 import './index.less';
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 dayjs.locale('es');
 dayjs.extend(relativeTime);
@@ -40,6 +43,24 @@ axios.defaults.headers.common['X-Tenant'] = tenantID;
 axios.defaults.headers.common.Authorization = 'Bearer ' + token;
 axios.defaults.withXSRFToken = true;
 
+configureEcho({
+  broadcaster: "reverb",
+  auth: {
+    headers: {
+      'X-Tenant': tenantID,
+      //'Authorization': 'Bearer ' + token,
+    }
+  },
+  authEndpoint: 'https://'+import.meta.env.VITE_REVERB_HOST + '/broadcasting/auth ',
+  bearerToken: token,
+  key: import.meta.env.VITE_REVERB_APP_KEY,
+  wsHost: import.meta.env.VITE_REVERB_HOST,
+  wsPort: import.meta.env.VITE_REVERB_PORT,
+  wssPort: import.meta.env.VITE_REVERB_PORT,
+  forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+  enabledTransports: ['ws', 'wss'],
+});
+
 axios
   .get('/version')
   .then(response => {
@@ -47,9 +68,9 @@ axios
       <AuthContextProvider config={response.data}>
         <TenantAppConfig tenant={response.data}>
           <UploadContextProvider>
-            <BrowserRouter future={{v7_relativeSplatPath:true, v7_startTransition:false}}>
+            <BrowserRouter future={{v7_relativeSplatPath: true, v7_startTransition: false}}>
               <EditorProvider>
-                <App />
+                <App/>
               </EditorProvider>
             </BrowserRouter>
           </UploadContextProvider>
