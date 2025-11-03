@@ -65,7 +65,7 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
         setSaving(false);
         form.resetFields();
         setProfiles(undefined);
-        onComplete && onComplete();
+        if(onComplete) onComplete();
         notification.success({message: 'Ingreso registrado'});
       })
       .catch(e => {

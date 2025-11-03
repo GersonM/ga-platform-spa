@@ -5,11 +5,11 @@ import {
   TbArrowRightToArc,
   TbArrowsSplit,
   TbCalendarCheck,
-  TbPlus,
+  TbPlus, TbReload,
   TbUser
 } from "react-icons/tb";
 import dayjs from "dayjs";
-import {Avatar, Badge, Button, Space} from "antd";
+import {Avatar, Badge, Button, Empty, Space, Tabs} from "antd";
 
 import ModuleSidebar from "../../../CommonUI/ModuleSidebar";
 import ModuleContent from "../../../CommonUI/ModuleContent";
@@ -102,8 +102,14 @@ const LeadMessagesManager = () => {
       <ModuleSidebar
         title={'Mensajes'}
         width={320}
-        actions={<><IconButton disabled={!selectedCampaign} icon={<TbPlus/>} small
-                               onClick={() => setOpenLeadForm(true)}/></>}
+        actions={<>
+          <IconButton
+            disabled={!selectedCampaign} icon={<TbPlus/>} small
+                      onClick={() => setOpenLeadForm(true)}/>
+          <IconButton
+            icon={<TbReload/>} small
+            onClick={() => setReload(!reload)}/>
+        </>}
       >
         <CampaignSelector
           style={{width: '100%', marginBottom: 5}} placeholder={'Filtrar por campaña'}
@@ -138,14 +144,30 @@ const LeadMessagesManager = () => {
             <div>
               Asesor asignado: <br/>
             </div>
-            <ProfileChip profile={currentLead?.referer} />
+            <ProfileChip profile={currentLead?.referer}/>
           </Space>}
         >
         </ContentHeader>
-        <ChatBox
-          disabled={user?.profile.uuid != currentLead?.referer?.uuid}
-          profile={currentLead?.profile}
-        />
+        <Tabs items={[
+          {
+            key: 'chats',
+            label: 'Chats',
+            children: <>
+              <ChatBox
+                disabled={user?.profile.uuid != currentLead?.referer?.uuid}
+                profile={currentLead?.profile}
+              />
+            </>
+          },
+          {
+            key: 'mail',
+            label: 'Correos',
+            children: <>
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay correos enviados'} />
+            </>
+          },
+        ]}/>
+
       </ModuleContent>
       <ModalView
         title={'Nuevo lead'}
