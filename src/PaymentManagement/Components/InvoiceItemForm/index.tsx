@@ -56,10 +56,10 @@ const InvoiceItemForm = ({
             <StockSelector onChange={(_vale, opt) => {
               setSelectedStock(opt.entity);
               const s = opt.entity
-              form.setFieldValue('concept', s.sku + ' - ' + (s.variation_name || s.product.name));
+              form.setFieldValue('concept', s.sku + ' - ' + (s.name || s.product.name));
               form.setFields([
                 {name:'amount', value: s.sale_price},
-                {name: 'concept', value: s.sku + ' - ' + (s.variation_name || s.product.name)}
+                {name: 'concept', value: s.sku + ' - ' + (s.name || s.product.name)}
               ]);
               console.log(opt);
             }}/>

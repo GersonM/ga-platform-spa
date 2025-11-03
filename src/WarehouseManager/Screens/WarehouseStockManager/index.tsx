@@ -228,6 +228,7 @@ const WarehouseStockManager = () => {
           setOpenStockForm(true);
           setSelectedStock(undefined);
         }}
+        loading={loading}
         title={'Existencias'}
         tools={<>
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles

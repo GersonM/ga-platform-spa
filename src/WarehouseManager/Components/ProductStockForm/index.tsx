@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Divider} from "antd";
+import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Divider, Select} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -17,6 +17,7 @@ import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFie
 import EntityGalleryEditor from "../../../FileManagement/Components/EntityGalleryEditor";
 import ProductVariationSelector from "../ProductVariationSelector";
 import HtmlEditor from "../../../CommonUI/HtmlEditor";
+import TaxonomySelector from "../../../TaxonomyManagement/Components/TaxonomySelector";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -29,6 +30,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   const [currentCurrency, setCurrentCurrency] = useState<string>();
   const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
   const [metadata, setMetadata] = useState<any[]>();
+  const [selectedType, setSelectedType] = useState<string | undefined>(stock?.type);
 
   useEffect(() => {
     if (form) {
@@ -94,20 +96,46 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="Nombre (opcional)" name={'name'}>
-              <Input placeholder={variation?.variation_name}/>
-            </Form.Item>
-            <Row gutter={15}>
-              <Col md={13}>
+            <Row gutter={[20, 20]}>
+              <Col md={9}>
                 <Form.Item label="Número de serie" name={'serial_number'}>
-                  <Input/>
+                  <Input style={{fontFamily: 'monospace'}}/>
                 </Form.Item>
               </Col>
-              <Col md={11}>
-                <Form.Item label="F. de vencimiento" name={'expiration_date'}>
-                  <DatePicker placeholder={'No caduca'} style={{width: '100%'}} format={Config.dateFormatUser}/>
+              <Col md={15}>
+                <Form.Item label="Nombre (opcional)" name={'name'}>
+                  <Input placeholder={variation?.name || variation?.product?.name}/>
                 </Form.Item>
               </Col>
+            </Row>
+            <Row gutter={15}>
+              <Col md={8}>
+                <Form.Item label={'Tipo'} name={'type'}>
+                  <TaxonomySelector onChange={val => {
+                    console.log(val);
+                    setSelectedType(val);
+                  }} code={'stock-types'} property={'code'} />
+                </Form.Item>
+              </Col>
+              {(selectedType == 'lease' || selectedType == 'license') ?
+                <Col md={8}>
+                  <Form.Item label={'Duración'} name={'duration'}>
+                    <Select
+                      placeholder={'1 mes'}
+                      options={[
+                        {label: '1 mes', value: '1m'},
+                        {label: '6 meses', value: '6m'},
+                        {label: '1 año', value: '1y'},
+                        {label: '2 años', value: '2y'},
+                      ]}/>
+                  </Form.Item>
+                </Col> :
+                <Col md={8}>
+                  <Form.Item label="F. de vencimiento" name={'expiration_date'}>
+                    <DatePicker placeholder={'No caduca'} style={{width: '100%'}} format={Config.dateFormatUser}/>
+                  </Form.Item>
+                </Col>
+              }
             </Row>
             <Row gutter={15}>
               <Col md={6}>
@@ -167,7 +195,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <Input.TextArea/>
             </Form.Item>
             <Form.Item name={'commercial_description'} label={'Información adicional'}>
-              <HtmlEditor height={120} />
+              <HtmlEditor height={120}/>
             </Form.Item>
             <Divider orientation={'left'}>Información adicional</Divider>
             <Form.Item name={'attributes'}>

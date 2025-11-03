@@ -42,7 +42,7 @@ const ProductVariationSelector = ({placeholder, mode, style, product, ...props}:
         if (response) {
           setVariations(
             response.data.data.map((item: StorageProductVariation) => {
-              return {value: item.uuid, label: `${item.product?.name} ${item.variation_name || ''}`, entity: item};
+              return {value: item.uuid, label: `${item.product?.name} ${item.name || ''}`, entity: item};
             }),
           );
         }

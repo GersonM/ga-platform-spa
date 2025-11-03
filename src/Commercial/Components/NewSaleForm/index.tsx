@@ -180,7 +180,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 renderItem={(cartItem) => {
                   return <List.Item>
                     <List.Item.Meta
-                      title={cartItem.stock?.variation?.variation_name || cartItem.stock?.variation?.product?.name}
+                      title={cartItem.stock?.variation?.name || cartItem.stock?.variation?.product?.name}
                       description={<CustomTag><code>{cartItem.stock?.serial_number}</code></CustomTag>}
                     />
                     <Space>

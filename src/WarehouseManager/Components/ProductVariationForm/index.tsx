@@ -64,7 +64,7 @@ const ProductVariationForm = ({product, variation, onComplete}: ProductVariation
           </Form.Item>
           <Row gutter={15}>
             <Col md={15} xs={13}>
-              <Form.Item label="Nombre de la variación (opcional)" name={'variation_name'}>
+              <Form.Item label="Nombre de la variación (opcional)" name={'name'}>
                 <Input placeholder={product?.name}/>
               </Form.Item>
             </Col>

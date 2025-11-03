@@ -78,10 +78,10 @@ const MonitorServicesManager = () => {
     },
     {
       title: 'Procesador',
-      dataIndex: 'uuid',
+      dataIndex: 'features',
       render: (text: string) => (
         <>
-          AMD Ryzen 9 3900X 12-Core Processor
+          {text}
           <small>DDR4 3200MHz 64GB (2 x 32GB 3200MHz)</small>
         </>
       )

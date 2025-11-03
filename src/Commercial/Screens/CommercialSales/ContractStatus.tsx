@@ -18,11 +18,11 @@ const statuses: any = {
 }
 
 const colors: any = {
-  provisioning: 'orange',
+  provisioning: 'blue',
   cancelled: 'red',
-  approved: 'blue',
-  proposal: 'yellow',
-  completed: 'green',
+  approved: 'green',
+  proposal: 'orange',
+  completed: 'magenta',
 }
 
 const ContractStatus = ({contract}: ContractStatusProps) => {

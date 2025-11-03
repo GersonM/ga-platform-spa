@@ -17,10 +17,11 @@ interface ProductSelectorProps {
   bordered?: boolean;
   disabled?: boolean;
   refresh?: boolean;
+  open?: boolean;
   style?: any;
   value?: any;
   size?: 'small' | 'large';
-  status?: 'sold' | 'available' | 'reserved';
+  status?: 'sold' | 'available' | 'reserved' | 'all';
   mode?: 'multiple' | 'tags' | undefined;
 }
 
@@ -54,7 +55,7 @@ const StockSelector = ({placeholder, currency, mode, refresh, product, status = 
               .data
               .filter((item: StorageStock) => !currency || item.currency === currency)
               .map((item: StorageStock) => {
-              let disabled = status && item.status != status;
+              let disabled = status && item.status != status && status != 'all';
               if(currency != null) {
                 disabled = currency != item.currency
               }
@@ -66,7 +67,7 @@ const StockSelector = ({placeholder, currency, mode, refresh, product, status = 
                 label: (
                   <>
                     <Tag bordered={false} color={'blue'}>{item.serial_number}</Tag>
-                    <MoneyString currency={item.currency} value={item.sale_price}/> - {item?.variation?.variation_name || item?.variation?.product?.name}
+                    <MoneyString currency={item.currency} value={item.sale_price}/> - {item?.variation?.name || item?.variation?.product?.name}
                   </>
                 ),
               };
@@ -97,8 +98,8 @@ const StockSelector = ({placeholder, currency, mode, refresh, product, status = 
         const stock: StorageStock = option.data.entity;
         const units = stock.is_consumable ? pluralize(stock.variation?.product?.unit_type || 'unit', stock.quantity, true) : 'Ilimitado';
         return <div>
-          <code style={{fontSize:13}}>{stock.serial_number}</code> <Divider type={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
-          <small><code>{stock.variation?.sku}</code> <Divider type={'vertical'} /> {stock?.variation?.variation_name || stock?.variation?.product?.name}</small>
+          <code style={{fontSize:13}}>{stock?.variation?.product?.name} {stock?.variation?.name}</code> <Divider type={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
+          <small><code>{stock.serial_number} | {stock.variation?.sku}</code></small>
         </div>;
       }}
       mode={mode || undefined}

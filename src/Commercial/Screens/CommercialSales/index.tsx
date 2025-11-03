@@ -196,16 +196,21 @@ const CommercialSales = () => {
         if (!cart?.length) {
           return <small>Sin productos</small>;
         }
-        return <Popover content={<div>
-          <Space direction={'vertical'} split={<Divider style={{margin: '5px 0'}}/>}>
-            {cart?.map((cI, index) => {
-              return <StorageStockChip key={index} storageStock={cI.stock} quantity={cI.quantity}/>
-            })}
-          </Space>
-        </div>}>
-          <StorageStockChip storageStock={cart[0].stock} quantity={cart[0].quantity}/>
-          {cart.length > 1 && <Tag bordered={false}>(...{cart.length - 1} más)</Tag>}
-        </Popover>
+        const label = <StorageStockChip storageStock={cart[0].stock} quantity={cart[0].quantity}/>;
+        if (cart.length == 1) {
+          return label;
+        } else {
+          return <Popover content={<div>
+            <Space direction={'vertical'} split={<Divider style={{margin: '5px 0'}}/>}>
+              {cart?.map((cI, index) => {
+                return <StorageStockChip key={index} storageStock={cI.stock} quantity={cI.quantity}/>
+              })}
+            </Space>
+          </div>}>
+            {label}
+            <Tag bordered={false}>(...{cart.length - 1} más)</Tag>
+          </Popover>
+        }
       },
     },
     {
@@ -334,7 +339,7 @@ const CommercialSales = () => {
                                         onChange={(_v, option) => setFilterVariation(option.entity)}/>
             </Form.Item>
             <Form.Item layout={'vertical'} label={'Stock'} name={'stock_uuid'}>
-              <StockSelector product={filterProduct} variation={filterVariation} status={'sold'}/>
+              <StockSelector product={filterProduct} variation={filterVariation} status={'all'}/>
             </Form.Item>
           </>}
           onInitialValues={values => setFilters(values)}
@@ -345,14 +350,18 @@ const CommercialSales = () => {
           <Form.Item>
             <DatePicker.RangePicker format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
           </Form.Item>
-          <Form.Item name={'provided'} label={'Entregado'}>
+          <Form.Item name={'status'} label={'Estado'}>
             <Select
               placeholder={'Todas'}
               allowClear
               style={{width: 125}}
               options={[
-                {label: 'Entregados', value: '1'},
-                {label: 'No entregados', value: '0'},
+                {label: 'Propuestas', value: 'proposal'},
+                {label: 'Aprobados', value: 'approved'},
+                {label: 'En proceso', value: 'in_progress'},
+                {label: 'Completado', value: 'completed'},
+                {label: 'Entregado', value: 'provided'},
+                {label: 'Anulado', value: 'void'},
               ]}
             />
           </Form.Item>

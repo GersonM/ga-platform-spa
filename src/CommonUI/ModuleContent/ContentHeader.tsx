@@ -101,9 +101,16 @@ const ContentHeader = (
         )}
         {onRefresh && (
           largeTools ?
-            <PrimaryButton icon={<TbRefresh className={loading ? 'spin' : ''}/>} ghost size={'small'} shape={'round'}
-                           label={'Recargar'} onClick={onRefresh}/> :
-            <IconButton title={'Actualizar'} icon={<TbRefresh className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
+            <PrimaryButton
+              icon={<TbRefresh className={loading ? 'spin' : ''}/>}
+              ghost
+              disabled={loading}
+              size={'small'} shape={'round'}
+              label={'Recargar'} onClick={onRefresh}/> :
+            <IconButton
+              title={'Actualizar'}
+              disabled={loading}
+              icon={<TbRefresh className={loading ? 'spin' : ''}/>} onClick={onRefresh}/>
         )}
         {onEdit && (
           <Tooltip title={'Editar'}>

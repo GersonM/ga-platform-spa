@@ -751,7 +751,7 @@ export type StorageContractCartItem = {
 
 export type StorageProductVariation = {
   uuid: string;
-  variation_name?: string;
+  name?: string;
   description?: string;
   unit_type?: string;
   sku: string;
@@ -775,6 +775,8 @@ export type StorageStock = {
   sku?: string;
   serial_number?: string;
   name?: string;
+  type?: string;
+  duration?: string;
   excerpt?: string;
   commercial_description?: string;
   currency: string;
