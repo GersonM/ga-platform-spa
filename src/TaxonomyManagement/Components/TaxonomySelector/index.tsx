@@ -8,7 +8,7 @@ interface ITaxonomySelectorProps {
   value?: any;
   code?: string;
   property?: string;
-  onChange?: (value: any) => void;
+  onChange?: (value: any, option: any) => void;
 }
 
 const TaxonomySelector = ({code, property = 'uuid', value, ...props}: ITaxonomySelectorProps) => {
@@ -71,19 +71,13 @@ const TaxonomySelector = ({code, property = 'uuid', value, ...props}: ITaxonomyS
       value={value}
       placeholder="Seleciona una categoría"
       loadData={onLoadData}
-      onSelect={(v: string, option) => {
+      onSelect={(v: string, option: any) => {
         if (props.onChange) {
-          let value = v;
+          let value: string = v;
           if (property !== 'uuid') {
             value = option[property];
           }
           props.onChange(value, option);
-        }
-      }}
-      onChange={(value) => {
-        console.log('aafsdf', value);
-        if (props.onChange) {
-          props.onChange();
         }
       }}
       {...props}
