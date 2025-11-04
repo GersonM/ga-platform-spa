@@ -120,13 +120,14 @@ const CommercialSales = () => {
       params: {
         page: currentPage,
         page_size: pageSize,
-        ...filters
+        ...filters,
+        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
 
     setDownloading(true);
     axios({
-      url: 'commercial/clients/export', //your url
+      url: 'commercial/contracts/export', //your url
       params: config.params,
       method: 'GET',
       responseType: 'blob', // important
