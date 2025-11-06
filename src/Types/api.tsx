@@ -102,6 +102,7 @@ export type Contract = {
   approved_at?: string;
   budget_details?: string;
   created_at: string;
+  locked_at: string;
   created_by?: Profile;
   date_end?: string;
   date_start: string;

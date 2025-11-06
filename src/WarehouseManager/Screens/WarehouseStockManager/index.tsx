@@ -234,6 +234,7 @@ const WarehouseStockManager = () => {
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
           <Progress percent={Math.round(percent)} style={{width: '200px'}}/>
           <PrimaryButton disabled={!selectedRows?.length} loading={downloadingReport} label={'Generar reporte'} onClick={getStockReport}/>
+          <PrimaryButton disabled loading={downloadingReport} label={'Registrar salidas'} onClick={getStockReport}/>
         </>}
       >
         <FilterForm
@@ -258,7 +259,7 @@ const WarehouseStockManager = () => {
           }
         >
           <Form.Item label="Buscar" name={'search'}>
-            <Input placeholder={'Buscar por variación o producto'}/>
+            <Input placeholder={'Buscar por nombre o N° de serie'}/>
           </Form.Item>
           <Form.Item label="Estado" name={'status'}>
             <Select

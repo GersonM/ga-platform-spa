@@ -141,20 +141,6 @@ const CommercialContractDetail = () => {
       })
   }
 
-  const updateStock = (uuid: string) => {
-    setLoading(true);
-    axios
-      .post(`commercial/contracts/${contract?.uuid}/update-stock`, {stock_uuid: uuid})
-      .then(() => {
-        setLoading(false);
-        setReload(!reload);
-      })
-      .catch(e => {
-        setLoading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
-
   if (!contract) {
     return <LoadingIndicator message={'Cargando información de contrato'}/>;
   }
@@ -341,8 +327,8 @@ const CommercialContractDetail = () => {
             }
             <Divider orientation={"left"}>Productos</Divider>
             <List
-              bordered
               size={"small"}
+              style={{margin:'0 -15px'}}
               dataSource={contract.cart}
               renderItem={(cartItem) => {
                 return <List.Item>
@@ -360,13 +346,14 @@ const CommercialContractDetail = () => {
                     </div>}
                   />
                   <Space>
-                    <small style={{display:'flex', alignItems:'center'}}>
-                      {cartItem.unit_amount && <TbLock />}
+                    <small style={{display: 'flex', alignItems: 'center'}}>
+                      {cartItem.unit_amount == null && <TbLock/>}
                       <MoneyString
-                        currency={cartItem.stock?.currency} value={cartItem.unit_amount || cartItem.stock?.sale_price}
+                        currency={cartItem.stock?.currency}
+                        value={cartItem.unit_amount == null ? cartItem.stock?.sale_price : cartItem.unit_amount}
                       />{' '}x {cartItem.quantity}
                     </small>
-                    {contract.status != 'provided' &&
+                    {!contract.locked_at &&
                       <>
                         <IconButton icon={<TbPencil/>} small onClick={() => {
                           setOpenCartItemForm(true);
