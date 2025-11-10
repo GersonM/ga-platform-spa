@@ -14,6 +14,7 @@ $tenantCode = match ($host) {
 $tenantNames = match ($host) {
   'platform.fbgroup.pe' => 'FB Group',
   'cobrify.geekadvice.pe' => 'Alma Quinta',
+  'manager.cobrify.lat' => 'Alma Quinta',
   'fireworks.geekadvice.pe' => 'Fireworks',
   'villa-primavera.geekadvice.pe' => 'Villa Primavera',
   'localhost:5173' => 'Geek Advice',

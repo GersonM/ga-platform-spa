@@ -36,6 +36,9 @@ let tenantID = selectedWorkspace ? selectedWorkspace : isDevMode ? import.meta.e
 if (window.location.hostname.includes('countryclublavilla.pe')) {
   tenantID = 'country-moquegua';
 }
+if (window.location.hostname.includes('cobrify.lat')) {
+  tenantID = 'cobrify';
+}
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API;

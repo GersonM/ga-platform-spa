@@ -14,7 +14,7 @@ import {
   Tabs, Tooltip,
 } from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
-import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbPlus, TbTrash} from "react-icons/tb";
+import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -41,7 +41,6 @@ import IconButton from "../../../CommonUI/IconButton";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
-import StorageStockChip from "../../Components/StorageStockChip";
 import Config from "../../../Config.tsx";
 import MetaTitle from "../../../CommonUI/MetaTitle";
 import ProductStockForm from "../../../WarehouseManager/Components/ProductStockForm";
@@ -215,7 +214,7 @@ const CommercialContractDetail = () => {
     {
       key: 'seller',
       label: 'Vendedor',
-      children: <ProfileChip profile={contract?.created_by}/>
+      children: contract?.created_by ? <ProfileChip profile={contract?.created_by}/> : 'Sin vendedor'
     },
     {key: '5', label: 'Observaciones', children: contract?.observations || <small>Sin observaciones</small>},
   ];
