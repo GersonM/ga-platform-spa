@@ -19,11 +19,11 @@ const statuses: any = {
 }
 
 const colors: any = {
-  provisioning: 'firebrick',
+  provisioning: 'blue',
   cancelled: 'red',
   approved: 'green',
   proposal: 'orange',
-  completed: 'blue',
+  completed: 'cyan',
   provided: 'lime',
 }
 
