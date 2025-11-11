@@ -5,6 +5,7 @@ $uri = $_SERVER['REQUEST_URI'];
 
 $tenantCode = match ($host) {
   'localhost:5173' => 'app',
+  'manager.cobrify.lat' => 'cobrify',
   default => explode('.', $host)[0],
 };
 
