@@ -7,6 +7,7 @@ import {GoogleLogin} from "@react-oauth/google";
 import Cookies from 'js-cookie';
 
 import AuthContext from "../../../Context/AuthContext.tsx";
+import MetaTitle from "../../../CommonUI/MetaTitle";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -82,6 +83,7 @@ const Login = () => {
 
   return (
     <>
+      <MetaTitle title="Login" />
       <Form onFinish={login}>
         <h2>Bienvenid@ de vuelta</h2>
         <div className={'input-large'}>
