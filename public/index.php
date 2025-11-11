@@ -27,14 +27,21 @@ $tenantDescriptions = match ($host) {
   'manager.cobrify.lat' => 'La perfección web es nuestro día a día',
   default => 'Plataforma de gestión empresarial',
 };
+$favicon = '/src/Assets/GeekAdvice_favicon.webp';
+$whiteLogo = null;
+try {
+  $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version'));
+  $favicon = $tenantInfo->favicon;
+  $whiteLogo = $tenantInfo->white_logo;
+} catch (exception $e) {
 
-$tenantInfo = file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version');
-echo $tenantInfo;
+}
 $indexHtml = file_get_contents('index.html');
 
 $indexHtml = str_replace('<title>Geek Advice</title>', '<title>' . $tenantNames . '</title>', $indexHtml);
 $indexHtml = str_replace('{{og:title}}', $tenantNames, $indexHtml);
 $indexHtml = str_replace('{{og:description}}', $tenantDescriptions, $indexHtml);
+$indexHtml = str_replace('{{img:favicon}}', $favicon, $indexHtml);
 
 if (str_contains($uri, 'storage/files/')) {
   $uuid = explode('storage/files/', $uri)[1];
@@ -45,6 +52,11 @@ if (str_contains($uri, 'storage/files/')) {
   );
   $indexHtml = str_replace('{{og:url}}', 'https://platform-v2.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
 } else {
+  $indexHtml = str_replace(
+    '{{og:image}}',
+    $whiteLogo,
+    $indexHtml
+  );
   $indexHtml = str_replace('{{og:url}}', $uri, $indexHtml);
 }
 echo $indexHtml;
