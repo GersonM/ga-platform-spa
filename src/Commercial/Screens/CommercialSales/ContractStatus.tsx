@@ -14,15 +14,17 @@ const statuses: any = {
   cancelled: 'Anulado',
   approved: 'Aprobado',
   proposal: 'Propuesta',
-  completed: 'Entregado',
+  completed: 'Completado',
+  provided: 'Entregado',
 }
 
 const colors: any = {
-  provisioning: 'blue',
+  provisioning: 'firebrick',
   cancelled: 'red',
   approved: 'green',
   proposal: 'orange',
-  completed: 'magenta',
+  completed: 'blue',
+  provided: 'lime',
 }
 
 const ContractStatus = ({contract}: ContractStatusProps) => {

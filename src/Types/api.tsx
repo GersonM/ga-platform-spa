@@ -100,6 +100,7 @@ export type Contract = {
   client?: Client;
   amount_string?: string;
   approved_at?: string;
+  next_invoice_at?: string;
   budget_details?: string;
   created_at: string;
   locked_at: string;

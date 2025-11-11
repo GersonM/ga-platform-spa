@@ -19,8 +19,6 @@ import TenantAppConfig from './Context/TenantAppConfig';
 import App from './App/App';
 import logo from './Assets/ga_logo.webp';
 import './index.less';
-import Echo from "laravel-echo";
-import Pusher from "pusher-js";
 
 dayjs.locale('es');
 dayjs.extend(relativeTime);
@@ -48,12 +46,7 @@ axios.defaults.withXSRFToken = true;
 
 configureEcho({
   broadcaster: "reverb",
-  auth: {
-    headers: {
-      'X-Tenant': tenantID,
-      //'Authorization': 'Bearer ' + token,
-    }
-  },
+  auth: {headers: {'X-Tenant': tenantID}},
   authEndpoint: 'https://'+import.meta.env.VITE_REVERB_HOST + '/broadcasting/auth ',
   bearerToken: token,
   key: import.meta.env.VITE_REVERB_APP_KEY,
