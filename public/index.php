@@ -27,6 +27,7 @@ $tenantNames = match ($host) {
 $indexHtml = file_get_contents('index.html');
 
 $indexHtml = str_replace('<title>Geek Advice</title>', '<title>' . $tenantNames . '</title>', $indexHtml);
+$indexHtml = str_replace('{{og:title}}', $tenantNames, $indexHtml);
 
 if (str_contains($uri, 'storage/files/')) {
   $uuid = explode('storage/files/', $uri)[1];
@@ -36,7 +37,6 @@ if (str_contains($uri, 'storage/files/')) {
           $indexHtml
   );
 
-  $indexHtml = str_replace('{{og:title}}', $tenantNames, $indexHtml);
   $indexHtml = str_replace('{{og:url}}', 'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
   //$indexHtml = str_replace('{{og:description}}', 'https://platform.geekadvice.pe/' . $tenantCode . '/storage/file-management/files/' . $uuid . '/view', $indexHtml);
 }
