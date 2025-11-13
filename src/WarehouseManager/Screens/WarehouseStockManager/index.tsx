@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {TbPencil, TbRecycleOff, TbShredder} from "react-icons/tb";
-import {Drawer, Form, Input, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
+import {Drawer, Form, Input, InputNumber, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
 import dayjs from "dayjs";
 import pluralize from "pluralize";
 import axios from "axios";
@@ -241,9 +241,6 @@ const WarehouseStockManager = () => {
           onSubmit={values => setFilters(values)}
           additionalChildren={
             <>
-              <Form.Item layout={'vertical'} label={'Almacen'} name={'warehouse_uuid'}>
-                <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
-              </Form.Item>
               <Form.Item layout={'vertical'} label={'Producto'} name={'product_uuid'}>
                 <ProductSelector warehouse={filterWarehouse}
                                  onChange={(_v, option) => setFilterProduct(option.entity)}/>
@@ -264,8 +261,7 @@ const WarehouseStockManager = () => {
           <Form.Item label="Estado" name={'status'}>
             <Select
               allowClear
-              placeholder={'Filtrar por estado'}
-              style={{width: 200}}
+              placeholder={'Disponible'}
               onChange={value => {
                 setStockState(value);
               }} options={[
@@ -275,6 +271,13 @@ const WarehouseStockManager = () => {
               {label: 'Dañados', value: 'damaged'},
               {label: 'Todos', value: 'all'},
             ]}/>
+          </Form.Item>
+
+          <Form.Item label={'Almacen'} name={'warehouse_uuid'}>
+            <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
+          </Form.Item>
+          <Form.Item label={'Desde'} name={'sale_price_from'}>
+            <InputNumber />
           </Form.Item>
         </FilterForm>
       </ContentHeader>

@@ -60,6 +60,7 @@ const WarehouseSelector = ({placeholder, mode, style, ...props}: WarehouseSelect
       onSearch={value => setName(value)}
       filterOption={false}
       loading={loading}
+      popupMatchSelectWidth={false}
       style={style ? style : {width: '100%'}}
       options={products}
       mode={mode}

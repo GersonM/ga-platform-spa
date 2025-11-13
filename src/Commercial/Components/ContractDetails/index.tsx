@@ -3,6 +3,7 @@ import {Divider} from 'antd';
 
 import StockViewerState from "../StockViewerState";
 import CommercialContractForm from "../CommercialContractForm";
+import StorageStockChip from "../StorageStockChip";
 
 interface ContractDetailsProps {
   contract: Contract;
@@ -13,9 +14,14 @@ const ContractDetails = ({contract, onChange}: ContractDetailsProps) => {
 
   return (
     <div>
-      <CommercialContractForm contract={contract} onComplete={onChange} />
+      <CommercialContractForm contract={contract} onComplete={onChange}/>
       <Divider>Detalle de productos</Divider>
-      {contract?.contractable && <StockViewerState stock={contract.contractable}/>}
+      {contract.cart?.map((cart, index) => (
+        <StorageStockChip key={index} storageStock={cart.stock}/>
+      ))}
+      {/*
+        contract?.contractable && <StockViewerState stock={contract.contractable}/>
+      */}
     </div>
   );
 };
