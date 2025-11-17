@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {InputNumber} from "antd";
+import {Empty, InputNumber} from "antd";
 import {TbTrash} from "react-icons/tb";
 
 import MoneyInput from "../../../CommonUI/MoneyInput";
@@ -8,7 +8,7 @@ import type {StorageContractCartItem} from "../../../Types/api.tsx";
 import './styles.less';
 
 interface ShoppingCartEditorProps {
-  onChange?: (value: any) => void;
+  onChange?: (value: StorageContractCartItem[]) => void;
   value?: StorageContractCartItem[];
 }
 
@@ -16,11 +16,14 @@ const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
   const [shoppingCart, setShoppingCart] = useState<StorageContractCartItem[]>();
 
   useEffect(() => {
-    setShoppingCart(value);
-  }, [value])
+    //setShoppingCart(value);
+    if(onChange && shoppingCart) {
+      onChange(shoppingCart);
+    }
+  }, [shoppingCart])
 
   const updateQuantity = (data: StorageContractCartItem, quantity: number | null) => {
-    const newCart = shoppingCart?.slice();
+    const newCart = value?.slice();
     if (newCart) {
       const index = newCart.findIndex(i => i.uuid === data.uuid);
       if (index !== -1) {
@@ -31,7 +34,7 @@ const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
   }
 
   const updateAmount = (data: StorageContractCartItem, amount?: number) => {
-    const newCart = shoppingCart?.slice();
+    const newCart = value?.slice();
     if (newCart) {
       const index = newCart.findIndex(i => i.uuid === data.uuid);
       if (index !== -1) {
@@ -42,7 +45,7 @@ const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
   }
 
   const removeStock = (data: StorageContractCartItem) => {
-    const newCart = shoppingCart?.slice();
+    const newCart = value?.slice();
     if (newCart) {
       const index = newCart.findIndex(i => i.uuid === data.uuid);
       if (index !== -1) {
@@ -54,7 +57,8 @@ const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
 
   return (
     <div className={'shopping-cart-editor-container'}>
-      {shoppingCart?.map((cartItem, index) => {
+      {!value?.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'Elige un producto para agregarlo'} />}
+      {value?.map((cartItem, index) => {
         const name = cartItem.stock?.name || (((cartItem.stock?.variation?.product?.name + ' ') || '') + cartItem.stock?.variation?.name);
         return <div className={'shopping-cart-item'}>
           <div className={'name'}>

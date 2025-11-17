@@ -143,9 +143,11 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
               </Col>
             </Row>
             <Form.Item>
-              <ShoppingCartEditor value={shoppingCart} onChange={value => setShoppingCart(value)} />
+              <ShoppingCartEditor value={shoppingCart} onChange={value => {
+                setShoppingCart(value);
+                console.log('value', value)
+              }} />
             </Form.Item>
-            <Divider />
             <Row gutter={[20, 20]}>
               <Col span={14}>
                 <Form.Item label={'Generar pagos (opcional)'} name={'payment_mode'}>
