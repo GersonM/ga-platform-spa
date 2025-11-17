@@ -13,18 +13,20 @@ interface ShoppingCartEditorProps {
 }
 
 const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
-  const [shoppingCart, setShoppingCart] = useState<StorageContractCartItem[] | undefined>(value);
+  const [shoppingCart, setShoppingCart] = useState<StorageContractCartItem[]>();
 
   useEffect(() => {
     setShoppingCart(value);
   }, [value])
 
   const updateQuantity = (data: StorageContractCartItem, quantity: number | null) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].quantity = quantity || 1;
-      setShoppingCart(newCart);
+    const newCart = shoppingCart?.slice();
+    if (newCart) {
+      const index = newCart.findIndex(i => i.uuid === data.uuid);
+      if (index !== -1) {
+        newCart[index].quantity = quantity || 1;
+        setShoppingCart(newCart);
+      }
     }
   }
 
