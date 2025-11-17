@@ -39,10 +39,10 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
 
   return (
     <>
-      <h2>Crear cuenta</h2>
+      <h2>{wallet ? 'Editar cuenta' : 'Crear cuenta'}</h2>
       <p>Las billeteras son espacio donde se puede guardar dinero como en el caso de cuentas de banco, tarjetas de
         crédito, caja chica, cajeros, etc.</p>
-      <Form layout="vertical" onFinish={submit}>
+      <Form layout="vertical" onFinish={submit} initialValues={wallet}>
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item label={'Entidad'} name={'bank_name'}>
@@ -74,7 +74,7 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'País'} name={'country_code'}>
-              <CountrySelector />
+              <CountrySelector/>
             </Form.Item>
           </Col>
           <Col span={12}>

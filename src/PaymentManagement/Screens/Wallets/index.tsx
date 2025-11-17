@@ -157,7 +157,10 @@ const Wallets = () => {
         onCancel={() => {
           setOpenWalletForm(false);
         }} open={openWalletForm}>
-        <WalletForm wallet={selectedWallet} onComplete={() => setReload(!reload)}/>
+        <WalletForm wallet={selectedWallet} onComplete={() => {
+          setReload(!reload);
+          setOpenWalletForm(false);
+        }}/>
       </ModalView>
     </>
   );
