@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {InputNumber, List, Space} from "antd";
+import {InputNumber} from "antd";
 import {TbTrash} from "react-icons/tb";
 
 import MoneyInput from "../../../CommonUI/MoneyInput";
@@ -42,11 +42,13 @@ const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
   }
 
   const removeStock = (data: StorageContractCartItem) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart.splice(index, 1);
-      setShoppingCart(newCart);
+    const newCart = shoppingCart?.slice();
+    if (newCart) {
+      const index = newCart.findIndex(i => i.uuid === data.uuid);
+      if (index !== -1) {
+        newCart.splice(index, 1);
+        setShoppingCart(newCart);
+      }
     }
   }
 
