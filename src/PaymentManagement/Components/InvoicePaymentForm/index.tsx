@@ -64,7 +64,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       <Form
         form={form}
         initialValues={payment ? {...payment, transaction_date: dayjs(payment.transaction_date)} : {amount: invoice.pending_payment}}
-        requiredMark={false}
         layout={'vertical'}
         onFinish={submitForm}>
         <Row gutter={[15, 15]}>
@@ -84,7 +83,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name={'wallet_uuid'} label={'Destino'}>
+        <Form.Item name={'wallet_uuid'} label={'Destino'} rules={[{required: true}]}>
           <WalletSelector />
         </Form.Item>
         <Form.Item name={'voucher_code'} label={'N° Voucher / Operación'}>

@@ -63,6 +63,10 @@ const Wallets = () => {
 
   const columns: any = [
     {
+      title: 'Nombre',
+      dataIndex: 'name',
+    },
+    {
       title: 'Tipo',
       dataIndex: 'type',
     },
