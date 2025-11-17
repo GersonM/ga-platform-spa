@@ -6,6 +6,7 @@ interface MoneyStringProps {
   currency?: string;
   placeholder?: string;
   block?: boolean;
+  width?: number;
   style?: React.CSSProperties;
   defaultValue?: number;
   onChange?: (value?: number) => void;
@@ -17,10 +18,12 @@ const currencies: any = {
   'USD': 'USD $',
 };
 
-const MoneyInput = ({value, style, block = true, currency = 'PEN', onChange, onCurrencyChange, ...props}: MoneyStringProps) => {
+const MoneyInput = (
+  {value, style, block = true, currency = 'PEN', onChange, onCurrencyChange, width = 120, ...props}: MoneyStringProps
+) => {
   return (
     <InputNumber
-      style={block ? {width: '100%'}:{width: 120}}
+      style={block ? {width: '100%'} : {width}}
       onChange={value => {
         if (onChange) {
           onChange((value != null) ? value * 100 : undefined);

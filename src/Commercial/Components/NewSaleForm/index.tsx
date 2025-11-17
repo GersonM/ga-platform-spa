@@ -4,8 +4,6 @@ import {
   DatePicker, Divider,
   Form,
   Input,
-  InputNumber,
-  List,
   notification,
   Row,
   Segmented,
@@ -13,7 +11,8 @@ import {
   Space,
   Tag
 } from 'antd';
-import {TbCheck, TbPencil, TbTrash} from "react-icons/tb";
+import {TbCheck, TbPencil} from "react-icons/tb";
+import {DefaultEditor} from "react-simple-wysiwyg";
 import axios from 'axios';
 
 import type {Contract, StorageContractCartItem, StorageStock} from '../../../Types/api';
@@ -23,14 +22,12 @@ import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import MoneyString from '../../../CommonUI/MoneyString';
-import MoneyInput from "../../../CommonUI/MoneyInput";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
-import {DefaultEditor} from "react-simple-wysiwyg";
-import CustomTag from "../../../CommonUI/CustomTag";
+import ShoppingCartEditor from "../ShoppingCartEditor";
 
 interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
@@ -97,33 +94,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
     setShoppingCart(newCart);
   }
 
-  const removeStock = (data: StorageContractCartItem) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart.splice(index, 1);
-      setShoppingCart(newCart);
-    }
-  }
-
-  const updateQuantity = (data: StorageContractCartItem, quantity: number | null) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].quantity = quantity || 1;
-      setShoppingCart(newCart);
-    }
-  }
-
-  const updateAmount = (data: StorageContractCartItem, amount?: number) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].unit_amount = amount != null ? amount : (data.stock?.sale_price || 0);
-      setShoppingCart(newCart);
-    }
-  }
-
   const cartTotalAmountPen = shoppingCart.reduce((s, item) => {
     const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : (item.stock?.sale_price || 0));
     return s + (item.stock?.currency == 'PEN' ? itemAmount : 0);
@@ -173,36 +143,9 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
               </Col>
             </Row>
             <Form.Item>
-              <List
-                bordered
-                size={'small'}
-                dataSource={shoppingCart}
-                renderItem={(cartItem) => {
-                  return <List.Item>
-                    <List.Item.Meta
-                      title={cartItem.stock?.variation?.name || cartItem.stock?.variation?.product?.name}
-                      description={<CustomTag><code>{cartItem.stock?.serial_number}</code></CustomTag>}
-                    />
-                    <Space>
-                      <InputNumber
-                        value={cartItem.quantity}
-                        min={1} max={999} addonBefore={'Cant.'} placeholder={'1'} style={{width: 110}}
-                        onChange={value => {
-                          updateQuantity(cartItem, value);
-                        }}/>
-                      <MoneyInput
-                        min={0}
-                        block={false} currency={cartItem.stock?.currency}
-                        placeholder={cartItem.stock?.sale_price ? (cartItem.stock?.sale_price / 100).toString() : '0'}
-                        onChange={value => {
-                          updateAmount(cartItem, value);
-                        }}
-                      />
-                      <IconButton icon={<TbTrash/>} danger small onClick={() => removeStock(cartItem)}/>
-                    </Space>
-                  </List.Item>;
-                }}/>
+              <ShoppingCartEditor value={shoppingCart} onChange={value => setShoppingCart(value)} />
             </Form.Item>
+            <Divider />
             <Row gutter={[20, 20]}>
               <Col span={14}>
                 <Form.Item label={'Generar pagos (opcional)'} name={'payment_mode'}>
