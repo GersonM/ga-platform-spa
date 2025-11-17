@@ -31,11 +31,13 @@ const ShoppingCartEditor = ({onChange, value}: ShoppingCartEditorProps) => {
   }
 
   const updateAmount = (data: StorageContractCartItem, amount?: number) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].unit_amount = amount != null ? amount : (data.stock?.sale_price || 0);
-      setShoppingCart(newCart);
+    const newCart = shoppingCart?.slice();
+    if (newCart) {
+      const index = newCart.findIndex(i => i.uuid === data.uuid);
+      if (index !== -1) {
+        newCart[index].unit_amount = amount != null ? amount : (data.stock?.sale_price || 0);
+        setShoppingCart(newCart);
+      }
     }
   }
 
