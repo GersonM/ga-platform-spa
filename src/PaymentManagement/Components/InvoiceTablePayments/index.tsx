@@ -34,11 +34,11 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
     {
       title: 'Fecha de pago',
       width: 140,
-      dataIndex: 'created_at',
-      render: (created_at: string) => {
-        return created_at && <>
-          {dayjs(created_at).format('DD/MM/YYYY')}
-          <small>{dayjs(created_at).format('HH:MM a')}</small>
+      dataIndex: 'transaction_date',
+      render: (transaction_date: string) => {
+        return transaction_date && <>
+          {dayjs(transaction_date).format('DD/MM/YYYY')}
+          <small>{dayjs(transaction_date).format('HH:MM a')}</small>
         </>
       }},
     {
