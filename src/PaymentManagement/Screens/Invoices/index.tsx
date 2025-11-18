@@ -48,6 +48,7 @@ const Invoices = () => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
+  const [dateRangeFilterExpire, setDateRangeFilterExpire] = useState<any[] | null>();
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [filters, setFilters] = useState<any>();
@@ -62,6 +63,7 @@ const Invoices = () => {
         page: currentPage,
         page_size: pageSize,
         date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+        expired_date_range: dateRangeFilterExpire ? dateRangeFilterExpire.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
     setLoading(true);
@@ -80,7 +82,7 @@ const Invoices = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters]);
+  }, [pageSize, search, currentPage, reload, dateRangeFilterExpire, filters]);
 
   const deleteInvoice = (uuid: string) => {
     axios
@@ -155,9 +157,10 @@ const Invoices = () => {
       align: 'center',
       dataIndex: 'contract',
       render: (contract?: Contract) => {
-        return contract && <Tooltip title={contract.status}>
+        return contract && <Tooltip title={contract.title + ' - ' + contract.status}>
           <Link target="_blank" to={`/commercial/contracts/${contract?.uuid}`}>
             <code>{contract.tracking_id}</code>
+            <small>{contract.title}</small>
           </Link>
         </Tooltip>
       }
@@ -217,16 +220,22 @@ const Invoices = () => {
     <>
       <ModuleContent>
         <ContentHeader
-          title={'Pagos'}
+          title={'Requerimientos de pago'}
           loading={loading}
           onRefresh={() => setReload(!reload)}
           tools={`Total ${pagination?.total}`}>
-          <FilterForm onSubmit={values => setFilters(values)}>
+          <FilterForm
+            additionalChildren={<>
+              <Form.Item label={'Emisión'} layout={'vertical'}>
+                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
+              </Form.Item>
+              <Form.Item label={'Vencimiento'} layout={'vertical'}>
+                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
+              </Form.Item>
+            </>}
+            onSubmit={values => setFilters(values)}>
             <Form.Item label={'Cliente'} name={'client_uuid'}>
               <ClientSelector/>
-            </Form.Item>
-            <Form.Item label={'Periodo'}>
-              <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
             </Form.Item>
             <Form.Item label={'Estado'} name={'status'}>
               <Select popupMatchSelectWidth={false} allowClear placeholder={'Todo'} options={[
