@@ -73,7 +73,7 @@ const Wallets = () => {
       dataIndex: 'type',
       render: (type: string, row: Wallet) => (
         <>
-          {row.bank_name.toUpperCase()}
+          {row.bank_name?.toUpperCase()}
           <small>
             <code>
               <WalletTypeText code={type}/>

@@ -44,7 +44,7 @@ export const WalletSelector = ({placeholder, mode, style, ...props}: WalletSelec
               return {
                 value: item.uuid,
                 label: <Space>
-                  <CustomTag color={'green'}>{item.bank_name.toUpperCase()} | {item.currency}</CustomTag>{item.name}  -<code>{item.account_number}</code>
+                  <CustomTag color={'green'}>{item.bank_name?.toUpperCase()} | {item.currency}</CustomTag>{item.name}  -<code>{item.account_number}</code>
                 </Space>
               };
             }),

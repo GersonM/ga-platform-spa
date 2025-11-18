@@ -53,7 +53,7 @@ const ProductBrandSelector = ({placeholder, ...props}:ProductBrandSelectorProps)
       showSearch={true}
       optionFilterProp={'label'}
       filterOption={(inputValue, option) =>
-        option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+        option!.value?.toUpperCase().indexOf(inputValue?.toUpperCase()) !== -1
       }
       options={brands}
     />
