@@ -469,6 +469,7 @@ export type Invoice = {
   tracking_id: string;
   concept: string;
   currency: string;
+  apply_taxes?: boolean;
   pending_payment?: number;
   created_at: string;
   expires_on: string;

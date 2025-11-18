@@ -114,7 +114,7 @@ const InvoicesTable = (
       render: (amount: number, row: Invoice) => {
         return <>
           <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
-          <small>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
+          <small> {row.apply_taxes ? 'Incluye IGV' : ''} | Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
         </>;
       }
     },

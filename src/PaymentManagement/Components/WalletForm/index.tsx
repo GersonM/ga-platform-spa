@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, DatePicker, Divider, Form, Input, Row, Select} from "antd";
+import {Col, DatePicker, Divider, Form, Input, Row, Segmented, Select} from "antd";
 import {TbCheck} from "react-icons/tb";
 import axios from "axios";
 
@@ -10,6 +10,8 @@ import CurrencySelector from "../CurrencySelector";
 import CountrySelector from "../../../CommonUI/CountrySelector";
 import dayjs from "dayjs";
 import {useForm} from "antd/lib/form/Form";
+import ProfileSelector from "../../../CommonUI/ProfileSelector";
+import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 
 interface InstallmentPlanProps {
   wallet?: Wallet;
@@ -19,6 +21,7 @@ interface InstallmentPlanProps {
 const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<any>();
+  const [holderType, setHolderType] = useState<string>('Persona');
   const [form] = useForm();
 
   useEffect(() => {
@@ -41,7 +44,10 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
       .request({
         url: wallet ? `payment-management/wallets/${wallet.uuid}` : 'payment-management/wallets',
         method: wallet ? 'put' : 'post',
-        data: values,
+        data: {
+          ...values,
+          holder_type: holderType === 'Persona' ? 'profile' : 'company',
+        },
       })
       .then(() => {
         setLoading(false);
@@ -113,6 +119,19 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label={'Propietario de la cuenta'} style={{marginBottom: 10}}>
+          <Segmented options={['Persona', 'Empresa']} onChange={value => setHolderType(value)}/>
+        </Form.Item>
+        {holderType == 'Persona' && (
+          <Form.Item name={'holder_id'}>
+            <ProfileSelector placeholder={'Buscar persona'}/>
+          </Form.Item>
+        )}
+        {holderType == 'Empresa' && (
+          <Form.Item name={'holder_id'}>
+            <CompanySelector/>
+          </Form.Item>
+        )}
         <Divider>Información adicional</Divider>
         <Form.Item label={'Nombre'} name={'name'}>
           <Input/>

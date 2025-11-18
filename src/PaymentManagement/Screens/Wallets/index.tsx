@@ -17,6 +17,8 @@ import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import {ClientSelector} from "../../Components/ClientSelector";
 import ModalView from "../../../CommonUI/ModalView";
 import WalletForm from "../../Components/WalletForm";
+import WalletTypeText from "../../Components/WaletTypeText";
+import CurrencySelector from "../../Components/CurrencySelector";
 
 const Wallets = () => {
   const [wallets, setWallets] = useState<Wallet[]>();
@@ -31,7 +33,7 @@ const Wallets = () => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {},
+      params: filters,
     };
     setLoading(true);
     axios
@@ -69,10 +71,16 @@ const Wallets = () => {
     {
       title: 'Tipo',
       dataIndex: 'type',
-    },
-    {
-      title: 'Entidad',
-      dataIndex: 'bank_name',
+      render: (type: string, row: Wallet) => (
+        <>
+          {row.bank_name.toUpperCase()}
+          <small>
+            <code>
+              <WalletTypeText code={type}/>
+            </code>
+          </small>
+        </>
+      )
     },
     {
       title: 'N°/ID de cuenta',
@@ -148,10 +156,16 @@ const Wallets = () => {
           title={'Cuentas'}
           loading={loading}
           onRefresh={() => setReload(!reload)}
-          onAdd={() => setOpenWalletForm(true)}>
+          onAdd={() => {
+            setOpenWalletForm(true);
+            setSelectedWallet(undefined);
+          }}>
           <FilterForm onSubmit={values => setFilters(values)}>
-            <Form.Item label={'Cliente'} name={'client_uuid'}>
+            <Form.Item label={'Cliente'} name={'holder_uuid'}>
               <ClientSelector/>
+            </Form.Item>
+            <Form.Item label={'Moneda'} name={'currency'}>
+              <CurrencySelector />
             </Form.Item>
           </FilterForm>
         </ContentHeader>
