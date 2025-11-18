@@ -115,7 +115,7 @@ const Invoices = () => {
           status = <CustomTag color={'green'}>Pagado</CustomTag>;
         }
         return (<>
-          <code>{i.tracking_id}</code>
+          <code>{i.tracking_id}</code><br/>
           {status ||
             <CustomTag color={i.paid_at ? 'green' : 'red'}>
               {pending_payment > 0 ? 'Pendiente' : 'Pagado'}
