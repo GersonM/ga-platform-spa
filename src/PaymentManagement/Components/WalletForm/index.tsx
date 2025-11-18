@@ -64,9 +64,11 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
         <Form.Item label={'Tipo'} name={'type'}>
           <Select placeholder={'Otro'} options={[
             {label: 'Cajero', value: 'cashier'},
-            {label: 'Cuenta de ahorros', value: 'saving_accounts'},
             {label: 'Cuenta corriente', value: 'current_account'},
-            {label: 'Tarjeta', value: 'card'},
+            {label: 'Cuenta de detracciones', value: 'deductions_accounts'},
+            {label: 'Cuenta de ahorros', value: 'saving_accounts'},
+            {label: 'Tarjeta crédito', value: 'credit_card'},
+            {label: 'Tarjeta débito', value: 'debit_card'},
             {label: 'Billetera virtual', value: 'wallet'},
           ]}/>
         </Form.Item>
