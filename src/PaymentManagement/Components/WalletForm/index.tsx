@@ -61,12 +61,22 @@ const WalletForm = ({wallet, onComplete}: InstallmentPlanProps) => {
       <p>Las billeteras son espacio donde se puede guardar dinero como en el caso de cuentas de banco, tarjetas de
         crédito, caja chica, cajeros, etc.</p>
       <Form form={form} layout="vertical" onFinish={submit} initialValues={formData}>
+        <Form.Item label={'Tipo'} name={'type'}>
+          <Select placeholder={'Otro'} options={[
+            {label: 'Cajero', value: 'cashier'},
+            {label: 'Cuenta de ahorros', value: 'saving_accounts'},
+            {label: 'Cuenta corriente', value: 'current_account'},
+            {label: 'Tarjeta', value: 'card'},
+            {label: 'Billetera virtual', value: 'wallet'},
+          ]}/>
+        </Form.Item>
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item label={'Entidad'} name={'bank_name'}>
               <Select options={[
                 {label: 'Interno', value: 'internal'},
                 {label: 'BCP', value: 'bcp'},
+                {label: 'Banco de la nación', value: 'bn_peru'},
                 {label: 'Interbank', value: 'interbank'},
                 {label: 'PayPal', value: 'paypal'},
                 {label: 'BBVA', value: 'bbva'},
