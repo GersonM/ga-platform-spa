@@ -6,6 +6,7 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import StorageStockChip from "../StorageStockChip";
+import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 
 interface CartItemForProps {
   cartItem: StorageContractCartItem;
@@ -27,8 +28,9 @@ const CartItemForm = ({cartItem, onComplete}: CartItemForProps) => {
   return (
     <Form initialValues={cartItem} onFinish={onSubmit} layout="vertical">
       <p>Editar el monto y la cantidad no afectará a los requerimientos de pagos ya generados</p>
-      <Form.Item name={'quantity'} label={'Producto'}>
-        <StorageStockChip storageStock={cartItem.stock}/>
+      <StorageStockChip storageStock={cartItem.stock}/>
+      <Form.Item name={'fk_stock_uuid'} label={'Producto'}>
+        <StockSelector  />
       </Form.Item>
       <Form.Item name={'quantity'} label={'Cantidad'}>
         <InputNumber/>

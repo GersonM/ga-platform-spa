@@ -3,6 +3,7 @@ import {Tag} from "antd";
 
 interface CustomTagProps {
   children?: React.ReactNode;
+  style?: React.CSSProperties;
   color?: string;
 }
 

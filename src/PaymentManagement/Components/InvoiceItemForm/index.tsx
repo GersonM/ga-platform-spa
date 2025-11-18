@@ -15,11 +15,12 @@ interface InvoiceItemFormProps {
   onCompleted?: () => void;
 }
 
-const InvoiceItemForm = ({
-                           invoiceItem,
-                           invoice,
-                           onCompleted,
-                         }: InvoiceItemFormProps) => {
+const InvoiceItemForm = (
+  {
+    invoiceItem,
+    invoice,
+    onCompleted,
+  }: InvoiceItemFormProps) => {
   const [loading, setLoading] = useState(false);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [form] = useForm();
@@ -47,35 +48,35 @@ const InvoiceItemForm = ({
 
   return (
     <Form form={form} initialValues={invoiceItem} onFinish={submitForm} layout={'vertical'}>
-      <Form.Item name={'concept'} label={'Concepto'}>
-        <Input placeholder={selectedStock?.variation?.product?.name}/>
-      </Form.Item>
       <Row gutter={20}>
-        <Col sm={11}>
-          <Form.Item name={'stock_uuid'} label={'Producto (opcional)'}>
-            <StockSelector onChange={(_vale, opt) => {
-              setSelectedStock(opt.entity);
-              const s = opt.entity
-              form.setFieldValue('concept', s.sku + ' - ' + (s.name || s.product.name));
-              form.setFields([
-                {name:'amount', value: s.sale_price},
-                {name: 'concept', value: s.sku + ' - ' + (s.name || s.product.name)}
-              ]);
-              console.log(opt);
-            }}/>
+        <Col sm={13}>
+          <Form.Item name={'concept'} label={'Concepto'}>
+            <Input placeholder={selectedStock?.variation?.product?.name}/>
           </Form.Item>
         </Col>
-        <Col sm={7}>
+        <Col sm={6}>
           <Form.Item name={'amount'} label={'Monto'}>
             <MoneyInput currency={invoice.currency || 'PEN'}/>
           </Form.Item>
         </Col>
-        <Col sm={6}>
+        <Col sm={5}>
           <Form.Item name={'quantity'} label={'Cantidad'}>
-            <InputNumber placeholder={'1'}/>
+            <InputNumber placeholder={'1'} style={{width:'100%'}} />
           </Form.Item>
         </Col>
       </Row>
+      <Form.Item name={'stock_uuid'} label={'Llenar desde producto (opcional)'}>
+        <StockSelector onChange={(_vale, opt) => {
+          setSelectedStock(opt.entity);
+          const s = opt.entity
+          form.setFieldValue('concept', s.sku + ' - ' + (s.name || s.variation.name));
+          form.setFields([
+            {name: 'amount', value: s.sale_price},
+            {name: 'concept', value: s.serial_number + ' - ' + (s.name || s.variation.name)}
+          ]);
+          console.log(opt);
+        }}/>
+      </Form.Item>
       <PrimaryButton block loading={loading} label={'Guardar'} htmlType={'submit'}/>
     </Form>
   );

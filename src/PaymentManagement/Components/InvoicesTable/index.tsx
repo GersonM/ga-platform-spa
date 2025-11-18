@@ -16,6 +16,7 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ModalView from "../../../CommonUI/ModalView";
 import InvoiceForm from "../InvoiceForm";
 import logoSunat from "../../../Assets/sunat_icon.png";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface InvoicesProps {
   order?: string;
@@ -101,10 +102,13 @@ const InvoicesTable = (
       render: (tracking_id: string) => <code>{tracking_id}</code>,
     },
     {
-      title: 'Descripción',
+      title: 'Conceptos',
       dataIndex: 'concept',
       render: (concept: string, row: Invoice) => {
-        return concept || row.items?.map((i: InvoiceItem) => i.concept).join(', ');
+        return <>{row.items?.map((i: InvoiceItem) => i.concept).join(', ')}
+          {row.apply_taxes ? <CustomTag style={{marginLeft:5}}>+IGV</CustomTag> : ''}
+          <small>{concept}</small>
+        </>
       }
     },
     {
@@ -114,7 +118,7 @@ const InvoicesTable = (
       render: (amount: number, row: Invoice) => {
         return <>
           <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
-          <small> {row.apply_taxes ? 'Incluye IGV' : ''} | Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
+          <small>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
         </>;
       }
     },

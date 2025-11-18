@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {Modal, Popconfirm, Space} from 'antd';
+import {useEffect, useState} from 'react';
+import {Button, Modal, Popconfirm, Select, Space} from 'antd';
 import {PiPencilSimple, PiTrash} from 'react-icons/pi';
 import {TbPlus} from "react-icons/tb";
 import axios from 'axios';
@@ -11,6 +11,7 @@ import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import InvoiceItemForm from '../InvoiceItemForm';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
+import ModalView from "../../../CommonUI/ModalView";
 
 interface InvoiceTableDetailsProps {
   invoice: Invoice;
@@ -20,9 +21,34 @@ interface InvoiceTableDetailsProps {
 const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
   const [openInvoiceItemForm, setOpenInvoiceItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InvoiceItem>();
+  const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const [fullInvoiceData, setFullInvoiceData] = useState<Invoice>();
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+    };
+
+    setLoading(true);
+
+    axios
+      .get(`payment-management/invoices/${invoice.uuid}`, config)
+      .then(response => {
+        if (response) {
+          setFullInvoiceData(response.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [reload, invoice]);
 
   const removeConcept = (uuid: string) => {
-    console.log(uuid);
     axios
       .delete('payment-management/invoice-items/' + uuid)
       .then(() => {
@@ -74,19 +100,23 @@ const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
     },
   ];
 
+  console.log(fullInvoiceData?.contract)
   return (
     <div>
       <TableList columns={columns} dataSource={invoice?.items}/>
+      {fullInvoiceData?.contract?.cart?.map((item, index) => {
+        return (<Button size={"small"} key={index} onClick={() => {}}>Agregar: {item.stock?.full_name} x{item.quantity}</Button>)
+      })}
+
       <PrimaryButton
         icon={<TbPlus/>}
         style={{marginTop: '10px'}}
         label={'Añadir nuevo item'}
         onClick={() => setOpenInvoiceItemForm(true)}
       />
-      <Modal
+      <ModalView
         open={openInvoiceItemForm}
-        destroyOnHidden
-        footer={null}
+        width={700}
         title={'Agregar item'}
         onCancel={() => {
           setOpenInvoiceItemForm(false);
@@ -103,7 +133,7 @@ const InvoiceTableDetails = ({invoice, onChange}: InvoiceTableDetailsProps) => {
           invoiceItem={selectedItem}
           invoice={invoice}
         />
-      </Modal>
+      </ModalView>
     </div>
   );
 };

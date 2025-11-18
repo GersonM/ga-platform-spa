@@ -477,6 +477,7 @@ export type Invoice = {
   paid_at?: string;
   payments?: InvoicePayment[];
   items?: InvoiceItem[];
+  contract?: Contract;
   purchase_token?: string;
   updated_at: string;
 };
@@ -779,6 +780,7 @@ export type StorageStock = {
   sku?: string;
   serial_number?: string;
   name?: string;
+  full_name?: string;
   type?: string;
   duration?: string;
   excerpt?: string;
