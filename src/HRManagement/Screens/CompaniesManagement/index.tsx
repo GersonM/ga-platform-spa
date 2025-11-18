@@ -36,7 +36,7 @@ const CompaniesManagement = () => {
       .then((response) => {
         setLoading(false);
         setCompanies(response.data.data);
-        setPagination(response.data.pagination);
+        setPagination(response.data.meta);
       })
       .catch((error) => {
         setLoading(false);
