@@ -5,13 +5,11 @@ import {useForm} from "antd/lib/form/Form";
 import dayjs from "dayjs";
 import axios from 'axios';
 
-import type {Contract, StorageStock} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import MoneyInput from "../../../CommonUI/MoneyInput";
 import IconButton from "../../../CommonUI/IconButton";
-import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 
@@ -22,11 +20,8 @@ interface CommercialContractFormProps {
 }
 
 const CommercialContractForm = ({onComplete, contract, isTemplate = false}: CommercialContractFormProps) => {
-  const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [loading, setLoading] = useState(false);
-  const [selectedStockUUID, setSelectedStockUUID] = useState<string>();
   const [chooseSeller, setChooseSeller] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState<string>();
   const [period, setPeriod] = useState<string>();
   const [formData, setFormData] = useState<any>();
   const [form] = useForm();
@@ -48,32 +43,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
       form.resetFields();
     }
   }, [formData]);
-
-  useEffect(() => {
-    if (!selectedStockUUID) {
-      return;
-    }
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-
-    setLoading(true);
-
-    axios
-      .get(`warehouses/stock/${selectedStockUUID}`, config)
-      .then(response => {
-        if (response) {
-          setSelectedStock(response.data);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-
-    return cancelTokenSource.cancel;
-  }, [selectedStockUUID]);
 
   const submitForm = (data: any) => {
     console.log(data.date_start);
@@ -102,6 +71,17 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
       <Form form={form} layout="vertical" onFinish={submitForm} initialValues={formData}>
         <Row gutter={[20, 20]}>
           <Col span={12}>
+            <Form.Item name={'title'} label={'Nombre del servicio'}>
+              <Input placeholder={'Opcional'} />
+            </Form.Item>
+            <Form.Item label={'Impuestos'}>
+              <Form.Item name={'apply_taxes'} noStyle valuePropName={'checked'}>
+                <Checkbox>Aplicar impuestos (IGV 18%)</Checkbox>
+              </Form.Item>
+              <Form.Item name={'include_taxes'} noStyle valuePropName={'checked'}>
+                <Checkbox>El monto incluye impuestos</Checkbox>
+              </Form.Item>
+            </Form.Item>
             <Form.Item label={'Duración'} name={'period'}>
               <Select
                 showSearch
@@ -157,7 +137,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
-              <PaymentMethodTypesSelector />
+              <PaymentMethodTypesSelector/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
               <Input.TextArea/>

@@ -327,7 +327,7 @@ const CommercialContractDetail = () => {
             <Divider orientation={"left"}>Productos</Divider>
             <List
               size={"small"}
-              style={{margin:'0 -15px'}}
+              style={{margin: '0 -15px'}}
               dataSource={contract.cart}
               renderItem={(cartItem) => {
                 return <List.Item>
@@ -370,10 +370,15 @@ const CommercialContractDetail = () => {
                 </List.Item>;
               }}/>
             {contract.totals?.PEN &&
-              <InvoiceResumen showTotal={false} items={[{label: 'Total', amount: contract.totals?.PEN},]}
-                              currency={'PEN'}/>}
+              <InvoiceResumen
+                includeTaxes={contract.include_taxes}
+                applyTaxes={contract.apply_taxes}
+                items={[{label: 'Total', amount: contract.totals.PEN}]} currency={'PEN'}/>}
             {contract.totals?.USD &&
-              <InvoiceResumen items={[{label: 'Total', amount: contract.totals?.USD},]} currency={'USD'}/>}
+              <InvoiceResumen
+                includeTaxes={contract.include_taxes}
+                applyTaxes={contract.apply_taxes}
+                items={[{label: 'Total', amount: contract.totals.USD}]} currency={'USD'}/>}
 
             {/*
             <PrimaryButton

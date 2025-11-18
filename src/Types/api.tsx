@@ -109,6 +109,7 @@ export type Contract = {
   date_start: string;
   dead_line?: string;
   include_taxes: boolean;
+  apply_taxes: boolean;
   observations?: string;
   payment_conditions?: string;
   payment_type?: string;
