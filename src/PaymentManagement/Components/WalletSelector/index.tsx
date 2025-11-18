@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Select, Space, Tag} from 'antd';
+import {Select, Space} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
 
-import type {Client, Wallet} from '../../../Types/api';
+import type {Wallet} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
-import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import CustomTag from "../../../CommonUI/CustomTag";
 
 interface WalletSelectorProps {
@@ -46,7 +44,7 @@ export const WalletSelector = ({placeholder, mode, style, ...props}: WalletSelec
               return {
                 value: item.uuid,
                 label: <Space>
-                  <CustomTag color={'green'}>{item.bank_name}</CustomTag><code>{item.account_number}</code>
+                  <CustomTag color={'green'}>{item.bank_name.toUpperCase()} | {item.currency}</CustomTag>{item.name}  -<code>{item.account_number}</code>
                 </Space>
               };
             }),

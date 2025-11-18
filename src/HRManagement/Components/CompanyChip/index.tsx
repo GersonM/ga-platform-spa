@@ -1,9 +1,9 @@
 import React from 'react';
 import {Avatar, Tooltip} from "antd";
-import {TbBuilding} from "react-icons/tb";
 
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import type {Company} from "../../../Types/api.tsx";
+import {LuBuilding2} from "react-icons/lu";
 
 interface CompanyChipProps {
   company?: Company;
@@ -16,8 +16,8 @@ const CompanyChip = ({company}: CompanyChipProps) => {
         <LoadingIndicator visible={!company}/>
         {company && (
           <>
-            <Avatar src={company.logo?.thumbnail} className={'avatar'}>
-              <TbBuilding size={22} style={{marginTop: 6}}/>
+            <Avatar src={company.logo?.thumbnail} style={{background:'#7ca2c1'}} className={'avatar'}>
+              <LuBuilding2 size={20} style={{marginTop: 6}}/>
             </Avatar>
             <div>
               {company.name}
