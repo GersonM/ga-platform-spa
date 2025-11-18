@@ -101,7 +101,7 @@ const CommercialDashboard = () => {
     <ModuleContent>
       <ContentHeader title={'Dashboard'} onRefresh={() => setReload(!reload)} loading={loading} />
       <Card
-        bordered={false}
+        variant="borderless"
         extra={
           <>
             <Select

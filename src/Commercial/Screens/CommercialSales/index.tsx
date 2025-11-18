@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   DatePicker, Divider,
   Form,
@@ -45,6 +45,7 @@ import WarehouseSelector from "../../../WarehouseManager/Components/WarehouseSel
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ProductSelector from "../../../WarehouseManager/Components/ProductSelector";
 import ProductVariationSelector from "../../../WarehouseManager/Components/ProductVariationSelector";
+import {ClientSelector} from "../../../PaymentManagement/Components/ClientSelector";
 
 const CommercialSales = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -345,8 +346,8 @@ const CommercialSales = () => {
           </>}
           onInitialValues={values => setFilters(values)}
         >
-          <Form.Item name={'search'} label={'Buscar'}>
-            <Input allowClear placeholder={'Buscar por nombre, dni o correo'}/>
+          <Form.Item label={'Cliente'} name={'client_uuid'}>
+            <ClientSelector/>
           </Form.Item>
           <Form.Item>
             <DatePicker.RangePicker format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
