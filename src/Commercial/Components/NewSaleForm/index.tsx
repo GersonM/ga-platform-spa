@@ -106,17 +106,30 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
 
   return (
     <div>
-      <h2>
-        <Space>
-          Nueva:
-          <Segmented
-            size={"large"}
-            options={[{label: 'propuesta', value: 'proposal'}, 'venta']}
-            onChange={value => setIsApproved(value != 'proposal')}
-          />
-        </Space>
-      </h2>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
+        <div style={{display: 'flex', backgroundColor: 'cyan'}}>
+          Nuevo
+          <div>
+            <Segmented
+              size={"large"}
+              options={[{label: 'propuesta', value: 'proposal'}, 'venta']}
+              onChange={value => setIsApproved(value != 'proposal')}
+            />
+          </div>
+          <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
+            {chooseSeller ? (
+                <ProfileSelector/>
+              ) :
+              <Space>
+                <ProfileChip profile={user?.profile}/>
+                <IconButton
+                  icon={<TbPencil/>}
+                  onClick={() => setChooseSeller(!chooseSeller)}
+                />
+              </Space>
+            }
+          </Form.Item>
+        </div>
         <Row gutter={[20, 20]}>
           <Col span={14}>
             <Row gutter={[15, 15]}>
@@ -191,19 +204,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 <CompanySelector/>
               </Form.Item>
             )}
-            <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
-              {chooseSeller ? (
-                  <ProfileSelector/>
-                ) :
-                <Space>
-                  <ProfileChip profile={user?.profile}/>
-                  <IconButton
-                    icon={<TbPencil/>}
-                    onClick={() => setChooseSeller(!chooseSeller)}
-                  />
-                </Space>
-              }
-            </Form.Item>
+
           </Col>
           <Col span={10}>
             <Divider>Información opcional</Divider>

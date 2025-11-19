@@ -112,7 +112,6 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <Col md={8}>
                 <Form.Item label={'Tipo'} name={'type'}>
                   <TaxonomySelector onChange={val => {
-                    console.log(val);
                     setSelectedType(val);
                   }} code={'stock-types'} property={'code'} />
                 </Form.Item>
@@ -202,7 +201,6 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <EntityFieldsEditor
                 entity={stock}
                 onChange={(values) => {
-                  console.log(values);
                   setMetadata(values);
                 }}/>
             </Form.Item>

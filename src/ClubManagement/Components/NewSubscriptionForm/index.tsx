@@ -31,6 +31,7 @@ import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSele
 import ContractTemplateSelector from "../../../Commercial/Components/ContractTemplateSelector";
 import dayjs from "dayjs";
 import Config from "../../../Config.tsx";
+import ShoppingCartEditor from "../../../Commercial/Components/ShoppingCartEditor";
 
 interface NewSubscriptionFormProps {
   onComplete?: (data: Contract) => void;
@@ -225,34 +226,9 @@ const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) =
               </Col>
             </Row>
             <Form.Item>
-              <List
-                bordered
-                size={'small'}
-                dataSource={shoppingCart}
-                renderItem={(cartItem) => {
-                  return <List.Item>
-                    <List.Item.Meta
-                      title={cartItem.stock?.variation?.name || cartItem.stock?.variation?.product?.name}
-                      description={<Tag bordered={false} color={'blue'}>{cartItem.stock?.sku}</Tag>}
-                    />
-                    <Space>
-                      <InputNumber
-                        value={cartItem.quantity}
-                        min={1} max={999} addonBefore={'Cant.'} placeholder={'1'} style={{width: 110}}
-                        onChange={value => {
-                          updateQuantity(cartItem, value);
-                        }}/>
-                      <MoneyInput
-                        min={0}
-                        block={false} currency={cartItem.stock?.currency} value={cartItem.stock?.sale_price}
-                        onChange={value => {
-                          updateAmount(cartItem, value);
-                        }}
-                      />
-                      <IconButton icon={<TbTrash/>} danger small onClick={() => removeStock(cartItem)}/>
-                    </Space>
-                  </List.Item>;
-                }}/>
+              <ShoppingCartEditor value={shoppingCart} onChange={value => {
+                setShoppingCart(value);
+              }} />
             </Form.Item>
             <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
               {chooseSeller ? (

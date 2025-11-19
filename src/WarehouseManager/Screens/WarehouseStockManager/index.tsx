@@ -321,7 +321,7 @@ const WarehouseStockManager = () => {
       </ModalView>
       <ModalView
         width={1200}
-        title={'Proforma'}
+        title={'Reporte de inventario'}
         open={!!tempURL}
         onCancel={() => {
           setTempURL(undefined);
