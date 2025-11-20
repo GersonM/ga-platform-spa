@@ -19,6 +19,7 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import ContractTemplateSelector from '../ContractTemplateSelector/index.tsx';
 import './styles.less';
+import FileDownloader from "../../../CommonUI/FileDownloader";
 
 interface ContractItemManagerProps {
   contract: Contract;
@@ -34,9 +35,7 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
   const [contractItems, setContractItems] = useState<ContractItem[]>();
   const [contractItemsGroups, setContractItemsGroups] = useState<any>();
   const [editMode, setEditMode] = useState(forceToEdit);
-  const [downloading, setDownloading] = useState(false);
   const [openPrint, setOpenPrint] = useState(false);
-  const [tempURL, setTempURL] = useState<string>();
 
   useEffect(() => {
     if (!contract) {
@@ -63,7 +62,6 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
             groups[groupName].push(item);
           });
           setContractItemsGroups(groups);
-          console.log({groups});
           setContractItems(response.data);
         }
         setLoading(false);
@@ -74,30 +72,6 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
 
     return cancelTokenSource.cancel;
   }, [reload, contract]);
-
-  const generateDocuments = () => {
-    setOpenPrint(true);
-    setDownloading(true);
-    axios({
-      url: 'document-generator/contract/provision',
-      method: 'GET',
-      params: {
-        profile_uuid: contract.client?.entity.uuid,
-      },
-      responseType: 'blob', // important
-    })
-      .then(response => {
-        setDownloading(false);
-        if (response) {
-          const url = window.URL.createObjectURL(response.data);
-          setTempURL(url);
-        }
-      })
-      .catch(e => {
-        setDownloading(false);
-        ErrorHandler.showNotification(e);
-      });
-  };
 
   const updateTemplate = (templateUuid: string) => {
     setLoading(true);
@@ -164,7 +138,9 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
           <IconButton
             title={'Imprimir documentos'}
             icon={<TbPrinter/>}
-            onClick={generateDocuments}/>
+            onClick={() => {
+              setOpenPrint(true);
+            }}/>
           <IconButton
             onClick={() => {
               setOpenItemForm(true);
@@ -179,7 +155,6 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
       {contractItemsGroups &&
         <Collapse bordered={false} destroyOnHidden items={
           Object.keys(contractItemsGroups).map(label => {
-            console.log(contractItemsGroups[label]);
             return {
               label: label,
               children: <>
@@ -199,17 +174,13 @@ const ContractItemsManager = ({contract, group, forceToEdit = false}: ContractIt
           })}>
         </Collapse>
       }
-      <ModalView
-        title={'Contratos'}
-        width={'80%'}
+      <FileDownloader
+        url={'document-generator/contracts/' + contract.uuid + '/provision'}
         open={openPrint}
-        onCancel={() => {
+        onComplete={() => {
           setOpenPrint(false);
-          setTempURL(undefined);
-        }}>
-        <LoadingIndicator visible={downloading}/>
-        {tempURL && <iframe src={tempURL} height={600} width={'100%'} style={{border: "none"}}/>}
-      </ModalView>
+        }}
+      />
       <ModalView
         title={selectedItem ? 'Editar item' : 'Agregar item'}
         onCancel={() => {

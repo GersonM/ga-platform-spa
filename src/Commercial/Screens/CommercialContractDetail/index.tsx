@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   Tabs, Tooltip,
 } from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
-import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbTrash} from "react-icons/tb";
+import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbPrinter, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -46,6 +46,7 @@ import MetaTitle from "../../../CommonUI/MetaTitle";
 import ProductStockForm from "../../../WarehouseManager/Components/ProductStockForm";
 import CartItemForm from "../../Components/CartItemForm";
 import InvoiceResumen from "../../../PaymentManagement/Components/InvoiceResumen";
+import FileDownloader from "../../../CommonUI/FileDownloader";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -61,6 +62,8 @@ const CommercialContractDetail = () => {
   const [openEditStock, setOpenEditStock] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState<StorageContractCartItem>();
   const [openCartItemForm, setOpenCartItemForm] = useState(false);
+  const [openPrintProposal, setOpenPrintProposal] = useState(false);
+  const [openPrintContract, setOpenPrintContract] = useState(false);
 
   useEffect(() => {
     if (!params.contract) {
@@ -226,13 +229,36 @@ const CommercialContractDetail = () => {
         loading={loading}
         onRefresh={() => setReload(!reload)}
         showBack
-        tools={<ContractStatus contract={contract}/>}
+        tools={<><ContractStatus contract={contract}/>
+          <PrimaryButton
+            label={'Propuesta'}
+            icon={<TbPrinter/>}
+            size={'small'}
+            shape={'round'}
+            onClick={() => {
+              setOpenPrintProposal(true);
+            }}/>
+          <PrimaryButton
+            size={'small'}
+            shape={'round'}
+            label={'Contrato'}
+            icon={<TbPrinter/>}
+            onClick={() => {
+              setOpenPrintContract(true);
+            }}/>
+        </>}
         title={
-          <>
-            <code>{contract?.title || contract.tracking_id}</code>
-            <TbChevronCompactRight
-              style={{margin: '0 10px'}}/> {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
-          </>
+          <Space>
+            <div>
+              <code>{contract?.title || contract.tracking_id}
+                <br/><small>{contract?.tracking_id}</small>
+              </code>
+            </div>
+            <TbChevronCompactRight/>
+            <span>
+              {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
+            </span>
+          </Space>
         }>
         {contract?.cancelled_at && (
           <AlertMessage message={'Este contrato fué anulado'} caption={contract?.cancellation_reason} type={'error'}/>
@@ -514,6 +540,22 @@ const CommercialContractDetail = () => {
           }}/>
         }
       </ModalView>
+      <FileDownloader
+        name={'Imprimir propuesta'}
+        url={'document-generator/contracts/' + contract.uuid + '/proposal'}
+        open={openPrintProposal}
+        onComplete={() => {
+          setOpenPrintProposal(false);
+        }}
+      />
+      <FileDownloader
+        name={'Imprimir contrato'}
+        url={'document-generator/contracts/' + contract.uuid}
+        open={openPrintContract}
+        onComplete={() => {
+          setOpenPrintContract(false);
+        }}
+      />
     </ModuleContent>
   );
 };

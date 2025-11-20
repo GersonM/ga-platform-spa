@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal} from "antd";
 
 interface ModalViewProps {
-  title?: string;
+  title?: string|React.ReactNode;
   open: boolean;
   width?: number|string;
   onCancel: () => void;

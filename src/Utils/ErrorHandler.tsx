@@ -52,7 +52,7 @@ class ErrorHandler {
   async getBlobError(error: any) {
     const status = await error.response.data.text();
     const st = JSON.parse(status);
-    this.description = st.status?.error;
+    this.description = st?.error;
   }
 
   static showNotification(error: any, time = 3) {
