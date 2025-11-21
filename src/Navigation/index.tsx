@@ -175,7 +175,7 @@ const Navigation = () => {
                 <NavItem icon={<PiDoorOpenLight/>} label={'Entregas'} path={'/real-estate/providing'}/>
               </NavItem>
             )*/}
-            {config?.modules.includes('commercial') && (
+            {config?.modules.includes('crm') && (
               <NavItem label={'CRM'} icon={<TbHeadset/>} notifications={'Beta'}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/crm/dashboard'}/>
                 <NavItem icon={<PiUserFocus/>} label={'Leads & campañas'} path={'/crm/leads'}/>
