@@ -28,6 +28,7 @@ import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import ShoppingCartEditor from "../ShoppingCartEditor";
+import './styles.less';
 
 interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
@@ -107,28 +108,46 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
   return (
     <div>
       <Form layout="vertical" onFinish={submitForm} initialValues={contract}>
-        <div style={{display: 'flex', backgroundColor: 'cyan'}}>
-          Nuevo
+        <div className={'sales-form-header'}>
           <div>
+            <small className={'label'}>NUEVA:</small>
             <Segmented
-              size={"large"}
-              options={[{label: 'propuesta', value: 'proposal'}, 'venta']}
+              options={[{label: 'Propuesta', value: 'proposal'}, 'Venta']}
               onChange={value => setIsApproved(value != 'proposal')}
             />
           </div>
-          <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
-            {chooseSeller ? (
-                <ProfileSelector/>
-              ) :
-              <Space>
-                <ProfileChip profile={user?.profile}/>
-                <IconButton
-                  icon={<TbPencil/>}
-                  onClick={() => setChooseSeller(!chooseSeller)}
-                />
-              </Space>
-            }
-          </Form.Item>
+          <div>
+            <small className={'label'}>VENDEDOR:</small>
+            <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'} noStyle>
+              {chooseSeller ? (
+                  <ProfileSelector/>
+                ) :
+                <Space>
+                  <ProfileChip profile={user?.profile}/>
+                  <IconButton
+                    icon={<TbPencil/>}
+                    onClick={() => setChooseSeller(!chooseSeller)}
+                  />
+                </Space>
+              }
+            </Form.Item>
+          </div>
+          <div>
+            <small className={'label'}>PERIODO:</small>
+            <Form.Item name={'period'} noStyle>
+              <Select
+                style={{width:120}}
+                showSearch
+                allowClear
+                placeholder={'Único'}
+                options={[
+                  {value: 'unique', label: 'Único'},
+                  {value: 'monthly', label: 'Mensual'},
+                  {value: 'annual', label: 'Anual'},
+                ]}
+              />
+            </Form.Item>
+          </div>
         </div>
         <Row gutter={[20, 20]}>
           <Col span={14}>
@@ -159,7 +178,7 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
               <ShoppingCartEditor value={shoppingCart} onChange={value => {
                 setShoppingCart(value);
                 console.log('value', value)
-              }} />
+              }}/>
             </Form.Item>
             <Row gutter={[20, 20]}>
               <Col span={14}>
@@ -177,18 +196,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 </Form.Item>
               </Col>
               <Col span={10}>
-                <Form.Item label={'Periodo'} name={'period'}>
-                  <Select
-                    showSearch
-                    allowClear
-                    placeholder={'Único'}
-                    options={[
-                      {value: 'unique', label: 'Único'},
-                      {value: 'monthly', label: 'Mensual'},
-                      {value: 'annual', label: 'Anual'},
-                    ]}
-                  />
-                </Form.Item>
               </Col>
             </Row>
             <Form.Item label={'Cliente'} style={{marginBottom: 10}}>
@@ -204,7 +211,9 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
                 <CompanySelector/>
               </Form.Item>
             )}
-
+            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
+              <Input.TextArea/>
+            </Form.Item>
           </Col>
           <Col span={10}>
             <Divider>Información opcional</Divider>
@@ -232,9 +241,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
             </Form.Item>
             <Form.Item label={'Información del presupuesto (opcional)'} name={'budget_details'}>
               <DefaultEditor/>
-            </Form.Item>
-            <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
-              <Input.TextArea/>
             </Form.Item>
           </Col>
         </Row>

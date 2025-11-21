@@ -17,7 +17,7 @@ const WorkspaceForm = ({onComplete}: WorkspaceFormProps) => {
       .post('workspaces', values)
       .then(() => {
         setLoading(false);
-        onComplete && onComplete();
+        if(onComplete) onComplete();
       })
       .catch(error => {
         setLoading(false);
