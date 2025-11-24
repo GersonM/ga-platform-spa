@@ -31,6 +31,8 @@ import {
 } from 'react-icons/pi';
 import {MapPinIcon, QueueListIcon} from '@heroicons/react/24/outline';
 import {
+  TbAdjustments,
+  TbAdjustmentsCog,
   TbBuilding,
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,
@@ -38,7 +40,8 @@ import {
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
   TbListCheck, TbMapPinBolt, TbMessageUser,
   TbPackage, TbPackageImport,
-  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
+  TbPigMoney,
+  TbRobotFace, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
 } from 'react-icons/tb';
 import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
 import {FaChalkboardTeacher} from 'react-icons/fa';
@@ -132,6 +135,8 @@ const Navigation = () => {
     key: t.config.id,
   }));
 
+  const oldSession = Cookies.get('old_session_token');
+
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
       {contextHolder}
@@ -181,6 +186,7 @@ const Navigation = () => {
                 <NavItem icon={<PiUserFocus/>} label={'Leads & campañas'} path={'/crm/leads'}/>
                 <NavItem icon={<TbMessageUser/>} label={'Mensajería'} path={'/crm/chat'}/>
                 <NavItem icon={<TbContract/>} label={'Procesos'} path={'/crm/processes'}/>
+                <NavItem icon={<TbAdjustments/>} label={'Configuración'} path={'/crm/configuration'}/>
               </NavItem>
             )}
             {config?.modules.includes('commercial') && (
@@ -292,6 +298,15 @@ const Navigation = () => {
               <TbMessageUser/>
             </div>
           </Badge>
+          {oldSession && <div className={'user-tool'} onClick={() => {
+            if (oldSession) {
+              Cookies.remove('old_session_token');
+              Cookies.set('session_token', oldSession);
+              location.reload();
+            }
+          }}>
+            <TbRobotFace />
+          </div>}
           <ScreenModeSelector/>
         </Space>
         <Dropdown arrow={true} trigger={['click']} menu={{items: menuItems, onClick: handleUserMenuClick}}>

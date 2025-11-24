@@ -226,7 +226,7 @@ export type Token = {
 };
 
 export type User = {
-  uuid: number;
+  uuid: string;
   last_login_at: string;
   /**
    * email is not used anymore, use profile email instead

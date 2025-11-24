@@ -202,7 +202,9 @@ const CommercialContractDetail = () => {
     {
       key: 'period',
       label: 'Periodo de contrato',
-      children: contract?.period
+      children: <>
+        {contract?.period == 'monthly' ? 'Mensual':'Único'}
+      </>
     },
     {
       key: 'period',

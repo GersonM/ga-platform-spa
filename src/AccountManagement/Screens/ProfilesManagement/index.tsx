@@ -1,7 +1,18 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Drawer, Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
-import {TbIdBadge2, TbLockCog, TbPencil, TbTrash, TbUser, TbUserOff, TbUserShield} from 'react-icons/tb';
+import {
+  TbFaceId,
+  TbFaceMask,
+  TbIdBadge2,
+  TbLockCog,
+  TbMask,
+  TbPencil,
+  TbTrash,
+  TbUser,
+  TbUserOff,
+  TbUserShield
+} from 'react-icons/tb';
 import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -18,6 +29,9 @@ import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import './styles.less';
 import UpdateUserPassword from "../../Components/UpdateUserPassword";
+import CustomTag from "../../../CommonUI/CustomTag";
+import Cookies from "js-cookie";
+import AuthContext from "../../../Context/AuthContext.tsx";
 
 interface ProfilesManagementProps {
   type?: string;
@@ -36,6 +50,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
   const [filterSubscription, setFilterSubscription] = useState<string>();
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -63,6 +78,25 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
 
     return cancelTokenSource.cancel;
   }, [reload, currentPage, pageSize, search, filterSubscription, type]);
+
+  const getSession = (u?: User) => {
+    if (!user) {
+      return;
+    }
+    axios
+      .post('authentication/impersonation', {user_uuid: u.uuid})
+      .then(response => {
+        const oldSession = Cookies.get('session_token');
+        if (oldSession) {
+          Cookies.set('old_session_token', oldSession);
+        }
+        Cookies.set('session_token', response.data.token);
+        location.reload();
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  }
 
   const columns = [
     {
@@ -100,16 +134,16 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
       title: 'Roles',
       dataIndex: 'user',
       render: (user: any) => {
-        if (user?.roles?.length > 0) {
-          return user.roles.map((role: any, index: number) => {
-            return (
-              <Tag key={index} color={'blue-inverse'}>
-                {role.name}
-              </Tag>
-            );
-          });
-        }
-        return <Tag color={'grey'}>Sin rol</Tag>;
+        return <Space>
+          {
+            user?.roles?.length > 0 ? user.roles.map((role: any, index: number) => {
+              return (<CustomTag key={index} color={'blue-inverse'}>{role.name}</CustomTag>);
+            }) : <small>Sin roles asignados</small>
+          }
+          <Tooltip title={'Editar roles'}>
+            <IconButton small icon={<TbUserShield/>} disabled/>
+          </Tooltip>
+        </Space>;
       },
     },
     {
@@ -140,7 +174,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
     },
     {
       dataIndex: 'uuid',
-      width: 175,
+      width: 170,
       render: (uuid: string, row: Profile) => {
         return (
           <Space wrap>
@@ -153,20 +187,15 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
                 setOpenChangePassword(true);
               }}/>
             </Tooltip>
-            <Tooltip title={'Editar roles'}>
-              <IconButton small icon={<TbUserShield/>} disabled/>
-            </Tooltip>
-            <Tooltip title={'Bloquear usuario'}>
+            <Tooltip title={'Restringir acceso'}>
               <IconButton small icon={<TbUserOff/>} danger disabled/>
             </Tooltip>
-            <Tooltip title={'Eliminar usuario'}>
-              <Popconfirm
-                title={'¿Quieres eliminar este usuario?'}
-                description={'Toda la información relacionada será eliminada también'}
-                onConfirm={() => setReload(!reload)}>
-                <IconButton small icon={<TbTrash/>} danger disabled/>
-              </Popconfirm>
-            </Tooltip>
+            {user?.roles?.includes('admin') && row.user && (
+              <Tooltip title={'Impersonation'}>
+                <IconButton onClick={() => getSession(row.user)} small icon={<TbFaceId/>}/>
+              </Tooltip>
+            )
+            }
           </Space>
         );
       },
@@ -211,7 +240,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
             </Form.Item>
           </FilterForm>
         </ContentHeader>
-        <TableList scroll={{x:900}} columns={columns} dataSource={profiles}/>
+        <TableList scroll={{x: 900}} columns={columns} dataSource={profiles}/>
         <Pagination
           align={'center'}
           showSizeChanger={false}
