@@ -80,7 +80,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
   }, [reload, currentPage, pageSize, search, filterSubscription, type]);
 
   const getSession = (u?: User) => {
-    if (!user) {
+    if (!u) {
       return;
     }
     axios
