@@ -12,6 +12,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
+import HtmlEditor from "../../../CommonUI/HtmlEditor";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -32,6 +33,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
       newFields.created_at = dayjs(contract.created_at);
       newFields.date_start = newFields.date_start ? dayjs(contract.date_start) : undefined;
       newFields.date_end = newFields.date_end ? dayjs(contract.date_end) : undefined;
+      newFields.dead_line = newFields.dead_line ? dayjs(contract.dead_line) : undefined;
       newFields.approved_at = newFields.approved_at ? dayjs(contract.approved_at) : undefined;
       newFields.provided_at = newFields.provided_at ? dayjs(contract.provided_at) : undefined;
       setFormData(newFields);
@@ -45,8 +47,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
   }, [formData]);
 
   const submitForm = (data: any) => {
-    console.log(data.date_start);
-    console.log(data.created_at);
     setLoading(true);
     axios
       .request({
@@ -133,6 +133,9 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label="Fecha de inicio (opcional)" name="date_start">
               <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
+            <Form.Item label="Fecha de entrega - Deadline (opcional)" name="dead_line" help={'Fecha prometida de entrega'}>
+              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+            </Form.Item>
             <Form.Item label="Fecha de finalización (opcional)" name="date_end">
               <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
             </Form.Item>
@@ -140,10 +143,10 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <PaymentMethodTypesSelector/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
-              <Input.TextArea/>
+              <HtmlEditor />
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
-              <Input.TextArea/>
+              <HtmlEditor />
             </Form.Item>
           </Col>
         </Row>

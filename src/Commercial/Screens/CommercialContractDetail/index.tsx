@@ -185,7 +185,7 @@ const CommercialContractDetail = () => {
     {
       key: 'deadline',
       label: 'Fecha estimada de entrega',
-      children: contract?.dead_line ? dayjs(contract?.dead_line).format(Config.dateFormatUser) :
+      children: contract?.dead_line ? <>{dayjs(contract?.dead_line).format(Config.dateFormatUser)} <br/> <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
         <small>No terminado</small>
     },
     {
