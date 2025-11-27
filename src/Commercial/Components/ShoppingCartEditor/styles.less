@@ -1,5 +1,5 @@
 .shopping-cart-editor-container {
-  border-bottom: 1px dashed #ddd;
+  border-bottom: 1px dashed var(--border-color-body);
 
   .shopping-cart-item {
     display: flex;
@@ -7,11 +7,16 @@
     padding: 10px 0;
     align-items: center;
     min-height: 60px;
-    border-top: 1px dashed #ddd;
+    border-top: 1px dashed var(--border-color-body);
 
     .name {
       flex: 1;
       font-size: 13px;
+      line-height: 16px;
+
+      small {
+        margin-top: 5px;
+      }
     }
   }
 }

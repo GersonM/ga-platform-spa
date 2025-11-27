@@ -47,6 +47,7 @@ import ProductStockForm from "../../../WarehouseManager/Components/ProductStockF
 import CartItemForm from "../../Components/CartItemForm";
 import InvoiceResumen from "../../../PaymentManagement/Components/InvoiceResumen";
 import FileDownloader from "../../../CommonUI/FileDownloader";
+import ShoppingCartEditor from "../../Components/ShoppingCartEditor";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -352,7 +353,10 @@ const CommercialContractDetail = () => {
                 <ProfileChip profile={contract?.client?.entity} showDocument/> :
                 <CompanyChip company={contract?.client?.entity}/>
             }
-            <Divider orientation={"left"}>Productos</Divider>
+            <Divider orientation={"left"}>Productos </Divider>
+            <PrimaryButton icon={<TbPencil/>} block label={'Editar'} size={"small"} ghost onClick={() => {
+              setOpenCartItemForm(true);
+            }}/>
             <List
               size={"small"}
               style={{margin: '0 -15px'}}
@@ -382,10 +386,6 @@ const CommercialContractDetail = () => {
                     </small>
                     {!contract.locked_at &&
                       <>
-                        <IconButton icon={<TbPencil/>} small onClick={() => {
-                          setOpenCartItemForm(true);
-                          setSelectedCartItem(cartItem);
-                        }}/>
                         <Popconfirm
                           title={'¿Seguro que quieres eliminar este producto?'}
                           description={'Esto modificará el monto total del contrato'}
@@ -534,13 +534,25 @@ const CommercialContractDetail = () => {
           setOpenEditStock(false);
         }}/>
       </ModalView>
-      <ModalView title={'Editar item de contrato'} open={openCartItemForm} onCancel={() => setOpenCartItemForm(false)}>
-        {selectedCartItem &&
-          <CartItemForm cartItem={selectedCartItem} onComplete={() => {
-            setOpenCartItemForm(false);
-            setReload(!reload);
-          }}/>
-        }
+      <ModalView title={'Editar items de contrato'} open={openCartItemForm} onCancel={() => setOpenCartItemForm(false)}>
+        <ShoppingCartEditor
+          value={contract.cart}
+          liveUpdate={false}
+          onChange={value => {
+          axios
+            .request({
+              url: `commercial/contracts/${contract.uuid}`,
+              method: 'PUT',
+              data: {cart:value}
+            })
+            .then(response => {
+              setOpenCartItemForm(false);
+              setReload(!reload);
+            })
+            .catch(error => {
+              ErrorHandler.showNotification(error);
+            });
+        }} />
       </ModalView>
       <FileDownloader
         name={'Imprimir propuesta'}

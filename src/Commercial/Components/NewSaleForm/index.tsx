@@ -85,7 +85,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
 
   const addStock = (data: StorageStock) => {
     const newCart = [...shoppingCart];
-    console.log({data});
     const index = newCart.findIndex(i => i.uuid === data.uuid);
     if (index !== -1) {
       newCart[index].quantity++;
@@ -151,33 +150,10 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
         </div>
         <Row gutter={[20, 20]}>
           <Col span={14}>
-            <Row gutter={[15, 15]}>
-              <Col xs={14}>
-                <Form.Item label={'Agregar producto'}>
-                  <StockSelector value={null} onChange={(_uuid, option) => {
-                    addStock(option.entity);
-                  }}/>
-                </Form.Item>
-              </Col>
-              <Col xs={10}>
-                <Form.Item label={'Total'}>
-                  {cartTotalAmountPen > 0 &&
-                    <Tag bordered={false} color={'blue'}>
-                      <MoneyString currency={'PEN'} value={cartTotalAmountPen}/>
-                    </Tag>
-                  }
-                  {cartTotalAmountUSD > 0 &&
-                    <Tag bordered={false} color={'green'}>
-                      <MoneyString currency={'USD'} value={cartTotalAmountUSD}/>
-                    </Tag>
-                  }
-                </Form.Item>
-              </Col>
-            </Row>
             <Form.Item>
-              <ShoppingCartEditor value={shoppingCart} onChange={value => {
+              <ShoppingCartEditor onChange={value => {
                 setShoppingCart(value);
-                console.log('value', value)
+                console.log(value);
               }}/>
             </Form.Item>
             <Row gutter={[20, 20]}>
