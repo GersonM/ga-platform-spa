@@ -146,9 +146,9 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
                     <Col span={12}>
                       <Form.Item label={'Tipo de cambio'}>
                         <MoneyInput
-                          value={(exchangeRate || payment?.exchange_rate)/1000}
+                          value={(payment?.exchange_rate) ? ((exchangeRate || payment?.exchange_rate) / 1000) : undefined}
                           returnInteger={false}
-                          onChange={(v) => setExchangeRate(v*1000)}
+                          onChange={(v) => setExchangeRate(v ? v * 1000 : undefined)}
                           placeholder={defaultChangeRate?.toString()}
                           currency={exchangeCurrency}/>
                       </Form.Item>
