@@ -432,6 +432,9 @@ export type SubscriptionMember = {
 };
 export type InvoicePayment = {
   amount: number;
+  exchange_amount?: number;
+  exchange_currency?: string;
+  exchange_rate?: number;
   created_at: string;
   description?: string;
   payment_channel?: string;
@@ -470,7 +473,7 @@ export type Invoice = {
   concept: string;
   currency: string;
   apply_taxes?: boolean;
-  pending_payment?: number;
+  pending_payment: number;
   created_at: string;
   expires_on: string;
   issued_on: string;

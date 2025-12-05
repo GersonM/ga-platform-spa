@@ -152,7 +152,7 @@ const CommercialDashboard = () => {
           </Col>
         </Row>
       </Card>
-      <Card bordered={false} title={'Pagos'} style={{marginTop: 50}}>
+      <Card variant={"borderless"} title={'Pagos'} style={{marginTop: 50}}>
         <Row gutter={[20, 20]}>
           {commercialStats.financial.groups.map((g: any, index: number) => {
             return (

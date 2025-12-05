@@ -40,7 +40,8 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
           {dayjs(transaction_date).format('DD/MM/YYYY')}
           <small>{dayjs(transaction_date).format('HH:MM a')}</small>
         </>
-      }},
+      }
+    },
     {
       title: 'Descripción',
       dataIndex: 'method',
@@ -48,7 +49,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
         return (
           <>
             {row.description}
-            <br />
+            <br/>
             <small>{method?.number}</small>
           </>
         );
@@ -59,7 +60,16 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       dataIndex: 'amount',
       width: 110,
       align: 'right',
-      render: (value: number) => <MoneyString currency={invoice.currency} value={value} />,
+      render: (value: number, row: InvoicePayment) => {
+        return <>
+          <MoneyString currency={invoice.currency} value={value}/>
+          {row.exchange_amount && (
+            <>
+              <small><MoneyString value={row.exchange_amount} currency={'PEN'}/></small>
+            </>
+          )}
+        </>
+      },
     },
     {
       title: 'N° Voucher',
@@ -71,11 +81,11 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       dataIndex: 'attachments',
       width: 190,
       render: (attachments: ApiFile[]) => {
-          return <Space wrap>
-            {attachments?.map(f =>
-              <FilePreview fileUuid={f.uuid} />
-            )}
-          </Space> ;
+        return <Space wrap>
+          {attachments?.map(f =>
+            <FilePreview fileUuid={f.uuid}/>
+          )}
+        </Space>;
       },
     },
     {
@@ -84,12 +94,12 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       render: (uuid: string, p: InvoicePayment) => {
         return (
           <Space>
-            <IconButton icon={<TbPencil />} small onClick={() => {
+            <IconButton icon={<TbPencil/>} small onClick={() => {
               setSelectedPayment(p);
               setOpenInvoiceForm(true);
-            }} />
+            }}/>
             <Popconfirm title={'¿Quieres eliminar este concepto?'} onConfirm={() => deletePayment(uuid)}>
-              <IconButton icon={<TbTrash />} small danger />
+              <IconButton icon={<TbTrash/>} small danger/>
             </Popconfirm>
           </Space>
         );
@@ -98,15 +108,18 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
   ];
   return (
     <>
-      <TableList small columns={columns} dataSource={invoice.payments} pagination={false} />
+      <TableList small columns={columns} dataSource={invoice.payments} pagination={false}/>
       <PrimaryButton
-        icon={<PiPlusBold size={14} />}
+        icon={<PiPlusBold size={14}/>}
         style={{marginTop: '10px'}}
         label={'Registrar pago'}
         block
         ghost
         size={'small'}
-        onClick={() => setOpenInvoiceForm(true)}
+        onClick={() => {
+          setOpenInvoiceForm(true);
+          setSelectedPayment(undefined);
+        }}
       />
       <Modal destroyOnHidden open={openInvoiceForm} onCancel={() => setOpenInvoiceForm(false)} footer={false}>
         <InvoicePaymentForm

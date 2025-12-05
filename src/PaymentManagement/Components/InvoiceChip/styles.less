@@ -1,0 +1,24 @@
+.invoice-chip-container {
+  background: linear-gradient(var(--background-color), var(--background-color-body));
+  padding: 10px 10px;
+  border-radius: 12px;
+  corner-shape: squircle;
+  border: 1px solid var(--border-color-body);
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  gap: 10px;
+
+  &:hover {
+    box-shadow: 0 2px 8px var(--shadow-color);
+  }
+
+  &.boxed {
+    margin-bottom: 15px;
+  }
+
+  .amounts {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+  }
+}

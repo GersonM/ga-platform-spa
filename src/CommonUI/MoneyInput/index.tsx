@@ -4,6 +4,7 @@ interface MoneyStringProps {
   value?: number;
   min?: number;
   currency?: string;
+  returnInteger?: boolean;
   placeholder?: string;
   block?: boolean;
   width?: number;
@@ -19,18 +20,22 @@ const currencies: any = {
 };
 
 const MoneyInput = (
-  {value, style, block = true, currency = 'PEN', onChange, onCurrencyChange, width = 120, ...props}: MoneyStringProps
+  {
+    value, style, block = true, currency = 'PEN',
+    returnInteger = true,
+    onChange, onCurrencyChange, width = 120, ...props
+  }: MoneyStringProps
 ) => {
   return (
     <InputNumber
       style={block ? {width: '100%'} : {width}}
       onChange={value => {
         if (onChange) {
-          onChange((value != null) ? value * 100 : undefined);
+          onChange((value != null) ? (returnInteger ? value * 100 : value) : undefined);
         }
       }}
-      addonBefore={currencies[currency]}
-      value={(value != null || value != undefined) ? value / 100 : null}
+      prefix={currencies[currency]}
+      value={(value != null || value != undefined) ? (returnInteger ? value / 100 : value) : null}
       {...props}
     />
   );

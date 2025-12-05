@@ -15,13 +15,14 @@ interface WalletSelectorProps {
   value?: any;
   style?: React.CSSProperties;
   size?: 'small' | 'large';
+  currency?: string;
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-export const WalletSelector = ({placeholder, mode, style, ...props}: WalletSelectorProps) => {
+export const WalletSelector = ({placeholder, mode, style, currency, ...props}: WalletSelectorProps) => {
   const [wallets, setWallets] = useState<Wallet | any>([]);
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string>();
   const lastSearchText = useDebounce(name, 300);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export const WalletSelector = ({placeholder, mode, style, ...props}: WalletSelec
       cancelToken: cancelTokenSource.token,
       params: {
         search: lastSearchText,
+        currency: currency,
       },
     };
 

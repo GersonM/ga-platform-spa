@@ -44,6 +44,23 @@ axios.defaults.headers.common['X-Tenant'] = tenantID;
 axios.defaults.headers.common.Authorization = 'Bearer ' + token;
 axios.defaults.withXSRFToken = true;
 
+function detectBrowser() {
+  if (navigator.userAgent.includes("Chrome")) {
+    return "chrome"
+  }
+  if (navigator.userAgent.includes("Firefox")) {
+    return "firefox"
+  }
+  if (navigator.userAgent.includes("Safari")) {
+    return "safari"
+  }
+}
+const browser = detectBrowser();
+if(browser) {
+  document.body.classList.add(browser);
+}
+
+
 configureEcho({
   broadcaster: "reverb",
   auth: {headers: {'X-Tenant': tenantID}},

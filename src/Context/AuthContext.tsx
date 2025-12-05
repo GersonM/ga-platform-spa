@@ -35,13 +35,18 @@ const AuthContext = createContext<AuthContextDefaults>({
   logout(): Promise<any> {
     return Promise.resolve(undefined);
   },
-  setUser(): void {},
-  setPreferredMode(): void {},
-  setDarkMode(): void {},
+  setUser(): void {
+  },
+  setPreferredMode(): void {
+  },
+  setDarkMode(): void {
+  },
   user: null,
   openMenu: false,
-  setOpenMenu(): void {},
-  setSecureMode(): void {},
+  setOpenMenu(): void {
+  },
+  setSecureMode(): void {
+  },
   secureMode: false,
 });
 const token = Cookies.get('session_token');
@@ -75,7 +80,8 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
       });
 
       return () => {
-        window.removeEventListener('change', function () {});
+        window.removeEventListener('change', function () {
+        });
       };
     } else {
       setDarkMode(preferredMode === 'dark');
@@ -174,7 +180,7 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
         sessionToken: token,
         setSecureMode: (value) => {
           setSecureMode(value);
-          localStorage.setItem('secure_mode', value ? '1':'0');
+          localStorage.setItem('secure_mode', value ? '1' : '0');
         },
         secureMode,
       }}>
