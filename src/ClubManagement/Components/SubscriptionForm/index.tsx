@@ -84,16 +84,6 @@ const SubscriptionForm = ({subscription, onComplete}: SubscriptionFormProps) => 
           }
         </Form.Item>
         <Divider>Subscripción</Divider>
-        <Form.Item label={'Plan'} name={'fk_plan_uuid'}>
-          <SubscriptionPlanSelector
-            onChange={(_uuid: string, item: any) => {
-              setSelectedPlan(item.entity);
-            }}
-          />
-        </Form.Item>
-        <Form.Item name={'amount'} label={'Precio'}>
-          <MoneyInput placeholder={selectedPlan ? (selectedPlan?.price / 100).toString() : ''}/>
-        </Form.Item>
         <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
           <Input.TextArea/>
         </Form.Item>
