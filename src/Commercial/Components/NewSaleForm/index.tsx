@@ -153,7 +153,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
             <Form.Item>
               <ShoppingCartEditor onChange={value => {
                 setShoppingCart(value);
-                console.log(value);
               }}/>
             </Form.Item>
             <Row gutter={[20, 20]}>

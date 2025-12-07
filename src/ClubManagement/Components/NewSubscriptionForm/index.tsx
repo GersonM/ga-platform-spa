@@ -200,33 +200,8 @@ const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) =
                 </Form.Item>
               </Col>
             </Row>
-            <Row gutter={[15, 15]}>
-              <Col xs={14}>
-                <Form.Item label={'Agregar servicio'}>
-                  <StockSelector
-                    placeholder={'Elige un servicio para agregar'} value={null}
-                    onChange={(_uuid, option) => {
-                      addStock(option.entity);
-                    }}/>
-                </Form.Item>
-              </Col>
-              <Col xs={10}>
-                <Form.Item label={'Total'}>
-                  {cartTotalAmountPen > 0 &&
-                    <Tag bordered={false} color={'blue'}>
-                      <MoneyString currency={'PEN'} value={cartTotalAmountPen}/>
-                    </Tag>
-                  }
-                  {cartTotalAmountUSD > 0 &&
-                    <Tag bordered={false} color={'green'}>
-                      <MoneyString currency={'USD'} value={cartTotalAmountUSD}/>
-                    </Tag>
-                  }
-                </Form.Item>
-              </Col>
-            </Row>
             <Form.Item>
-              <ShoppingCartEditor value={shoppingCart} onChange={value => {
+              <ShoppingCartEditor onChange={value => {
                 setShoppingCart(value);
               }} />
             </Form.Item>
