@@ -264,7 +264,9 @@ const Navigation = () => {
             {config?.modules.includes('inbox') && (
               <NavItem label={'E-mail'} icon={<PiMailboxDuotone/>} path={'/inbox-management'}/>
             )}
-            <NavItem label={'Monitor de servicios'} icon={<TbHeartRateMonitor/>} path={'/monitoring'}/>
+            {config?.modules.includes('monitor') && (
+              <NavItem label={'Monitor de servicios'} icon={<TbHeartRateMonitor/>} path={'/monitoring'}/>
+            )}
             {user?.roles?.includes('admin') && (
               <>
                 <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/users'}/>

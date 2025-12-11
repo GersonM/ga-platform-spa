@@ -48,13 +48,13 @@ import ProductVariationSelector from "../../../WarehouseManager/Components/Produ
 import {ClientSelector} from "../../../PaymentManagement/Components/ClientSelector";
 
 const CommercialSales = () => {
+  const navigate = useNavigate();
   const [clients, setClients] = useState<Profile[]>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const navigate = useNavigate();
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
   const [filters, setFilters] = useState<any>();
