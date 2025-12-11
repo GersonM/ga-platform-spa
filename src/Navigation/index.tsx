@@ -32,7 +32,7 @@ import {
 import {MapPinIcon, QueueListIcon} from '@heroicons/react/24/outline';
 import {
   TbAdjustments,
-  TbAdjustmentsCog,
+  TbAdjustmentsCog, TbBook,
   TbBuilding,
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,
@@ -267,11 +267,13 @@ const Navigation = () => {
             {config?.modules.includes('monitor') && (
               <NavItem label={'Monitor de servicios'} icon={<TbHeartRateMonitor/>} path={'/monitoring'}/>
             )}
+            <NavItem label={'Contactos'} icon={<TbBook/>}>
+              <NavItem label={'Personas'} icon={<TbUser/>} path={'/profiles'}/>
+              <NavItem label={'Empresas'} icon={<PiBuilding/>} path={'/companies'}/>
+            </NavItem>
             {user?.roles?.includes('admin') && (
               <>
                 <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/users'}/>
-                <NavItem label={'Personas'} icon={<TbUser/>} path={'/profiles'}/>
-                <NavItem label={'Empresas'} icon={<PiBuilding/>} path={'/companies'}/>
                 <NavItem label={'Administración'} icon={<PiGear/>} path={'/config'}/>
               </>
             )}
@@ -307,7 +309,7 @@ const Navigation = () => {
               location.reload();
             }
           }}>
-            <TbRobotFace />
+            <TbRobotFace/>
           </div>}
           <ScreenModeSelector/>
         </Space>
