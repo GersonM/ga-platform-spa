@@ -32,7 +32,7 @@ import {
 import {MapPinIcon, QueueListIcon} from '@heroicons/react/24/outline';
 import {
   TbAdjustments,
-  TbAdjustmentsCog, TbBook,
+  TbBook,
   TbBuilding,
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,

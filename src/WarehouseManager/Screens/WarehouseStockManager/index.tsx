@@ -111,6 +111,15 @@ const WarehouseStockManager = () => {
       }
     },
     {
+      title: 'Tipo',
+      dataIndex: 'type',
+      render: (type: string) => {
+        return <CustomTag color={type == 'rent' ? 'orange' : 'blue'}>
+          <code>{type == 'rent' ? 'Rentar' : 'Venta'}</code>
+        </CustomTag>;
+      }
+    },
+    {
       title: 'Vence',
       dataIndex: 'expiration_date',
       render: (expiration_date: string) => {
@@ -233,7 +242,8 @@ const WarehouseStockManager = () => {
         tools={<>
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
           <Progress percent={Math.round(percent)} style={{width: '200px'}}/>
-          <PrimaryButton disabled={!selectedRows?.length} loading={downloadingReport} label={'Generar reporte'} onClick={getStockReport}/>
+          <PrimaryButton disabled={!selectedRows?.length} loading={downloadingReport} label={'Generar reporte'}
+                         onClick={getStockReport}/>
           <PrimaryButton disabled loading={downloadingReport} label={'Registrar salidas'} onClick={getStockReport}/>
         </>}
       >
@@ -277,7 +287,7 @@ const WarehouseStockManager = () => {
             <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
           </Form.Item>
           <Form.Item label={'Desde'} name={'sale_price_from'}>
-            <InputNumber />
+            <InputNumber/>
           </Form.Item>
         </FilterForm>
       </ContentHeader>
