@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Button, Col, Divider, Form, Input, Popover, Row, Space} from "antd";
+import {Button, Col, Divider, Form, Input, notification, Popover, Row, Space} from "antd";
 
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
@@ -8,8 +8,10 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
 
 interface CsfFirewallProps {
-  resourceUuid: string;
+  resourceUuid?: string;
 }
+
+let timer: any = null;
 
 const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,7 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
   const [modifiedFields, setModifiedFields] = useState<any[]>([]);
 
   useEffect(() => {
+    if (!resourceUuid) return;
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -42,21 +45,29 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
   }, [reload]);
 
   const submitForm = (values: any) => {
+    console.log('sending form');
     setLoading(true);
     axios.post(`external-resources/servers/${resourceUuid}/firewall-config`, {fields: modifiedFields})
-      .then(response => {
+      .then(() => {
         setLoading(false);
+        setModifiedFields([]);
+        notification.success({message:'Cambios aplicados correctamente'});
       })
       .catch((error) => {
+        setLoading(false);
         ErrorHandler.showNotification(error);
       })
   }
 
   const checkChanges = (values: any, fields: any[]) => {
-    const touched = fields.filter(f => f.touched)
-      .map(f => ({name: f.name[0], value: f.value}));
-    console.log('changes', values, touched);
-    setModifiedFields(touched);
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      const touched = fields.filter(f => f.touched)
+        .map(f => ({name: f.name[0], value: f.value}));
+      setModifiedFields(touched);
+    }, 300);
   }
 
   const getFields = (key: string) => {
@@ -71,16 +82,16 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
 
   return (
     <div className={'firewall-config-container'}>
-      <LoadingIndicator visible={loading}/>
+      <LoadingIndicator visible={loading} message={'Listando configuración'}/>
+      <Form onFinish={submitForm} layout="vertical" onFieldsChange={checkChanges}>
         <div className={'controls'}>
           <Space split={<Divider type={'vertical'}/>}>
-            <PrimaryButton htmlType={'submit'} label={'Guardar'} disabled={modifiedFields.length == 0}/>
+            <PrimaryButton loading={loading} htmlType={'submit'} label={'Guardar'} disabled={modifiedFields.length == 0}/>
             <Button onClick={() => setReload(!reload)} type={"link"}>Recargar</Button>
             <Button onClick={() => setShowHints(!showHints)}
                     type={"link"}>{showHints ? 'Ocultar ayuda' : 'Mostrar ayuda'}</Button>
           </Space>
         </div>
-      <Form onFinish={submitForm} layout="vertical" onFieldsChange={checkChanges}>
         {modifiedFields.length > 0 && (<div>
           {modifiedFields.length} campos modificados
         </div>)}
