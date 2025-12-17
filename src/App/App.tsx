@@ -8,6 +8,7 @@ import AuthContext from '../Context/AuthContext';
 import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import LeadMessagesManager from "../CRMModule/Screens/LeadMessagesManager";
+import ResourceManager from "../ServiceMonitoring/Screens/ResourceManager";
 
 const CommercialSellersManager = lazy(() => import("../Commercial/Screens/CommercialSellersManager"));
 const EntityFieldManager = lazy(() => import("../TaxonomyManagement/Screens/EntityFieldManager"));
@@ -216,7 +217,11 @@ const App = () => {
           <Route path={'estates/:state?'} element={<EstateDetailView/>}/>
           <Route path={'providing'} element={<EstateProviding/>}/>
         </Route>
-        <Route path={'monitoring'} element={<MonitorServicesManager/>}/>
+        <Route path={'resources'} element={<MonitorServicesManager/>}/>
+        <Route path={'resources/:uuid'} element={<ResourceManager/>}>
+          <Route path={':tab'}/>
+        </Route>
+
         <Route path={'workspaces'}>
           <Route path={'dashboard'} element={<RealEstateDashboard/>}/>
         </Route>

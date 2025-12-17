@@ -1,16 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Input, Space} from "antd";
-import PreferenceValue from "../../../Preferences/Components/PreferenceValue";
+import {Button, Col, Divider, Form, Input, Popover, Row, Space} from "antd";
+
+import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import './styles.less';
 
 interface CsfFirewallProps {
   resourceUuid: string;
 }
 
-const CsfFirewall = ({resourceUuid}:CsfFirewallProps) => {
+const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
   const [loading, setLoading] = useState(false);
   const [resources, setResources] = useState<any[]>();
   const [reload, setReload] = useState(false);
+  const [showHints, setShowHints] = useState(false);
+  const [modifiedFields, setModifiedFields] = useState<any[]>([]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -34,20 +40,64 @@ const CsfFirewall = ({resourceUuid}:CsfFirewallProps) => {
 
     return cancelTokenSource.cancel;
   }, [reload]);
+
+  const submitForm = (values: any) => {
+    setLoading(true);
+    axios.post(`external-resources/servers/${resourceUuid}/firewall-config`, {fields: modifiedFields})
+      .then(response => {
+        setLoading(false);
+      })
+      .catch((error) => {
+        ErrorHandler.showNotification(error);
+      })
+  }
+
+  const checkChanges = (values: any, fields: any[]) => {
+    const touched = fields.filter(f => f.touched)
+      .map(f => ({name: f.name[0], value: f.value}));
+    console.log('changes', values, touched);
+    setModifiedFields(touched);
+  }
+
+  const getFields = (key: string) => {
+    switch (key) {
+      case 'TCP_IN':
+      case 'TCP_OUT':
+        return <Input.TextArea />
+      default:
+        return <Input/>;
+    }
+  }
+
   return (
-    <div>
-      {resources?.map((item, i) => (
-        <div key={i}>
-          <pre>{item.comment}</pre>
-          <PreferenceValue preference={{
-            key: item.key,
-            type: 'string',
-            label:item.key,
-            value:item.value,
-          }}/>
-          <Divider/>
+    <div className={'firewall-config-container'}>
+      <LoadingIndicator visible={loading}/>
+        <div className={'controls'}>
+          <Space split={<Divider type={'vertical'}/>}>
+            <PrimaryButton htmlType={'submit'} label={'Guardar'} disabled={modifiedFields.length == 0}/>
+            <Button onClick={() => setReload(!reload)} type={"link"}>Recargar</Button>
+            <Button onClick={() => setShowHints(!showHints)}
+                    type={"link"}>{showHints ? 'Ocultar ayuda' : 'Mostrar ayuda'}</Button>
+          </Space>
         </div>
-      ))}
+      <Form onFinish={submitForm} layout="vertical" onFieldsChange={checkChanges}>
+        {modifiedFields.length > 0 && (<div>
+          {modifiedFields.length} campos modificados
+        </div>)}
+        <Divider/>
+        <Row gutter={[20, 20]}>
+          {resources?.map((item, i) => (
+            <Col md={8} key={i}>
+              <Form.Item name={item.key} label={item.key} initialValue={item.value}>
+                {getFields(item.key)}
+              </Form.Item>
+              <Popover trigger={'click'} content={<pre>{item.comment}</pre>}>
+                <small>{item.comment.substring(0, 120)}...</small>
+              </Popover>
+            </Col>
+          ))}
+        </Row>
+      </Form>
     </div>
   );
 };

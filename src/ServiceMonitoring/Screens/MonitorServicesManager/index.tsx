@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, Pagination, Space, Tooltip} from "antd";
+import {Form, Input, Space} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 
 import type {
   ExternalResource,
   ResponsePagination,
-  StorageProduct,
 } from "../../../Types/api.tsx";
 import ModuleContent from "../../../CommonUI/ModuleContent";
 import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
@@ -15,11 +14,13 @@ import ProductGroupsSelector from "../../../WarehouseManager/Components/ProductG
 import ProductManufacturerSelector from "../../../WarehouseManager/Components/ProductManufacturerSelector";
 import TableList from "../../../CommonUI/TableList";
 import CustomTag from "../../../CommonUI/CustomTag";
-import CsfFirewall from "../../Components/CsfFirewall";
 import IconButton from "../../../CommonUI/IconButton";
 import {TbPencil} from "react-icons/tb";
 import ModalView from "../../../CommonUI/ModalView";
 import ExternalResourceForm from "../../Components/ExternalResourceForm";
+import {useNavigate} from "react-router-dom";
+import {LuEye} from "react-icons/lu";
+import TablePagination from "../../../CommonUI/TablePagination";
 
 const MonitorServicesManager = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,8 @@ const MonitorServicesManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [openAddResource, setOpenAddResource] = useState(false);
   const [selectedResource, setSelectedResource] = useState<ExternalResource>();
-  const [filters, setFilters] = useState<any>()
+  const [filters, setFilters] = useState<any>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -81,7 +83,7 @@ const MonitorServicesManager = () => {
     },
     {
       title: 'Llave',
-      dataIndex: 'auth_key',
+      dataIndex: 'auth_key_hint',
       render: (text: string) => (<code>{text}</code>)
     },
     {
@@ -99,9 +101,14 @@ const MonitorServicesManager = () => {
     },
     {
       dataIndex: 'uuid',
-      render: (_uuid: string, row: ExternalResource) => (
+      width: 100,
+      render: (uuid: string, row: ExternalResource) => (
         <Space>
-          <IconButton icon={<TbPencil/>} onClick={() => setSelectedResource(row)}/>
+          <IconButton icon={<TbPencil/>} onClick={() => {
+            setSelectedResource(row);
+            setOpenAddResource(true);
+          }}/>
+          <IconButton icon={<LuEye/>} onClick={() => navigate(uuid)}/>
         </Space>
       )
     }
@@ -114,7 +121,10 @@ const MonitorServicesManager = () => {
         loading={loading}
         largeTools
         onRefresh={() => setReload(!reload)}
-        onAdd={() => setOpenAddResource(true)}>
+        onAdd={() => {
+          setOpenAddResource(true);
+          setSelectedResource(undefined);
+        }}>
         <FilterForm
           onInitialValues={values => setFilters(values)}
           onSubmit={values => setFilters(values)}
@@ -135,25 +145,17 @@ const MonitorServicesManager = () => {
       </ContentHeader>
       <TableList customStyle={false} columns={columns} dataSource={resources}/>
       {pagination && (
-        <Pagination
-          showSizeChanger={false}
-          style={{marginTop: 10}}
-          onChange={(page) => {
-            setCurrentPage(page);
-          }}
-          size={"small"} total={pagination.total}
-          showTotal={(total) => `${total} productos en total`}
-          pageSize={pagination.per_page}
-          current={pagination.current_page}/>
+        <TablePagination pagination={pagination} onChange={(page) => setCurrentPage(page)}/>
       )}
       <ModalView
-        title={selectedResource ? 'Editar recurso':'Nuevo recurso'}
+        title={selectedResource ? 'Editar recurso' : 'Nuevo recurso'}
         open={openAddResource} onCancel={() => setOpenAddResource(false)}>
-        <ExternalResourceForm externalResource={selectedResource} onComplete={() => setOpenAddResource(false)}/>
+        <ExternalResourceForm
+          externalResource={selectedResource} onComplete={() => {
+          setOpenAddResource(false);
+          setReload(!reload);
+        }}/>
       </ModalView>
-      {selectedResource &&
-        <CsfFirewall resourceUuid={selectedResource?.uuid}/>
-      }
     </ModuleContent>
   );
 };

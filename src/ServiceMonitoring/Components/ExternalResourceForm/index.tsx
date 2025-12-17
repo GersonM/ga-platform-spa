@@ -5,10 +5,9 @@ import {TbCheck, TbPencil} from "react-icons/tb";
 import {useForm} from "antd/lib/form/Form";
 
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import ProfileSelector from "../../../CommonUI/ProfileSelector";
-import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {ExternalResource} from "../../../Types/api.tsx";
+import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
 
 interface ExternalResourceFormProps {
   externalResource?: ExternalResource;
@@ -74,20 +73,9 @@ const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFor
         <Form.Item label={'Descripción (opcional)'} name={'description'}>
           <Input.TextArea/>
         </Form.Item>
-        {type == 'cpanel' && (
-          <Form.Item label={'Vendedor'} name={'fk_created_by_uuid'}>
-            {chooseSeller ? (
-                <ProfileSelector/>
-              ) :
-              <Space>
-                <IconButton
-                  icon={<TbPencil/>}
-                  onClick={() => setChooseSeller(!chooseSeller)}
-                />
-              </Space>
-            }
-          </Form.Item>
-        )}
+        <Form.Item label={'Descripción (opcional)'} name={'attributes'}>
+          <EntityFieldsEditor entity={externalResource} />
+        </Form.Item>
         <PrimaryButton
           icon={<TbCheck/>} loading={loading} block htmlType={'submit'}
           label={'Guardar cambios'}/>
