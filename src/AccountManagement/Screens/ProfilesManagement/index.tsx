@@ -1,14 +1,11 @@
 import {useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Drawer, Form, Input, Modal, Pagination, Popconfirm, Select, Space, Tag, Tooltip} from 'antd';
+import {Drawer, Form, Input, Modal, Pagination, Select, Space, Tooltip} from 'antd';
 import {
   TbFaceId,
-  TbFaceMask,
   TbIdBadge2,
   TbLockCog,
-  TbMask,
   TbPencil,
-  TbTrash,
   TbUser,
   TbUserOff,
   TbUserShield

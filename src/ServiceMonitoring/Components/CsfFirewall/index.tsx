@@ -74,7 +74,7 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
     switch (key) {
       case 'TCP_IN':
       case 'TCP_OUT':
-        return <Input.TextArea />
+        return <Input.TextArea rows={6} />
       default:
         return <Input/>;
     }

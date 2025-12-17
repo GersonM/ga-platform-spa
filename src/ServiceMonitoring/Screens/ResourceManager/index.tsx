@@ -7,6 +7,7 @@ import axios from "axios";
 import type {ExternalResource} from "../../../Types/api.tsx";
 import CsfFirewall from "../../Components/CsfFirewall";
 import ExternalResourceForm from "../../Components/ExternalResourceForm";
+import {LuFireExtinguisher} from "react-icons/lu";
 
 const ResourceManager = () => {
   const params = useParams();
@@ -46,9 +47,9 @@ const ResourceManager = () => {
         showBack
         description={resource?.description}/>
       <Tabs
+        type={'card'}
         activeKey={params.tab}
         onChange={(v) => {
-          console.log(v);
           navigate(`/resources/${params.uuid}/${v}`);
         }}
         destroyOnHidden
@@ -60,6 +61,7 @@ const ResourceManager = () => {
         },
         {
           key: 'firewall',
+          icon:<LuFireExtinguisher />,
           label: 'Firewall',
           children: <CsfFirewall resourceUuid={params.uuid}/>
         },

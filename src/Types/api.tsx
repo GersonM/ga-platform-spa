@@ -818,6 +818,7 @@ export type StorageWarehouse = {
 export type ExternalResource = {
   uuid: string;
   name: string;
+  uptime?: string;
   description?: string;
   type: boolean;
   group: boolean;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, Space} from "antd";
+import {Form, Input, notification, Popconfirm, Space} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -19,8 +19,10 @@ import {TbPencil} from "react-icons/tb";
 import ModalView from "../../../CommonUI/ModalView";
 import ExternalResourceForm from "../../Components/ExternalResourceForm";
 import {useNavigate} from "react-router-dom";
-import {LuEye} from "react-icons/lu";
+import {LuEye, LuPower, LuTrash, LuTrash2} from "react-icons/lu";
 import TablePagination from "../../../CommonUI/TablePagination";
+import ResourceStatus from "../../Components/ResourceStatus";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 const MonitorServicesManager = () => {
   const [loading, setLoading] = useState(false);
@@ -58,11 +60,30 @@ const MonitorServicesManager = () => {
     return cancelTokenSource.cancel;
   }, [reload, currentPage, filters]);
 
+  const resetServer = (uuid:string) => {
+    setLoading(true);
+    axios.post(`external-resources/servers/${uuid}/reset`)
+      .then(() => {
+        setLoading(false);
+        notification.success({message:'Reinicio en proceso'});
+      })
+      .catch((error) => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      })
+  }
+
   const columns = [
     {
       title: 'Nombre',
       dataIndex: 'name',
       width: 100,
+    },
+    {
+      title: 'Estado',
+      dataIndex: 'uuid',
+      width: 100,
+      render: (uuid: string) => (<ResourceStatus resourceUuid={uuid}/>)
     },
     {
       title: 'Tipo',
@@ -87,28 +108,27 @@ const MonitorServicesManager = () => {
       render: (text: string) => (<code>{text}</code>)
     },
     {
-      title: 'Fecha de regisrto',
+      title: 'Tiempo activo',
       width: 210,
-      dataIndex: 'created_at',
-      render: (date: any) => {
-        return (
-          <>
-            {dayjs(date).fromNow()} <br/>
-            <small>{dayjs(date).format('DD [de] MMMM [del] YYYY hh:mm a')}</small>
-          </>
-        );
-      },
+      dataIndex: 'uptime'
     },
     {
       dataIndex: 'uuid',
       width: 100,
       render: (uuid: string, row: ExternalResource) => (
         <Space>
-          <IconButton icon={<TbPencil/>} onClick={() => {
+          <IconButton small icon={<TbPencil/>} onClick={() => {
             setSelectedResource(row);
             setOpenAddResource(true);
           }}/>
-          <IconButton icon={<LuEye/>} onClick={() => navigate(uuid)}/>
+          <IconButton small icon={<LuEye/>} onClick={() => navigate(uuid)}/>
+          <Popconfirm
+            title={'¿Quieres reiniciar el servicio?'} description={'Forzar reinicio del sistema'}
+            onConfirm={() => resetServer(uuid)}
+          >
+            <IconButton small danger icon={<LuPower/>} title={'Reiniciar'}/>
+          </Popconfirm>
+          <IconButton small danger icon={<LuTrash2/>} onClick={() => navigate(uuid)}/>
         </Space>
       )
     }
