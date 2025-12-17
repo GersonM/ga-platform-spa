@@ -814,3 +814,12 @@ export type StorageWarehouse = {
   is_physical: boolean;
   created_at: string;
 }
+
+export type ExternalResource = {
+  uuid: string;
+  name: string;
+  description?: string;
+  type: boolean;
+  group: boolean;
+  created_at: string;
+}
