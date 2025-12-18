@@ -7,7 +7,9 @@ import axios from "axios";
 import type {ExternalResource} from "../../../Types/api.tsx";
 import CsfFirewall from "../../Components/CsfFirewall";
 import ExternalResourceForm from "../../Components/ExternalResourceForm";
-import {LuFireExtinguisher} from "react-icons/lu";
+import {LuBrickWall, LuFireExtinguisher, LuInfo} from "react-icons/lu";
+import ResourceInformation from "../../Components/ResourceInformation";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 const ResourceManager = () => {
   const params = useParams();
@@ -42,12 +44,12 @@ const ResourceManager = () => {
   return (
     <ModuleContent>
       <ContentHeader
-        title={resource?.type + ' | ' + resource?.name}
+        title={resource?.name}
+        tools={<CustomTag>{resource?.type}</CustomTag>}
         onRefresh={() => setReload(!reload)}
-        showBack
+        onBack={() => navigate("/resources")}
         description={resource?.description}/>
       <Tabs
-        type={'card'}
         activeKey={params.tab}
         onChange={(v) => {
           navigate(`/resources/${params.uuid}/${v}`);
@@ -57,11 +59,12 @@ const ResourceManager = () => {
         {
           key: 'info',
           label: 'Información',
-          children: <ExternalResourceForm externalResource={resource} />
+          icon:<LuInfo size={18} style={{verticalAlign: 'bottom'}} />,
+          children: <ResourceInformation resourceUuid={params.uuid} />
         },
         {
           key: 'firewall',
-          icon:<LuFireExtinguisher />,
+          icon:<LuBrickWall size={18} style={{verticalAlign: 'bottom'}} />,
           label: 'Firewall',
           children: <CsfFirewall resourceUuid={params.uuid}/>
         },
