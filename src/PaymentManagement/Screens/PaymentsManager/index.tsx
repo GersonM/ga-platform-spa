@@ -12,7 +12,7 @@ import {
   Row,
   Space,
 } from 'antd';
-import {TbInfoCircle, TbPencil, TbTrash} from "react-icons/tb";
+import {TbFileExcel, TbInfoCircle, TbPencil, TbTrash} from "react-icons/tb";
 import {Link} from "react-router-dom";
 import dayjs from 'dayjs';
 
@@ -36,6 +36,8 @@ import InvoiceForm from "../../Components/InvoiceForm";
 import InvoiceTableDetails from "../../Components/InvoiceTableDetails";
 import ModalView from "../../../CommonUI/ModalView";
 import InvoicePaymentForm from "../../Components/InvoicePaymentForm";
+import TablePagination from "../../../CommonUI/TablePagination";
+import ReportDownloader from "../../../CommonUI/ReportDownloader";
 
 const PaymentsManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -218,8 +220,13 @@ const PaymentsManager = () => {
             >
               <PrimaryButton
                 loading={loadingDeleteSelection}
-                icon={<TbInfoCircle/>} label={'Borrar selección'} size={"small"} danger ghost/>
+                icon={<TbInfoCircle size={18}/>} label={'Borrar selección'} size={"small"} danger ghost/>
             </Popconfirm>
+            <ReportDownloader url={'payment-management/payments/export'} params={{
+              ...filters,
+              date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+              create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null
+            }} />
           </>}>
           <FilterForm
             onInitialValues={values => setFilters(values)}
@@ -247,15 +254,10 @@ const PaymentsManager = () => {
           </FilterForm>
         </ContentHeader>
         <TableList scroll={{x: 1000}} customStyle={false} columns={columns} dataSource={invoices}/>
-        <Pagination
-          style={{marginTop: 10}}
-          align={'center'}
-          total={pagination?.total}
-          pageSize={pagination?.per_page}
-          current={pagination?.current_page}
-          onChange={(page, size) => {
+        <TablePagination
+          pagination={pagination}
+          onChange={(page) => {
             setCurrentPage(page);
-            setPageSize(size);
           }}
         />
       </ModuleContent>

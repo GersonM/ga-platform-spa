@@ -3,12 +3,10 @@ import axios from "axios";
 import {Button, Card, Col, Divider, Progress, Row, Space, Tooltip} from "antd";
 import {LuClock, LuCpu, LuMemoryStick} from "react-icons/lu";
 
-import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import CustomTag from "../../../CommonUI/CustomTag";
 import './styles.less';
 import {TbClockPin, TbReload} from "react-icons/tb";
 import ResourceStatus from "../ResourceStatus";
-import {PlusOutlined} from "@ant-design/icons";
 
 interface ResourceInformationProps {
   resourceUuid?: string;
@@ -19,6 +17,7 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
   const [reload, setReload] = useState(false);
   const [serverInfo, setServerInfo] = useState<any>();
   const [force, setForce] = useState(false);
+  const [serverLog, setServerLog] = useState<any>();
 
   useEffect(() => {
     if (!resourceUuid) return;
@@ -36,6 +35,33 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
       .then(response => {
         if (response) {
           setServerInfo(response.data);
+          setForce(false);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [reload]);
+
+  useEffect(() => {
+    if (!resourceUuid) return;
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+      params: {force: force ? 1 : null},
+    };
+
+    setLoading(true);
+    console.log('updating')
+
+    axios
+      .get(`external-resources/servers/${resourceUuid}/logs`, config)
+      .then(response => {
+        if (response) {
+          setServerLog(response.data);
           setForce(false);
         }
         setLoading(false);
@@ -103,9 +129,14 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
             }}>Actualizar información</Button>
         </Col>
         <Col span={16}>
-          Log
           <Card>
-            Last log
+          Última actividad del sistema
+            <small>
+
+            <pre>
+              {serverLog?.raw}
+            </pre>
+            </small>
           </Card>
         </Col>
       </Row>

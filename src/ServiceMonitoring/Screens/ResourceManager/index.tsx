@@ -10,6 +10,7 @@ import ExternalResourceForm from "../../Components/ExternalResourceForm";
 import {LuBrickWall, LuFireExtinguisher, LuInfo} from "react-icons/lu";
 import ResourceInformation from "../../Components/ResourceInformation";
 import CustomTag from "../../../CommonUI/CustomTag";
+import FirewallManager from "../../Components/FirewallManager";
 
 const ResourceManager = () => {
   const params = useParams();
@@ -66,7 +67,7 @@ const ResourceManager = () => {
           key: 'firewall',
           icon:<LuBrickWall size={18} style={{verticalAlign: 'bottom'}} />,
           label: 'Firewall',
-          children: <CsfFirewall resourceUuid={params.uuid}/>
+          children: <FirewallManager resourceUuid={params.uuid}/>,
         },
         {
           key: 'databases',
