@@ -33,12 +33,20 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
 
     const primaryColor = tenant.primary_color || defaultColor;
     const tColor = tinyColor(primaryColor);
+    const tColorL = tinyColor(primaryColor);
+    const tColorD = tinyColor(primaryColor);
     tColor.darken(16);
+    tColorL.lighten(70);
+    tColorD.darken(9);
     const r = document.querySelector(':root');
     //@ts-ignore
     r.style.setProperty('--primary-color', primaryColor);
     //@ts-ignore
     r.style.setProperty('--primary-color-darker', tColor);
+    //@ts-ignore
+    r.style.setProperty('--primary-color-dark', tColorD);
+    //@ts-ignore
+    r.style.setProperty('--primary-color-lighter', tColorL);
   }, [tenant]);
 
   useEffect(() => {

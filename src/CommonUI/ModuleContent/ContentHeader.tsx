@@ -119,7 +119,7 @@ const ContentHeader = (
         )}
         {tools}
       </Space>
-      {description && <div style={{marginTop: 10, fontSize: 12}}>{description}</div>}
+      {description && <div style={{marginTop: 0, fontSize: 12}}>{description}</div>}
       {children && <div className={'content-header-caption'}>{children}</div>}
     </div>
   );

@@ -295,12 +295,13 @@ const WarehouseStockManager = () => {
 
       </Drawer>
       <Table
+        scroll={{x:900}}
         rowSelection={{
           onChange: (rows: any[]) => {
             setSelectedRows(rows);
           }
         }}
-        pagination={false} rowKey={'uuid'} size={"small"} style={{marginTop: 15}} loading={loading}
+        pagination={false} rowKey={'uuid'} size={"small"} loading={loading}
         columns={columns} dataSource={productStock}/>
       {pagination && (
         <Pagination

@@ -85,6 +85,7 @@ const Navigation = () => {
     config,
     setOpenMenu,
     openMenu,
+    darkMode,
     activityCount
   } = useContext(AuthContext);
   const {pathname} = useLocation();
@@ -136,7 +137,7 @@ const Navigation = () => {
   }));
 
   const oldSession = Cookies.get('old_session_token');
-
+  const tenantLogo = darkMode ? config?.dark_logo : config?.white_logo;
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
       {contextHolder}
@@ -144,7 +145,7 @@ const Navigation = () => {
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
           <Tooltip title={config?.config?.name} placement={"right"}>
             <div className="logo-square">
-              <img src={config?.dark_logo || logo} alt={config?.config?.name}/>
+              <img src={tenantLogo || logo} alt={config?.config?.name}/>
               <PiCaretUpDown/>
             </div>
           </Tooltip>

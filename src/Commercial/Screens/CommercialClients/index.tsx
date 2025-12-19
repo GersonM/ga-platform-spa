@@ -10,7 +10,6 @@ import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import ContractList from './ContractList';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
 import FilterForm from '../../../CommonUI/FilterForm';

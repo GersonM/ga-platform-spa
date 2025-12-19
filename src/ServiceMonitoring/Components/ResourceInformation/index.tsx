@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {Button, Card, Col, Divider, Progress, Row, Space, Tooltip} from "antd";
-import {LuClock, LuCpu, LuMemoryStick} from "react-icons/lu";
+import {LuCpu, LuMemoryStick} from "react-icons/lu";
 
 import CustomTag from "../../../CommonUI/CustomTag";
-import './styles.less';
 import {TbClockPin, TbReload} from "react-icons/tb";
 import ResourceStatus from "../ResourceStatus";
+import './styles.less';
 
 interface ResourceInformationProps {
   resourceUuid?: string;
@@ -133,9 +133,9 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
           Última actividad del sistema
             <small>
 
-            <pre>
+            <code>
               {serverLog?.raw}
-            </pre>
+            </code>
             </small>
           </Card>
         </Col>

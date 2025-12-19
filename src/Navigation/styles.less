@@ -1,7 +1,6 @@
 @iconSize: 20px;
 
 .navigation-wrapper {
-  background: radial-gradient(circle, var(--primary-color) 0%, var(--primary-color-darker) 220%) -20px -50vh;
   min-width: var(--main-nav-width);
   max-width: var(--main-nav-width);
   transition: all 0.3s;
@@ -11,7 +10,6 @@
   top: 0;
   height: 100dvh;
   z-index: 3;
-  color: #ffffff;
 
   animation-duration: .7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
@@ -59,7 +57,6 @@
       border-radius: 35px;
       cursor: pointer;
       transition: all 0.4s;
-      color: #ffffff;
 
       &.danger {
         background: rgba(255, 0, 0, 0.3);
@@ -135,23 +132,74 @@
   margin: 0;
   padding: 0;
 
+  .notification-badge {
+    color: #ffffff;
+    background: var(--primary-color);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 10px;
+  }
+
   li {
     .item {
-      display: flex;
+
+      .divider {
+        display: flex;
+        padding: 3px 15px 3px 20px;
+        margin: 10px 0 5px 0;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: 600;
+        opacity: 0.35;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s;
+        cursor: pointer;
+        gap: 10px;
+
+        .line {
+          display: block;
+          border-bottom: 1px solid var(--border-color-active);
+          opacity: 0.3;
+          flex: 1;
+        }
+
+        &:hover {
+          opacity: 1;
+          background: rgba(0, 0, 0, 0.1);
+        }
+      }
 
       a {
         display: flex;
         align-items: center;
-        padding: 10px 10px;
-        margin: 0 8px 0 5px;
-        border-radius: 5px;
+        padding: 10px 10px 10px 20px;
+        margin: 0 10px 0 0;
+          border-radius: 0 20px 20px 0;
         flex: 1;
-        color: #ffffff;
+        color: #333;
+        opacity: 0.7;
         transition: all 0.3s;
         position: relative;
 
-        &:hover, &.active {
-          background: rgba(0, 0, 0, 0.4);
+        &:before {
+          content: '';
+          width: 3px;
+          height: 15px;
+          background: #ffffff;
+          position: absolute;
+          left: -3px;
+          transition: all 0.3s cubic-bezier(0.01, 1.15, 0.8, 0.99);
+        }
+
+        &:hover {
+          background: var(--background-color-body);
+          color: #000;
+        }
+        &.active {
+          color: #ffff;
+          background: var(--primary-color);
+          opacity: 1;
         }
 
         &:active {
@@ -178,13 +226,6 @@
           display: inline-block;
           stroke-width: 1.5;
         }
-
-        .notification-badge {
-          background: #ff0000;
-          padding: 2px 8px;
-          border-radius: 30px;
-          font-size: 11px;
-        }
       }
 
       .open-button {
@@ -203,58 +244,27 @@
 
     ul {
       list-style: none;
-      background: rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease-out;
       max-height: 0;
       overflow: hidden;
+      margin: 0;
+      padding: 0;
       position: relative;
-      margin: 0 8px 0 5px;
-      padding: 0 0 0 0;
-      border-radius: 0 0 5px 5px;
 
       &.open {
-        margin: 0 8px 5px 5px;
-        padding: 5px 0;
         max-height: 300px;
       }
+    }
+  }
+}
 
-      li {
-        border-bottom: none;
-        position: relative;
-
-        .item {
-          a {
-            margin: 0;
-            padding: 5px 5px 5px 20px;
-            border-radius: 0;
-
-            &:before {
-              content: '';
-              width: 3px;
-              height: 15px;
-              background: #ffffff;
-              position: absolute;
-              left: -3px;
-              border-radius: 4px;
-              transition: all 0.3s cubic-bezier(0.01, 1.15, 0.8, 0.99);
-            }
-
-            &:active {
-            }
-
-            &.active {
-              background: rgba(0, 0, 0, 0.3);
-
-              &:before {
-                left: 8px;
-              }
-            }
-
-            .label {
-              font-size: 12px;
-              line-height: 15px;
-            }
-          }
+.dark-mode {
+  .navigation-list {
+    li {
+      a {
+        color: #d3d3d3;
+        &:hover {
+          color: #ffffff;
         }
       }
     }

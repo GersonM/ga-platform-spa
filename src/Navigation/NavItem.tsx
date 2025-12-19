@@ -30,15 +30,15 @@ const NavItem = ({path, label, icon, children, notifications}: NavItemProps) => 
             {content}
           </NavLink>
         ) : (
-          <a href={'#'} className={`${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(!isOpen)}>
-            {icon}
+          <span className={`${isOpen ? 'open' : ''} divider`} onClick={() => setIsOpen(!isOpen)}>
             {content}
+            <span className="line"></span>
             {children && (
               <div className={`open-button ${isOpen ? 'open' : ''}`}>
                 <TbChevronDown />
               </div>
             )}
-          </a>
+          </span>
         )}
       </div>
       {children && <ul className={`${isOpen ? 'open' : ''}`}>{children}</ul>}

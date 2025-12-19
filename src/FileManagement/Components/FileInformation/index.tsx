@@ -18,8 +18,8 @@ import IconButton from '../../../CommonUI/IconButton';
 import MediaPlayer from '../../../CommonUI/MediaPlayer';
 import FileIcon from '../FileIcon';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import './styles.less';
 import ContainerDropdownActions from "../ContainerDropdownActions";
+import './styles.less';
 
 interface FileInformationProps {
   file?: ApiFile;

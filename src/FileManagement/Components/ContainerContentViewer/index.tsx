@@ -183,22 +183,21 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
               />
             )}
             {containerUuid === 'trash' && (
-              <div style={{marginBottom: 15}}>
+              <div>
                 <PrimaryButton label={'Vaciar papelera'} icon={<PiRecycle/>} onClick={emptyTrash}/>
               </div>
             )}
             {containerContent.containers.length === 0 && containerContent.files.length === 0 ? (
-              <div style={{flex: 1}}>
+              <div>
                 <Empty
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description={
                     <>
-                      <span>No hay archivos en esta ubicación</span> <br/>
+                      <span>{containerUuid === 'trash' ? 'No tienes elementos en la papelera':'No hay archivos en esta ubicación'}</span> <br/>
                       <br/>
                       {allowUpload && !searchValue && (
                         <>
-                          <strong>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</strong> <br/>
-                          <br/>
+                          <h4>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</h4> <br/>
                           <Button ghost icon={<PiUploadBold/>} onClick={open} shape={'round'} type={'primary'}>
                             Cargar archivos
                           </Button>
