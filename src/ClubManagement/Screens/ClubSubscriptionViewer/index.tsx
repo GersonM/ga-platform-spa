@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from 'react-router-dom';
-import {Card, Col, Divider, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from "antd";
+import {Card, Col, Collapse, Divider, Modal, Popconfirm, Row, Select, Space, Switch, Tag, Tooltip} from "antd";
 import {TbCalendarUp, TbCalendarX, TbCancel, TbPencil, TbReceipt2, TbThumbUp, TbTrash} from "react-icons/tb";
 import {PiCalendarX, PiIdentificationCard, PiPlusBold} from "react-icons/pi";
 import axios from "axios";
@@ -282,13 +282,11 @@ const ClubSubscription = () => {
       </ContentHeader>
       <Row gutter={[20, 20]}>
         <Col xs={16}>
-          <Card
-            title={'Miembros'}
-            variant={"borderless"}
-            size={'small'}
-            extra={
+          <Divider>
+            <Space>
+              Miembros
               <PrimaryButton
-                icon={<PiPlusBold size={13}/>}
+                icon={<PiPlusBold size={16}/>}
                 label={'Agregar miembro'}
                 onClick={() => {
                   setOpenAddMember(true);
@@ -296,19 +294,16 @@ const ClubSubscription = () => {
                 }}
                 size={'small'}
               />
-            }>
-            <TableList loading={loading} columns={columns} dataSource={subscription?.members}/>
-          </Card>
-          <Card
-            variant={"borderless"}
-            title={'Pagos'} size={'small'} style={{marginTop: '10px'}}>
-            {subscription?.contract &&
-              <InvoicesTable
-                contract={subscription.contract}
+            </Space>
+          </Divider>
+          <TableList loading={loading} columns={columns} dataSource={subscription?.members}/>
+          <Divider>Pagos</Divider>
+          {subscription?.contract &&
+            <InvoicesTable
+              contract={subscription.contract}
 
-              />
-            }
-          </Card>
+            />
+          }
         </Col>
         <Col xs={8}>
           <h3>Actividad</h3>

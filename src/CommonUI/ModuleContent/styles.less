@@ -6,7 +6,7 @@
 .mobile-header {
   background: linear-gradient(var(--primary-color), var(--primary-color-darker) 300%);
   display: none;
-  border-radius: 12px;
+  border-radius: 9px;
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
@@ -15,6 +15,7 @@
   top: 5px;
   right: 10px;
   left: 10px;
+  margin: 5px;
   z-index: 1;
 
   .logo-square {
@@ -29,10 +30,10 @@
   flex: 1;
   padding: 20px;
   position: relative;
-  //width: calc(100vw - (var(--main-nav-width) + 60px));
+  width: calc(100vw - (var(--main-nav-width) + 60px));
 
   &.with-sidebar {
-    //width: calc(100vw - (var(--main-nav-width) + 330px));
+    width: calc(100vw - (var(--main-nav-width) + 330px));
   }
 
   animation-duration: 0.7s;
@@ -117,7 +118,7 @@
   }
 
   .module-content-wrapper {
-    //width: 100dvw;
+    width: calc(100dvw - 20px);
 
     .content-header {
       top: 50px;

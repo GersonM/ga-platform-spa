@@ -16,6 +16,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import AuthContext from '../../../Context/AuthContext';
+import TableList from "../../../CommonUI/TableList";
 
 const MyComponent = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
@@ -217,7 +218,7 @@ const MyComponent = () => {
         )}
       </Space>
       <div style={{marginBottom: '10px'}}>
-        <Table
+        <TableList
           rowKey={'uuid'}
           size="small"
           scroll={{x: 1200}}

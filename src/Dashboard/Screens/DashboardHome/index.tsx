@@ -17,12 +17,12 @@ const DashboardHome = () => {
         <p>Aquí tienes un resumen lo que sucede en la aplicación</p>
 
         <Row gutter={[25, 25]}>
-          <Col span={12}>
+          <Col md={12}>
             <Card title={'Actividad'} size={'small'}>
               <ActivityLogViewer boxed={false} numItems={5} autoReload/>
             </Card>
           </Col>
-          <Col span={12}>
+          <Col md={12}>
             <Card title={'Almacenamiento'} size={'small'}>
               <ServiceStatus/>
             </Card>

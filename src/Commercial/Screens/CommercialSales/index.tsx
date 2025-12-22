@@ -380,7 +380,7 @@ const CommercialSales = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <TableList scroll={{x: 1100}} customStyle={false} loading={loading} columns={columns} dataSource={clients}/>
+      <TableList scroll={{x: 1100}} loading={loading} columns={columns} dataSource={clients}/>
       {pagination && (
         <Pagination
           style={{marginTop: 10}}
