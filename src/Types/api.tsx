@@ -477,6 +477,7 @@ export type Invoice = {
   created_at: string;
   expires_on: string;
   issued_on: string;
+  contract_uuid: string;
   paid_at?: string;
   payments?: InvoicePayment[];
   items?: InvoiceItem[];

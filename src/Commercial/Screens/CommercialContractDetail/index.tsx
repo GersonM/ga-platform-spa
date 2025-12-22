@@ -186,7 +186,8 @@ const CommercialContractDetail = () => {
     {
       key: 'deadline',
       label: 'Fecha estimada de entrega',
-      children: contract?.dead_line ? <>{dayjs(contract?.dead_line).format(Config.dateFormatUser)} <br/> <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
+      children: contract?.dead_line ? <>{dayjs(contract?.dead_line).format(Config.dateFormatUser)} <br/>
+          <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
         <small>No terminado</small>
     },
     {
@@ -204,7 +205,7 @@ const CommercialContractDetail = () => {
       key: 'period',
       label: 'Periodo de contrato',
       children: <>
-        {contract?.period == 'monthly' ? 'Mensual':'Único'}
+        {contract?.period == 'monthly' ? 'Mensual' : 'Único'}
       </>
     },
     {
@@ -344,7 +345,7 @@ const CommercialContractDetail = () => {
             },
         ]}
       />
-      <Row gutter={[20, 20]}>
+      <Row gutter={[30, 30]}>
         <Col md={24} lg={7}>
           <div style={{position: "sticky", top: 62}}>
             <Divider orientation={'left'}>Cliente</Divider>
@@ -432,49 +433,47 @@ const CommercialContractDetail = () => {
           </div>
         </Col>
         <Col md={24} lg={17}>
-          <Card variant={'borderless'}>
-            <Tabs style={{marginTop: -20}} centered items={[
-              {
-                key: 'finances',
-                label: 'Finanzas',
-                children: <>
-                  {contract &&
-                    <InvoicesTable
-                      client={contract.client}
-                      contract={contract}
-                      refresh={reload}
-                      tools={<>
-                        <PrimaryButton
-                          ghost
-                          size={"small"}
-                          label={'Crear plan de pagos'}
-                          onClick={() => setOpenInstallmentFom(true)}
-                          icon={<PiPlusBold/>}
-                        />
-                      </>}
-                    />
-                  }
-                </>
-              },
-              {
-                key: 'info',
-                label: 'Detalle del contrato',
-                children: <>
-                  {contract && <ContractDetails contract={contract} onChange={() => setReload(!reload)}/>}
-                </>
-              },
-              {
-                key: 'documents',
-                label: 'Documentos',
-                children: <ContractItemsManager contract={contract} group={'documents'} forceToEdit={false}/>
-              },
-              {
-                key: 'crm',
-                label: 'CRM',
-                children: <EntityActivityManager refresh={reload} uuid={contract.uuid} type={'commercial-contract'}/>
-              }
-            ]}/>
-          </Card>
+          <Tabs centered items={[
+            {
+              key: 'finances',
+              label: 'Finanzas',
+              children: <>
+                {contract &&
+                  <InvoicesTable
+                    client={contract.client}
+                    contract={contract}
+                    refresh={reload}
+                    tools={<>
+                      <PrimaryButton
+                        ghost
+                        size={"small"}
+                        label={'Crear plan de pagos'}
+                        onClick={() => setOpenInstallmentFom(true)}
+                        icon={<PiPlusBold/>}
+                      />
+                    </>}
+                  />
+                }
+              </>
+            },
+            {
+              key: 'info',
+              label: 'Detalle del contrato',
+              children: <>
+                {contract && <ContractDetails contract={contract} onChange={() => setReload(!reload)}/>}
+              </>
+            },
+            {
+              key: 'documents',
+              label: 'Documentos',
+              children: <ContractItemsManager contract={contract} group={'documents'} forceToEdit={false}/>
+            },
+            {
+              key: 'crm',
+              label: 'CRM',
+              children: <EntityActivityManager refresh={reload} uuid={contract.uuid} type={'commercial-contract'}/>
+            }
+          ]}/>
         </Col>
       </Row>
       <ModalView onCancel={() => setOpenInstallmentFom(false)} open={openInstallmentFom}>
@@ -539,20 +538,20 @@ const CommercialContractDetail = () => {
           value={contract.cart}
           liveUpdate={false}
           onChange={value => {
-          axios
-            .request({
-              url: `commercial/contracts/${contract.uuid}`,
-              method: 'PUT',
-              data: {cart:value}
-            })
-            .then(response => {
-              setOpenCartItemForm(false);
-              setReload(!reload);
-            })
-            .catch(error => {
-              ErrorHandler.showNotification(error);
-            });
-        }} />
+            axios
+              .request({
+                url: `commercial/contracts/${contract.uuid}`,
+                method: 'PUT',
+                data: {cart: value}
+              })
+              .then(response => {
+                setOpenCartItemForm(false);
+                setReload(!reload);
+              })
+              .catch(error => {
+                ErrorHandler.showNotification(error);
+              });
+          }}/>
       </ModalView>
       <FileDownloader
         name={'Imprimir propuesta'}

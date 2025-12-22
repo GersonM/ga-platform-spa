@@ -157,7 +157,7 @@ const PaymentsManager = () => {
       title: 'Req. de pago',
       dataIndex: 'invoice',
       render: (invoice: Invoice) => {
-        return <Link to={'/finances/invoices/'}>{invoice.tracking_id}
+        return <Link to={`/commercial/contracts/${invoice.contract_uuid}`}>{invoice.tracking_id}
           <small>{dayjs(invoice.issued_on).format('MMMM YYYY')}</small>
           </Link>;
       }
