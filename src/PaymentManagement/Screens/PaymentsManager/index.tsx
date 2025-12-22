@@ -48,6 +48,7 @@ const PaymentsManager = () => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
+  const [dateInvoiceIssue, setDateInvoiceIssue] = useState<any[] | null>();
   const [dateCreatedRangeFilter, setDateCreatedRangeFilter] = useState<any[] | null>();
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
@@ -66,6 +67,7 @@ const PaymentsManager = () => {
         page_size: pageSize,
         date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
         create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+        invoice_issue_date_range: dateInvoiceIssue ? dateInvoiceIssue.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
     setLoading(true);
@@ -84,7 +86,7 @@ const PaymentsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters, dateCreatedRangeFilter]);
+  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters, dateCreatedRangeFilter, dateInvoiceIssue]);
 
   const deletePayment = (uuid: string) => {
     axios
@@ -105,6 +107,7 @@ const PaymentsManager = () => {
           ...filters,
           date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
           create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+          invoice_issue_date_range: dateInvoiceIssue ? dateInvoiceIssue.map(d => d.format(Config.dateFormatServer)) : null,
         }
       })
       .then(() => {
@@ -154,7 +157,9 @@ const PaymentsManager = () => {
       title: 'Req. de pago',
       dataIndex: 'invoice',
       render: (invoice: Invoice) => {
-        return <Link to={'finances/invoices'}>{invoice.tracking_id}</Link>;
+        return <Link to={'/finances/invoices/'}>{invoice.tracking_id}
+          <small>{dayjs(invoice.issued_on).format('MMMM YYYY')}</small>
+          </Link>;
       }
     },
     {
@@ -235,6 +240,11 @@ const PaymentsManager = () => {
                 <DatePicker.RangePicker
                   showNow format={'DD/MM/YYYY'}
                   onChange={value => setDateCreatedRangeFilter(value)}/>
+              </Form.Item>
+              <Form.Item label={'Fecha de emisión de RP'}>
+                <DatePicker.RangePicker
+                  showNow format={'DD/MM/YYYY'}
+                  onChange={value => setDateInvoiceIssue(value)}/>
               </Form.Item>
             </>}
           >

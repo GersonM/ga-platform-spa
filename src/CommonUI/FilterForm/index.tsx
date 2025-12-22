@@ -96,7 +96,19 @@ const FilterForm = (
             initialValues={initialValues}
             onFinish={onSubmitHandler}
             layout={'inline'}>
-            {children}
+            <div className={'filter-form-items-wrapper'}>
+              {children}
+              <Space>
+                <PrimaryButton
+                  className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'}
+                  htmlType={'submit'}/>
+                {additionalChildren &&
+                  <Button type={"link"} onClick={() => setOpenMoreFilters(true)}>
+                    Más filtros
+                  </Button>
+                }
+              </Space>
+            </div>
             {additionalChildren &&
               <Drawer
                 title={'Filtros avanzados'}
@@ -108,16 +120,6 @@ const FilterForm = (
                   htmlType={'submit'}/>
               </Drawer>
             }
-            <Space>
-              <PrimaryButton
-                className={'primary-button'} loading={loading} icon={<TbFilter/>} label={'Filtrar'}
-                htmlType={'submit'}/>
-              {additionalChildren &&
-                <Button type={"link"} onClick={() => setOpenMoreFilters(true)}>
-                  Más filtros
-                </Button>
-              }
-            </Space>
           </Form>
         </div>
       )}

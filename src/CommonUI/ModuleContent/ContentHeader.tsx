@@ -75,7 +75,7 @@ const ContentHeader = (
 
   return (
     <div className={`content-header ${bordered ? 'bordered' : ''}`}>
-      <Space wrap>
+      <Space wrap style={bordered ? {}:{marginBottom: '10px'}}>
         {(onBack || backLocation || showBack) && (
           <Tooltip title={'Back'}>
             <IconButton

@@ -1,5 +1,18 @@
 import {useEffect, useState} from 'react';
-import {Image, Input, Modal, Pagination, Popconfirm, Progress, Select, Space, Statistic, Table, Tooltip} from 'antd';
+import {
+  Form,
+  Image,
+  Input,
+  Modal,
+  Pagination,
+  Popconfirm,
+  Progress,
+  Select,
+  Space,
+  Statistic,
+  Table,
+  Tooltip
+} from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useNavigate} from 'react-router-dom';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
@@ -19,6 +32,7 @@ import ScheduleActivityForm from '../../../EntityActivity/Components/ScheduleAct
 import './styles.less';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
+import FilterForm from "../../../CommonUI/FilterForm";
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -107,7 +121,7 @@ const CommercialIncidents = () => {
       fixed: 'left',
       dataIndex: 'type',
       render: (type: string, activity: EntityActivity) => {
-        return <EntityActivityIcon type={type} size={25} activity={activity} />;
+        return <EntityActivityIcon type={type} size={25} activity={activity}/>;
       },
     },
     {
@@ -115,7 +129,7 @@ const CommercialIncidents = () => {
       dataIndex: 'profile',
       width: 190,
       render: (profile: Profile, row: EntityActivity) => {
-        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
+        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')}/>;
       },
     },
     {
@@ -147,7 +161,7 @@ const CommercialIncidents = () => {
                   ) : (
                     <Tooltip title={at.name}>
                       <a href={at.source} target={'_blank'}>
-                        <FileIcon file={at} size={25} />
+                        <FileIcon file={at} size={25}/>
                       </a>
                     </Tooltip>
                   )}
@@ -166,7 +180,7 @@ const CommercialIncidents = () => {
         return (
           <>
             {assigned_to ? (
-              <ProfileChip profile={assigned_to} />
+              <ProfileChip profile={assigned_to}/>
             ) : (
               <PrimaryButton
                 ghost
@@ -233,11 +247,11 @@ const CommercialIncidents = () => {
               <Tooltip
                 title={row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
                 placement={'bottom'}>
-                <IconButton icon={row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
+                <IconButton icon={row.completed_at ? <PiProhibit size={17}/> : <PiCheckBold size={17}/>}/>
               </Tooltip>
             </Popconfirm>
             <Popconfirm title={'Seguro que quieres eliminar esta incidencia?'} onConfirm={() => deleteTask(uuid)}>
-              <IconButton small icon={<TrashIcon />} danger />
+              <IconButton small icon={<TrashIcon/>} danger/>
             </Popconfirm>
           </Space>
         );
@@ -248,34 +262,40 @@ const CommercialIncidents = () => {
   return (
     <ModuleContent>
       <ContentHeader tools={'Total: ' + pagination?.total} title={'Incidencias'} onRefresh={() => setReload(!reload)}>
-        <Space>
-          <Input.Search
-            allowClear
-            onSearch={value => setSearchText(value)}
-            placeholder={'Buscar por nombre, dni o correo'}
-          />
-          <Select
-            placeholder={'Tipo'}
-            allowClear
-            onChange={value => setTypeFilter(value)}
-            style={{width: 100}}
-            options={[
-              {label: 'Alertas', value: 'alert'},
-              {label: 'Mensaje', value: 'entry'},
-            ]}
-          />
-          <Select
-            placeholder={'Pendientes'}
-            allowClear
-            onChange={value => setStatusFilter(value)}
-            style={{width: 120}}
-            options={[
-              {label: 'Completados', value: 'completed'},
-              {label: 'Pendientes', value: 'pending'},
-              {label: 'Todos', value: 'all'},
-            ]}
-          />
-        </Space>
+        <FilterForm>
+          <Form.Item>
+            <Input.Search
+              allowClear
+              onSearch={value => setSearchText(value)}
+              placeholder={'Buscar por nombre, dni o correo'}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Select
+              placeholder={'Tipo'}
+              allowClear
+              onChange={value => setTypeFilter(value)}
+              style={{width: 100}}
+              options={[
+                {label: 'Alertas', value: 'alert'},
+                {label: 'Mensaje', value: 'entry'},
+              ]}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Select
+              placeholder={'Pendientes'}
+              allowClear
+              onChange={value => setStatusFilter(value)}
+              style={{width: 120}}
+              options={[
+                {label: 'Completados', value: 'completed'},
+                {label: 'Pendientes', value: 'pending'},
+                {label: 'Todos', value: 'all'},
+              ]}
+            />
+          </Form.Item>
+        </FilterForm>
       </ContentHeader>
       <Space size={'large'}>
         {stats && (
@@ -286,8 +306,8 @@ const CommercialIncidents = () => {
               size={40}
               percent={Math.round((stats?.completed * 100) / stats.total)}
             />
-            <Statistic title={'Pendientes'} value={stats?.pending} />
-            <Statistic title={'Vencidas'} value={stats?.expired} />
+            <Statistic title={'Pendientes'} value={stats?.pending}/>
+            <Statistic title={'Vencidas'} value={stats?.expired}/>
           </>
         )}
       </Space>
