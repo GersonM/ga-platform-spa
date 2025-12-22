@@ -42,10 +42,8 @@ const PaymentsManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [search, setSearch] = useState<string>();
   const [currentPage, setCurrentPage] = useState<number>();
   const [pagination, setPagination] = useState<ResponsePagination>();
-  const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
   const [dateInvoiceIssue, setDateInvoiceIssue] = useState<any[] | null>();
@@ -64,7 +62,6 @@ const PaymentsManager = () => {
       params: {
         ...filters,
         page: currentPage,
-        page_size: pageSize,
         date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
         create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
         invoice_issue_date_range: dateInvoiceIssue ? dateInvoiceIssue.map(d => d.format(Config.dateFormatServer)) : null,
@@ -86,7 +83,7 @@ const PaymentsManager = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload, dateRangeFilter, filters, dateCreatedRangeFilter, dateInvoiceIssue]);
+  }, [currentPage, reload, dateRangeFilter, filters, dateCreatedRangeFilter, dateInvoiceIssue]);
 
   const deletePayment = (uuid: string) => {
     axios
@@ -229,7 +226,8 @@ const PaymentsManager = () => {
             <ReportDownloader url={'payment-management/payments/export'} params={{
               ...filters,
               date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
-              create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null
+              create_date_range: dateCreatedRangeFilter ? dateCreatedRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+              invoice_issue_date_range: dateInvoiceIssue ? dateInvoiceIssue.map(d => d.format(Config.dateFormatServer)) : null,
             }} />
           </>}>
           <FilterForm
