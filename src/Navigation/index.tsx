@@ -167,7 +167,7 @@ const Navigation = () => {
               <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives/>} path={'/file-management'}/>
             )}
             {config?.modules.includes('attendance') && (
-              <NavItem label={'Asistencia'} icon={<PiClockUser/>}>
+              <NavItem label={'Asistencia'} icon={<PiClockUser/>} code={'attendance'}>
                 <NavItem label={'Reportes'} icon={<PiPresentationChart/>} path={'/attendance/dashboard'}/>
                 <NavItem label={'Asistencia'} icon={<PiUsersThree/>} path={'/attendance/management'}/>
                 <NavItem label={'Control de acceso'} icon={<PiUserFocus/>} path={'/attendance/access-control'}/>
@@ -182,7 +182,7 @@ const Navigation = () => {
               </NavItem>
             )*/}
             {config?.modules.includes('crm') && (
-              <NavItem label={'CRM'} icon={<TbHeadset/>} notifications={'Beta'}>
+              <NavItem label={'CRM'} icon={<TbHeadset/>} notifications={'Beta'} code={'crm'}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/crm/dashboard'}/>
                 <NavItem icon={<PiUserFocus/>} label={'Leads & campañas'} path={'/crm/leads'}/>
                 <NavItem icon={<TbMessageUser/>} label={'Mensajería'} path={'/crm/chat'}/>
@@ -191,7 +191,7 @@ const Navigation = () => {
               </NavItem>
             )}
             {config?.modules.includes('commercial') && (
-              <NavItem label={'Comercial'} icon={<PiHandshake/>}>
+              <NavItem label={'Comercial'} icon={<PiHandshake/>} code={'commercial'}>
                 <NavItem icon={<PiPresentationChart/>} label={'Dashboard'} path={'/commercial/dashboard'}/>
                 <NavItem icon={<PiWarningDiamond/>} label={'Incidencias'} path={'/commercial/incidents'}/>
                 <NavItem icon={<PiUsers/>} label={'Clientes'} path={'/commercial/clients'}/>
@@ -201,13 +201,13 @@ const Navigation = () => {
                 <NavItem icon={<TbUsersGroup/>} label={'Vendedores'} path={'/commercial/sellers'}/>
               </NavItem>
             )}
-            <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>}>
+            <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>} code={'stock'}>
               <NavItem icon={<TbPackageImport/>} label={'Stock'} path={'/warehouse/stock'}/>
               <NavItem icon={<TbPackage/>} label={'Productos'} path={'/warehouse/products'}/>
               <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/activity'}/>
             </NavItem>
             {config?.modules.includes('move') && (
-              <NavItem icon={<PiCarProfile/>} label={'Transporte'}>
+              <NavItem icon={<PiCarProfile/>} label={'Transporte'} code={'move'}>
                 <NavItem icon={<TbTicket/>} label={'Nueva reserva'} path={'/move/reservation'}/>
                 <NavItem icon={<QueueListIcon/>} label={'Mis reservas'} path={'/move/trips'}/>
                 {user?.roles?.includes('admin') && (
@@ -224,7 +224,7 @@ const Navigation = () => {
               </NavItem>
             )}
             {config?.modules.includes('reservations') && (
-              <NavItem icon={<PiCalendarCheckLight/>} label={'Reservas'}>
+              <NavItem icon={<PiCalendarCheckLight/>} label={'Reservas'} code={'reservations'}>
                 <NavItem icon={<TbTicket/>} label={'Nueva reserva'} path={'/reservations/create'}/>
                 <NavItem icon={<QueueListIcon/>} label={'Reservas'} path={'/reservations/manager'}/>
                 {user?.roles?.includes('admin') && (
@@ -241,14 +241,14 @@ const Navigation = () => {
               </NavItem>
             )}
             {config?.modules.includes('club') && (
-              <NavItem label={'Club'} icon={<PiUsers/>}>
+              <NavItem label={'Club'} icon={<PiUsers/>} code={'club'}>
                 <NavItem label={'Socios'} icon={<PiPerson/>} path={'/club/subscriptions'}/>
                 <NavItem label={'Importar pagos'} icon={<PiMoney/>} path={'/club/payments-import'}/>
               </NavItem>
             )}
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree/>} path={'/hr'}/>}
             {config?.modules.includes('payments') && (
-              <NavItem label={'Finanzas'} icon={<TbCurrencyDollar/>}>
+              <NavItem label={'Finanzas'} icon={<TbCurrencyDollar/>} code={'payments'}>
                 <NavItem label={'Req. de pago'} icon={<TbInvoice/>} path={'/finances/invoices'}/>
                 <NavItem label={'Cobros'} icon={<GiReceiveMoney/>} path={'/finances/payments/in'}/>
                 <NavItem label={'Pagos'} icon={<GiPayMoney/>} path={'/finances/payments/out'}/>
@@ -256,7 +256,7 @@ const Navigation = () => {
               </NavItem>
             )}
             {config?.modules.includes('lms') && (
-              <NavItem label={'LMS'} icon={<PiGraduationCap/>}>
+              <NavItem label={'LMS'} icon={<PiGraduationCap/>} code={'lms'}>
                 <NavItem label={'Cursos'} icon={<PiBooksLight/>} path={'/lms/courses'}/>
                 <NavItem label={'Estudiantes'} icon={<PiStudent/>} path={'/lms/students'}/>
                 <NavItem label={'Profesores'} icon={<FaChalkboardTeacher/>} path={'/lms/teachers'}/>
@@ -268,7 +268,7 @@ const Navigation = () => {
             {config?.modules.includes('resources') && (
               <NavItem label={'Servicios y recursos'} icon={<TbHeartRateMonitor/>} path={'/resources'}/>
             )}
-            <NavItem label={'Contactos'} icon={<TbBook/>}>
+            <NavItem label={'Contactos'} icon={<TbBook/>} code={'contacts'}>
               <NavItem label={'Personas'} icon={<TbUser/>} path={'/profiles'}/>
               <NavItem label={'Empresas'} icon={<PiBuilding/>} path={'/companies'}/>
             </NavItem>

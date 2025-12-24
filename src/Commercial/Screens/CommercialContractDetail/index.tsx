@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {
   Button,
-  Card,
   Col,
   Descriptions,
   type DescriptionsProps,
@@ -18,7 +17,7 @@ import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbPrinter, T
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import type {Contract, StorageContractCartItem, StorageStock} from '../../../Types/api';
+import type {Contract, StorageStock} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
@@ -44,10 +43,10 @@ import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import Config from "../../../Config.tsx";
 import MetaTitle from "../../../CommonUI/MetaTitle";
 import ProductStockForm from "../../../WarehouseManager/Components/ProductStockForm";
-import CartItemForm from "../../Components/CartItemForm";
 import InvoiceResumen from "../../../PaymentManagement/Components/InvoiceResumen";
 import FileDownloader from "../../../CommonUI/FileDownloader";
 import ShoppingCartEditor from "../../Components/ShoppingCartEditor";
+import './styles.less';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -61,7 +60,6 @@ const CommercialContractDetail = () => {
   const [openInstallmentFom, setOpenInstallmentFom] = useState(false);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [openEditStock, setOpenEditStock] = useState(false);
-  const [selectedCartItem, setSelectedCartItem] = useState<StorageContractCartItem>();
   const [openCartItemForm, setOpenCartItemForm] = useState(false);
   const [openPrintProposal, setOpenPrintProposal] = useState(false);
   const [openPrintContract, setOpenPrintContract] = useState(false);
@@ -236,20 +234,25 @@ const CommercialContractDetail = () => {
         tools={<><ContractStatus contract={contract}/>
           <PrimaryButton
             label={'Propuesta'}
-            icon={<TbPrinter/>}
-            size={'small'}
+            icon={<TbPrinter size={20}/>}
             shape={'round'}
-            onClick={() => {
-              setOpenPrintProposal(true);
-            }}/>
+            onClick={() => setOpenPrintProposal(true)}/>
           <PrimaryButton
-            size={'small'}
             shape={'round'}
             label={'Contrato'}
-            icon={<TbPrinter/>}
-            onClick={() => {
-              setOpenPrintContract(true);
-            }}/>
+            icon={<TbPrinter size={20}/>}
+            onClick={() => setOpenPrintContract(true)}/>
+          {!contract.provided_at &&
+            <PrimaryButton
+              danger
+              shape={'round'}
+              block
+              icon={<PiReceiptXBold size={20}/>}
+              disabled={!!contract?.cancelled_at}
+              label={'Anular venta'}
+              onClick={() => setOpenCancelContract(true)}
+            />
+          }
         </>}
         title={
           <Space>
@@ -345,9 +348,9 @@ const CommercialContractDetail = () => {
             },
         ]}
       />
-      <Row gutter={[30, 30]}>
+      <Row gutter={[20, 20]}>
         <Col md={24} lg={7}>
-          <div style={{position: "sticky", top: 62}}>
+          <div className={'info-contract-block'}>
             <Divider orientation={'left'}>Cliente</Divider>
             {
               contract?.client?.type.includes('Profile') ?
@@ -408,27 +411,10 @@ const CommercialContractDetail = () => {
                 includeTaxes={contract.include_taxes}
                 applyTaxes={contract.apply_taxes}
                 items={[{label: 'Total', amount: contract.totals.USD}]} currency={'USD'}/>}
-
-            {/*
-            <PrimaryButton
-              icon={<TbPlus/>} style={{marginTop: 10}} label={'Agregar productos'} block ghost
-              size={'small'}/>
-            */}
             <Divider orientation={'left'}>Detalles</Divider>
             <Descriptions
               column={1}
               bordered layout={'horizontal'} size={"small"} items={contractDetails}/>
-            {!contract.provided_at &&
-              <PrimaryButton
-                danger
-                block
-                style={{marginTop: 10}}
-                icon={<PiReceiptXBold size={20}/>}
-                disabled={!!contract?.cancelled_at}
-                label={'Anular venta'}
-                onClick={() => setOpenCancelContract(true)}
-              />
-            }
             {contract && <ActivityLogViewer entity={'contract'} id={contract?.uuid}/>}
           </div>
         </Col>

@@ -1,9 +1,11 @@
 import {useContext, useEffect, useState} from 'react';
-import {Image, Modal, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tooltip} from 'antd';
+import {Avatar, Image, Modal, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tag, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd'
 
 import type {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -17,6 +19,11 @@ import FileIcon from '../../../FileManagement/Components/FileIcon';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import AuthContext from '../../../Context/AuthContext';
 import TableList from "../../../CommonUI/TableList";
+import './styles.less';
+import {TbUserSquareRounded} from "react-icons/tb";
+import CustomTag from "../../../CommonUI/CustomTag";
+import EntityActivityCardViewer from "../../Components/EntityActivityCardViewer";
+import {useDrag} from "react-dnd";
 
 const MyComponent = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
@@ -29,9 +36,19 @@ const MyComponent = () => {
   const [typeFilter, _setTypeFilter] = useState<string>();
   const [statusFilter, _setStatusFilter] = useState<string>();
   const navigate = useNavigate();
-  const [_selectedActivity, setSelectedActivity] = useState<EntityActivity>();
-  const [_openActivityEditor, setOpenActivityEditor] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
+  const [openActivityEditor, setOpenActivityEditor] = useState(false);
   const {updateActivityCount, activityCount} = useContext(AuthContext);
+  const [{ opacity }, dragRef] = useDrag(
+    () => ({
+      type: 'CARD',
+      item: { text: 'Hola' },
+      collect: (monitor) => ({
+        opacity: monitor.isDragging() ? 0.5 : 1
+      })
+    }),
+    []
+  )
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -78,133 +95,13 @@ const MyComponent = () => {
       });
   };
 
-  const columns: any[] = [
-    {
-      title: 'Tipo',
-      width: 50,
-      align: 'center',
-      dataIndex: 'type',
-      render: (type: string, activity: EntityActivity) => {
-        return <EntityActivityIcon type={type} size={25} activity={activity} />;
-      },
-    },
-    {
-      title: 'Reportado',
-      dataIndex: 'profile',
-      width: 180,
-      render: (profile: Profile, row: EntityActivity) => {
-        return <ProfileChip profile={profile} caption={dayjs(row.created_at).format('DD-MM-YYYY [a las] HH:mm a')} />;
-      },
-    },
-    {
-      title: 'Mensaje',
-      dataIndex: 'comment',
-      fixed: 'left',
-      width: 320,
-    },
-    {
-      title: 'Archivos',
-      dataIndex: 'attachments',
-      width: 190,
-      render: (attachments: ApiFile[], row: EntityActivity) => {
-        return (
-          <>
-            <Image.PreviewGroup>
-              {attachments?.map((at: ApiFile) => (
-                <>
-                  {at.type.includes('ima') ? (
-                    <Image
-                      key={at.uuid}
-                      preview={{
-                        destroyOnClose: true,
-                        src: at.source,
-                      }}
-                      loading={'lazy'}
-                      src={at.thumbnail}
-                      width={30}
-                    />
-                  ) : (
-                    <Tooltip title={at.name}>
-                      <a href={at.source} target={'_blank'}>
-                        <FileIcon file={at} size={25} />
-                      </a>
-                    </Tooltip>
-                  )}
-                </>
-              ))}
-            </Image.PreviewGroup>
-          </>
-        );
-      },
-    },
-    {
-      title: 'Asunto',
-      dataIndex: 'entity',
-      width: 200,
-      render: (entity?: any, _row?: EntityActivity) => {
-        if (_row?.entity_type.includes('Subscription')) {
-          return entity.code;
-        }
-        return (
-          <EstateContractAddress
-            contract={entity}
-            onEdit={() => {
-              navigate(`/commercial/contracts/${entity.uuid}`);
-            }}
-          />
-        );
-      },
-    },
-    {
-      title: 'Expira',
-      dataIndex: 'expired_at',
-      width: 110,
-      render: (date: string, row: any) => {
-        return date ? (
-          dayjs(date).fromNow()
-        ) : (
-          <PrimaryButton
-            ghost
-            size={'small'}
-            label={'Asignar fecha'}
-            onClick={() => {
-              setOpenActivityEditor(true);
-              setSelectedActivity(row);
-            }}
-          />
-        );
-      },
-    },
-    {
-      title: 'Acciones',
-      dataIndex: 'uuid',
-      width: 90,
-      render: (uuid: string, row: EntityActivity) => {
-        return (
-          <Space>
-            <Popconfirm
-              onConfirm={() => completeTask(uuid, !!row.completed_at)}
-              title={row.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
-              description={
-                row.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
-              }>
-              <Tooltip
-                title={row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
-                placement={'bottom'}>
-                <IconButton icon={row.completed_at ? <PiProhibit size={17} /> : <PiCheckBold size={17} />} />
-              </Tooltip>
-            </Popconfirm>
-          </Space>
-        );
-      },
-    },
-  ];
-
   return (
     <ModuleContent>
-      <ContentHeader title={'Mis tareas asignadas'} onRefresh={() => setReload(!reload)} loading={loading} />
-      <Space size={'large'}>
-        {activityCount && (
+      <ContentHeader
+        title={'Mis tareas asignadas'}
+        onRefresh={() => setReload(!reload)}
+        loading={loading}
+        tools={activityCount && (
           <>
             <Progress
               showInfo
@@ -212,22 +109,85 @@ const MyComponent = () => {
               size={40}
               percent={Math.round((activityCount?.completed * 100) / activityCount.total)}
             />
-            <Statistic title={'Pendientes'} value={activityCount?.pending} />
-            <Statistic title={'Vencidas'} value={activityCount?.expired} />
+            <Statistic title={'Pendientes'} value={activityCount?.pending}/>
+            <Statistic title={'Vencidas'} value={activityCount?.expired}/>
           </>
         )}
-      </Space>
-      <div style={{marginBottom: '10px'}}>
-        <TableList
-          rowKey={'uuid'}
-          size="small"
-          scroll={{x: 1200}}
-          loading={loading}
-          columns={columns}
-          dataSource={activities}
-          pagination={false}
-        />
+      />
+      <DndProvider backend={HTML5Backend}>
+      <div className={'activity-board'}>
+        <div className="board-list">
+          <div className="title">Pendientes</div>
+          <div className="items">
+            {activities?.map((activity, index) => (
+              <div key={index} ref={dragRef} style={{opacity}} className="activity-card" onClick={() => {
+                setSelectedActivity(activity);
+                setOpenActivityEditor(true);
+              }}>
+                  <EntityActivityIcon type={activity.type} size={15} activity={activity}/>
+                {activity.completed_at && <CustomTag color={'green'}>Completado</CustomTag>}
+                <div className="content">
+                  {activity.comment}
+                  <small>{dayjs(activity.expired_at).fromNow()}</small>
+                </div>
+                <div className="tools">
+                  <Image.PreviewGroup>
+                    {activity.attachments?.map((at: ApiFile) => (
+                      <>
+                        {at.type.includes('ima') ? (
+                          <Image
+                            key={at.uuid}
+                            preview={{
+                              destroyOnClose: true,
+                              src: at.source,
+                            }}
+                            loading={'lazy'}
+                            src={at.thumbnail}
+                            width={30}
+                          />
+                        ) : (
+                          <Tooltip title={at.name}>
+                            <a href={at.source} target={'_blank'}>
+                              <FileIcon file={at} size={25}/>
+                            </a>
+                          </Tooltip>
+                        )}
+                      </>
+                    ))}
+                  </Image.PreviewGroup>
+                  <div>
+                    <Popconfirm
+                      onConfirm={() => completeTask(activity.uuid, !!activity.completed_at)}
+                      title={activity.completed_at ? 'Marcar tarea como no resuelta' : 'Vas a marcar esta tarea como completada'}
+                      description={
+                        activity.completed_at ? 'Se reactivarán las alertas para esta tarea' : 'No se emitirán nuevas alertas'
+                      }>
+                      <Tooltip
+                        title={activity.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
+                        placement={'bottom'}>
+                        <IconButton icon={activity.completed_at ? <PiProhibit size={17}/> : <PiCheckBold size={17}/>}/>
+                      </Tooltip>
+                    </Popconfirm>
+                  </div>
+                </div>
+                <div className="user">
+                  {activity.assigned_to && <Avatar src={activity.assigned_to.avatar?.thumbnail}>
+                    {activity.assigned_to.name.substring(0, 1)}
+                  </Avatar> }
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+        <div className="board-list">
+          <div className="board-title">En proceso</div>
+        </div>
+        <div className="board-list">
+          <div className="board-title">Completadas</div>
+        </div>
       </div>
+      </DndProvider>
       {pagination && (
         <Pagination
           size="small"
@@ -240,7 +200,13 @@ const MyComponent = () => {
           pageSize={pagination.per_page}
         />
       )}
-      <Modal></Modal>
+      <EntityActivityCardViewer
+        entityActivityUUID={selectedActivity?.uuid}
+        onCancel={() => {
+          setSelectedActivity(undefined);
+          setOpenActivityEditor(false);
+        }}
+        open={openActivityEditor} />
     </ModuleContent>
   );
 };

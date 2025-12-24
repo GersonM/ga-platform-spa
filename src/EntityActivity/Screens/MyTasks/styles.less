@@ -1,0 +1,29 @@
+.activity-board {
+  display: flex;
+  gap: 10px;
+  border-radius: 12px;
+
+  .board-list {
+    border-radius: 8px;
+    width: 300px;
+    background: var(--background-color-body);
+
+    .title {
+      display: block;
+      padding: 10px 10px 0 10px;
+    }
+
+    .items {
+      overflow: auto;
+      height: calc(100vh - 140px);
+      padding: 0 10px 10px 10px;
+
+      .activity-card {
+        background: var(--background-color);
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 7px;
+      }
+    }
+  }
+}

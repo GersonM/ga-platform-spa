@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Input, notification, Popconfirm, Space} from "antd";
 import axios from "axios";
-import dayjs from "dayjs";
 
 import type {
   ExternalResource,

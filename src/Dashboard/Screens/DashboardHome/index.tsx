@@ -11,9 +11,9 @@ const DashboardHome = () => {
 
   return (
     <>
-      <ModuleContent>
+      <ModuleContent style={{padding:'30px'}}>
         <MetaTitle title={'Dashboard'}/>
-        <h1>Dashboard</h1>
+        <h1 style={{fontSize:30, fontWeight: 400}}>Dashboard</h1>
         <p>Aquí tienes un resumen lo que sucede en la aplicación</p>
 
         <Row gutter={[25, 25]}>

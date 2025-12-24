@@ -11,11 +11,11 @@ const EntityActivityIcon = ({type, size = 18, activity}: EntityActivityIconProps
   let color = undefined;
 
   if (type === 'alert' || activity?.type === 'alert') {
-    color = '#ff0000';
+    color = 'red';
   }
 
   if (activity?.completed_at) {
-    color = '#1dc600';
+    color = 'green';
   }
 
   switch (type) {

@@ -13,6 +13,7 @@ const FirewallManager = ({resourceUuid}:FirewallManagerProps) => {
   return (
     <div>
       <Tabs
+        type={'card'}
         tabPosition={'left'}
         destroyOnHidden
         items={[
@@ -31,10 +32,12 @@ const FirewallManager = ({resourceUuid}:FirewallManagerProps) => {
           {
             key: 'ports',
             label: 'Puertos',
+            disabled: true
           },
           {
             key: 'ip-tables',
             label: 'Tabla de IP\'s',
+            disabled: true
           }
         ]}/>
     </div>

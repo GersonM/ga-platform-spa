@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Button, Col, Divider, Form, Input, notification, Popover, Row, Space} from "antd";
+import {Button, Col, Divider, Form, Input, notification, Popover, Row, Space, Switch} from "antd";
 
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
+import {TbReload} from "react-icons/tb";
 
 interface CsfFirewallProps {
   resourceUuid?: string;
@@ -17,7 +18,6 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
   const [loading, setLoading] = useState(false);
   const [resources, setResources] = useState<any[]>();
   const [reload, setReload] = useState(false);
-  const [showHints, setShowHints] = useState(false);
   const [modifiedFields, setModifiedFields] = useState<any[]>([]);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
       .then(() => {
         setLoading(false);
         setModifiedFields([]);
-        notification.success({message:'Cambios aplicados correctamente'});
+        notification.success({message: 'Cambios aplicados correctamente'});
       })
       .catch((error) => {
         setLoading(false);
@@ -74,7 +74,7 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
     switch (key) {
       case 'TCP_IN':
       case 'TCP_OUT':
-        return <Input.TextArea rows={6} />
+        return <Input.TextArea rows={6}/>
       default:
         return <Input/>;
     }
@@ -86,15 +86,15 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
       <Form onFinish={submitForm} layout="vertical" onFieldsChange={checkChanges}>
         <div className={'controls'}>
           <Space split={<Divider type={'vertical'}/>}>
-            <PrimaryButton loading={loading} htmlType={'submit'} label={'Guardar'} disabled={modifiedFields.length == 0}/>
-            <Button onClick={() => setReload(!reload)} type={"link"}>Recargar</Button>
-            <Button onClick={() => setShowHints(!showHints)}
-                    type={"link"}>{showHints ? 'Ocultar ayuda' : 'Mostrar ayuda'}</Button>
+            <PrimaryButton
+              loading={loading} htmlType={'submit'} label={'Guardar'}
+              disabled={modifiedFields.length == 0}/>
+            <Button icon={<TbReload/>} onClick={() => setReload(!reload)} type={"link"}>Recargar valores</Button>
           </Space>
+          {modifiedFields.length > 0 && (<small className={'fields-changed'}>
+            {modifiedFields.length} campos modificados
+          </small>)}
         </div>
-        {modifiedFields.length > 0 && (<div>
-          {modifiedFields.length} campos modificados
-        </div>)}
         <Divider/>
         <Row gutter={[20, 20]}>
           {resources?.map((item, i) => (
