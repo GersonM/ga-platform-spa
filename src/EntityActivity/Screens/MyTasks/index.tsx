@@ -1,26 +1,20 @@
 import {useContext, useEffect, useState} from 'react';
-import {Avatar, Image, Modal, Pagination, Popconfirm, Progress, Space, Statistic, Table, Tag, Tooltip} from 'antd';
+import {Avatar, Image, Pagination, Popconfirm, Progress, Statistic, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
-import {useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 
-import type {EntityActivity, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
+import type {EntityActivity, ApiFile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
-import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import EstateContractAddress from '../../../Commercial/Components/RealState/EstateContractAddress';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
-import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import AuthContext from '../../../Context/AuthContext';
-import TableList from "../../../CommonUI/TableList";
 import './styles.less';
-import {TbUserSquareRounded} from "react-icons/tb";
 import CustomTag from "../../../CommonUI/CustomTag";
 import EntityActivityCardViewer from "../../Components/EntityActivityCardViewer";
 import {useDrag} from "react-dnd";
@@ -35,11 +29,10 @@ const MyComponent = () => {
   const [reload, setReload] = useState(false);
   const [typeFilter, _setTypeFilter] = useState<string>();
   const [statusFilter, _setStatusFilter] = useState<string>();
-  const navigate = useNavigate();
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
   const {updateActivityCount, activityCount} = useContext(AuthContext);
-  const [{ opacity }, dragRef] = useDrag(
+  const [{ opacity }] = useDrag(
     () => ({
       type: 'CARD',
       item: { text: 'Hola' },
@@ -120,7 +113,7 @@ const MyComponent = () => {
           <div className="title">Pendientes</div>
           <div className="items">
             {activities?.map((activity, index) => (
-              <div key={index} ref={dragRef} style={{opacity}} className="activity-card" onClick={() => {
+              <div key={index} style={{opacity}} className="activity-card" onClick={() => {
                 setSelectedActivity(activity);
                 setOpenActivityEditor(true);
               }}>
