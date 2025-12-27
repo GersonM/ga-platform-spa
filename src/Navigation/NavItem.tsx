@@ -24,6 +24,16 @@ const NavItem = ({path, label, icon, children, notifications, code}: NavItemProp
     }
   }, []);
 
+  const toggleItem = () => {
+    if (code) {
+      if (!isOpen) {
+        localStorage.setItem(code, '1');
+      } else {
+        localStorage.removeItem(code);
+      }
+    }
+    setIsOpen(!isOpen);
+  }
 
   const content = (
     <>
@@ -42,16 +52,7 @@ const NavItem = ({path, label, icon, children, notifications, code}: NavItemProp
             {content}
           </NavLink>
         ) : (
-          <span className={`${isOpen ? 'open' : ''} divider`} onClick={() => {
-            if (code) {
-              if (!isOpen) {
-                localStorage.setItem(code, '1');
-              } else {
-                localStorage.removeItem(code);
-              }
-            }
-            setIsOpen(!isOpen);
-          }}>
+          <span className={`${isOpen ? 'open' : ''} divider`} onClick={toggleItem}>
             {content}
             <span className="line"></span>
             {children && (

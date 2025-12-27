@@ -1,12 +1,16 @@
 import {useEffect, useState} from 'react';
-import {Button, Input, Popover, Segmented, Select, Tooltip} from 'antd';
+import {Button, Input, Popover, Segmented, Select, Space, Tooltip} from 'antd';
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons';
 import {TbFolderPlus, TbInfoCircle, TbSearch} from "react-icons/tb";
-import {PiUpload} from 'react-icons/pi';
+import {PiDotsThreeVertical, PiUpload} from 'react-icons/pi';
+import {LuGlobe, LuLock} from "react-icons/lu";
 
 import ContainerForm from '../../Components/ContainerForm';
 import type {Container} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
+import IconButton from "../../../CommonUI/IconButton";
+import ContainerDropdownActions from "../../Components/ContainerDropdownActions";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ContainerHeaderProps {
   container: Container;
@@ -21,18 +25,19 @@ interface ContainerHeaderProps {
   onReload?: () => void;
 }
 
-const ContainerHeader = ({
-                           container,
-                           onChange,
-                           onToggleInformation,
-                           upLevel,
-                           onChangeViewMode,
-                           onOpenUpload,
-                           allowUpload,
-                           onSearch,
-                           onChangeOrder,
-                           onReload,
-                         }: ContainerHeaderProps) => {
+const ContainerHeader = (
+  {
+    container,
+    onChange,
+    onToggleInformation,
+    upLevel,
+    onChangeViewMode,
+    onOpenUpload,
+    allowUpload,
+    onSearch,
+    onChangeOrder,
+    onReload,
+  }: ContainerHeaderProps) => {
   const [viewMode, setViewMode] = useState<string | number>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
   const [orderBy, setOrderBy] = useState('date_desc');
@@ -67,9 +72,22 @@ const ContainerHeader = ({
       onRefresh={onReload}
       bordered
       title={container.name}
-      description={container.parent_container?.name}
+      description={<Space>
+        {container.is_public ? <CustomTag color={'orange'}><LuGlobe size={10}/> Público</CustomTag> : <CustomTag><LuLock size={10}/> Privado</CustomTag>}
+        {container.num_containers}
+      </Space>}
       tools={
         <>
+          <ContainerDropdownActions
+            container={container}
+            trigger={['click']}
+            onChange={() => {
+              if (onChange) {
+                onChange();
+              }
+            }}>
+            <IconButton icon={<PiDotsThreeVertical size={20}/>}/>
+          </ContainerDropdownActions>
           {allowUpload && (
             <Button type={'text'} onClick={onOpenUpload} icon={<PiUpload size={20}/>}>
               Cargar archivos

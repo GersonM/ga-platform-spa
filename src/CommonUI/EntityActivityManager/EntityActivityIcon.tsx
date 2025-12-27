@@ -1,5 +1,6 @@
 import type {EntityActivity} from '../../Types/api';
 import {PiCalendarDots, PiInfo, PiWarningDiamond} from 'react-icons/pi';
+import {Tooltip} from "antd";
 
 interface EntityActivityIconProps {
   type: string;
@@ -18,16 +19,25 @@ const EntityActivityIcon = ({type, size = 18, activity}: EntityActivityIconProps
     color = 'green';
   }
 
+  let icon = null;
   switch (type) {
     case 'alert':
-      return <PiWarningDiamond size={size} color={color} />;
+      icon = <PiWarningDiamond size={size} color={color} />;
+      break;
     case 'schedule':
-      return <PiCalendarDots size={size} color={color} />;
+      icon = <PiCalendarDots size={size} color={color} />;
+      break;
     case 'entry':
-      return <PiInfo size={size} color={color} />;
+      icon = <PiInfo size={size} color={color} />;
+      break;
     default:
-      return <PiCalendarDots size={size} color={color} />;
+      icon = <PiInfo size={size} color={color} />;
+      break;
   }
+
+  return <Tooltip title={type}>
+    {icon}
+  </Tooltip>
 };
 
 export default EntityActivityIcon;

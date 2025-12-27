@@ -1,14 +1,12 @@
-import {useContext, useEffect, useState} from 'react';
-import {useParams, useNavigate, NavLink} from 'react-router-dom';
-import {Empty, Popover, Space, Tooltip} from 'antd';
-import {FiTrash2} from 'react-icons/fi';
+import {useEffect, useState} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {Empty, Popover, Tooltip, Tree} from 'antd';
+import {LuFolder, LuHardDrive} from "react-icons/lu";
 import {TbPlus, TbRefresh} from 'react-icons/tb';
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import ContainerForm from '../../Components/ContainerForm';
-import ContainerNavItem from './ContainerNavItem';
-import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ContainerContentViewer from '../../Components/ContainerContentViewer';
 import ModuleSidebar from '../../../CommonUI/ModuleSidebar';
 import ModuleContent from '../../../CommonUI/ModuleContent';
@@ -16,9 +14,14 @@ import type {Container} from '../../../Types/api';
 import ServiceStatus from '../../Components/ServiceStatus';
 import EmptyMessage from '../../../CommonUI/EmptyMessage';
 import IconButton from '../../../CommonUI/IconButton';
-import AuthContext from '../../../Context/AuthContext';
 import './styles.less';
-import MetaTitle from "../../../CommonUI/MetaTitle";
+
+interface DataNode {
+  title: string;
+  key: string;
+  isLeaf?: boolean;
+  children?: DataNode[];
+}
 
 const CompanyContainers = () => {
   const [containers, setContainers] = useState<Array<Container>>();
@@ -27,7 +30,7 @@ const CompanyContainers = () => {
   const [openContainerCreator, setOpenContainerCreator] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
-  const {user} = useContext(AuthContext);
+  const [treeData, setTreeData] = useState<DataNode[]>();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -44,6 +47,10 @@ const CompanyContainers = () => {
             setContainers([]);
           }
           setContainers(response.data);
+          setTreeData(response.data?.map((c: Container) => ({
+            title: c.name, key: c.uuid,
+            icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+          })));
         }
       })
       .catch(e => {
@@ -54,20 +61,49 @@ const CompanyContainers = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
+  const updateTreeData = (list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] =>
+    list.map((node) => {
+      if (node.key === key) {
+        return {
+          ...node,
+          children,
+        };
+      }
+      if (node.children) {
+        return {
+          ...node,
+          children: updateTreeData(node.children, key, children),
+        };
+      }
+      return node;
+    });
+
   const navigateToFolder = (uuid: string) => {
     navigate(`/file-management/${params.uuid}/containers/${uuid}`);
   };
 
   const currentContainer = params.child_uuid ? params.child_uuid : params.uuid;
 
+  const onLoadData = async ({key}: any) => {
+    const result = await axios.get(`file-management/containers/${key}/view`)
+    setTreeData((origin) => {
+      if (origin) {
+        return updateTreeData(origin, key, result.data.containers?.map((c: Container) => ({
+          title: c.name, key: c.uuid,
+          icon: <LuFolder size={16} style={{verticalAlign: 'middle'}}/>
+        })))
+      }
+    });
+  };
+
   return (
     <>
       <ModuleSidebar
         title={'Gestor de archivos'}
         actions={
-          <Space>
+          <>
             <Tooltip title={'Recargar lista de contenedores'}>
-              <IconButton icon={<TbRefresh />} small onClick={() => setReload(!reload)} />
+              <IconButton icon={<TbRefresh/>} small onClick={() => setReload(!reload)}/>
             </Tooltip>
             <Popover
               open={openContainerCreator}
@@ -79,40 +115,28 @@ const CompanyContainers = () => {
                   }}
                 />
               }
-              onOpenChange={value => {
-                setOpenContainerCreator(value);
-              }}
+              onOpenChange={value => setOpenContainerCreator(value)}
               trigger={'click'}>
               <Tooltip title={'Crear contenedor'} placement={'left'}>
-                <IconButton small icon={<TbPlus />} />
+                <IconButton small icon={<TbPlus/>}/>
               </Tooltip>
             </Popover>
-          </Space>
+          </>
         }
-        footer={<ServiceStatus />}>
-        <ul className="list-items">
-          <LoadingIndicator visible={loading} />
-          {containers?.length === 0 && (
-            <EmptyMessage message={'No tienes contenedores creados, haz clic en el + para crear uno'} />
-          )}
-          {containers && (
-            <>
-              {containers
-                .filter(c => !c.is_locked || user?.roles?.includes('admin'))
-                .map(c => (
-                  <li key={c.uuid} className={params.uuid === c.uuid ? 'active' : ''}>
-                    <ContainerNavItem container={c} onChange={() => setReload(!reload)} />
-                  </li>
-                ))}
-              <li className={params.uuid === 'trash' ? 'active' : ''}>
-                <NavLink to={`/file-management/trash`}>
-                  <FiTrash2 className="icon" />
-                  <span className="label">Elementos borrados</span>
-                </NavLink>
-              </li>
-            </>
-          )}
-        </ul>
+        footer={<ServiceStatus/>}>
+        {containers?.length === 0 && (
+          <EmptyMessage message={'No tienes contenedores creados, haz clic en el + para crear uno'}/>
+        )}
+        <Tree
+          showIcon
+          defaultSelectedKeys={params?.uuid ? [params?.uuid] : undefined}
+          showLine
+          loadData={onLoadData}
+          treeData={treeData}
+          onSelect={keys => {
+            navigate(`/file-management/${keys[0]}`);
+          }}
+        />
       </ModuleSidebar>
 
       <ModuleContent withSidebar>
@@ -123,7 +147,7 @@ const CompanyContainers = () => {
             onChange={navigateToFolder}
           />
         ) : (
-          <Empty description={'Seleccionar un contenedor para ver su contenido'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          <Empty description={'Seleccionar un contenedor para ver su contenido'} image={Empty.PRESENTED_IMAGE_SIMPLE}/>
         )}
       </ModuleContent>
     </>

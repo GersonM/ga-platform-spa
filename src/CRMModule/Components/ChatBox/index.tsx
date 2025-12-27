@@ -1,14 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Image, Input, Select} from "antd";
+import React, {useEffect, useState} from 'react';
+import {Input, notification, Select} from "antd";
 import {TbSend} from "react-icons/tb";
-import dayjs from "dayjs";
 import axios from "axios";
-import {useEcho, echo } from "@laravel/echo-react";
+import {useEcho} from "@laravel/echo-react";
 
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {ChatRoom, Profile} from "../../../Types/api.tsx";
-import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import AuthContext from "../../../Context/AuthContext.tsx";
 import './styles.less';
 
 interface ChatBoxProps {
@@ -21,7 +18,6 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
   const [chatRoom, setChatRoom] = useState<ChatRoom>();
   const [reload, setReload] = useState(false);
   const [message, setMessage] = useState<string>();
-  const {user} = useContext(AuthContext);
 
   useEcho(
     `chat-rooms.20`,
@@ -65,39 +61,15 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
         console.log('response', response);
       })
       .catch(error => {
-        ErrorHandler.showNotification(error);
+        notification.warning({message:'La cuenta de Whatsapp no está configurada, no se pueden enviar mensajes'})
       });
   }
 
   return (
     <div className={'chat-box-container'}>
       <div className={'message-list'}>
-        <div className={'message-bubble'}>Hola <div className={'message-time'}>{dayjs().format('h:m a')}</div></div>
-        <div className={'message-bubble'}>Busco información sobre un producto
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble own'}>
-          Buenos días {profile?.name} <br/> <br/>
-          Tenemos información para ofrecerle sobre las propiedad en nuestro Proyecto TERRA
-
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble'}>Si, donde est+a ubicado?
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble own'}>
-          Le adjunto un mapa de la ubicación
-          <div className={'message-time'}>{dayjs().format('h:m a')}</div>
-        </div>
-        <div className={'message-bubble own'}>
-          <Image
-            src={'https://platform.geekadvice.pe/wayra/storage/file-management/files/f07043f7-7884-4cfe-88f0-76669f8b628b/view?token=121%7CocVgXMbXeda3RK9BVnOvid3ELlGZhyDunnt3ld1R'}/>
-          <div className={'message-time'}>{dayjs().format('h:mm a')}</div>
-        </div>
       </div>
       <div className={'message-box'}>
-        <div>
-        </div>
         <Input.TextArea
           value={message}
           onChange={e => {

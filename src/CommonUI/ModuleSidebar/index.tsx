@@ -43,11 +43,13 @@ const ModuleSidebar = (
               <div className={'title'}>
                 <h4>{title}</h4>
                 {actions && <div className={'actions'}>{actions}</div>}
-                <IconButton
-                  onClick={() => setOpenMenu(!openMenu)}
-                  icon={<TbChevronLeft/>}
-                  small
-                />
+                <div className="hide-sidebar">
+                  <IconButton
+                    onClick={() => setOpenMenu(!openMenu)}
+                    icon={<TbChevronLeft/>}
+                    small
+                  />
+                </div>
               </div>
               {header && <div className={'header'}>{header}</div>}
             </div>

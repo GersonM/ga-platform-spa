@@ -1,5 +1,5 @@
 .module-sidebar-wrapper {
-  overflow: hidden;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   transition: all 0.3s;
@@ -23,18 +23,28 @@
   }
 
   .module-nav-header {
-    backdrop-filter: blur(9px);
+    background: var(--background-color);
+    border-radius: 15px 15px 0 0;
     position: sticky;
     top: 0;
     padding: 10px 5px;
     z-index: 1;
-    border-bottom: 1px dashed var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 
     .title {
       padding: 0 10px;
       align-items: center;
       display: flex;
       justify-content: space-between;
+
+      .hide-sidebar {
+        display: none;
+      }
+
+      .actions {
+        display: flex;
+        gap: 5px;
+      }
 
       h4 {
         font-size: 15px;
@@ -57,16 +67,17 @@
 
   .module-nav-content {
     flex: 1;
-    padding: 7px;
+    padding: 10px;
     min-height: 100px;
   }
 
   .module-nav-footer {
+    background: var(--background-color);
     position: fixed;
     bottom: 0 !important;
-    padding: 10px 0;
-    left: 10px;
-    right: 10px;
+    padding: 10px;
+    left: 0;
+    right: 0;
     border-top: 1px solid var(--border-color);
 
     .status-info {
@@ -76,14 +87,6 @@
       margin-top: 10px;
       font-size: 12px;
       opacity: 0.6;
-    }
-  }
-}
-
-.dark-mode {
-  .module-sidebar-wrapper {
-    .module-nav-header {
-      background: rgba(20, 20, 20, 0.1);
     }
   }
 }

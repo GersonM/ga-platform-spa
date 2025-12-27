@@ -17,7 +17,6 @@ import AuthContext from '../../../Context/AuthContext';
 import './styles.less';
 import CustomTag from "../../../CommonUI/CustomTag";
 import EntityActivityCardViewer from "../../Components/EntityActivityCardViewer";
-import {useDrag} from "react-dnd";
 
 const MyComponent = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
@@ -32,16 +31,6 @@ const MyComponent = () => {
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
   const {updateActivityCount, activityCount} = useContext(AuthContext);
-  const [{ opacity }] = useDrag(
-    () => ({
-      type: 'CARD',
-      item: { text: 'Hola' },
-      collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1
-      })
-    }),
-    []
-  )
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -110,10 +99,10 @@ const MyComponent = () => {
       <DndProvider backend={HTML5Backend}>
       <div className={'activity-board'}>
         <div className="board-list">
-          <div className="title">Pendientes</div>
+          <div className="title"><CustomTag>{activities?.length}</CustomTag> Pendientes</div>
           <div className="items">
             {activities?.map((activity, index) => (
-              <div key={index} style={{opacity}} className="activity-card" onClick={() => {
+              <div key={index} className="activity-card" onClick={() => {
                 setSelectedActivity(activity);
                 setOpenActivityEditor(true);
               }}>
@@ -171,13 +160,12 @@ const MyComponent = () => {
               </div>
             ))}
           </div>
-
         </div>
         <div className="board-list">
-          <div className="board-title">En proceso</div>
+          <div className="title"><CustomTag>0</CustomTag> En proceso</div>
         </div>
         <div className="board-list">
-          <div className="board-title">Completadas</div>
+          <div className="title"><CustomTag>0</CustomTag> Completadas</div>
         </div>
       </div>
       </DndProvider>

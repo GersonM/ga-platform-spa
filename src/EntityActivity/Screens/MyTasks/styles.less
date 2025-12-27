@@ -9,19 +9,22 @@
     background: var(--background-color-body);
 
     .title {
-      display: block;
-      padding: 10px 10px 0 10px;
+      display: flex;
+      font-weight: 600;
+      padding: 10px;
+      gap: 5px;
+      align-items: center;
     }
 
     .items {
       overflow: auto;
-      height: calc(100vh - 140px);
-      padding: 0 10px 10px 10px;
+      height: calc(100vh - 200px);
+      padding: 0 10px;
 
       .activity-card {
         background: var(--background-color);
         padding: 15px;
-        margin-top: 10px;
+        margin-bottom: 10px;
         border-radius: 7px;
       }
     }
