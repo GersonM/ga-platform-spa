@@ -311,6 +311,7 @@ export type Container = {
   num_containers?: number;
   description?: string;
   parent_container?: Container;
+  containers?: Container[];
   created_at: string;
   updated_at: string;
 };

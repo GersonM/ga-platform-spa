@@ -50,6 +50,14 @@ const CompanyContainers = () => {
           setTreeData(response.data?.map((c: Container) => ({
             title: c.name, key: c.uuid,
             icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+            children: c.containers?.map(sC => ({
+              title: sC.name, key: sC.uuid,
+              icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+              children: sC.containers?.map(ssC => ({
+                title: ssC.name, key: ssC.uuid,
+                icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+              })),
+            })),
           })));
         }
       })
