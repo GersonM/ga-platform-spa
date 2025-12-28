@@ -29,7 +29,7 @@ dayjs.tz.setDefault("America/Lima")
 const token = Cookies.get('session_token');
 const selectedWorkspace = Cookies.get('workspace');
 const isDevMode = window.location.hostname.includes('localhost') || window.location.hostname.includes('192.168');
-let tenantID = selectedWorkspace ? selectedWorkspace : isDevMode ? import.meta.env.VITE_CODE : window.location.hostname.split('.')[0];
+let tenantID = selectedWorkspace ? selectedWorkspace : (isDevMode ? import.meta.env.VITE_CODE : window.location.hostname.split('.')[0]);
 
 if (window.location.hostname.includes('countryclublavilla.pe')) {
   tenantID = 'country-moquegua';
@@ -94,7 +94,7 @@ axios
   .catch(() => {
     const el = document.getElementById('root');
     if (el) {
-      el.innerHTML =
-        `<div class="error-name"><img src=${logo} alt={"Logo"}/>La cuenta no se encuentra activa<br/> <span>Revisa tu correo para saber el estado de tu cuenta</span></div>`;
+      // @ts-ignore
+      el.innerHTML = `<div class="error-name"><img src=${logo} alt={"Logo"}/>La cuenta no se encuentra activa<br/> <span>Revisa tu correo para saber el estado de tu cuenta</span></div>`;
     }
   });

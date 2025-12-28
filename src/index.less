@@ -21,8 +21,8 @@
   --main-nav-width: 220px;
   --shadow-color: rgba(0, 0, 0, 0.1);
 
-  --font-title: "Red Hat Text", sans-serif;
-  --font-code: "JetBrains Mono", monospace;;
+  --font-title: "Red Hat Text";
+  --font-code: "JetBrains Mono";
 }
 
 body.dark-mode {
@@ -65,7 +65,7 @@ body.dark-mode {
   justify-content: stretch;
 }
 html{
-  background: var(--background-color-body);
+  background: radial-gradient(circle, var(--background-color-body) 70%, var(--primary-color) 240%);
 }
 @media (prefers-color-scheme: dark) {
   html{
@@ -73,9 +73,11 @@ html{
   }
 }
 body {
-  font-family: var(--font-title);
+  height: 100%;
+  font-family: var(--font-title) sans-serif;
   //background: var(--background-color-body);
-  background: radial-gradient(circle, var(--background-color-body) 70%, var(--primary-color) 240%);
+  //background: #ff9999;
+  //background: radial-gradient(circle, var(--background-color-body) 70%, var(--primary-color) 240%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 500;
@@ -101,7 +103,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: var(--font-title);
+  font-family: var(--font-title) sans-serif;
   color: var(--text-title-color);
   font-weight: 600;
 }
@@ -144,7 +146,7 @@ small {
 }
 
 code {
-  font-family: var(--font-code);
+  font-family: var(--font-code) monospace;
 }
 
 .grid-layout-fit {

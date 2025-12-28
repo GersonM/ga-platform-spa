@@ -26,7 +26,7 @@ const ModuleContent = ({children, opaque, withSidebar = false, style}: ModuleCon
           }}>
           <img src={config?.dark_logo} alt="Logo" />
         </div>
-        <IconButton icon={<TbMenu2 />} onClick={() => setOpenMenu(!openMenu)} />
+        <IconButton icon={<TbMenu2 color={'#ffffff'} />} onClick={() => setOpenMenu(!openMenu)} />
       </div>
       <div className={`module-content-wrapper ${opaque ? ' opaque' : ''} ${withSidebar ? ' with-sidebar' : ''}`} style={style}>
         {children}

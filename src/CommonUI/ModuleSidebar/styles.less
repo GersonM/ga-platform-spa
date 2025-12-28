@@ -1,5 +1,4 @@
 .module-sidebar-wrapper {
-  overflow: auto;
   display: flex;
   flex-direction: column;
   transition: all 0.3s;
@@ -8,7 +7,9 @@
   height: calc(100dvh - 20px);
   width: 280px;
   z-index: 2;
+  border-radius: 14px 0 0 14px;
   border-right: 1px solid var(--border-color);
+  background: var(--background-color);
 
   animation-duration: 0.7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
@@ -72,7 +73,9 @@
   }
 
   .module-nav-footer {
+    overflow: hidden;
     background: var(--background-color);
+    border-radius: 0 0 0 14px;
     position: fixed;
     bottom: 0 !important;
     padding: 10px;
@@ -98,6 +101,7 @@
     position: fixed;
     animation-name: none;
     opacity: 0;
+    height: 100dvh;
 
     &.open {
       opacity: 1;

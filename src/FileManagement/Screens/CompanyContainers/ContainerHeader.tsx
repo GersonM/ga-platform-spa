@@ -72,93 +72,91 @@ const ContainerHeader = (
       onRefresh={onReload}
       bordered
       title={container.name}
-      description={<Space>
-        {container.is_public ? <CustomTag color={'orange'}><LuGlobe size={10}/> Público</CustomTag> : <CustomTag><LuLock size={10}/> Privado</CustomTag>}
-        {container.num_containers}
+      tools={<Space wrap>
+        {container.is_public ? <CustomTag color={'orange'}><LuGlobe size={10}/> Público</CustomTag> :
+          <CustomTag><LuLock size={10}/> Privado</CustomTag>}
+        <ContainerDropdownActions
+          container={container}
+          trigger={['click']}
+          onChange={() => {
+            if (onChange) {
+              onChange();
+            }
+          }}>
+          <IconButton icon={<PiDotsThreeVertical size={20}/>}/>
+        </ContainerDropdownActions>
+        {allowUpload && (
+          <Button type={'text'} onClick={onOpenUpload} icon={<PiUpload size={20}/>}>
+            Cargar archivos
+          </Button>
+        )}
+        <Tooltip title={'Buscar'}>
+          <Popover
+            placement={'bottomRight'}
+            content={
+              <>
+                <Input.Search
+                  placeholder={'Buscar'}
+                  onSearch={value => {
+                    if (onSearch) {
+                      onSearch(value);
+                    }
+                  }}
+                />
+              </>
+            }
+            trigger={'click'}>
+            <Button type={'text'} onClick={upLevel} icon={<TbSearch size={18}/>}/>
+          </Popover>
+        </Tooltip>
+        <Tooltip title={'Nuevo folder'}>
+          <Popover
+            placement={'bottomRight'}
+            content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange}/>}
+            trigger={'click'}>
+            <Button type={'text'} icon={<TbFolderPlus size={20}/>}/>
+          </Popover>
+        </Tooltip>
+        <Select
+          prefix={'Ordenar'}
+          value={orderBy}
+          popupMatchSelectWidth={false}
+          onChange={setOrderBy}
+          placeholder={'Nombre'}
+          options={[
+            {label: 'nuevos primero', value: 'date_desc'},
+            {label: 'por nombre A-Z', value: 'name'},
+            {label: 'antiguos primero', value: 'date_asc'},
+            {label: 'pesados primero', value: 'size_desc'},
+            {label: 'ligeros primero', value: 'size_asc'},
+          ]}
+        />
+        <Segmented
+          options={[
+            {
+              value: 'list',
+              icon: <BarsOutlined/>,
+            },
+            {
+              value: 'grid',
+              icon: <AppstoreOutlined/>,
+            },
+          ]}
+          value={viewMode}
+          onChange={setViewMode}
+        />
+        <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
+          <Button
+            type={"primary"}
+            variant={'solid'}
+            ghost={!informationEnabled}
+            onClick={() => setInformationEnabled(!informationEnabled)}
+            icon={<TbInfoCircle size={22} style={{verticalAlign:'middle'}}/>}
+          />
+        </Tooltip>
       </Space>}
-      tools={
-        <>
-          <ContainerDropdownActions
-            container={container}
-            trigger={['click']}
-            onChange={() => {
-              if (onChange) {
-                onChange();
-              }
-            }}>
-            <IconButton icon={<PiDotsThreeVertical size={20}/>}/>
-          </ContainerDropdownActions>
-          {allowUpload && (
-            <Button type={'text'} onClick={onOpenUpload} icon={<PiUpload size={20}/>}>
-              Cargar archivos
-            </Button>
-          )}
-          <Tooltip title={'Mostrar panel de información'} placement={'bottomRight'}>
-            <Button
-              type={"primary"}
-              ghost={!informationEnabled}
-              onClick={() => setInformationEnabled(!informationEnabled)}
-              icon={<TbInfoCircle size={22}/>}
-            />
-          </Tooltip>
-          <Tooltip title={'Buscar'}>
-            <Popover
-              placement={'bottomRight'}
-              content={
-                <>
-                  <Input.Search
-                    placeholder={'Buscar'}
-                    onSearch={value => {
-                      if (onSearch) {
-                        onSearch(value);
-                      }
-                    }}
-                  />
-                </>
-              }
-              trigger={'click'}>
-              <Button type={'text'} onClick={upLevel} icon={<TbSearch size={18}/>}/>
-            </Popover>
-          </Tooltip>
-          <Tooltip title={'Nuevo folder'}>
-            <Popover
-              placement={'bottomRight'}
-              content={<ContainerForm containerUuid={container.uuid} onCompleted={onChange}/>}
-              trigger={'click'}>
-              <Button type={'text'} icon={<TbFolderPlus size={20}/>}/>
-            </Popover>
-          </Tooltip>
-          <Select
-            prefix={'Ordenar'}
-            value={orderBy}
-            popupMatchSelectWidth={false}
-            onChange={setOrderBy}
-            placeholder={'Nombre'}
-            options={[
-              {label: 'nuevos primero', value: 'date_desc'},
-              {label: 'por nombre A-Z', value: 'name'},
-              {label: 'antiguos primero', value: 'date_asc'},
-              {label: 'pesados primero', value: 'size_desc'},
-              {label: 'ligeros primero', value: 'size_asc'},
-            ]}
-          />
-          <Segmented
-            options={[
-              {
-                value: 'list',
-                icon: <BarsOutlined/>,
-              },
-              {
-                value: 'grid',
-                icon: <AppstoreOutlined/>,
-              },
-            ]}
-            value={viewMode}
-            onChange={setViewMode}
-          />
-        </>
-      }
-    />
+    >
+    </ContentHeader>
   );
 };
 
