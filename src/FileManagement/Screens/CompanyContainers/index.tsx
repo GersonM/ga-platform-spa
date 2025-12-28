@@ -136,6 +136,7 @@ const CompanyContainers = () => {
           <EmptyMessage message={'No tienes contenedores creados, haz clic en el + para crear uno'}/>
         )}
         <Tree
+          rootStyle={{backgroundColor:'transparent'}}
           showIcon
           defaultSelectedKeys={params?.uuid ? [params?.uuid] : undefined}
           showLine

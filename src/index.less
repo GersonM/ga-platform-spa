@@ -25,9 +25,52 @@
   --font-code: "JetBrains Mono", monospace;;
 }
 
+body.dark-mode {
+  color: #e5e5e5;
+  --background-color: #1b1b1b;
+  --background-color-input: #313131;
+  --background-active-color: #181818;
+  --background-color-body: #26282b;
+  --background-color-higlight: #1c1c1c;
+  --border-color: #333333;
+  --text-color: #dfdfdf;
+  --text-title-color: #ffffff;
+  --border-color-body: #3c3c3c;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+
+
+  /* Track */
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  /* Handle */
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
 #root {
   display: flex;
   justify-content: stretch;
+}
+html{
+  background: var(--background-color-body);
+}
+@media (prefers-color-scheme: dark) {
+  html{
+    background: #26282b;
+  }
 }
 body {
   font-family: var(--font-title);
@@ -158,41 +201,6 @@ code {
 
 .rcs-inner-handle {
   background-color: rgba(0,0,0,0.3) !important;
-}
-
-body.dark-mode {
-  color: #e5e5e5;
-  --background-color: #1b1b1b;
-  --background-color-input: #313131;
-  --background-active-color: #181818;
-  --background-color-body: #26282b;
-  --background-color-higlight: #1c1c1c;
-  --border-color: #333333;
-  --text-color: #dfdfdf;
-  --text-title-color: #ffffff;
-  --border-color-body: #3c3c3c;
-  --shadow-color: rgba(0, 0, 0, 0.5);
-
-
-  /* Track */
-
-  ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-
-  /* Handle */
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-  }
-
-  /* Handle on hover */
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
 }
 
 @keyframes contentFadeIn {
