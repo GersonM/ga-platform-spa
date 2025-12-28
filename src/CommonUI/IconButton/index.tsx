@@ -25,10 +25,9 @@ const IconButton = ({title, icon, small, type = 'text', loading, ...props}: Icon
       className={`${small ? 'small' : ''}`}
       shape={'circle'}
       style={{fontSize:19}}
+      icon={icon}
       {...props}
-    >
-      {loading ? null : icon}
-    </Button>
+    />
   );
 
   return title ? <Tooltip title={title}>{button}</Tooltip> : button;

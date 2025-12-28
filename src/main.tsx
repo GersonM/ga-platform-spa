@@ -94,7 +94,6 @@ axios
   .catch(() => {
     const el = document.getElementById('root');
     if (el) {
-      // @ts-ignore
       el.innerHTML = `<div class="error-name"><img src=${logo} alt={"Logo"}/>La cuenta no se encuentra activa<br/> <span>Revisa tu correo para saber el estado de tu cuenta</span></div>`;
     }
   });

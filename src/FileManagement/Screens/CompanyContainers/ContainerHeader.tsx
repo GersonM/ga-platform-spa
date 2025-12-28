@@ -86,8 +86,8 @@ const ContainerHeader = (
           <IconButton icon={<PiDotsThreeVertical size={20}/>}/>
         </ContainerDropdownActions>
         {allowUpload && (
-          <Button type={'text'} onClick={onOpenUpload} icon={<PiUpload size={20}/>}>
-            Cargar archivos
+          <Button type={'primary'} onClick={onOpenUpload} icon={<PiUpload size={20}/>}>
+            Subir
           </Button>
         )}
         <Tooltip title={'Buscar'}>

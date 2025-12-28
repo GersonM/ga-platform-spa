@@ -16,8 +16,8 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import UploadContext from '../../../Context/UploadContext';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import IconButton from '../../../CommonUI/IconButton';
-import './styles.less';
 import MetaTitle from "../../../CommonUI/MetaTitle";
+import './styles.less';
 
 interface ContainerContentViewerProps {
   containerUuid: string;

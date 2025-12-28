@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import {Divider, Empty, Space} from 'antd';
+import {Divider, Empty, Image, Space} from 'antd';
 import axios, {type AxiosError} from 'axios';
 import dayjs from 'dayjs';
 
@@ -30,7 +30,7 @@ const PublicContainerViewer = () => {
     };
 
     axios
-      .get(`file-management/containers/${params.uuid}/view`, config)
+      .get(`file-management/containers/${params.uuid}/public-content`, config)
       .then(response => {
         if (response) {
           setCurrentContainer(response.data.container);
@@ -71,13 +71,25 @@ const PublicContainerViewer = () => {
           ) :
           <div className={'container-files-wrapper'}>
             {containers?.map((c: Container, index: number) => (
-              <FolderItem container={c} key={index} onClick={() => navigate(`/storage/containers/${c.uuid}`)}/>
+              <FolderItem size={60} container={c} key={index} onClick={() => navigate(`/storage/containers/${c.uuid}`)}/>
             ))}
-            {files?.map((file: ApiFile, index: number) => (
+            {files?.filter(f => !f.type.includes('image')).map((file: ApiFile, index: number) => (
               <FileItem file={file} key={index} onClick={() => navigate(`/storage/files/${file.uuid}`)}/>
             ))}
           </div>
         }
+
+        <div className={'image-gallery'}>
+          <Image.PreviewGroup>
+            {files?.filter(f => f.type.includes('image')).map((file: ApiFile, index: number) => (
+              <Image
+                key={index}
+                preview={{src:file.source}}
+                src={file.thumbnail}
+              />
+            ))}
+          </Image.PreviewGroup>
+        </div>
       </div>
       <div className={'footer'}>
         {config?.config.name} | V{version}

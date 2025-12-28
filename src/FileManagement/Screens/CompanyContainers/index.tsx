@@ -49,13 +49,22 @@ const CompanyContainers = () => {
           setContainers(response.data);
           setTreeData(response.data?.map((c: Container) => ({
             title: c.name, key: c.uuid,
-            icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+            icon: <LuHardDrive size={18} style={{verticalAlign: 'text-bottom'}}/>,
+            isLeaf: !c.num_containers,
             children: c.containers?.map(sC => ({
               title: sC.name, key: sC.uuid,
-              icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+              icon: sC.containers?.length ? undefined : <LuFolder size={14} style={{marginTop:5}}/>,
+              isLeaf: !sC.num_containers,
               children: sC.containers?.map(ssC => ({
                 title: ssC.name, key: ssC.uuid,
-                icon: <LuHardDrive size={16} style={{verticalAlign: 'middle'}}/>,
+                isLeaf: !ssC.num_containers,
+                icon: ssC.containers?.length ? undefined : <LuFolder size={14} style={{marginTop:5}}/>,
+                children: ssC.containers?.map(sssC => ({
+                  title: sssC.name,
+                  key: sssC.uuid,
+                  isLeaf: !sssC.num_containers,
+                  icon: sssC.containers?.length ? undefined : <LuFolder size={14} style={{marginTop:5}}/>,
+                })),
               })),
             })),
           })));
@@ -86,10 +95,6 @@ const CompanyContainers = () => {
       return node;
     });
 
-  const navigateToFolder = (uuid: string) => {
-    navigate(`/file-management/${params.uuid}/containers/${uuid}`);
-  };
-
   const currentContainer = params.child_uuid ? params.child_uuid : params.uuid;
 
   const onLoadData = async ({key}: any) => {
@@ -111,7 +116,7 @@ const CompanyContainers = () => {
         actions={
           <>
             <Tooltip title={'Recargar lista de contenedores'}>
-              <IconButton icon={<TbRefresh/>} small onClick={() => setReload(!reload)}/>
+              <IconButton icon={<TbRefresh/>} loading={loading} small onClick={() => setReload(!reload)}/>
             </Tooltip>
             <Popover
               open={openContainerCreator}
@@ -135,10 +140,9 @@ const CompanyContainers = () => {
         {containers?.length === 0 && (
           <EmptyMessage message={'No tienes contenedores creados, haz clic en el + para crear uno'}/>
         )}
-        <Tree
-          rootStyle={{backgroundColor:'transparent'}}
-          showIcon
-          defaultSelectedKeys={params?.uuid ? [params?.uuid] : undefined}
+        <Tree.DirectoryTree
+          rootStyle={{backgroundColor: 'transparent'}}
+          selectedKeys={params?.uuid ? [params?.uuid] : undefined}
           showLine
           loadData={onLoadData}
           treeData={treeData}
@@ -153,7 +157,7 @@ const CompanyContainers = () => {
           <ContainerContentViewer
             allowUpload={params.uuid !== 'trash'}
             containerUuid={currentContainer}
-            onChange={navigateToFolder}
+            onChange={(uuid: string) => navigate(`/file-management/${uuid}`)}
           />
         ) : (
           <Empty description={'Seleccionar un contenedor para ver su contenido'} image={Empty.PRESENTED_IMAGE_SIMPLE}/>

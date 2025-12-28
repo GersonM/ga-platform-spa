@@ -20,6 +20,7 @@
   max-width: 1200px;
   background: var(--background-color);
   border-radius: 12px;
+  corner-shape: superellipse();
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 
   .timeline-item {
@@ -40,9 +41,18 @@
     max-height: 40px;
   }
 
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+  }
+
   .container-files-wrapper {
     background: var(--background-color-body);
-    border-radius: var(--border-radius);
+    border-radius: 15px;
+    corner-shape: superellipse();
     margin-top: 20px;
     padding: 20px;
     flex: 1;
