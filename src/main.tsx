@@ -55,8 +55,9 @@ function detectBrowser() {
     return "safari"
   }
 }
+
 const browser = detectBrowser();
-if(browser) {
+if (browser) {
   document.body.classList.add(browser);
 }
 
@@ -64,7 +65,7 @@ if(browser) {
 configureEcho({
   broadcaster: "reverb",
   auth: {headers: {'X-Tenant': tenantID}},
-  authEndpoint: 'https://'+import.meta.env.VITE_REVERB_HOST + '/broadcasting/auth ',
+  authEndpoint: 'https://' + import.meta.env.VITE_REVERB_HOST + '/broadcasting/auth ',
   bearerToken: token,
   key: import.meta.env.VITE_REVERB_APP_KEY,
   wsHost: import.meta.env.VITE_REVERB_HOST,

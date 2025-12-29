@@ -49,18 +49,19 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
     r.style.setProperty('--primary-color-lighter', tColorL);
   }, [tenant]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (preferredMode === 'auto') {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-        const colorScheme = e.matches ? 'dark' : 'light';
-        setDarkMode(colorScheme === 'dark');
-      });
+      window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', function (e) {
+          const colorScheme = e.matches ? 'dark' : 'light';
+          setDarkMode(colorScheme === 'dark');
+        });
       return () => {
         window.removeEventListener('change', function () {
         });
       };
     }
-  }, [preferredMode]);
+  }, [preferredMode]);*/
 
   if (darkMode === undefined && !tenant) {
     return null;

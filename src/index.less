@@ -25,7 +25,7 @@
   --font-code: "JetBrains Mono";
 }
 
-body.dark-mode {
+html.dark-mode {
   color: #e5e5e5;
   --background-color: #1b1b1b;
   --background-color-input: #313131;
@@ -64,14 +64,15 @@ body.dark-mode {
   display: flex;
   justify-content: stretch;
 }
-html{
+
+:root {
   background: radial-gradient(circle, var(--background-color-body) 70%, var(--primary-color) 240%);
 }
-@media (prefers-color-scheme: dark) {
-  html{
-    background: #26282b;
-  }
+
+html.dark-mode {
+  background: radial-gradient(circle, #26282b 70%, var(--primary-color) 240%);
 }
+
 body {
   height: 100%;
   font-family: var(--font-title), sans-serif;
@@ -202,7 +203,7 @@ code {
 }
 
 .rcs-inner-handle {
-  background-color: rgba(0,0,0,0.3) !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
 }
 
 @keyframes contentFadeIn {
