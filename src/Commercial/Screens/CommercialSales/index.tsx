@@ -94,12 +94,15 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       cancelToken: cancelTokenSource.token,
       params: {
         ...filters,
-        client_uuid: 'self',
         page: currentPage,
         page_size: pageSize,
         date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
+
+    if (mode == 'purchases') {
+      config.params.client_uuid = 'self';
+    }
 
     setLoading(true);
     axios
@@ -117,7 +120,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [currentPage, pageSize, reload, filters, dateRangeFilter]);
+  }, [currentPage, pageSize, reload, filters, dateRangeFilter, mode]);
 
   const exportSelection = () => {
     const config = {
