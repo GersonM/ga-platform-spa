@@ -202,6 +202,7 @@ const App = () => {
           <Route path={'incidents'} element={<CommercialIncidents/>}/>
           <Route path={'clients'} element={<CommercialClients/>}/>
           <Route path={'sales'} element={<CommercialSales/>}/>
+          <Route path={'purchases'} element={<CommercialSales mode={'purchases'}/>}/>
           <Route path={'contracts/:contract'} element={<CommercialContractDetail/>}/>
           <Route path={'contract-templates/:contract_template?'} element={<TemplateContractsManager/>}/>
           <Route path={'sellers'} element={<CommercialSellersManager/>}/>

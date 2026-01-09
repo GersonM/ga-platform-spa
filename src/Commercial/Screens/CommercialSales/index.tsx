@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   DatePicker, Divider,
   Form,
-  Input,
   Modal,
   Pagination, Popconfirm, Popover,
   Progress,
@@ -47,7 +46,11 @@ import ProductSelector from "../../../WarehouseManager/Components/ProductSelecto
 import ProductVariationSelector from "../../../WarehouseManager/Components/ProductVariationSelector";
 import {ClientSelector} from "../../../PaymentManagement/Components/ClientSelector";
 
-const CommercialSales = () => {
+interface CommercialSalesProps {
+  mode?: string;
+}
+
+const CommercialSales = ({mode}: CommercialSalesProps) => {
   const navigate = useNavigate();
   const [clients, setClients] = useState<Profile[]>();
   const [pagination, setPagination] = useState<ResponsePagination>();
@@ -91,6 +94,7 @@ const CommercialSales = () => {
       cancelToken: cancelTokenSource.token,
       params: {
         ...filters,
+        client_uuid: 'self',
         page: currentPage,
         page_size: pageSize,
         date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
@@ -308,7 +312,7 @@ const CommercialSales = () => {
     <ModuleContent>
       <ContentHeader
         onAdd={() => setOpenContractForm(true)}
-        title={'Ventas'}
+        title={mode == 'purchases' ? 'Compras' : 'Ventas'}
         tools={
           <>
             <Tooltip title={'Exportar listado actual en formato excel'}>

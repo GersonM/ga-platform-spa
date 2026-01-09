@@ -18,7 +18,7 @@ import {TbPencil} from "react-icons/tb";
 import ModalView from "../../../CommonUI/ModalView";
 import ExternalResourceForm from "../../Components/ExternalResourceForm";
 import {useNavigate} from "react-router-dom";
-import {LuEye, LuPower, LuTrash, LuTrash2} from "react-icons/lu";
+import {LuEye, LuPower, LuTrash2} from "react-icons/lu";
 import TablePagination from "../../../CommonUI/TablePagination";
 import ResourceStatus from "../../Components/ResourceStatus";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
