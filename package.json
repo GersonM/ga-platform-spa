@@ -68,7 +68,7 @@
     "@types/timestring": "^7.0.0",
     "@types/tinycolor2": "^1.4.6",
     "@types/voca": "^1.4.6",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@vitejs/plugin-react": "^4.7.0",
     "esbuild": "^0.25.5",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
