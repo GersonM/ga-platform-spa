@@ -99,7 +99,7 @@ const CampaignsManager = () => {
         </Form.Item>
         <PrimaryButton label={'Crear'} block htmlType={'submit'} />
       </Form>
-      <TableList size={'small'} columns={columns} dataSource={campaigns} />
+      <TableList columns={columns} dataSource={campaigns} />
     </>
   );
 };
