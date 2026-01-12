@@ -13,7 +13,6 @@ interface TableListProps {
   footer?: any;
   customStyle?: boolean;
   loading?: boolean;
-  size?: string;
   small?: boolean;
   dataSource?: TableProps['dataSource'];
   expandable?: ExpandableConfig<AnyObject>;
@@ -27,11 +26,10 @@ const TableList = (
     small,
     loading,
     columns,
-    customStyle = true,
+    customStyle = false,
     dataSource,
     expandable,
     onClick,
-    size,
     rowKey = 'uuid',
     ...props
   }: TableListProps) => {

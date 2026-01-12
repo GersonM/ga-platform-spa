@@ -53,7 +53,7 @@ const MailAccountSelector = ({onSelect, refresh, selectedIndex}: MailAccountSele
     const index = accounts?.findIndex(a => a.uuid === key);
     if (accounts && index) {
       setSelectedAccount(accounts[index]);
-      onSelect && onSelect(accounts[index], index);
+      if(onSelect) onSelect(accounts[index], index);
     }
   };
 

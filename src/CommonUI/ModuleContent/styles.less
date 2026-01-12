@@ -25,7 +25,6 @@
 
 .module-content-wrapper {
   flex: 1;
-  padding: 20px;
   position: relative;
   width: calc(100vw - (var(--main-nav-width) + 60px));
 
@@ -42,14 +41,26 @@
     background: var(--background-color);
   }
 
+  &.boxed {
+    padding: 20px;
+
+    .content-header {
+      margin: -20px -20px 0 -20px;
+    }
+  }
+
   .content-header {
     background: var(--background-color);
     border-radius: 12px 12px 0 0;
     position: sticky;
     top: 0;
     padding: 15px 20px 0 20px;
-    margin: -20px -20px 0 -20px;
     z-index: 3;
+
+    .filter-form-container {
+      margin: 0 -20px;
+      margin-bottom: 10px;
+    }
 
     &.bordered {
       margin-bottom: 15px;

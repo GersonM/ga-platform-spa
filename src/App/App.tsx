@@ -9,6 +9,7 @@ import Login from '../Authentication/Screen/Login';
 import AuthenticatedLayout from './AuthenticatedLayout';
 import LeadMessagesManager from "../CRMModule/Screens/LeadMessagesManager";
 import ResourceManager from "../ServiceMonitoring/Screens/ResourceManager";
+import WalletTransactionsManager from "../PaymentManagement/Screens/WalletTransactionsManager";
 
 const CommercialSellersManager = lazy(() => import("../Commercial/Screens/CommercialSellersManager"));
 const EntityFieldManager = lazy(() => import("../TaxonomyManagement/Screens/EntityFieldManager"));
@@ -83,13 +84,12 @@ const App = () => {
 
   useEffect(() => {
     axios.interceptors.response.use(undefined, error => {
-      console.error('Global error: ' + error.message);
       if (error.message === 'Network Error') {
         Modal.error({
           icon: <span className="icon-cloud-crossed" style={{fontSize: 30}}/>,
-          title: 'Network error',
+          title: 'Error de conexión',
           centered: true,
-          content: "Can't reach the service, please check your connection and try again",
+          content: "No es posible conectar con el servidor, por favor revisa tu conexión y vuelve a intentar",
         });
       }
 
@@ -139,8 +139,8 @@ const App = () => {
           <Route path={'invoices'} element={<Invoices/>}>
             <Route path={':uuid'}/>
           </Route>
-          <Route path={'payments/in'} element={<PaymentsManager/>}/>
-          <Route path={'payments/out'} element={<PaymentsManager/>}/>
+          <Route path={'payments/:type?'} element={<PaymentsManager />}/>
+          <Route path={'transactions/:type?'} element={<WalletTransactionsManager />}/>
           <Route path={'wallet-accounts'} element={<Wallets/>}/>
         </Route>
         <Route path={'config'} element={<ModuleConfiguration/>}>

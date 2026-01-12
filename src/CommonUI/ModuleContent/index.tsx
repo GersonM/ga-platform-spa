@@ -9,11 +9,12 @@ import {TbMenu2} from "react-icons/tb";
 interface ModuleContentProps {
   children?: ReactNode;
   opaque?: boolean;
+  boxed?: boolean;
   withSidebar?: boolean;
   style?: React.CSSProperties;
 }
 
-const ModuleContent = ({children, opaque, withSidebar = false, style}: ModuleContentProps) => {
+const ModuleContent = ({children, opaque, boxed, withSidebar = false, style}: ModuleContentProps) => {
   const {config, openMenu, setOpenMenu} = useContext(AuthContext);
 
   return (
@@ -24,11 +25,13 @@ const ModuleContent = ({children, opaque, withSidebar = false, style}: ModuleCon
           onClick={() => {
             setOpenMenu(!openMenu);
           }}>
-          <img src={config?.dark_logo} alt="Logo" />
+          <img src={config?.dark_logo} alt="Logo"/>
         </div>
-        <IconButton icon={<TbMenu2 color={'#ffffff'} />} onClick={() => setOpenMenu(!openMenu)} />
+        <IconButton icon={<TbMenu2 color={'#ffffff'}/>} onClick={() => setOpenMenu(!openMenu)}/>
       </div>
-      <div className={`module-content-wrapper ${opaque ? ' opaque' : ''} ${withSidebar ? ' with-sidebar' : ''}`} style={style}>
+      <div
+        className={`module-content-wrapper ${opaque && ' opaque'} ${withSidebar && ' with-sidebar'} ${boxed && ' boxed'}`}
+        style={style}>
         {children}
       </div>
     </>

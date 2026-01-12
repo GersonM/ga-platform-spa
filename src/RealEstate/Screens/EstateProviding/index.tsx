@@ -313,7 +313,7 @@ const EstateProviding = () => {
           </>
         )}
       </Space>
-      <TableList loading={loading} columns={columns} dataSource={clients} pagination={false}/>
+      <TableList customStyle={false} loading={loading} columns={columns} dataSource={clients}/>
       {pagination && (
         <Pagination
           size="small"

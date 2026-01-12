@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TbPencil, TbRecycleOff, TbShredder} from "react-icons/tb";
+import {TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {Drawer, Form, Input, InputNumber, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
 import dayjs from "dayjs";
 import pluralize from "pluralize";
@@ -186,6 +186,7 @@ const WarehouseStockManager = () => {
       dataIndex: 'uuid',
       width: 70,
       render: (uuid: string, stock: StorageStock) => {
+        const isDamaged = stock.status == 'damaged';
         return <Space>
           <IconButton small icon={<TbPencil/>} onClick={() => {
             setSelectedStock(stock);
@@ -196,8 +197,11 @@ const WarehouseStockManager = () => {
               <IconButton small icon={<TbShredder/>} danger onClick={() => deleteStock(uuid, true)}/>
             </Tooltip>
           }
-          <Tooltip title={'Registrar como dañado'}>
-            <IconButton small icon={<TbRecycleOff/>} danger onClick={() => deleteStock(uuid)}/>
+          <Tooltip title={isDamaged ? 'Recuperar stock' : 'Registrar como dañado'}>
+            <IconButton
+              small icon={isDamaged ? <TbRecycle color={'green'}/> : <TbRecycleOff/>}
+              danger={!isDamaged}
+              onClick={() => deleteStock(uuid)}/>
           </Tooltip>
         </Space>;
       }
@@ -291,17 +295,14 @@ const WarehouseStockManager = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <Drawer open={openStockReport} title={'Filtros'} onClose={() => setOpenStockReport(false)}>
-
-      </Drawer>
       <Table
-        scroll={{x:900}}
+        scroll={{x: 900}}
         rowSelection={{
           onChange: (rows: any[]) => {
             setSelectedRows(rows);
           }
         }}
-        pagination={false} rowKey={'uuid'} size={"small"} loading={loading}
+        pagination={false} rowKey={'uuid'} size={"middle"} loading={loading}
         columns={columns} dataSource={productStock}/>
       {pagination && (
         <Pagination

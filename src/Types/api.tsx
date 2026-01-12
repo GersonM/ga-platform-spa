@@ -439,8 +439,9 @@ export type InvoicePayment = {
   created_at: string;
   description?: string;
   payment_channel?: string;
-  fk_invoice_uuid: string;
-  fk_payment_method_uuid: string;
+  invoice_uuid: string;
+  attachment_container_uuid?: string;
+  payment_method_uuid: string;
   purchase_token: string;
   transaction_info: string;
   transaction_date: string;
@@ -520,8 +521,14 @@ export type Wallet = {
 export type WalletTransaction = {
   uuid: string;
   created_at: string;
+  tracking_id: string;
+  payment_channel?: string;
+  invoice_payments?: InvoicePayment[];
   amount: number;
-  exchange_rate: number;
+  currency: string;
+  exchange_rate?: number;
+  exchange_currency?: string;
+  exchange_amount?: number;
   type: string;
   updated_at: string;
   observations?: string;

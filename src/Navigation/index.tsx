@@ -56,6 +56,7 @@ import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
 import NavItem from './NavItem';
 import './styles.less';
+import {LuReceipt, LuReceiptText} from "react-icons/lu";
 
 const menuItems: ItemType[] = [
   {
@@ -248,9 +249,10 @@ const Navigation = () => {
             {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree/>} path={'/hr'}/>}
             {config?.modules.includes('payments') && (
               <NavItem label={'Finanzas'} icon={<TbCurrencyDollar/>} code={'payments'}>
-                <NavItem label={'Req. de pago'} icon={<TbInvoice/>} path={'/finances/invoices'}/>
-                <NavItem label={'Cobros'} icon={<GiReceiveMoney/>} path={'/finances/payments/in'}/>
-                <NavItem label={'Pagos'} icon={<GiPayMoney/>} path={'/finances/payments/out'}/>
+                <NavItem label={'Req. de pago'} icon={<LuReceiptText/>} path={'/finances/invoices'}/>
+                <NavItem label={'Pagos'} icon={<LuReceipt/>} path={'/finances/payments'}/>
+                <NavItem label={'Ingresos'} icon={<GiReceiveMoney/>} path={'/finances/transactions/deposit'}/>
+                <NavItem label={'Salidas'} icon={<GiPayMoney/>} path={'/finances/transactions/withdraw'}/>
                 <NavItem label={'Cuentas'} icon={<TbPigMoney/>} path={'/finances/wallet-accounts'}/>
               </NavItem>
             )}

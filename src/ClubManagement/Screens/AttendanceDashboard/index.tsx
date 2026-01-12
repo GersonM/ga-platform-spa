@@ -121,7 +121,7 @@ const AttendanceDashboard = () => {
   });
 
   return (
-    <ModuleContent>
+    <ModuleContent boxed>
       <ContentHeader
         title="Estadisticas de asistencia"
         onRefresh={() => setReload(!reload)}

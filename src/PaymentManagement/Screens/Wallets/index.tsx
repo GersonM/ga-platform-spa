@@ -169,7 +169,7 @@ const Wallets = () => {
             </Form.Item>
           </FilterForm>
         </ContentHeader>
-        <TableList scroll={{x: 1000}} customStyle={false} columns={columns} dataSource={wallets}/>
+        <TableList scroll={{x: 1000}} small={false} customStyle={false} columns={columns} dataSource={wallets}/>
       </ModuleContent>
       <ModalView
         onCancel={() => {

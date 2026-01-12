@@ -1,19 +1,29 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import dayjs from "dayjs";
+import {Tooltip} from "antd";
+import {RiFileExcel2Fill} from "react-icons/ri";
 import ErrorHandler from "../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../PrimaryButton";
-import {RiFileExcel2Fill} from "react-icons/ri";
-import {Tooltip} from "antd";
 
 interface ReportDownloaderProps {
-  params?:any;
-  url:string;
-  label?:string;
-  method?:string;
+  params?: any;
+  url: string;
+  label?: string;
+  fileName?: string;
+  method?: string;
+  fileFormat?: string;
 }
 
-const ReportDownloader = ({url, label, params, method='GET'}:ReportDownloaderProps) => {
+const ReportDownloader = (
+  {
+    url,
+    label = 'Descargar',
+    params,
+    method = 'GET',
+    fileName,
+    fileFormat = 'xlsx'
+  }: ReportDownloaderProps) => {
   const [downloading, setDownloading] = useState(false);
 
   const getFile = () => {
@@ -26,7 +36,7 @@ const ReportDownloader = ({url, label, params, method='GET'}:ReportDownloaderPro
     axios({
       url: url,
       params: config.params,
-      method: 'GET',
+      method,
       responseType: 'blob',
     })
       .then(response => {
@@ -35,7 +45,7 @@ const ReportDownloader = ({url, label, params, method='GET'}:ReportDownloaderPro
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
           link.href = url;
-          link.download = 'ventas_' + dayjs().format('D-M-YYYY') + '.xlsx';
+          link.download = fileName + '_' + dayjs().format('D-M-YYYY') + '.' + fileFormat;
           document.body.appendChild(link);
 
           link.click();
@@ -52,11 +62,11 @@ const ReportDownloader = ({url, label, params, method='GET'}:ReportDownloaderPro
   return (
     <Tooltip title={'Exportar listado actual en formato excel'}>
       <PrimaryButton
-        icon={<RiFileExcel2Fill size={18}/>}
+        icon={<RiFileExcel2Fill size={16}/>}
         onClick={getFile}
         size={'small'}
         loading={downloading}
-        label={'Exportar'}
+        label={label}
       />
     </Tooltip>
   );
