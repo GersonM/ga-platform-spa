@@ -370,6 +370,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
                 {label: 'En proceso', value: 'in_progress'},
                 {label: 'Completado', value: 'completed'},
                 {label: 'Entregado', value: 'provided'},
+                {label: 'No entregado', value: 'not-provided'},
                 {label: 'Anulado', value: 'void'},
               ]}
             />
