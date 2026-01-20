@@ -12,9 +12,10 @@ interface IAlertMessageProps {
   type?: 'success' | 'warning' | 'error' | 'info';
   float?: boolean;
   dismissible?: boolean;
+  children?: React.ReactNode;
 }
 
-const AlertMessage = ({message, caption, type = 'warning', float, dismissible}: IAlertMessageProps) => {
+const AlertMessage = ({children, message, caption, type = 'warning', float, dismissible}: IAlertMessageProps) => {
   const [dismiss, setDismiss] = useState(false);
 
   if (dismiss) return null;
@@ -30,6 +31,7 @@ const AlertMessage = ({message, caption, type = 'warning', float, dismissible}: 
       <div className={'content'}>
         {message}
         {caption && <div className={'caption'}>{caption}</div>}
+        {children && <div className={'caption'}>{children}</div>}
       </div>
       {dismissible && <IconButton icon={<XMarkIcon color={'#000000'} />} onClick={() => setDismiss(true)} />}
     </div>

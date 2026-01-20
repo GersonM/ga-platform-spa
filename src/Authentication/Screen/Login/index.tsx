@@ -8,6 +8,8 @@ import Cookies from 'js-cookie';
 
 import AuthContext from "../../../Context/AuthContext.tsx";
 import MetaTitle from "../../../CommonUI/MetaTitle";
+import AlertMessage from "../../../CommonUI/AlertMessage";
+import tenantAppConfig from "../../../Context/TenantAppConfig.tsx";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -55,7 +57,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = (credentialResponse: any) => {
-    axios.post('authenticate/service/google', {token:credentialResponse.credential})
+    axios.post('authenticate/service/google', {token: credentialResponse.credential})
       .then(({data}) => {
         axios.defaults.headers.common.Authorization = 'Bearer ' + data.token;
         Cookies.set('session_token', data.token);
@@ -83,27 +85,27 @@ const Login = () => {
 
   return (
     <>
-      <MetaTitle title="Login" />
+      <MetaTitle title="Login"/>
       <Form onFinish={login}>
         <h2>Bienvenid@ de vuelta</h2>
         <div className={'input-large'}>
           <div className="icon">
-            <TbAt size={20} />
+            <TbAt size={20}/>
           </div>
           <Form.Item name={'email'} noStyle>
-            <Input variant={'borderless'} placeholder={'E-mail'} inputMode={'email'} />
+            <Input variant={'borderless'} placeholder={'E-mail'} inputMode={'email'}/>
           </Form.Item>
         </div>
         <div className={'input-large'}>
           <div className="icon">
-            <TbKey size={18} />
+            <TbKey size={18}/>
           </div>
           <Form.Item name={'password'} noStyle>
-            <Input.Password variant={'borderless'} placeholder={'Contraseña'} />
+            <Input.Password variant={'borderless'} placeholder={'Contraseña'}/>
           </Form.Item>
         </div>
         <Button block type={'primary'} shape={'round'} loading={loading} htmlType={'submit'}>
-          Ingresar <TbChevronRight />
+          Ingresar <TbChevronRight/>
         </Button>
       </Form>
       <br/>
@@ -112,14 +114,20 @@ const Login = () => {
           Recuperar contraseña
         </Button>
       </NavLink>
+      {axios.defaults.headers.common['X-Tenant'] == 'demo' &&
+        <AlertMessage message={'Credenciales de prueba'}>
+          <b>E-mail:</b> admin@test.com <br/>
+          <b>Contraseña:</b> admin@test.com
+        </AlertMessage>
+      }
       <Divider/>
       <GoogleLogin
-        theme={darkMode ? 'filled_black':'filled_blue'}
+        theme={darkMode ? 'filled_black' : 'filled_blue'}
         onSuccess={handleGoogleLogin}
       />
       <br/>
       <a href="https://geekadvice.pe/politica-privacidad/">
-          Política de privacidad
+        Política de privacidad
       </a>
     </>
   );

@@ -14,6 +14,12 @@
   }
 }
 
+.dark-mode {
+  .container-detail-container {
+    outline-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
 .container-detail-container {
   padding: 30px;
   width: 100%;
@@ -21,7 +27,7 @@
   background: var(--background-color);
   border-radius: 12px;
   corner-shape: superellipse();
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  outline: 5px solid rgba(227, 227, 227, 0.5);
 
   .timeline-item {
     cursor: pointer;
