@@ -31,7 +31,7 @@ const ModuleConfiguration = () => {
           <NavListItem icon={<TbDatabaseEdit />} name={'Tipos de datos'} path={'/config/fields'} />
         </NavList>
       </ModuleSidebar>
-      <ModuleContent withSidebar>
+      <ModuleContent withSidebar boxed>
         <Suspense fallback={<LoadingIndicator />}>
           <Outlet />
         </Suspense>

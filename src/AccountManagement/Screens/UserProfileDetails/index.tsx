@@ -16,7 +16,7 @@ const UserProfileDetails = () => {
   const [reload, setReload] = useState(false);
 
   return (
-    <ModuleContent>
+    <ModuleContent boxed>
       <ContentHeader title={'Información del usuario'} showBack/>
       <div>
         {params.uuid && (
@@ -24,14 +24,11 @@ const UserProfileDetails = () => {
             onChange={tab => {
               navigate(`/profiles/${params.uuid}/${tab}`);
             }}
-            className={'users-tab-bar'}
-            type={'card'}
             destroyOnHidden
             activeKey={params.tab}
             items={[
               {
                 label: 'Información personal',
-                style: {border: 3},
                 key: 'info',
                 children: (
                   <div className={'users-tab-content'}>
