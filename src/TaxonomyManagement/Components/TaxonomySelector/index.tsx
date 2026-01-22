@@ -26,7 +26,7 @@ const TaxonomySelector = ({code, property = 'uuid', value, ...props}: ITaxonomyS
     axios
       .get(`taxonomy/definitions`, config)
       .then(response => {
-        if (response) {
+        if (response && response.data[0]) {
           setTaxonomy(response.data[0].children);
         }
       })

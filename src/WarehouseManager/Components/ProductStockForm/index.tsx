@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Divider, Select} from "antd";
+import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Divider, Select, Button, message} from "antd";
 import {useForm} from "antd/lib/form/Form";
+import {NavLink} from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -12,12 +13,12 @@ import MoneyInput from "../../../CommonUI/MoneyInput";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer";
-import Config from "../../../Config.tsx";
 import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
 import EntityGalleryEditor from "../../../FileManagement/Components/EntityGalleryEditor";
 import ProductVariationSelector from "../ProductVariationSelector";
 import HtmlEditor from "../../../CommonUI/HtmlEditor";
 import TaxonomySelector from "../../../TaxonomyManagement/Components/TaxonomySelector";
+import Config from "../../../Config";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -63,6 +64,37 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
         ErrorHandler.showNotification(err);
       });
   };
+
+  const copyText = (text?: string) => {
+    if (text) {
+      const cleanText = stripHtmlPreserveNewlines(text);
+      navigator.clipboard.writeText(cleanText).then(() => {
+        message.success('Copiado al portapapeles').then();
+      });
+    }
+  };
+
+  const stripHtmlPreserveNewlines = (html: string) => {
+    let text = html.replace(/<br\s*\/?>/gi, '\n');
+
+    const blockTags = ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'tr', 'section', 'article', 'header', 'footer'];
+    blockTags.forEach(tag => {
+      text = text.replace(new RegExp(`</${tag}>`, 'gi'), '\n');
+    });
+
+    text = text.replace(/<[^>]+>/g, '');
+
+    text = text.replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+
+    text = text.replace(/\n\s*\n\s*\n/g, '\n\n');
+
+    return text.trim();
+  }
 
   return (
     <>
@@ -113,7 +145,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 <Form.Item label={'Tipo'} name={'type'}>
                   <TaxonomySelector onChange={val => {
                     setSelectedType(val);
-                  }} code={'stock-types'} property={'code'} />
+                  }} code={'stock-types'} property={'code'}/>
                 </Form.Item>
               </Col>
               {(selectedType == 'lease' || selectedType == 'license') ?
@@ -172,7 +204,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               </Col>
               <Col md={9}>
                 <Form.Item name={'quantity'}>
-                  <InputNumber addonBefore={'Cantidad'} style={{width: '100%'}}
+                  <InputNumber prefix={'Cantidad'} style={{width: '100%'}}
                                placeholder={isConsumable ? '1' : 'Sin límite'}/>
                 </Form.Item>
               </Col>
@@ -187,13 +219,25 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             }
           </Col>
           <Col md={11}>
-            <Form.Item name={'attachments'} label={'Galería de imagenes'}>
+            <Form.Item
+              name={'attachments'}
+              label={<>
+                Galería de imagenes {' - '}
+                <NavLink target={'_blank'} to={`/file-management/${stock?.attachments_container_uuid}`}>
+                  <Button size={'small'} type={'primary'} ghost>Ver carpeta</Button>
+                </NavLink>
+              </>}
+            >
               <EntityGalleryEditor/>
             </Form.Item>
             <Form.Item name={'excerpt'} label={'Resumen'}>
               <Input.TextArea/>
             </Form.Item>
-            <Form.Item name={'commercial_description'} label={'Información adicional'}>
+            <Form.Item
+              name={'commercial_description'}
+              label={<>Información adicional {' - '}<Button type={'primary'} ghost size={'small'}
+                                                            onClick={() => copyText(stock?.commercial_description)}>Copiar
+                texto</Button></>}>
               <HtmlEditor height={120}/>
             </Form.Item>
             <Divider orientation={'left'}>Información adicional</Divider>

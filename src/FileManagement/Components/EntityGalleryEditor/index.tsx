@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TbEye, TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
+import {TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
 import {Popconfirm, Space} from "antd";
 import axios from "axios";
 
@@ -8,7 +8,6 @@ import FileUploader from "../FileUploader";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
-import {NavLink, useNavigate} from "react-router-dom";
 
 interface EntityGalleryEditorProps {
   value?: ApiFile[];
@@ -17,7 +16,6 @@ interface EntityGalleryEditorProps {
 
 const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) => {
   const [gallery, setGallery] = useState<ApiFile[] | undefined | null>(value);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (onChange && gallery) {
@@ -65,9 +63,6 @@ const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) =
                 <IconButton icon={<TbPhotoCancel/>} title={'Quitar imagen como portada'}
                             onClick={() => setAsCover(item, 'public')}/>
               }
-              <NavLink target={'_blank'} to={`/file-management/${item.container_uuid}`}>
-                <IconButton icon={<TbEye color={'#ffffff'}/>} title={'Ver carpeta'} />
-              </NavLink>
               <Popconfirm title={'¿Quiere eliminar esta imagen?'} onConfirm={() => deleteImage(item)}>
                 <IconButton icon={<TbTrash/>} danger/>
               </Popconfirm>

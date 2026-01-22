@@ -808,6 +808,8 @@ export type StorageStock = {
   metadata?: any;
   observations?: string;
   expiration_date?: string;
+  attachments_container_uuid?: string;
+  attachments?: ApiFile[];
   status: string;
   updated_at: string;
   attributes?: EntityFieldValue[];
