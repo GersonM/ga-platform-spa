@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {Button, Card, Col, Divider, notification, Popconfirm, Progress, Row, Space, Tooltip} from "antd";
+import {Button, Card, Col, Divider, notification, Popconfirm, Progress, Row, Space} from "antd";
 import {LuCpu, LuMemoryStick} from "react-icons/lu";
 
 import CustomTag from "../../../CommonUI/CustomTag";
 import {TbClockPin, TbPower, TbReload, TbTimeline, TbWorldWww} from "react-icons/tb";
 import ResourceStatus from "../ResourceStatus";
-import './styles.less';
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import './styles.less';
 
 interface ResourceInformationProps {
   resourceUuid?: string;

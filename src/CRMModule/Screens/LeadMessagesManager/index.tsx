@@ -31,6 +31,7 @@ import AuthContext from "../../../Context/AuthContext.tsx";
 
 const LeadMessagesManager = () => {
   const [leads, setLeads] = useState<Lead[]>();
+  const [threads, setThreads] = useState<any[]>();
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [reload, setReload] = useState(false);
@@ -59,6 +60,35 @@ const LeadMessagesManager = () => {
         if (response) {
           setLeads(response.data.data);
           setPagination(response.data.meta);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      });
+
+    return cancelTokenSource.cancel;
+  }, [reload]);
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const config = {
+      cancelToken: cancelTokenSource.token,
+      params: {
+        //campaign_uuid: params.campaign,
+        //page: currentPage,
+        //page_size: pageSize,
+      },
+    };
+
+    setLoading(true);
+
+    axios
+      .get(`crm/threads`, config)
+      .then(response => {
+        if (response) {
+          setThreads(response.data);
         }
         setLoading(false);
       })
@@ -118,19 +148,20 @@ const LeadMessagesManager = () => {
           }}
         />
         <NavList>
-          {leads?.map((lead: Lead, index) => (
+          {threads?.map((t: any, index) => (
             <NavListItem
               key={index}
-              icon={<TbUser/>} name={lead.profile.name}
+              icon={<TbUser/>}
+              name={t.meta?.sender?.name}
               tools={<Space>
-                <CustomTag>{lead.campaign?.name}</CustomTag>
+                <CustomTag>{t.meta?.assignee?.name}</CustomTag>
               </Space>}
-              caption={lead.profile.phone + ' | ' + dayjs(lead.created_at).fromNow()}
-              path={"/crm/chat/" + lead.uuid}/>
+              caption={t.last_non_activity_message.content + ' | ' + dayjs(t.last_activity_at, 'timestamp').fromNow()}
+              path={"/crm/chat/" + t.id}/>
           ))}
         </NavList>
       </ModuleSidebar>
-      <ModuleContent withSidebar style={{display: 'flex', flexDirection: 'column'}}>
+      <ModuleContent withSidebar boxed style={{display: 'flex', flexDirection: 'column'}}>
         <ContentHeader
           bordered
           title={<Space>

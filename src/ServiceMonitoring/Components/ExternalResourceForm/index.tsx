@@ -56,6 +56,8 @@ const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFor
               {value: 'domain', label: 'Dominio'},
               {value: 'namecheap_domain', label: 'Dominio en Namecheap '},
               {value: 'vps', label: 'VPS'},
+              {value: 'crm', label: 'CRM'},
+              {value: 'whatsapp_business_id', label: 'Cuenta Whatsapp Business'},
               {value: 'cpanel_server', label: 'Servidor cPanel/WHM'},
               {value: 'cpanel_account', label: 'Cuenta cPanel'},
             ]}

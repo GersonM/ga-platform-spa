@@ -30,7 +30,7 @@ const ModuleContent = ({children, opaque, boxed, withSidebar = false, style}: Mo
         <IconButton icon={<TbMenu2 color={'#ffffff'}/>} onClick={() => setOpenMenu(!openMenu)}/>
       </div>
       <div
-        className={`module-content-wrapper ${opaque && ' opaque'} ${withSidebar && ' with-sidebar'} ${boxed && ' boxed'}`}
+        className={`module-content-wrapper ${opaque ? 'opaque':''} ${withSidebar ? 'with-sidebar':''} ${boxed && 'boxed'}`}
         style={style}>
         {children}
       </div>

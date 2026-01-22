@@ -43,7 +43,7 @@ const ResourceManager = () => {
   }, [reload, params.uuid]);
 
   return (
-    <ModuleContent>
+    <ModuleContent boxed>
       <ContentHeader
         title={resource?.name}
         tools={<CustomTag>{resource?.type}</CustomTag>}
