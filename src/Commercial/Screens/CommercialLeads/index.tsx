@@ -58,53 +58,6 @@ const CommercialLeads = () => {
     return cancelTokenSource.cancel;
   }, [reload, params.campaign, currentPage, pageSize]);
 
-  const fetchVideoData = async () => {
-    try {
-      setLoading(true);
-
-      const videoId = '1117548162';
-      //const accessToken = '3136aa002173bfa2b2e977c1b7e0f5cc';
-      const accessToken = '572fa8cb4d9d7f23e53089a50e8ee030';
-      const response = await fetch(`https://api.vimeo.com/videos/${videoId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al obtener datos del video');
-      }
-
-      const data = await response.json();
-
-      console.log(data);
-
-      // Obtener el archivo de video de mayor calidad
-      const videoFile =
-        data.files?.find(
-          file => file.quality === 'hd' || file.quality === 'sd',
-        ) || data.files?.[0];
-
-      if (!videoFile) {
-        throw new Error('No se encontró URL del video');
-      }
-
-      setVideoData({
-        uri: videoFile.link,
-        title: data.name,
-        description: data.description,
-        duration: data.duration,
-        thumbnail: data.pictures?.sizes?.[0]?.link,
-      });
-
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
   const columns = [
     {
       dataIndex: 'created_at',
@@ -173,7 +126,6 @@ const CommercialLeads = () => {
       />
       <Row gutter={[20, 20]}>
         <Col lg={8} xs={24}>
-          <Button onClick={fetchVideoData}>Cargar</Button>
           {params.campaign ? (
             <CreateLeadForm
               campaignUuid={params.campaign}
