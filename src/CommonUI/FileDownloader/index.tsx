@@ -12,10 +12,11 @@ interface FileDownloaderProps {
   url: string;
   name?: string;
   open: boolean;
+  data?: any;
   onComplete?: () => void;
 }
 
-const FileDownloader = ({url, name, open = false, onComplete}: FileDownloaderProps) => {
+const FileDownloader = ({url, name, open = false, onComplete, data}: FileDownloaderProps) => {
   const [openPrint, setOpenPrint] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
@@ -30,10 +31,12 @@ const FileDownloader = ({url, name, open = false, onComplete}: FileDownloaderPro
   const generateDocuments = () => {
     setOpenPrint(true);
     setDownloading(true);
+    console.log({data});
     axios({
       url: url,
       method: 'GET',
-      responseType: 'blob', // important
+      responseType: 'blob',
+      params: data
     })
       .then(response => {
         setDownloading(false);

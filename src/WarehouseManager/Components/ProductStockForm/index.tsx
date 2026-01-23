@@ -19,6 +19,8 @@ import ProductVariationSelector from "../ProductVariationSelector";
 import HtmlEditor from "../../../CommonUI/HtmlEditor";
 import TaxonomySelector from "../../../TaxonomyManagement/Components/TaxonomySelector";
 import Config from "../../../Config";
+import ReportDownloader from "../../../CommonUI/ReportDownloader";
+import FileDownloader from "../../../CommonUI/FileDownloader";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -32,6 +34,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
   const [metadata, setMetadata] = useState<any[]>();
   const [selectedType, setSelectedType] = useState<string | undefined>(stock?.type);
+  const [openBrochure, setOpenBrochure] = useState(false);
 
   useEffect(() => {
     if (form) {
@@ -99,6 +102,15 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   return (
     <>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'}</h2>
+      <PrimaryButton label={'GEnerar reporte'} onClick={() => setOpenBrochure(!openBrochure)}/>
+      <FileDownloader
+        name={'Imprimir propuesta'}
+        url={'document-generator/stock/' + stock?.uuid}
+        open={openBrochure}
+        onComplete={() => {
+          setOpenBrochure(false);
+        }}
+      />
       {stock?.status}
       <Form form={form} layout="vertical" initialValues={{
         ...stock,

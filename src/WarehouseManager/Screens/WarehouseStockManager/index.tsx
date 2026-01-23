@@ -27,6 +27,7 @@ import ProductVariationSelector from "../../Components/ProductVariationSelector"
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ProductSelector from "../../Components/ProductSelector";
 import StockSelector from "../../Components/StockSelector";
+import FileDownloader from "../../../CommonUI/FileDownloader";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -247,7 +248,7 @@ const WarehouseStockManager = () => {
           {stockStats?.sold} vendidos de {stockStats?.total} | {stockStats?.available} disponibles
           <Progress percent={Math.round(percent)} style={{width: '200px'}}/>
           <PrimaryButton disabled={!selectedRows?.length} loading={downloadingReport} label={'Generar reporte'}
-                         onClick={getStockReport}/>
+                         onClick={() => setOpenStockReport(true)}/>
           <PrimaryButton disabled loading={downloadingReport} label={'Registrar salidas'} onClick={getStockReport}/>
         </>}
       >
@@ -295,6 +296,15 @@ const WarehouseStockManager = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
+      <FileDownloader
+        name={'Imprimir brochure'}
+        url={'document-generator/stock-brochure'}
+        data={{selected_stock: selectedRows}}
+        open={openStockReport}
+        onComplete={() => {
+          setOpenStockReport(false);
+        }}
+      />
       <Table
         scroll={{x: 900}}
         rowSelection={{
