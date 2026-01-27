@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {PiPlusBold} from 'react-icons/pi';
 
 import SearchProfile from '../SearchProfile';
@@ -21,12 +21,15 @@ interface ProfileSelectorProps {
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-const ProfileSelector = ({
-  onChange,
-  placeholder,
-  disabled,
-  allowCreate = true
-}: ProfileSelectorProps) => {
+const ProfileSelector = (
+  {
+    onChange,
+    placeholder,
+    disabled,
+    allowCreate = true,
+    value,
+    size
+  }: ProfileSelectorProps) => {
   const [openCreateProfile, setOpenCreateProfile] = useState(false);
   const [createdProfile, setCreatedProfile] = useState<Profile>();
 
@@ -35,6 +38,7 @@ const ProfileSelector = ({
       <div style={{display: 'flex'}}>
         <SearchProfile
           style={{flex: 1}}
+          value={value}
           placeholder={createdProfile?.name || placeholder}
           onChange={(values, item) => {
             //setSelectedProfile(item);
@@ -47,9 +51,9 @@ const ProfileSelector = ({
           <PrimaryButton
             disabled={disabled}
             onClick={() => setOpenCreateProfile(true)}
-            icon={<PiPlusBold size={14} />}
+            icon={<PiPlusBold size={14}/>}
             style={{marginLeft: 8}}
-            label={'Nuevo'}
+            label={size == 'small' ? undefined : 'Nuevo'}
           />
         )}
       </div>

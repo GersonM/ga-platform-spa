@@ -1,6 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
-import {Drawer, Form, Input, InputNumber, Pagination, Popover, Progress, Select, Space, Table, Tooltip} from "antd";
+import {TbArchive, TbArchiveOff, TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
+import {
+  Divider,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Pagination,
+  Popover,
+  Progress,
+  Select,
+  Space,
+  Table,
+  Tooltip
+} from "antd";
 import dayjs from "dayjs";
 import pluralize from "pluralize";
 import axios from "axios";
@@ -49,6 +62,7 @@ const WarehouseStockManager = () => {
   const [selectedRows, setSelectedRows] = useState<string[]>();
   const [downloadingReport, setDownloadingReport] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
+  const [openArchiveStock, setOpenArchiveStock] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -97,6 +111,18 @@ const WarehouseStockManager = () => {
     axios.delete(`warehouses/stock/${uuid}`, {params: {force: force ? 1 : 0}})
       .then(() => {
         setReload(!reload);
+      })
+      .catch((error) => {
+        ErrorHandler.showNotification(error);
+      });
+  }
+
+  const archiveStock = (values: any) => {
+    axios.post(`warehouses/stock/${selectedStock?.uuid}/retire-from-sale`, values)
+      .then(() => {
+        setReload(!reload);
+        setOpenArchiveStock(false);
+        setSelectedStock(undefined);
       })
       .catch((error) => {
         ErrorHandler.showNotification(error);
@@ -188,6 +214,7 @@ const WarehouseStockManager = () => {
       width: 70,
       render: (uuid: string, stock: StorageStock) => {
         const isDamaged = stock.status == 'damaged';
+        const isArchived = stock.status == 'not_available';
         return <Space>
           <IconButton small icon={<TbPencil/>} onClick={() => {
             setSelectedStock(stock);
@@ -204,6 +231,16 @@ const WarehouseStockManager = () => {
               danger={!isDamaged}
               onClick={() => deleteStock(uuid)}/>
           </Tooltip>
+          {stock.status == 'available' &&
+            <Tooltip title={isArchived ? 'Recuperar' : 'Retirar'}>
+              <IconButton
+                small icon={isArchived ? <TbArchiveOff color={'green'}/> : <TbArchive/>}
+                onClick={() => {
+                  setSelectedStock(stock);
+                  setOpenArchiveStock(true);
+                }}/>
+            </Tooltip>
+          }
         </Space>;
       }
     }
@@ -277,17 +314,18 @@ const WarehouseStockManager = () => {
             <Select
               allowClear
               placeholder={'Disponible'}
+              popupMatchSelectWidth={false}
               onChange={value => {
                 setStockState(value);
               }} options={[
-              {label: 'Vendidos', value: 'sold'},
               {label: 'Disponible', value: 'available'},
+              {label: 'No disponibles', value: 'not_available'},
+              {label: 'Vendidos', value: 'sold'},
               {label: 'Reservados', value: 'reserved'},
               {label: 'Dañados', value: 'damaged'},
               {label: 'Todos', value: 'all'},
             ]}/>
           </Form.Item>
-
           <Form.Item label={'Almacen'} name={'warehouse_uuid'}>
             <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
           </Form.Item>
@@ -340,6 +378,19 @@ const WarehouseStockManager = () => {
           setOpenStockForm(false);
           setSelectedStock(undefined);
         }}/>
+      </ModalView>
+      <ModalView open={openArchiveStock} onCancel={() => setOpenArchiveStock(false)}>
+        <h3>Archivar stock</h3>
+        <p>Al retirar el stock no se elimina ninguna información relacionada, pero no estará disponible para ventas
+          futuras ni en el catalogo</p>
+        <StorageStockChip storageStock={selectedStock}/>
+        <Divider />
+        <Form layout={'vertical'} onFinish={archiveStock}>
+          <Form.Item label={'Motivo del retiro (opcional)'} name={'comment'}>
+            <Input.TextArea/>
+          </Form.Item>
+          <PrimaryButton label={'Retirar'} htmlType={'submit'} block/>
+        </Form>
       </ModalView>
       <ModalView
         width={1200}

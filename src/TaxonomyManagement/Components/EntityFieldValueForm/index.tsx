@@ -7,6 +7,7 @@ import type {EntityFieldValue} from "../../../Types/api.tsx";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import EntityFieldSelector from "../EntityFieldSelector";
+import ProfileSelector from "../../../CommonUI/ProfileSelector";
 
 interface EntityFieldValueFormProps {
   fieldValue?: EntityFieldValue;
@@ -57,6 +58,15 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
           }}
           suffix={selectedFieldValue?.field?.unit_type}
         />
+      case 'profile':
+        console.log(selectedFieldValue?.value);
+        return <ProfileSelector
+          size={"small"}
+          value={selectedFieldValue?.value}
+          placeholder={'Valor'}
+          onChange={(v: any) => {
+            saveValue('value', v);
+          }}/>;
       default:
         return <Input
           value={selectedFieldValue?.value}

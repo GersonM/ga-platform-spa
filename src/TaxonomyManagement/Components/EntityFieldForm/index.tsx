@@ -62,6 +62,9 @@ const EntityFieldForm = ({entityField, onComplete}: EntityFieldFormProps) => {
             {label: 'Número', value: 'number'},
             {label: 'Opciones', value: 'select'},
             {label: 'Si/No', value: 'boolean'},
+            {label: 'Perfil', value: 'profile'},
+            {label: 'Archivo', value: 'file'},
+            {label: 'Geo Ubicación', value: 'geolocation'},
           ]}/>
       </Form.Item>
       {type == 'select' && (
@@ -69,7 +72,7 @@ const EntityFieldForm = ({entityField, onComplete}: EntityFieldFormProps) => {
           <Input placeholder={'Eje: Opción 1, Opción 2'}/>
         </Form.Item>
       )}
-      <Form.Item label={'Tipo de unidad'} name={'unit_type'}>
+      <Form.Item label={'Tipo de unidad (opcional)'} name={'unit_type'}>
         <Input/>
       </Form.Item>
       <PrimaryButton block icon={<TbCheck/>} loading={loading} htmlType={'submit'} label={'Guardar'}/>

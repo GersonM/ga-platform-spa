@@ -7,6 +7,7 @@ interface StockStatusProps {
 
 const statuses: any = {
   available: 'Disponible',
+  not_available: 'No disponible',
   sold: 'Vendido',
   reserved: 'Reservado',
   damaged: 'Dañado',
@@ -19,6 +20,7 @@ const colors: any = {
   sold: 'blue',
   in_transportation: 'yellow',
   available: 'green',
+  not_available: 'orange',
 }
 
 const StockStatus = ({status}: StockStatusProps) => {

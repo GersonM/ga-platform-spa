@@ -1,12 +1,12 @@
 import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
-import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
+import dayjs from 'dayjs';
 import 'dayjs/locale/es.js';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import '@ant-design/v5-patch-for-react-19';
