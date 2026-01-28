@@ -145,7 +145,7 @@ const WarehouseProductsManager = () => {
   return (
     <ModuleContent>
       <ContentHeader
-        title={'Productos'}
+        title={'Catalogo'}
         loading={loading}
         onRefresh={() => setReload(!reload)}
         tools={<Space>

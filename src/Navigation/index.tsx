@@ -203,7 +203,7 @@ const Navigation = () => {
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse/>} code={'stock'}>
               <NavItem icon={<TbPackageImport/>} label={'Stock'} path={'/warehouse/stock'}/>
-              <NavItem icon={<TbPackage/>} label={'Productos'} path={'/warehouse/products'}/>
+              <NavItem icon={<TbPackage/>} label={'Catalogo'} path={'/warehouse/products'}/>
               <NavItem icon={<TbForklift/>} label={'Movimientos'} path={'/warehouse/activity'}/>
             </NavItem>
             {config?.modules.includes('move') && (
