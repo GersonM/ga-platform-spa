@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, Input, InputNumber, Popconfirm, Row} from "antd";
+import {Input, InputNumber, Popconfirm, Switch} from "antd";
 import {TbTrash} from "react-icons/tb";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ interface EntityFieldValueFormProps {
   onChange?: (values: any) => void;
 }
 
-const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: EntityFieldValueFormProps) => {
+const EntityFieldValueForm = ({fieldValue, onChange, onRemove}: EntityFieldValueFormProps) => {
   const [editFieldMode, setEditFieldMode] = useState(false);
   const [selectedFieldValue, setSelectedFieldValue] = useState<EntityFieldValue | undefined>(fieldValue);
   const [deleting, setDeleting] = useState(false);
@@ -45,9 +45,9 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
   const getField = () => {
     switch (selectedFieldValue?.field?.type) {
       case 'boolean':
-        return <Checkbox checked={selectedFieldValue.value == '1'} onChange={(e: any) => {
-          saveValue('value', e.target.checked ? 1 : 0);
-        }}/>;
+        return <Switch checked={selectedFieldValue.value == '1'} onChange={(e) => {
+          saveValue('value', e ? 1 : 0);
+        }}/>
       case 'number':
         return <InputNumber
           style={{width: '100%'}}
@@ -59,7 +59,6 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
           suffix={selectedFieldValue?.field?.unit_type}
         />
       case 'profile':
-        console.log(selectedFieldValue?.value);
         return <ProfileSelector
           size={"small"}
           value={selectedFieldValue?.value}
@@ -85,37 +84,35 @@ const EntityFieldValueForm = ({fieldValue, onComplete, onChange, onRemove}: Enti
 
   return (
     <div className={'entity-fields-editor-row'}>
-      <Row gutter={[10, 10]}>
-        <Col span={11}>
-          {(selectedFieldValue?.field && !editFieldMode) ? <>
-              <a href="#" onClick={() => setEditFieldMode(!editFieldMode)}>
-                {selectedFieldValue.field.name}
-              </a>
-              <small>{selectedFieldValue.field.description || selectedFieldValue.field.code}</small>
-            </> :
-            <EntityFieldSelector
-              value={selectedFieldValue?.field?.uuid}
-              onChange={(value, option) => {
-                setEditFieldMode(false);
-                saveValue('field', option.entity)
-              }}
-              onClear={() => setEditFieldMode(!editFieldMode)}/>
-          }
-        </Col>
-        <Col span={10}>
-          {getField()}
-        </Col>
-        <Col span={3}>
-          <Popconfirm title={'¿Quieres eliminar este campo?'} onConfirm={removeField}>
-            <IconButton
-              small
-              danger
-              loading={deleting}
-              icon={<TbTrash/>}
-            />
-          </Popconfirm>
-        </Col>
-      </Row>
+      <div className={'name'}>
+        {(selectedFieldValue?.field && !editFieldMode) ? <>
+            <a href="#" onClick={() => setEditFieldMode(!editFieldMode)}>
+              {selectedFieldValue.field.name}
+            </a>
+            <small>{selectedFieldValue.field.description || selectedFieldValue.field.code}</small>
+          </> :
+          <EntityFieldSelector
+            value={selectedFieldValue?.field?.uuid}
+            onChange={(value, option) => {
+              setEditFieldMode(false);
+              saveValue('field', option.entity)
+            }}
+            onClear={() => setEditFieldMode(!editFieldMode)}/>
+        }
+      </div>
+      <div className={'field'}>
+        {getField()}
+      </div>
+      <div className={'tools'}>
+        <Popconfirm title={'¿Quieres eliminar este campo?'} onConfirm={removeField}>
+          <IconButton
+            small
+            danger
+            loading={deleting}
+            icon={<TbTrash/>}
+          />
+        </Popconfirm>
+      </div>
     </div>
   );
 };

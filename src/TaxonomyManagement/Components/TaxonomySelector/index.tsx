@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {TreeSelect, type TreeSelectProps} from 'antd';
+import {TreeSelect} from 'antd';
 import axios from 'axios';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {TaxonomyDefinition} from '../../../Types/api';
@@ -8,10 +8,11 @@ interface ITaxonomySelectorProps {
   value?: any;
   code?: string;
   property?: string;
+  placeholder?: string;
   onChange?: (value: any, option: any) => void;
 }
 
-const TaxonomySelector = ({code, property = 'uuid', value, ...props}: ITaxonomySelectorProps) => {
+const TaxonomySelector = ({code, property = 'uuid', onChange, ...props}: ITaxonomySelectorProps) => {
   const [taxonomy, setTaxonomy] = useState<TaxonomyDefinition[]>();
 
   useEffect(() => {
@@ -26,9 +27,34 @@ const TaxonomySelector = ({code, property = 'uuid', value, ...props}: ITaxonomyS
     axios
       .get(`taxonomy/definitions`, config)
       .then(response => {
-        if (response && response.data[0]) {
-          setTaxonomy(response.data[0].children);
+        if (response.data[0]) {
+
+          setTaxonomy(response.data[0].children.map((c: any) => ({
+            title: c.name,
+            id: c[property],
+            value: c[property],
+            entity: c,
+            children: c.children?.map((sC: any) => ({
+              title: sC.name,
+              id: sC[property],
+              value: sC[property],
+              entity: sC,
+              children: sC.children?.map((ssC: any) => ({
+                title: ssC.name,
+                id: ssC[property],
+                value: ssC[property],
+                entity: ssC,
+                children: ssC.children?.map((sssC: any) => ({
+                  title: sssC.name,
+                  id: sssC[property],
+                  value: sssC[property],
+                  entity: sssC,
+                })),
+              })),
+            })),
+          })));
         }
+
       })
       .catch(e => {
         ErrorHandler.showNotification(e);
@@ -37,53 +63,24 @@ const TaxonomySelector = ({code, property = 'uuid', value, ...props}: ITaxonomyS
     return cancelTokenSource.cancel;
   }, []);
 
-  const onLoadData: TreeSelectProps['loadData'] = ({id}) =>
-    axios
-      .get(`taxonomy/definitions/${id}`)
-      .then(response => {
-        if (response) {
-          //setTaxonomy(response.data[0].children);
-          addChildren(
-            id,
-            response.data.children.map((d: any) => {
-              return {id: d.uuid, value: d.uuid, title: d.name, children: d.children};
-            }),
-          );
-        }
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-
-  const addChildren = (parentUuid: string, children: any[]) => {
-    if (!taxonomy) return;
-    const newTax = [...taxonomy];
-    const parentIndex = taxonomy?.findIndex(t => t.uuid == parentUuid);
-    newTax[parentIndex].children = children;
-    console.log(parentUuid, children, {parentIndex});
-    setTaxonomy(newTax);
-  };
-
   return (
     <TreeSelect
       treeDataSimpleMode
       style={{width: '100%'}}
-      value={value}
+      allowClear
       placeholder="Seleciona una categoría"
-      loadData={onLoadData}
       onSelect={(v: string, option: any) => {
-        if (props.onChange) {
-          let value: string = v;
+        console.log('VVVVV', v);
+        if (onChange) {
+          let nV: string = v;
           if (property !== 'uuid') {
-            value = option[property];
+            nV = option.entity[property];
           }
-          props.onChange(value, option);
+          onChange(nV, option);
         }
       }}
       {...props}
-      treeData={taxonomy?.map(d => {
-        return {id: d.uuid, value: d.uuid, title: d.name, children: d.children};
-      })}
+      treeData={taxonomy}
     />
   );
 };

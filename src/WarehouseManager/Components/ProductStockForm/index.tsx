@@ -101,7 +101,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
 
   return (
     <>
-      <h2>{stock ? 'Editar stock' : 'Registrar stock'} {stock && <StockStatus status={stock.status} />}</h2>
+      <h2>{stock ? 'Editar stock' : 'Registrar stock'} {stock && <StockStatus status={stock.status}/>}</h2>
       <Form form={form} layout="vertical" initialValues={{
         ...stock,
         expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
@@ -110,7 +110,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
           <Col md={13}>
             {!variation && !stock && (
               <Form.Item
-                label="Variación" name={'variation_uuid'}
+                label="Producto" name={'variation_uuid'}
                 rules={[{required: true}]}>
                 <ProductVariationSelector/>
               </Form.Item>
@@ -145,9 +145,13 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             <Row gutter={15}>
               <Col md={8}>
                 <Form.Item label={'Tipo'} name={'type'}>
-                  <TaxonomySelector onChange={val => {
-                    setSelectedType(val);
-                  }} code={'stock-types'} property={'code'}/>
+                  <TaxonomySelector
+                    placeholder={'Tipo'}
+                    onChange={(val, option) => {
+                      console.log('valor', val);
+                      console.log('option', option);
+                      setSelectedType(val);
+                    }} code={'stock-types'} property={'code'}/>
                 </Form.Item>
               </Col>
               {(selectedType == 'lease' || selectedType == 'license') ?

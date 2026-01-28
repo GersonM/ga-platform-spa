@@ -142,7 +142,7 @@ const WarehouseStockManager = () => {
       dataIndex: 'type',
       render: (type: string) => {
         return <CustomTag color={type == 'rent' ? 'orange' : 'blue'}>
-          <code>{type == 'rent' ? 'Rentar' : 'Venta'}</code>
+          <code>{type == 'rent' ? 'Alquiler' : (type == 'sale' ? 'Venta':type)}</code>
         </CustomTag>;
       }
     },
@@ -368,7 +368,7 @@ const WarehouseStockManager = () => {
       )}
       <ModalView
         open={openStockForm}
-        width={900}
+        width={1100}
         onCancel={() => {
           setOpenStockForm(false);
           setSelectedStock(undefined);

@@ -59,7 +59,7 @@ const ProductVariationSelector = ({placeholder, mode, style, product, ...props}:
     <Select
       {...props}
       allowClear
-      placeholder={placeholder || 'Selecciona una ubicación'}
+      placeholder={placeholder || 'Tipo de producto'}
       showSearch={true}
       onSearch={value => setName(value)}
       filterOption={false}
