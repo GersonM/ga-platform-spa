@@ -32,8 +32,30 @@ const FilterForm = (
   const [initialValues, setInitialValues] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [form] = useForm();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState<boolean>();
   const [openMoreFilters, setOpenMoreFilters] = useState(false);
+  const [screenSize, setScreenSize] = useState<number>();
+
+  useEffect(() => {
+    if (open === undefined) {
+      if (window.innerWidth < 700) {
+        setOpen(false);
+      }
+    }
+    if (open === false) {
+      if (window.innerWidth > 700) {
+        setOpen(undefined);
+      }
+    }
+  }, [screenSize]);
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (searchParams) {
@@ -88,7 +110,7 @@ const FilterForm = (
 
   return (
     <div className={'filter-form-container'}>
-      {open && (
+      {(open || open === undefined) && (
         <div className={'form-wrapper'}>
           <Form
             form={form}

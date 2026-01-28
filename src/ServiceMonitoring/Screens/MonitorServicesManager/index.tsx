@@ -59,12 +59,25 @@ const MonitorServicesManager = () => {
     return cancelTokenSource.cancel;
   }, [reload, currentPage, filters]);
 
-  const resetServer = (uuid:string) => {
+  const resetServer = (uuid: string) => {
     setLoading(true);
     axios.post(`external-resources/servers/${uuid}/reset`)
       .then(() => {
         setLoading(false);
-        notification.success({message:'Reinicio en proceso'});
+        notification.success({message: 'Reinicio en proceso'});
+      })
+      .catch((error) => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      })
+  }
+
+  const deleteService = (uuid: string) => {
+    setLoading(true);
+    axios.delete(`external-resources/${uuid}`)
+      .then(() => {
+        setLoading(false);
+        notification.success({message: 'Servicio eliminado'});
       })
       .catch((error) => {
         setLoading(false);
@@ -127,7 +140,12 @@ const MonitorServicesManager = () => {
           >
             <IconButton small danger icon={<LuPower/>} title={'Reiniciar'}/>
           </Popconfirm>
-          <IconButton small danger icon={<LuTrash2/>} onClick={() => navigate(uuid)}/>
+          <Popconfirm
+            title={'¿Quieres reiniciar el servicio?'} description={'No elimina el servicio solo lo quita de la lista'}
+            onConfirm={() => deleteService(uuid)}
+          >
+            <IconButton small danger icon={<LuTrash2/>}/>
+          </Popconfirm>
         </Space>
       )
     }
@@ -136,7 +154,7 @@ const MonitorServicesManager = () => {
   return (
     <ModuleContent>
       <ContentHeader
-        title={'Monitoreo de servicios'}
+        title={'Servicio y recursos'}
         loading={loading}
         largeTools
         onRefresh={() => setReload(!reload)}
