@@ -1,12 +1,12 @@
 import {useState} from 'react';
-import {Modal, Popconfirm, Space} from 'antd';
+import {Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {PiPlusBold} from 'react-icons/pi';
 import {TbPencil, TbTrash} from "react-icons/tb";
 import dayjs from "dayjs";
 import axios from 'axios';
 
 import TableList from '../../../CommonUI/TableList';
-import type {Invoice, ApiFile, InvoicePayment} from '../../../Types/api';
+import type {Invoice, ApiFile, InvoicePayment, WalletTransaction} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
@@ -48,7 +48,7 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       render: (method: any, row: InvoicePayment) => {
         return (
           <>
-            {row.description}
+            {row.transaction?.payment_channel}
             <br/>
             <small>{method?.number}</small>
           </>
@@ -63,26 +63,31 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
       render: (value: number, row: InvoicePayment) => {
         return <>
           <MoneyString currency={invoice.currency} value={value}/>
-          {row.exchange_amount && (
-            <>
-              <small><MoneyString value={row.exchange_amount} currency={'PEN'}/></small>
-            </>
+          {row.exchange_rate && row.exchange_amount && (
+            <Tooltip title={row.exchange_rate / 1000}>
+              <small><MoneyString value={row.exchange_amount} currency={row.exchange_currency}/></small>
+            </Tooltip>
           )}
         </>
       },
     },
     {
       title: 'N° Voucher',
-      dataIndex: 'voucher_code',
+      dataIndex: 'transaction',
       width: 150,
+      render: (transaction: WalletTransaction) => {
+        return (transaction && <div>
+          {transaction.tracking_id}
+        </div>)
+      }
     },
     {
       title: 'Doc.',
-      dataIndex: 'attachments',
+      dataIndex: 'transaction',
       width: 190,
-      render: (attachments: ApiFile[]) => {
+      render: (transaction: WalletTransaction) => {
         return <Space wrap>
-          {attachments?.map(f =>
+          {transaction.attachments?.map(f =>
             <FilePreview fileUuid={f.uuid}/>
           )}
         </Space>;

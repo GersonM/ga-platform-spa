@@ -93,7 +93,7 @@ const TransactionPaymentsManager = ({transaction, onChange}: TransactionPayments
           <MoneyString currency={row.invoice?.currency} value={value}/>
           {row.exchange_amount && (
             <>
-              <small><MoneyString value={row.exchange_amount} currency={'PEN'}/></small>
+              <small><MoneyString value={row.exchange_amount} currency={row.exchange_currency}/></small>
             </>
           )}
         </>

@@ -14,6 +14,7 @@ import {Link, useParams} from "react-router-dom";
 import dayjs from 'dayjs';
 
 import type {
+  ApiFile,
   Invoice,
   InvoicePayment,
   ResponsePagination, Wallet,
@@ -38,6 +39,7 @@ import CustomTag from "../../../CommonUI/CustomTag";
 import Config from "../../../Config.tsx";
 import WalletTransactionForm from "../../Components/WalletTransactionForm";
 import TransactionPaymentsManager from "../../Components/TransactionPaymentsManager";
+import FilePreview from "../../../CommonUI/FilePreview";
 
 const WalletTransactionsManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -211,6 +213,18 @@ const WalletTransactionsManager = () => {
           <MoneyString currency={cu || 'PEN'} value={amount}/>
         </>;
       }
+    },
+    {
+      title: 'Doc.',
+      dataIndex: 'attachments',
+      width: 190,
+      render: (attachments: ApiFile[]) => {
+        return <Space wrap>
+          {attachments?.map(f =>
+            <FilePreview fileUuid={f.uuid}/>
+          )}
+        </Space>;
+      },
     },
     {
       title: '',

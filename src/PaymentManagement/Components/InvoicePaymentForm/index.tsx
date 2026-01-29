@@ -143,7 +143,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
               <LuArrowBigRightDash size={30}/>
             </Col>
           </>)}
-          <Col>
+          <Col span={10}>
             <Form.Item name={'amount'} label={'Monto'} rules={[{required: true}]}>
               <MoneyInput currency={invoice.currency || 'PEN'} onChange={v => setPaymentAmount(v)}/>
             </Form.Item>

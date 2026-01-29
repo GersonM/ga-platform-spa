@@ -447,6 +447,7 @@ export type InvoicePayment = {
   transaction_date: string;
   updated_at: string;
   uuid: string;
+  transaction?:WalletTransaction;
   voucher_code: string;
   method?: PaymentMethod;
   invoice?: Invoice;
@@ -536,6 +537,7 @@ export type WalletTransaction = {
   authorized_by?: Profile;
   wallet_from?: Wallet;
   wallet_to?: Wallet;
+  attachments?: ApiFile[];
   transaction_date?: string;
   needsAuthorization?: boolean;
 };
