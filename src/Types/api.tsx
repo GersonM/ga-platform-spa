@@ -536,6 +536,7 @@ export type WalletTransaction = {
   authorized_by?: Profile;
   wallet_from?: Wallet;
   wallet_to?: Wallet;
+  transaction_date?: string;
   needsAuthorization?: boolean;
 };
 

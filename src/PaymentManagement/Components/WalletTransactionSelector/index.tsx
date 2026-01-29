@@ -3,11 +3,12 @@ import {Select, Space} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import axios from 'axios';
 
-import type {Wallet} from '../../../Types/api';
+import type {Wallet, WalletTransaction} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CustomTag from "../../../CommonUI/CustomTag";
+import MoneyString from "../../../CommonUI/MoneyString";
 
-interface WalletSelectorProps {
+interface WalletTransactionSelectorProps {
   placeholder?: string;
   onChange?: (value: any, option: any) => void;
   bordered?: boolean;
@@ -16,10 +17,11 @@ interface WalletSelectorProps {
   style?: React.CSSProperties;
   size?: 'small' | 'large';
   currency?: string;
+  refresh?: boolean;
   mode?: 'multiple' | 'tags' | undefined;
 }
 
-export const WalletSelector = ({placeholder, mode, style, currency, ...props}: WalletSelectorProps) => {
+export const WalletTransactionSelector = ({refresh, placeholder, mode, style, currency, ...props}: WalletTransactionSelectorProps) => {
   const [wallets, setWallets] = useState<Wallet | any>([]);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState<string>();
@@ -32,22 +34,23 @@ export const WalletSelector = ({placeholder, mode, style, currency, ...props}: W
       cancelToken: cancelTokenSource.token,
       params: {
         search: lastSearchText,
-        currency: currency,
+        //currency: currency,
       },
     };
 
     axios
-      .get(`/payment-management/wallets`, config)
+      .get(`/payment-management/transactions`, config)
       .then(response => {
         setLoading(false);
         if (response) {
           setWallets(
-            response.data.map((item: Wallet) => {
+            response.data.data.map((item: WalletTransaction) => {
+              const currency = item.wallet_from?.currency ?? item.wallet_to?.currency;
               return {
                 value: item.uuid,
                 entity: item,
                 label: <Space>
-                  <CustomTag color={'green'}>{item.bank_name?.toUpperCase()} | {item.currency}</CustomTag>{item.name}  -<code>{item.account_number}</code>
+                  <CustomTag color={item.type=='deposit'?'green':'orange'}><MoneyString currency={currency} value={item.amount}/></CustomTag>{item.tracking_id}  -<code>{item.payment_channel}</code>
                 </Space>
               };
             }),
@@ -60,13 +63,13 @@ export const WalletSelector = ({placeholder, mode, style, currency, ...props}: W
       });
 
     return cancelTokenSource.cancel;
-  }, [lastSearchText]);
+  }, [lastSearchText, refresh]);
 
   return (
     <Select
       {...props}
       allowClear
-      placeholder={placeholder || 'Elige cuenta'}
+      placeholder={placeholder || 'Elige transacción'}
       showSearch={true}
       onSearch={value => setName(value)}
       filterOption={false}

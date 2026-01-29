@@ -1,21 +1,20 @@
-import {useEffect, useState} from 'react';
-import {Col, DatePicker, Form, Input, Row, Space, Collapse, Tooltip} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Col, Form, Row, Tooltip, Button, Input} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
 import {PiCheck} from 'react-icons/pi';
-import dayjs, {type Dayjs} from "dayjs";
+import dayjs from "dayjs";
+import {LuArrowBigRightDash} from "react-icons/lu";
 import axios from 'axios';
-import Decimal from 'decimal.js';
 
-import type {Invoice, InvoicePayment} from '../../../Types/api';
-import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
+import type {Invoice, InvoicePayment, WalletTransaction} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
-import FileUploader from '../../../CommonUI/FileUploader';
 import MoneyInput from "../../../CommonUI/MoneyInput";
-import Config from "../../../Config.tsx";
 import CustomTag from "../../../CommonUI/CustomTag";
-import {WalletSelector} from "../WalletSelector";
 import InvoiceChip from "../InvoiceChip";
+import {WalletTransactionSelector} from "../WalletTransactionSelector";
+import ModalView from "../../../CommonUI/ModalView";
+import WalletTransactionForm from "../WalletTransactionForm";
 
 interface InvoicePaymentProps {
   onCompleted: () => void;
@@ -25,25 +24,30 @@ interface InvoicePaymentProps {
 
 const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps) => {
   const [loading, setLoading] = useState(false);
-  const [fileUuid, setFileUuid] = useState<string>();
   const [enableExchange, setEnableExchange] = useState(!!payment?.exchange_amount);
   const [exchangeValues, setExchangeValues] = useState<any>();
   const [exchangeAmount, setExchangeAmount] = useState<number>();
   const [paymentAmount, setPaymentAmount] = useState<number>();
   const [exchangeRate, setExchangeRate] = useState<number>();
   const [defaultChangeRate, setDefaultChangeRate] = useState<number>(0);
-  const [transactionDate, setTransactionDate] = useState<Dayjs>();
+  const [openTransactionForm, setOpenTransactionForm] = useState(false);
+  const [transactionSelected, setTransactionSelected] = useState<WalletTransaction>();
+  const [reload, setReload] = useState(false);
   const [form] = useForm();
 
   const exchangeCurrency = invoice.currency == 'USD' ? 'PEN' : 'USD';
 
   useEffect(() => {
+    if(transactionSelected){
+      const selectedCurrency = transactionSelected?.wallet_to?.currency ?? transactionSelected?.wallet_from?.currency;
+      setEnableExchange(!!selectedCurrency && (selectedCurrency != invoice.currency));
+    }
+  }, [transactionSelected]);
+
+  useEffect(() => {
     if (!enableExchange) return;
     const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-      params: {date: transactionDate?.format('YYYY-MM-DD')}
-    };
+    const config = {cancelToken: cancelTokenSource.token,};
 
     setLoading(true);
 
@@ -61,27 +65,18 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       });
 
     return cancelTokenSource.cancel;
-  }, [enableExchange, transactionDate]);
+  }, [enableExchange]);
 
   useEffect(() => {
     console.log({exchangeRate});
-    if (form && exchangeAmount && (exchangeRate || defaultChangeRate)) {
-      form.setFieldValue('amount', exchangeAmount * (exchangeRate ? exchangeRate : defaultChangeRate));
+    if (form && exchangeAmount && paymentAmount) {
+      setExchangeRate((paymentAmount / exchangeAmount));
     }
-  }, [exchangeRate, exchangeAmount, form]);
-
-  useEffect(() => {
-    if (form && paymentAmount && (exchangeRate || defaultChangeRate)) {
-      const rate = exchangeRate ? exchangeRate : defaultChangeRate
-      const targetAmount = new Decimal(paymentAmount);
-      form.setFieldValue('exchange_amount', targetAmount.dividedBy(rate).toNearest(3).toString());
-    }
-  }, [paymentAmount, form]);
+  }, [exchangeAmount, form, paymentAmount]);
 
   const submitForm = (values: any) => {
     const data = {
       invoice_uuid: invoice.uuid,
-      file_uuid: fileUuid,
       ...values,
     };
     if (enableExchange) {
@@ -109,6 +104,8 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       });
   };
 
+  const selectedCurrency = transactionSelected?.wallet_to?.currency ?? transactionSelected?.wallet_from?.currency;
+
   return (
     <>
       <h3>{payment ? 'Editar pago' : 'Registrar nuevo pago'}</h3>
@@ -121,98 +118,91 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         } : {amount: invoice.pending_payment}}
         layout={'vertical'}
         onFinish={submitForm}>
-        <div>
-          <Collapse
-            size={"small"}
-            style={{marginBottom: 15}}
-            activeKey={enableExchange ? [0] : undefined}
-            onChange={v => {
-              setEnableExchange(!!v.length);
-            }}
-            destroyOnHidden
-            items={[
-              {
-                label: 'Registrar pago en otro moneda',
-                id: 'change',
-                children: <>
-                  <Row gutter={15}>
-                    <Col span={12}>
-                      <Form.Item name={'exchange_amount'} label={'Monto a cambiar'}>
-                        <MoneyInput
-                          currency={exchangeCurrency}
-                          onChange={(v) => setExchangeAmount(v)}/>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item label={'Tipo de cambio'}>
-                        <MoneyInput
-                          value={(payment?.exchange_rate) ? ((exchangeRate || payment?.exchange_rate) / 1000) : undefined}
-                          returnInteger={false}
-                          onChange={(v) => setExchangeRate(v ? v * 1000 : undefined)}
-                          placeholder={defaultChangeRate?.toString()}
-                          currency={exchangeCurrency}/>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Form.Item name={'exchange_wallet_uuid'} label={'Cuenta de destino'} rules={[{required: true}]}>
-                    <WalletSelector currency={exchangeCurrency}/>
-                  </Form.Item>
-                  <Space>
-                    Tipo de cambio SUNAT:
-                    <CustomTag>
-                      <Tooltip title={exchangeValues?.buy}>
-                        Compra: S/ {exchangeValues?.buy_reverse}
-                      </Tooltip>
-                    </CustomTag>
-                    <CustomTag>
-                      Venta: S/ {exchangeValues?.sell}
-                    </CustomTag>
-                  </Space>
-                </>
-              }
-            ]}
-          />
-        </div>
-        <Row gutter={[15, 15]}>
-          <Col span={9}>
-            <Form.Item name={'payment_channel'} label={'Método de pago'}>
-              <PaymentMethodTypesSelector/>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
+        <h3>
+          {selectedCurrency} -
+          {invoice.currency}
+        </h3>
+        <Form.Item
+          label={'Transacción'}
+          extra={<Button size={"small"} onClick={() => setOpenTransactionForm(true)}>Nueva transacción</Button>}
+          name={'wallet_transaction_uuid'}>
+          <WalletTransactionSelector refresh={reload} onChange={(d, i) => {
+            setTransactionSelected(i.entity);
+          }} currency={invoice.currency || 'PEN'}/>
+        </Form.Item>
+        <Row gutter={[15, 15]} align="middle">
+          {selectedCurrency != invoice.currency && (<>
+            <Col span={10}>
+              <Form.Item name={'exchange_amount'} label={'Monto a cambiar'}>
+                <MoneyInput
+                  currency={exchangeCurrency}
+                  onChange={(v) => setExchangeAmount(v)}/>
+              </Form.Item>
+            </Col>
+            <Col span={4} style={{textAlign: 'center'}}>
+              <LuArrowBigRightDash size={30}/>
+            </Col>
+          </>)}
+          <Col>
             <Form.Item name={'amount'} label={'Monto'} rules={[{required: true}]}>
-              <MoneyInput currency={invoice.currency || 'PEN'} onChange={(v) => setPaymentAmount(v)}/>
-            </Form.Item>
-          </Col>
-          <Col span={7}>
-            <Form.Item name={'transaction_date'} label={'Fecha de pago'}>
-              <DatePicker onChange={d => setTransactionDate(d)} placeholder={'Hoy'} format={Config.dateFormatUser}/>
+              <MoneyInput currency={invoice.currency || 'PEN'} onChange={v => setPaymentAmount(v)}/>
             </Form.Item>
           </Col>
         </Row>
-        {!enableExchange &&
-          <Form.Item name={'wallet_uuid'} label={'Destino'} rules={[{required: true}]}>
-            <WalletSelector currency={invoice.currency || 'PEN'}/>
+        {selectedCurrency && selectedCurrency != invoice.currency && (
+          <div>
+            <Form.Item label={'Tipo de cambio'}>
+              <Input
+                value={exchangeRate}
+                placeholder={defaultChangeRate?.toString()}
+              />
+            </Form.Item>
+            <p>
+              Tipo de cambio SUNAT:
+              <CustomTag><Tooltip title={exchangeValues?.buy}>Compra:
+                S/ {exchangeValues?.buy_reverse}</Tooltip></CustomTag> {' '}
+              <CustomTag>Venta: S/ {exchangeValues?.sell}</CustomTag>
+            </p>
+          </div>
+        )}
+        {/*
+        <div>
+          {!enableExchange &&
+            <Form.Item name={'wallet_uuid'} label={'Destino'} rules={[{required: true}]}>
+              <WalletSelector currency={invoice.currency || 'PEN'}/>
+            </Form.Item>
+          }
+          <Form.Item name={'voucher_code'} label={'N° Voucher / Operación'}>
+            <Input/>
           </Form.Item>
-        }
-        <Form.Item name={'voucher_code'} label={'N° Voucher / Operación'}>
-          <Input/>
-        </Form.Item>
-        <Form.Item name={'purchase_token'} label={'ID Transacción (opcional)'}>
-          <Input placeholder={'Autogenerado'}/>
-        </Form.Item>
-        <Form.Item label={'Foto del comprobante'}>
-          <FileUploader
-            onFilesUploaded={file => {
-              setFileUuid(file.uuid);
-            }}
-          />
-        </Form.Item>
-        <Form.Item name={'description'} label={'Descripción (opcional)'} tooltip={'Información adicional'}>
-          <Input/>
-        </Form.Item>
+          <Form.Item name={'purchase_token'} label={'ID Transacción (opcional)'}>
+            <Input placeholder={'Autogenerado'}/>
+          </Form.Item>
+          <Form.Item label={'Foto del comprobante'}>
+            <FileUploader
+              onFilesUploaded={file => {
+                setFileUuid(file.uuid);
+              }}
+            />
+          </Form.Item>
+          <Form.Item name={'description'} label={'Descripción (opcional)'} tooltip={'Información adicional'}>
+            <Input/>
+          </Form.Item>
+        </div>
+        */}
         <PrimaryButton icon={<PiCheck/>} block loading={loading} label={'Guardar'} htmlType={'submit'}/>
       </Form>
+      <ModalView
+        width={700}
+        onCancel={() => {
+          setOpenTransactionForm(false);
+        }} open={openTransactionForm}>
+        <WalletTransactionForm type={'deposit'} onCompleted={(t: any) => {
+          console.log(t)
+          setOpenTransactionForm(false);
+          setReload(!reload);
+        }}/>
+      </ModalView>
     </>
   );
 };

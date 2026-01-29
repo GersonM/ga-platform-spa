@@ -2,7 +2,14 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Col, DatePicker, Empty, Form, Input, InputNumber, Popconfirm, Row, Space, Tooltip} from 'antd';
 import {TbInfoCircle, TbPencil, TbTrash} from "react-icons/tb";
-import {PiHandDepositDuotone, PiHandWithdrawDuotone, PiShuffle} from "react-icons/pi";
+import {
+  PiGitForkBold,
+  PiGitForkLight,
+  PiGitForkThin,
+  PiHandDepositDuotone,
+  PiHandWithdrawDuotone,
+  PiShuffle
+} from "react-icons/pi";
 import {Link, useParams} from "react-router-dom";
 import dayjs from 'dayjs';
 
@@ -29,6 +36,8 @@ import TablePagination from "../../../CommonUI/TablePagination";
 import ReportDownloader from "../../../CommonUI/ReportDownloader";
 import CustomTag from "../../../CommonUI/CustomTag";
 import Config from "../../../Config.tsx";
+import WalletTransactionForm from "../../Components/WalletTransactionForm";
+import TransactionPaymentsManager from "../../Components/TransactionPaymentsManager";
 
 const WalletTransactionsManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -40,12 +49,13 @@ const WalletTransactionsManager = () => {
   const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
   const [dateInvoiceIssue, setDateInvoiceIssue] = useState<any[] | null>();
   const [dateCreatedRangeFilter, setDateCreatedRangeFilter] = useState<any[] | null>();
-  const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
+  const [openTransactionForm, setOpenTransactionForm] = useState(false);
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<InvoicePayment>();
+  const [selectedTransaction, setSelectedTransaction] = useState<WalletTransaction>();
   const [loadingDeleteSelection, setLoadingDeleteSelection] = useState(false);
   const [filters, setFilters] = useState<any>();
   const params = useParams();
+  const [openDistributionForm, setOpenDistributionForm] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -80,7 +90,7 @@ const WalletTransactionsManager = () => {
 
   const deletePayment = (uuid: string) => {
     axios
-      .delete('payment-management/payments/' + uuid)
+      .delete('payment-management/transactions/' + uuid)
       .then(() => {
         setReload(!reload);
       })
@@ -146,8 +156,11 @@ const WalletTransactionsManager = () => {
       title: 'Origen',
       width: 200,
       dataIndex: 'wallet_from',
-      render: (wallet_from: Wallet, row: WalletTransaction) => {
-        return <>{wallet_from?.name || row.payment_channel}</>;
+      render: (wallet_from: Wallet) => {
+        return wallet_from && <>
+          <small>{wallet_from.bank_name?.toUpperCase()} <CustomTag>{wallet_from.currency}</CustomTag></small>
+          <small><code>{wallet_from.account_number}</code></small>
+        </>;
       },
     },
     {
@@ -155,7 +168,10 @@ const WalletTransactionsManager = () => {
       width: 200,
       dataIndex: 'wallet_to',
       render: (wallet_to: Wallet) => {
-        return <>{wallet_to?.name}</>;
+        return wallet_to && <>
+          <small>{wallet_to.bank_name?.toUpperCase()} <CustomTag>{wallet_to.currency}</CustomTag></small>
+          <small><code>{wallet_to.account_number}</code></small>
+        </>;
       },
     },
     {
@@ -180,9 +196,9 @@ const WalletTransactionsManager = () => {
     {
       title: 'Info',
       width: 200,
-      dataIndex: 'auth_token',
-      render: (auth_token?: string) => {
-        return <pre><small>{auth_token}</small></pre>
+      dataIndex: 'payment_channel',
+      render: (payment_channel?: string) => {
+        return <pre><small>{payment_channel}</small></pre>
       }
     },
     {
@@ -190,8 +206,9 @@ const WalletTransactionsManager = () => {
       dataIndex: 'amount',
       align: 'right',
       render: (amount: number, row: WalletTransaction) => {
+        const cu = row.wallet_to?.currency || row.wallet_from?.currency
         return <>
-          <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
+          <MoneyString currency={cu || 'PEN'} value={amount}/>
         </>;
       }
     },
@@ -199,14 +216,20 @@ const WalletTransactionsManager = () => {
       title: '',
       dataIndex: 'uuid',
       width: 75,
-      render: (uuid: string, row: InvoicePayment) => (
+      render: (uuid: string, row: WalletTransaction) => (
         <Space>
           <IconButton small icon={<TbPencil/>} onClick={() => {
-            setSelectedPayment(row);
-            setOpenPaymentsDetail(true);
+            setSelectedTransaction(row);
+            setOpenTransactionForm(true);
+          }}/>
+          <IconButton
+            title={'Gestionar distribución'}
+            small icon={<PiGitForkLight/>} onClick={() => {
+            setSelectedTransaction(row);
+            setOpenDistributionForm(true);
           }}/>
           <Popconfirm
-            title={'¿Quiere eliminar esta factura?'}
+            title={'¿Quiere eliminar esta transacción?'}
             onConfirm={() => deletePayment(uuid)}
             okText={'Si'}
             cancelText={'No'}>
@@ -221,9 +244,9 @@ const WalletTransactionsManager = () => {
     <>
       <ModuleContent>
         <ContentHeader
-          title={params.type == 'deposit' ? 'Cobros' : 'Pagos'}
+          title={params.type == 'deposit' ? 'Ingresos' : 'Salidas'}
           loading={loading}
-          onAdd={() => setOpenPaymentsDetail(true)}
+          onAdd={() => setOpenTransactionForm(true)}
           onRefresh={() => setReload(!reload)}
           tools={<>
             <div>
@@ -237,7 +260,8 @@ const WalletTransactionsManager = () => {
             >
               <PrimaryButton
                 loading={loadingDeleteSelection}
-                icon={<TbInfoCircle size={18}/>} label={'Borrar selección'} size={"small"} danger ghost/>
+                icon={<TbInfoCircle size={18}/>} label={'Borrar selección'}
+                size={"small"} danger/>
             </Popconfirm>
             <ReportDownloader
               url={'payment-management/payments/export'}
@@ -317,23 +341,28 @@ const WalletTransactionsManager = () => {
         </Row>
       </ModalView>
       <ModalView
+        onCancel={() => {
+          setOpenTransactionForm(false);
+          setSelectedTransaction(undefined);
+        }} open={openTransactionForm}>
+        <WalletTransactionForm
+          transaction={selectedTransaction}
+          type={params.type}
+          onCompleted={() => {
+            setReload(!reload);
+            setOpenTransactionForm(false);
+          }}
+        />
+      </ModalView>
+      <ModalView
         width={700}
         onCancel={() => {
-          setOpenPaymentsDetail(false);
-        }} open={openPaymentsDetail}>
-        {selectedPayment?.invoice &&
-          <InvoicePaymentForm
-            invoice={selectedPayment.invoice}
-            payment={selectedPayment}
-            onCompleted={() => {
-              setOpenInvoiceForm(false);
-              setReload(!reload);
-              setOpenPaymentsDetail(false);
-              setSelectedInvoice(undefined);
-            }}
-          />
-        }
-
+          setOpenDistributionForm(false);
+          setSelectedTransaction(undefined);
+        }} open={openDistributionForm}>
+        {selectedTransaction && <TransactionPaymentsManager
+          transaction={selectedTransaction}
+        />}
       </ModalView>
     </>
   );

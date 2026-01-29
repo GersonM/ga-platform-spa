@@ -22,7 +22,7 @@ interface PrimaryButtonProps {
   block?: boolean;
 }
 
-const PrimaryButton = ({label, size, disabled, children, icon, href, onClick, ...props}: PrimaryButtonProps) => {
+const PrimaryButton = ({label, size, disabled, children, icon, href, onClick, shape = 'round', ...props}: PrimaryButtonProps) => {
   return (
     <Button
       disabled={disabled}
@@ -30,6 +30,7 @@ const PrimaryButton = ({label, size, disabled, children, icon, href, onClick, ..
       icon={icon}
       href={href}
       size={size}
+      shape={shape}
       onClick={onClick}
       {...props}>
       {label || children}
