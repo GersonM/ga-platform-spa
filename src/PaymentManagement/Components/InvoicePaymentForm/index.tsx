@@ -118,10 +118,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         } : {amount: invoice.pending_payment}}
         layout={'vertical'}
         onFinish={submitForm}>
-        <h3>
-          {selectedCurrency} -
-          {invoice.currency}
-        </h3>
         <Form.Item
           label={'Transacción'}
           extra={<Button size={"small"} onClick={() => setOpenTransactionForm(true)}>Nueva transacción</Button>}

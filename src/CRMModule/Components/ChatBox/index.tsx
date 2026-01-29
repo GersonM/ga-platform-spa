@@ -3,7 +3,6 @@ import {Input, notification, Select} from "antd";
 import {TbSend} from "react-icons/tb";
 import axios from "axios";
 import {echo} from "@laravel/echo-react";
-import ChatwootClient from "@figuro/chatwoot-sdk";
 
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {ChatRoom, Profile} from "../../../Types/api.tsx";
@@ -23,14 +22,6 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
   const [message, setMessage] = useState<string>();
   const {user, config} = useContext(AuthContext);
   const channel = echo().join(`${config?.id}.chat-rooms.attendance`);
-    const client = new ChatwootClient({
-      config: {
-        basePath: "https://chat.geekadvice.pe",
-        with_credentials: true,
-        credentials: "include",
-        token: "Fx8J3SrDsYJLkzcMzT69wEW7"
-      }
-    });
 
   useEffect(() => {
     channel
@@ -125,20 +116,6 @@ const ChatBox = ({disabled, profile}: ChatBoxProps) => {
             /*sendMessage(value.target.value);
             setMessage(undefined);
             value.preventDefault();*/
-            client.messages.create({
-              accountId: 1,
-              conversationId: 5,
-              data: {
-                // @ts-ignore
-                content: value.target.value,
-              }
-            })
-              .then(response => {
-                console.log(response.sender?.name);
-              })
-              .catch(err => {
-                console.error(err);
-              });
           }}
           placeholder={'Escribe un mensaje y presiona enter para enviar'}/>
 
