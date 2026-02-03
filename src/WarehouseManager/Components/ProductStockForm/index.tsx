@@ -237,14 +237,14 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <EntityGalleryEditor/>
             </Form.Item>
             <Form.Item name={'excerpt'} label={'Resumen'}>
-              <Input.TextArea/>
+              <HtmlEditor height={140}/>
             </Form.Item>
             <Form.Item
               name={'commercial_description'}
               label={<>Información adicional {' - '}<Button type={'primary'} ghost size={'small'}
                                                             onClick={() => copyText(stock?.commercial_description)}>Copiar
                 texto</Button></>}>
-              <HtmlEditor height={120}/>
+              <HtmlEditor height={230}/>
             </Form.Item>
             <Divider orientation={'left'}>Información adicional</Divider>
             <Form.Item name={'attributes'}>
