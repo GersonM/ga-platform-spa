@@ -419,7 +419,7 @@ const CommercialContractDetail = () => {
           </div>
         </Col>
         <Col md={24} lg={17}>
-          <Tabs centered items={[
+          <Tabs centered style={{paddingRight:15}} items={[
             {
               key: 'finances',
               label: 'Finanzas',
@@ -530,7 +530,7 @@ const CommercialContractDetail = () => {
                 method: 'PUT',
                 data: {cart: value}
               })
-              .then(response => {
+              .then(() => {
                 setOpenCartItemForm(false);
                 setReload(!reload);
               })
