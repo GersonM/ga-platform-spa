@@ -128,20 +128,23 @@ const AuthContextProvider = ({children, config}: AuthContextProp) => {
     if (localVersion !== version) {
       setTimeout(() => {
         notification.open({
-          message: `¡Nueva versión v${version}!`,
+          message:'',
           placement: 'bottomLeft',
           className: 'deploy-alert-wrapper',
           description: (
-            <ul
-              style={{
-                padding: '5px 5px 5px 20px',
-                backgroundColor: 'rgba(255,255,255,0.6)',
-                borderRadius: '5px',
-              }}>
-              <li>Asignar una empresa como proveedor de un stock</li>
-              <li>Realizar ventas a empresas</li>
-              <li>Gestión de items de un contrato</li>
-            </ul>
+            <div style={{
+              padding: '5px 5px 5px 100px',
+              overflow: 'auto',
+              height: '120px',
+              borderRadius: '5px',
+            }}>
+              <h3>¡Nueva versión v{version}!</h3>
+              <ul
+              >
+                <li>Mejoras en la navegación</li>
+                <li>Ahora se puede ajustar el tamaño de las miniaturas</li>
+              </ul>
+            </div>
           ),
           duration: 0,
         });

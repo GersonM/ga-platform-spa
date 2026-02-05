@@ -37,7 +37,7 @@ import {
   TbBuildingEstate,
   TbBuildingWarehouse, TbCalendar, TbContract,
   TbCurrencyDollar,
-  TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor, TbInvoice,
+  TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor,
   TbListCheck, TbMapPinBolt, TbMessageUser,
   TbPackage, TbPackageImport,
   TbPigMoney,
@@ -50,7 +50,8 @@ import {OverlayScrollbarsComponent} from "overlayscrollbars-react";
 import Cookies from 'js-cookie';
 
 import ScreenModeSelector from './ScreenModeSelector';
-import logo from '../Assets/ga_logo_white.webp';
+import logo from '../Assets/ga_logo.webp';
+import logoDark from '../Assets/ga_logo_white.webp';
 import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
@@ -146,7 +147,7 @@ const Navigation = () => {
         <Dropdown arrow={true} trigger={['click']} menu={{items: tenantItems, onClick: setWorkspace}}>
           <Tooltip title={config?.config?.name} placement={"right"}>
             <div className="logo-square">
-              <img src={tenantLogo || logo} alt={config?.config?.name}/>
+              <img src={tenantLogo || (darkMode ? logoDark : logo)} alt={config?.config?.name}/>
               <PiCaretUpDown/>
             </div>
           </Tooltip>
@@ -274,10 +275,10 @@ const Navigation = () => {
               <NavItem label={'Empresas'} icon={<PiBuilding/>} path={'/companies'}/>
             </NavItem>
             {user?.roles?.includes('admin') && (
-              <>
+              <NavItem label={'Administración'} icon={<TbBook/>} code={'admin'}>
                 <NavItem label={'Usuarios'} icon={<PiFingerprint/>} path={'/users'}/>
-                <NavItem label={'Administración'} icon={<PiGear/>} path={'/config'}/>
-              </>
+                <NavItem label={'Configuración'} icon={<PiGear/>} path={'/config'}/>
+              </NavItem>
             )}
           </ul>
         </nav>

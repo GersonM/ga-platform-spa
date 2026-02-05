@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Input, InputNumber, Popconfirm, Switch} from "antd";
-import {TbTrash} from "react-icons/tb";
+import {Button, Input, InputNumber, Popconfirm, Space, Switch} from "antd";
+import {TbMapPin, TbTrash} from "react-icons/tb";
 import axios from "axios";
 
 import type {EntityFieldValue} from "../../../Types/api.tsx";
@@ -66,6 +66,16 @@ const EntityFieldValueForm = ({fieldValue, onChange, onRemove}: EntityFieldValue
           onChange={(v: any) => {
             saveValue('value', v);
           }}/>;
+      case 'geolocation':
+        return <Space.Compact>
+          <Button icon={<TbMapPin/>}/>
+          <Input
+          value={selectedFieldValue?.value}
+          placeholder={'Valor'}
+          onChange={(e: any) => saveValue('value', e.target.value)}
+          suffix={selectedFieldValue?.field?.unit_type}
+        />
+        </Space.Compact>;
       default:
         return <Input
           value={selectedFieldValue?.value}

@@ -16,19 +16,18 @@ const TaxonomySelector = ({code, property = 'uuid', onChange, ...props}: ITaxono
   const [taxonomy, setTaxonomy] = useState<TaxonomyDefinition[]>();
 
   useEffect(() => {
+    console.log('TaxonomySelector mounted');
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {
-        code: code,
-      },
+      params: {code: code,},
     };
 
     axios
       .get(`taxonomy/definitions`, config)
       .then(response => {
-        if (response.data[0]) {
-
+        console.log({response});
+        if (response && response.data[0]) {
           setTaxonomy(response.data[0].children.map((c: any) => ({
             title: c.name,
             id: c[property],
@@ -70,7 +69,6 @@ const TaxonomySelector = ({code, property = 'uuid', onChange, ...props}: ITaxono
       allowClear
       placeholder="Seleciona una categoría"
       onSelect={(v: string, option: any) => {
-        console.log('VVVVV', v);
         if (onChange) {
           let nV: string = v;
           if (property !== 'uuid') {

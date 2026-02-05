@@ -10,14 +10,38 @@ import './styles.less';
 
 interface ContainerSelectorProps {
   onChange?: (value: string) => void;
-  _value?: string;
+  value?: string;
   hidden?: string;
 }
 
-const ContainerSelector = ({_value, onChange}: ContainerSelectorProps) => {
+const ContainerSelector = ({value, onChange}: ContainerSelectorProps) => {
   const [containerLevels, setContainerLevels] = useState<Container[][]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedContainer, setSelectedContainer] = useState<Container>();
+
+  useEffect(() => {
+    if (value) {
+      const cancelTokenSource = axios.CancelToken.source();
+      const config = {
+        cancelToken: cancelTokenSource.token,
+      };
+      setLoading(true);
+      axios
+        .get(`file-management/containers/${value}`, config)
+        .then(response => {
+          setLoading(false);
+          if (response) {
+            setSelectedContainer(response.data);
+          }
+        })
+        .catch(e => {
+          setLoading(false);
+          ErrorHandler.showNotification(e);
+        });
+
+      return cancelTokenSource.cancel;
+    }
+  }, [value]);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -51,7 +75,7 @@ const ContainerSelector = ({_value, onChange}: ContainerSelectorProps) => {
       .then(response => {
         setLoading(false);
         if (response) {
-          let nLevel = [...containerLevels];
+          const nLevel = [...containerLevels];
           nLevel[level].forEach(i => (i.open = false));
           nLevel[level][item].open = true;
           nLevel[level + 1] = response.data.containers;
@@ -68,14 +92,14 @@ const ContainerSelector = ({_value, onChange}: ContainerSelectorProps) => {
     <>
       <div className={'container-selector-wrapper'}>
         <div className={'container-selector-scroll'}>
-          <LoadingIndicator visible={loading} />
+          <LoadingIndicator visible={loading}/>
           {containerLevels &&
             containerLevels.map((level, lIndex) => {
               return (
                 <div key={lIndex}>
                   <div className={'container-level'}>
                     {level.length == 0 && (
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay contenedores'} />
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay contenedores'}/>
                     )}
                     {level.map((container, cIndex) => {
                       return (
@@ -94,12 +118,12 @@ const ContainerSelector = ({_value, onChange}: ContainerSelectorProps) => {
                             }
                           }}>
                           {container.open ? (
-                            <PiFolderOpen size={18} style={{marginRight: 5}} />
+                            <PiFolderOpen size={18} style={{marginRight: 5}}/>
                           ) : (
-                            <PiFolder size={18} style={{marginRight: 5}} />
+                            <PiFolder size={18} style={{marginRight: 5}}/>
                           )}
                           <span>{container.name}</span>
-                          {container.open ? <PiCaretRight /> : null}
+                          {container.open ? <PiCaretRight/> : null}
                         </div>
                       );
                     })}

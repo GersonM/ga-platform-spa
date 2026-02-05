@@ -2275,6 +2275,18 @@ isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
+jodit-react@^5.3.21:
+  version "5.3.21"
+  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-5.3.21.tgz#cd681d12ab2f2064b876fec3f83b79af6cc042c4"
+  integrity sha512-dSFVKkrDVbhVwKDjuFMJ3HhPdqeEz/Yz5MhJf9v9B3Gg29CnelKCZ00h6MxXzlhglF3qvtvUTc2HSKrSB15khw==
+  dependencies:
+    jodit "^4.9.4"
+
+jodit@^4.9.4:
+  version "4.9.4"
+  resolved "https://registry.yarnpkg.com/jodit/-/jodit-4.9.4.tgz#29f09055f43097ac9980cc9fda5797327ec6a577"
+  integrity sha512-vrC7JqxMfUALL0Q10pq1x1RbECqENegOyAPhYbic5MiNZ+KKJRtBM+S1y6uEH2eYq4iYrp/nNVlfPWVO7OFG3A==
+
 js-cookie@^3.0.5:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.5.tgz#0b7e2fd0c01552c58ba86e0841f94dc2557dcdbc"
@@ -3340,11 +3352,6 @@ react-side-effect@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.2.tgz#dc6345b9e8f9906dc2eeb68700b615e0b4fe752a"
   integrity sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==
-
-react-simple-wysiwyg@^3.4.0:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/react-simple-wysiwyg/-/react-simple-wysiwyg-3.4.1.tgz#e694285f39eda531746ba66244fb6541b7d3feb8"
-  integrity sha512-amppNS/WiUSURSFXg9evcRjRBwK6pf5LRWDACVZT/q4k2TginjNxegxM0T2s2LYulbRFS4eGwO7nv57OskckHw==
 
 react-sizeme@^2.2.0:
   version "2.6.12"

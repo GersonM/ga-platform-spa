@@ -18,10 +18,8 @@ import EntityGalleryEditor from "../../../FileManagement/Components/EntityGaller
 import ProductVariationSelector from "../ProductVariationSelector";
 import HtmlEditor from "../../../CommonUI/HtmlEditor";
 import TaxonomySelector from "../../../TaxonomyManagement/Components/TaxonomySelector";
-import Config from "../../../Config";
-import ReportDownloader from "../../../CommonUI/ReportDownloader";
-import FileDownloader from "../../../CommonUI/FileDownloader";
 import StockStatus from "../ProductStockManager/StockStatus.tsx";
+import Config from "../../../Config";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -147,9 +145,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 <Form.Item label={'Tipo'} name={'type'}>
                   <TaxonomySelector
                     placeholder={'Tipo'}
-                    onChange={(val, option) => {
-                      console.log('valor', val);
-                      console.log('option', option);
+                    onChange={(val) => {
                       setSelectedType(val);
                     }} code={'stock-types'} property={'code'}/>
                 </Form.Item>

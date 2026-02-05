@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Col, ColorPicker, Input, InputNumber, Row, Select, Space, Switch} from 'antd';
+import {TbCheck, TbTrash} from "react-icons/tb";
 import axios from 'axios';
 
 import type {SettingValue} from '../../../Types/api';
@@ -7,7 +8,6 @@ import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileUploader from '../../../FileManagement/Components/FileUploader';
 import './styles.less';
-import {TbCheck, TbTrash} from "react-icons/tb";
 
 interface PreferenceValueProps {
   preference: SettingValue;
@@ -25,6 +25,8 @@ const PreferenceValue = ({preference, onUpdated}: PreferenceValueProps) => {
 
   const getControl = () => {
     switch (preference.type) {
+      /*case 'container':
+        return <ContainerSelector value={preference.value} />;*/
       case 'color':
         return <ColorPicker value={value} onChange={value => onChangeValue(value.toHexString())} />;
       case 'image':
