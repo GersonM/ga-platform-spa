@@ -10,7 +10,6 @@ import 'overlayscrollbars/overlayscrollbars.css';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import '@ant-design/v5-patch-for-react-19';
-import {EditorProvider} from "react-simple-wysiwyg";
 import {configureEcho} from "@laravel/echo-react";
 
 import {AuthContextProvider} from './Context/AuthContext';
@@ -83,9 +82,7 @@ axios
         <TenantAppConfig tenant={response.data}>
           <UploadContextProvider>
             <BrowserRouter future={{v7_relativeSplatPath: true, v7_startTransition: false}}>
-              <EditorProvider>
-                <App/>
-              </EditorProvider>
+              <App/>
             </BrowserRouter>
           </UploadContextProvider>
         </TenantAppConfig>

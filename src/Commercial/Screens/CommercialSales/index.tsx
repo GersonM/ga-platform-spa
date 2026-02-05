@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   DatePicker, Divider,
   Form,
-  Modal,
   Pagination, Popconfirm, Popover,
   Progress,
   Select,
@@ -45,6 +44,7 @@ import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ProductSelector from "../../../WarehouseManager/Components/ProductSelector";
 import ProductVariationSelector from "../../../WarehouseManager/Components/ProductVariationSelector";
 import {ClientSelector} from "../../../PaymentManagement/Components/ClientSelector";
+import ModalView from "../../../CommonUI/ModalView";
 
 interface CommercialSalesProps {
   mode?: string;
@@ -403,14 +403,13 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
           pageSize={pagination.per_page}
         />
       )}
-      <Modal
-        destroyOnHidden
+      <ModalView
         width={1000}
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
-        footer={false}>
+        >
         <NewSaleForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)}/>
-      </Modal>
+      </ModalView>
     </ModuleContent>
   );
 };

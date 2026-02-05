@@ -6,32 +6,27 @@ import {
   Form,
   Input,
   InputNumber,
-  List,
   notification,
   Row,
   Select,
   Space,
-  Tag
 } from 'antd';
-import {TbCheck, TbPencil, TbTrash} from "react-icons/tb";
-import {DefaultEditor} from "react-simple-wysiwyg";
+import {TbCheck, TbPencil} from "react-icons/tb";
+import dayjs from "dayjs";
 import axios from 'axios';
 
-import type {Contract, StorageContractCartItem, StorageStock} from '../../../Types/api';
+import type {Contract, StorageContractCartItem} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
-import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import MoneyString from '../../../CommonUI/MoneyString';
-import MoneyInput from "../../../CommonUI/MoneyInput";
 import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import ContractTemplateSelector from "../../../Commercial/Components/ContractTemplateSelector";
-import dayjs from "dayjs";
 import Config from "../../../Config.tsx";
 import ShoppingCartEditor from "../../../Commercial/Components/ShoppingCartEditor";
+import HtmlEditor from "../../../CommonUI/HtmlEditor";
 
 interface NewSubscriptionFormProps {
   onComplete?: (data: Contract) => void;
@@ -44,32 +39,6 @@ const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) =
   const [loading, setLoading] = useState(false);
   const [chooseSeller, setChooseSeller] = useState(false);
   const [shoppingCart, setShoppingCart] = useState<StorageContractCartItem[]>([]);
-
-  /*useEffect(() => {
-    if (!selectedStockUUID) {
-      return;
-    }
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-
-    setLoading(true);
-
-    axios
-      .get(`warehouses/stock/${selectedStockUUID}`, config)
-      .then(response => {
-        if (response) {
-          setSelectedStock(response.data);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-
-    return cancelTokenSource.cancel;
-  }, [selectedStockUUID]);*/
 
   const submitForm = (data: any) => {
     if (!data.fk_company_uuid && !data.fk_profile_uuid) {
@@ -108,55 +77,6 @@ const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) =
         ErrorHandler.showNotification(error);
       });
   };
-
-  const addStock = (data: StorageStock) => {
-    const newCart = [...shoppingCart];
-    console.log({data});
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].quantity++;
-    } else {
-      newCart.push({uuid: data.uuid, unit_amount: data.sale_price || 0, quantity: 1, stock: data});
-    }
-    setShoppingCart(newCart);
-  }
-
-  const removeStock = (data: StorageContractCartItem) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart.splice(index, 1);
-      setShoppingCart(newCart);
-    }
-  }
-
-  const updateQuantity = (data: StorageContractCartItem, quantity: number | null) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].quantity = quantity || 1;
-      setShoppingCart(newCart);
-    }
-  }
-
-  const updateAmount = (data: StorageContractCartItem, amount?: number) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].unit_amount = amount != null ? amount : (data.stock?.sale_price || 0);
-      setShoppingCart(newCart);
-    }
-  }
-
-  const cartTotalAmountPen = shoppingCart.reduce((s, item) => {
-    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : 0);
-    return s + (item.stock?.currency == 'PEN' ? itemAmount : 0);
-  }, 0);
-
-  const cartTotalAmountUSD = shoppingCart.reduce((s, item) => {
-    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : 0);
-    return s + (item.stock?.currency == 'USD' ? itemAmount : 0);
-  }, 0);
 
   return (
     <div>
@@ -237,10 +157,10 @@ const NewSubscriptionForm = ({onComplete, contract}: NewSubscriptionFormProps) =
               <DatePicker style={{width: '100%'}} placeholder={'Nunca'}/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
-              <DefaultEditor/>
+              <HtmlEditor />
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
-              <DefaultEditor/>
+              <HtmlEditor />
             </Form.Item>
           </Col>
         </Row>

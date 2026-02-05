@@ -9,19 +9,15 @@ import {
   Segmented,
   Select,
   Space,
-  Tag
 } from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
-import {DefaultEditor} from "react-simple-wysiwyg";
 import axios from 'axios';
 
-import type {Contract, StorageContractCartItem, StorageStock} from '../../../Types/api';
+import type {Contract, StorageContractCartItem} from '../../../Types/api';
 import ProfileSelector from '../../../CommonUI/ProfileSelector';
-import StockSelector from '../../../WarehouseManager/Components/StockSelector';
 import AuthContext from '../../../Context/AuthContext';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import MoneyString from '../../../CommonUI/MoneyString';
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 import ContractTemplateSelector from "../ContractTemplateSelector";
 import IconButton from "../../../CommonUI/IconButton";
@@ -29,6 +25,7 @@ import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import ShoppingCartEditor from "../ShoppingCartEditor";
 import './styles.less';
+import HtmlEditor from "../../../CommonUI/HtmlEditor";
 
 interface NewSaleFormProps {
   onComplete?: (data: Contract) => void;
@@ -82,27 +79,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
         ErrorHandler.showNotification(error);
       });
   };
-
-  const addStock = (data: StorageStock) => {
-    const newCart = [...shoppingCart];
-    const index = newCart.findIndex(i => i.uuid === data.uuid);
-    if (index !== -1) {
-      newCart[index].quantity++;
-    } else {
-      newCart.push({uuid: data.uuid, unit_amount: null, quantity: 1, stock: data});
-    }
-    setShoppingCart(newCart);
-  }
-
-  const cartTotalAmountPen = shoppingCart.reduce((s, item) => {
-    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : (item.stock?.sale_price || 0));
-    return s + (item.stock?.currency == 'PEN' ? itemAmount : 0);
-  }, 0);
-
-  const cartTotalAmountUSD = shoppingCart.reduce((s, item) => {
-    const itemAmount = (item.quantity || 1) * (item.unit_amount != null ? item.unit_amount : (item.stock?.sale_price || 0));
-    return s + (item.stock?.currency == 'USD' ? itemAmount : 0);
-  }, 0);
 
   return (
     <div>
@@ -209,13 +185,13 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
               <PaymentMethodTypesSelector/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
-              <DefaultEditor/>
+              <HtmlEditor/>
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
-              <DefaultEditor/>
+              <HtmlEditor/>
             </Form.Item>
             <Form.Item label={'Información del presupuesto (opcional)'} name={'budget_details'}>
-              <DefaultEditor/>
+              <HtmlEditor/>
             </Form.Item>
           </Col>
         </Row>
