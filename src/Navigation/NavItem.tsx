@@ -5,35 +5,26 @@ import {TbChevronDown} from "react-icons/tb";
 interface NavItemProps {
   label: string;
   icon: ReactNode;
+  disabled?: boolean;
   children?: ReactNode[];
+  toggleStatus?: number;
+  onOpen?: (isOpen: boolean) => void;
   path?: string;
-  code?: string;
   notifications?: number | string;
 }
 
-const NavItem = ({path, label, icon, children, notifications, code}: NavItemProps) => {
+const NavItem = ({path, label, icon, children, notifications, onOpen, toggleStatus, disabled}: NavItemProps) => {
   const {pathname} = useLocation();
   const [isOpen, setIsOpen] = useState(pathname == path);
 
   useEffect(() => {
-    if (code) {
-      const item = localStorage.getItem(code);
-      if (item) {
-        setIsOpen(true);
-      }
-    }
-  }, []);
+    setIsOpen(false);
+  }, [toggleStatus]);
 
-  const toggleItem = () => {
-    if (code) {
-      if (!isOpen) {
-        localStorage.setItem(code, '1');
-      } else {
-        localStorage.removeItem(code);
-      }
-    }
-    setIsOpen(!isOpen);
-  }
+  useEffect(() => {
+    if (onOpen) onOpen(isOpen);
+  }, [isOpen]);
+
 
   const content = (
     <>
@@ -47,20 +38,22 @@ const NavItem = ({path, label, icon, children, notifications, code}: NavItemProp
     <li>
       <div className={'item'}>
         {path ? (
-          <NavLink to={path}>
+          <NavLink to={path} style={disabled?{opacity:0.6, cursor:'not-allowed'}:{}}>
             {icon}
             {content}
           </NavLink>
         ) : (
-          <span className={`${isOpen ? 'open' : ''} divider`} onClick={toggleItem}>
+          <a className={`${isOpen ? 'open' : ''}`} onClick={() => {
+            setIsOpen(!isOpen);
+          }}>
+            {icon}
             {content}
-            <span className="line"></span>
             {children && (
               <div className={`open-button ${isOpen ? 'open' : ''}`}>
                 <TbChevronDown/>
               </div>
             )}
-          </span>
+          </a>
         )}
       </div>
       {children && <ul className={`${isOpen ? 'open' : ''}`}>{children}</ul>}

@@ -222,6 +222,7 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
                   title={'Generate Thumbnail'}
                   type={'primary'}
                   icon={<TbRefreshDot/>}/>
+                <Button ghost type={'primary'} shape={'round'}>Editar</Button>
               </Space>
               <div className={'links-container'}>
                 <span className="label">
