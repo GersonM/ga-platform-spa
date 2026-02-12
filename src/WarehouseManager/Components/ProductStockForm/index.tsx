@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Divider, Select, Button, message} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import {NavLink} from "react-router-dom";
@@ -20,6 +20,7 @@ import HtmlEditor from "../../../CommonUI/HtmlEditor";
 import TaxonomySelector from "../../../TaxonomyManagement/Components/TaxonomySelector";
 import StockStatus from "../ProductStockManager/StockStatus.tsx";
 import Config from "../../../Config";
+import AuthContext from "../../../Context/AuthContext.tsx";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -33,6 +34,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
   const [metadata, setMetadata] = useState<any[]>();
   const [selectedType, setSelectedType] = useState<string | undefined>(stock?.type);
+  const {config} = useContext(AuthContext);
 
   useEffect(() => {
     if (form) {
@@ -97,6 +99,8 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
     return text.trim();
   }
 
+  const formType = config?.id == 'candares' ? 'estate' : 'regular';
+
   return (
     <>
       <h2>{stock ? 'Editar stock' : 'Registrar stock'} {stock && <StockStatus status={stock.status}/>}</h2>
@@ -108,7 +112,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
           <Col md={13}>
             {!variation && !stock && (
               <Form.Item
-                label="Producto" name={'variation_uuid'}
+                label="Tipo de propiedad" name={'variation_uuid'}
                 rules={[{required: true}]}>
                 <ProductVariationSelector/>
               </Form.Item>
@@ -122,7 +126,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
               <Col md={16}>
-                <Form.Item label="Agente" name={'provider_uuid'} rules={[{required: true}]}>
+                <Form.Item label="Asesor encargado" name={'provider_uuid'} rules={[{required: true}]}>
                   <CompanySelector style={{maxWidth: 190}} filter={'providers'}
                                    placeholder={stock?.provider?.company?.name}/>
                 </Form.Item>
@@ -130,7 +134,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             </Row>
             <Row gutter={[20, 20]}>
               <Col md={9}>
-                <Form.Item label="Número de serie" name={'serial_number'}>
+                <Form.Item label="Código de propiedad" name={'serial_number'}>
                   <Input style={{fontFamily: 'monospace'}}/>
                 </Form.Item>
               </Col>
@@ -142,7 +146,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             </Row>
             <Row gutter={15}>
               <Col md={8}>
-                <Form.Item label={'Tipo'} name={'type'}>
+                <Form.Item label={'Tipo de operación'} name={'type'}>
                   <TaxonomySelector
                     placeholder={'Tipo'}
                     onChange={(val) => {
@@ -176,11 +180,13 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                   <CurrencySelector defaultValue={'PEN'} onChange={(value: string) => setCurrentCurrency(value)}/>
                 </Form.Item>
               </Col>
+              {/*
               <Col md={9}>
                 <Form.Item label="Costo" name={'cost_price'}>
                   <MoneyInput currency={currentCurrency || stock?.currency}/>
                 </Form.Item>
               </Col>
+              */}
               <Col md={9}>
                 <Form.Item
                   label="Venta"
