@@ -1,9 +1,12 @@
+
+.app-content * {
+  outline: 1px solid rgba(0, 255, 0, 0.2);
+}
+
 .app-content {
-  background: var(--background-color);
-  margin: 10px 10px 10px 0;
-  padding-bottom: 15px;
-  outline: 5px solid rgba(227, 227, 227, 0.5);
-  border-radius: 12px;
+  outline: 2px solid rgba(0, 255, 0, 0.2);
+  width: 1200px;
+  margin: 0 auto;
   position: relative;
   display: flex;
   flex: 1;
@@ -15,9 +18,18 @@
   }
 }
 
+@media screen and (max-width: 1200px) {
+  .app-content {
+    margin: 0;
+    width: auto;
+  }
+}
+
+
 @media screen and (max-width: 700px) {
   .app-content {
     margin: 0;
+    width: auto;
     border: none;
     border-radius: 0;
     flex-direction: column;
