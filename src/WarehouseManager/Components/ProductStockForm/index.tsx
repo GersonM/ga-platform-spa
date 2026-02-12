@@ -116,13 +116,13 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             <Row gutter={15}>
               <Col md={8}>
                 <Form.Item
-                  label="Almacen" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
+                  label="Ubicación" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
                   rules={[{required: true}]}>
                   <WarehouseSelector/>
                 </Form.Item>
               </Col>
               <Col md={16}>
-                <Form.Item label="Proveedor" name={'provider_uuid'} rules={[{required: true}]}>
+                <Form.Item label="Agente" name={'provider_uuid'} rules={[{required: true}]}>
                   <CompanySelector style={{maxWidth: 190}} filter={'providers'}
                                    placeholder={stock?.provider?.company?.name}/>
                 </Form.Item>

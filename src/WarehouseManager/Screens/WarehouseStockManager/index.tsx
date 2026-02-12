@@ -326,7 +326,7 @@ const WarehouseStockManager = () => {
               {label: 'Todos', value: 'all'},
             ]}/>
           </Form.Item>
-          <Form.Item label={'Almacen'} name={'warehouse_uuid'}>
+          <Form.Item label={'Ubicación'} name={'warehouse_uuid'}>
             <WarehouseSelector onChange={(_v, option) => setFilterWarehouse(option.entity)}/>
           </Form.Item>
           <Form.Item label={'Desde'} name={'sale_price_from'}>
