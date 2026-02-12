@@ -1,32 +1,24 @@
 @iconSize: 20px;
 
 .navigation-wrapper {
-  background: var(--background-color);
+  min-width: var(--main-nav-width);
+  max-width: var(--main-nav-width);
   transition: all 0.3s;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   position: sticky;
   top: 0;
-  z-index: 10;
-  padding: 10px 15px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  height: 100dvh;
+  z-index: 3;
 
-  animation-duration: .8s;
+  animation-duration: .7s;
   animation-timing-function: cubic-bezier(0.01, 1.15, 0.8, 0.99);
   animation-fill-mode: both;
-  animation-delay: .4s;
   animation-name: sidebarFadeIn;
 
-  .container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 1200px;
-  }
-
   .head {
-    width: 120px;
+    margin: 12px 0 0 0;
+    padding: 0 10px;
 
     .logo-square {
       transition: all 0.3s;
@@ -34,10 +26,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 40px;
-      border-radius: 10px;
-      corner-shape: squircle;
-      padding: 6px 10px;
+      height: 47px;
+      padding: 5px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+
+      &:hover {
+        background: var(--background-color);
+      }
 
       img {
         max-height: 100%;
@@ -46,62 +42,76 @@
     }
   }
 
-  .navigation-items {
-    flex: 1;
-  }
+  .bottom-nav {
+    margin: 10px 0;
+    text-align: center;
 
-  .user-tool {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    width: 35px;
-    height: 35px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 35px;
-    cursor: pointer;
-    transition: all 0.4s;
+    .user-tool {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      width: 35px;
+      height: 35px;
+      font-size: 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 35px;
+      cursor: pointer;
+      transition: all 0.4s;
 
-    &.danger {
-      background: rgba(255, 0, 0, 0.3);
-      border-color: #ff0000;
+      &.danger {
+        background: rgba(255, 0, 0, 0.3);
+        border-color: #ff0000;
+      }
+
+      &.alert {
+        background: rgba(255, 0, 0, 0.3);
+        border-color: #ff0000;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
     }
 
-    &.alert {
-      background: rgba(255, 0, 0, 0.3);
-      border-color: #ff0000;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    svg {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
-  .user-menu {
-    cursor: pointer;
-    border-radius: 60px;
-    display: flex;
-
-    .avatar {
-      width: 30px;
-      height: 30px;
-    }
-
-    div {
-      flex: 1;
-      width: 100%;
+    .user-menu {
+      text-align: left;
+      cursor: pointer;
+      margin: 10px 10px 0 10px;
+      border-radius: 60px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 3px 5px 3px 3px;
+      display: flex;
+      align-items: center;
       text-overflow: ellipsis;
-      overflow: hidden;
-      font-size: 13px;
+      transition: all 0.3s;
 
-      small {
-        display: block;
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        margin-right: 5px;
+      }
+
+      div {
+        flex: 1;
+        width: 100%;
         text-overflow: ellipsis;
         overflow: hidden;
+        font-size: 13px;
+
+        small {
+          display: block;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
       }
     }
   }
@@ -112,37 +122,84 @@
   .version-info {
     opacity: 0.4;
     font-size: 11px;
+    text-align: center;
+    margin-bottom: 10px;
   }
 }
 
 .navigation-list {
-  display: flex;
-  gap: 5px;
   list-style: none;
   margin: 0;
   padding: 0;
 
-  li {
-    position: relative;
+  .notification-badge {
+    color: #ffffff;
+    background: var(--primary-color);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 10px;
+  }
 
+  li {
     .item {
-      display: flex;
+
+      .divider {
+        display: flex;
+        padding: 3px 15px 3px 20px;
+        margin: 10px 0 5px 0;
+        text-transform: uppercase;
+        font-size: 10px;
+        font-weight: 600;
+        opacity: 0.55;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s;
+        cursor: pointer;
+        gap: 10px;
+
+        .line {
+          display: block;
+          border-bottom: 1px solid var(--border-color-active);
+          opacity: 0.3;
+          flex: 1;
+        }
+
+        &:hover {
+          opacity: 1;
+          background: rgba(0, 0, 0, 0.1);
+        }
+      }
 
       a {
         display: flex;
-        cursor: pointer;
         align-items: center;
-        padding: 8px 15px;
-        border-radius: 20px;
+        padding: 10px 10px 10px 20px;
+        margin: 0 10px 0 0;
+          border-radius: 0 20px 20px 0;
         flex: 1;
-        font-weight: 600;
-        color: var(--text-color);
+        color: #333;
+        opacity: 0.7;
         transition: all 0.3s;
         position: relative;
 
-        &:hover, &.active {
+        &:before {
+          content: '';
+          width: 3px;
+          height: 15px;
+          background: #ffffff;
+          position: absolute;
+          left: -3px;
+          transition: all 0.3s cubic-bezier(0.01, 1.15, 0.8, 0.99);
+        }
+
+        &:hover {
+          background: var(--background-color-body);
+          color: #000;
+        }
+        &.active {
+          color: #ffff;
           background: var(--primary-color);
-          color: #ffffff;
+          opacity: 1;
         }
 
         &:active {
@@ -150,14 +207,14 @@
         }
 
         &.open {
-          background: var(--background-color);
+          background: rgba(0, 0, 0, 0.3);
           border-radius: 5px 5px 0 0;
-          z-index: 20;
         }
 
         .label {
           display: block;
           font-size: 13px;
+          flex: 1;
         }
 
         .icon, svg {
@@ -165,21 +222,13 @@
           width: @iconSize;
           min-width: @iconSize;
           line-height: @iconSize;
-          margin-right: 7px;
+          margin-right: 10px;
           display: inline-block;
-        }
-
-        .notification-badge {
-          background: #ff0000;
-          padding: 2px 8px;
-          border-radius: 30px;
-          font-size: 11px;
+          stroke-width: 1.5;
         }
       }
 
       .open-button {
-        margin-left: 10px;
-        margin-right: -5px;
         transition: all 0.3s;
 
         svg {
@@ -194,61 +243,32 @@
     }
 
     ul {
-      position: absolute;
       list-style: none;
-      background: var(--background-color);
-      width: 100%;
       transition: all 0.3s ease-out;
       max-height: 0;
       overflow: hidden;
-      padding: 0 0 0 0;
-      border-radius: 0 0 5px 5px;
-      box-shadow: 2px 2px 25px rgba(0, 0, 0, 0.3);
+      margin: 0;
+      padding: 0;
+      position: relative;
 
       &.open {
-        padding: 5px 0;
         max-height: 300px;
-      }
-
-      li {
-        border-bottom: none;
-        position: relative;
-
-        .item {
-          a {
-            margin: 0;
-            padding: 5px 5px 5px 5px;
-            border-radius: 0;
-
-            &:active {
-            }
-
-            &.active {
-              background: var(--primary-color);
-              color: #fff;
-
-              &:before {
-                left: 8px;
-              }
-            }
-
-            .label {
-              font-size: 12px;
-              line-height: 15px;
-            }
-          }
-        }
       }
     }
   }
 }
 
-.menu-overlay {
-  position: fixed;
-  width: 100vw;
-  opacity: 0;
-  height: 100vh;
-  z-index: 1;
+.dark-mode {
+  .navigation-list {
+    li {
+      a {
+        color: #d3d3d3;
+        &:hover {
+          color: #ffffff;
+        }
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 700px) {
