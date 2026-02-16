@@ -89,7 +89,8 @@ const InvoiceForm = (
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Fecha de emisión'} name={'issued_on'}>
-              <DatePicker format={'DD/MM/YYYY'} showNow={false} onChange={d => setIssuedOn(d)} style={{width: '100%'}}
+              <DatePicker format={'DD/MM/YYYY'} showNow={false} onChange={d => setIssuedOn(d ? d : undefined)}
+                          style={{width: '100%'}}
                           placeholder={'Hoy'}/>
             </Form.Item>
           </Col>

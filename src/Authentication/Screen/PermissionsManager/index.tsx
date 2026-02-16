@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Divider, Modal, Popconfirm, Space, Tabs} from 'antd';
-import {TrashIcon, PencilIcon} from '@heroicons/react/24/solid';
+import {Divider, Popconfirm, Space, Tabs} from 'antd';
+import {TbPencil, TbTrash} from "react-icons/tb";
 
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import type {Permission, Role} from '../../../Types/api';
@@ -12,7 +12,6 @@ import AuthRoleForm from '../../Components/AuthRoleForm';
 
 import './styles.less';
 import ModalView from "../../../CommonUI/ModalView";
-import {TbPencil, TbTrash} from "react-icons/tb";
 
 const PermissionsManager = () => {
   const [roles, setRoles] = useState<Role[]>();
@@ -51,7 +50,7 @@ const PermissionsManager = () => {
       .get(`authentication/permissions`, config)
       .then(response => {
         if (response) {
-          let p: any = {};
+          const p: any = {};
           for (const r of response.data) {
             if (!p[r.group]) {
               p[r.group] = [];
@@ -128,7 +127,7 @@ const PermissionsManager = () => {
                 Object.keys(permissions).map(p => {
                   return (
                     <div key={p} className={'permissions-group'}>
-                      <Divider orientation={'left'} style={{textTransform: 'capitalize'}}>
+                      <Divider titlePlacement={'left'} style={{textTransform: 'capitalize'}}>
                         {p.replace('-', ' ')}
                       </Divider>
                       <div className={'role-permissions-list'}>

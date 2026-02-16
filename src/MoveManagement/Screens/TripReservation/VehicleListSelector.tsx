@@ -12,8 +12,8 @@ import './styles.less';
 
 interface VehicleListSelectorProps {
   _value?: string;
-  departureTime?: Dayjs;
-  arrivalTime?: Dayjs;
+  departureTime?: Dayjs|null;
+  arrivalTime?: Dayjs|null;
   onChange?: (value: string, vehicle: MoveVehicle) => void;
 }
 

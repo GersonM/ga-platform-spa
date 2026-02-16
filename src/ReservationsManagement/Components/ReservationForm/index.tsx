@@ -22,8 +22,8 @@ interface TripFormProps {
 }
 
 const ReservationForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: TripFormProps) => {
-  const [arrivalDate, setArrivalDate] = useState<Dayjs>();
-  const [departureDate, setDepartureDate] = useState<Dayjs>();
+  const [arrivalDate, setArrivalDate] = useState<Dayjs|null>();
+  const [departureDate, setDepartureDate] = useState<Dayjs|null>();
   const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
   const [form] = useForm();
   const [creatingTrip, setCreatingTrip] = useState(false);

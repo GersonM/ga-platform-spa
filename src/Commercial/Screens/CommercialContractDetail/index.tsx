@@ -351,13 +351,13 @@ const CommercialContractDetail = () => {
       <Row gutter={[20, 20]}>
         <Col md={24} lg={7}>
           <div className={'info-contract-block'}>
-            <Divider orientation={'left'}>Cliente</Divider>
+            <Divider titlePlacement={'left'}>Cliente</Divider>
             {
               contract?.client?.type.includes('Profile') ?
                 <ProfileChip profile={contract?.client?.entity} showDocument/> :
                 <CompanyChip company={contract?.client?.entity}/>
             }
-            <Divider orientation={"left"}>Productos </Divider>
+            <Divider titlePlacement={"left"}>Productos </Divider>
             <PrimaryButton icon={<TbPencil/>} block label={'Editar'} size={"small"} ghost onClick={() => {
               setOpenCartItemForm(true);
             }}/>
@@ -411,7 +411,7 @@ const CommercialContractDetail = () => {
                 includeTaxes={contract.include_taxes}
                 applyTaxes={contract.apply_taxes}
                 items={[{label: 'Total', amount: contract.totals.USD}]} currency={'USD'}/>}
-            <Divider orientation={'left'}>Detalles</Divider>
+            <Divider titlePlacement={'left'}>Detalles</Divider>
             <Descriptions
               column={1}
               bordered layout={'horizontal'} size={"small"} items={contractDetails}/>

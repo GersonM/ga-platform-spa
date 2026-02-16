@@ -26,8 +26,10 @@ const ScheduleActivityForm = ({activity, onComplete}: ScheduleActivityFormProps)
       .put(`/entity-activity/${activity.uuid}/`, data)
       .then(_response => {
         setLoading(false);
-        onComplete && onComplete();
-        updateActivityCount && updateActivityCount();
+        if (onComplete) onComplete();
+        if (updateActivityCount) {
+          updateActivityCount();
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -39,16 +41,16 @@ const ScheduleActivityForm = ({activity, onComplete}: ScheduleActivityFormProps)
     <div>
       <Form layout="vertical" onFinish={submitForm}>
         <Form.Item name={'assigned_uuid'} label={'Responsable'}>
-          <SearchProfile />
+          <SearchProfile/>
         </Form.Item>
         <Form.Item
           name={'expired_at'}
           label={'Fecha'}
           initialValue={activity.expired_at ? dayjs(activity.expired_at) : undefined}>
-          <DatePicker style={{width: '100%'}} onChange={date => setSelectedDate(date)} />
+          <DatePicker style={{width: '100%'}} onChange={date => setSelectedDate(date ? date : undefined)}/>
         </Form.Item>
         {selectedDate?.format('YYYY-MM-DD HH:mm:ss')}
-        <PrimaryButton htmlType={'submit'} block label={'Guardar'} loading={loading} />
+        <PrimaryButton htmlType={'submit'} block label={'Guardar'} loading={loading}/>
       </Form>
     </div>
   );

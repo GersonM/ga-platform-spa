@@ -173,7 +173,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
               size={'small'}
               placeholder={'Fecha de límite para solución'}
               style={{width: '100%'}}
-              onChange={date => setMessageDate(date)}
+              onChange={date => setMessageDate(date ? date : undefined)}
             />
             <SearchProfile
               placeholder={'Asignar tarea (opcional)'}

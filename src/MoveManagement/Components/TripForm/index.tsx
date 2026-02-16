@@ -24,8 +24,8 @@ interface TripFormProps {
 }
 
 const TripForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: TripFormProps) => {
-  const [arrivalDate, setArrivalDate] = useState<Dayjs>();
-  const [departureDate, setDepartureDate] = useState<Dayjs>();
+  const [arrivalDate, setArrivalDate] = useState<Dayjs|null>();
+  const [departureDate, setDepartureDate] = useState<Dayjs|null>();
   const [selectedRoute, setSelectedRoute] = useState<MoveRoute>();
   const [form] = useForm();
   const [durationSeconds, setDurationSeconds] = useState<number>(0);
@@ -68,9 +68,9 @@ const TripForm = ({onCompleted, route, vehicle, loading, showVehicle = true}: Tr
   };
 
   const timeToString = (seconds: number) => {
-    let date = new Date(seconds * 1000);
-    let hh = date.getUTCHours();
-    let mm = date.getUTCMinutes();
+    const date = new Date(seconds * 1000);
+    const hh = date.getUTCHours();
+    const mm = date.getUTCMinutes();
     return hh > 0 ? hh + 'h ' : '' + (mm > 0) ? mm + 'm' : '';
   };
 

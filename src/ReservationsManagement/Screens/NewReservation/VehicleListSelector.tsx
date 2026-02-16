@@ -12,8 +12,8 @@ import './styles.less';
 
 interface VehicleListSelectorProps {
   value?: string;
-  departureTime?: Dayjs;
-  arrivalTime?: Dayjs;
+  departureTime?: Dayjs|null;
+  arrivalTime?: Dayjs|null;
   onChange?: (value: string, vehicle: MoveVehicle) => void;
 }
 
@@ -79,7 +79,9 @@ const VehicleListSelector = ({onChange, departureTime, arrivalTime}: VehicleList
               className={`${selectedVehicle && selectedVehicle.uuid == vehicle.uuid ? 'selected' : ''}`}
               onClick={() => {
                 setSelectedVehicle(vehicle);
-                onChange && onChange(vehicle.uuid, vehicle);
+                if(onChange) {
+                  onChange(vehicle.uuid, vehicle);
+                }
               }}>
               {getIcon(vehicle.type)}
               <div className={'vehicle-info'}>

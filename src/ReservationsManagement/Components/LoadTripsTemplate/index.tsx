@@ -16,7 +16,7 @@ interface ILoadTripsTemplateProps {
 
 const LoadTripsTemplate = ({onCompleted}: ILoadTripsTemplateProps) => {
   const [templates, setTemplates] = useState<any[]>();
-  const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const [selectedDate, setSelectedDate] = useState<Dayjs|null>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
@@ -50,7 +50,9 @@ const LoadTripsTemplate = ({onCompleted}: ILoadTripsTemplateProps) => {
       .post('move/templates/load', {...template, date_to_apply: selectedDate?.format(Config.dateFormatServer)})
       .then(_response => {
         setLoadingTemplate(false);
-        onCompleted && onCompleted();
+        if(onCompleted) {
+          onCompleted();
+        }
       })
       .catch(_e => {
         setLoadingTemplate(false);

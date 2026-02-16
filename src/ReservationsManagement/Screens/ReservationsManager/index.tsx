@@ -25,7 +25,7 @@ import FilterForm from "../../../CommonUI/FilterForm";
 const ReservationsManager = () => {
   const [openTripModal, setOpenTripModal] = useState(false);
   const [reload, setReload] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Dayjs>();
+  const [selectedDate, setSelectedDate] = useState<Dayjs|null>();
   const [selectedRouteUuid, setSelectedRouteUuid] = useState<string>();
   const [selectedStatus, setSelectedStatus] = useState<string>();
   const [trips, setTrips] = useState<MoveTrip[]>();

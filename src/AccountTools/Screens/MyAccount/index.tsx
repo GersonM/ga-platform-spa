@@ -18,7 +18,7 @@ const MyAccount = () => {
       <Row justify={'center'}>
         <Col md={14}>
           <ContentHeader title={'Mi cuenta'} />
-          <Divider style={{margin: '0 0 30px 0'}} dashed orientation={'left'}>
+          <Divider style={{margin: '0 0 30px 0'}} dashed titlePlacement={'left'}>
             Seguridad
           </Divider>
           <Space align={'center'} size={'large'}>
@@ -43,7 +43,7 @@ const MyAccount = () => {
           <List size={'small'} bordered>
             <List.Item actions={['Actual', 'Escritorio']}>Sesión actual</List.Item>
           </List>
-          <Divider style={{margin: '30px 0'}} dashed orientation={'left'}>
+          <Divider style={{margin: '30px 0'}} dashed titlePlacement={'left'}>
             Información personal
           </Divider>
           <Row gutter={[20, 20]}>
@@ -72,7 +72,7 @@ const MyAccount = () => {
               {user?.profile.address || 'Sin dirección'}
             </Col>
           </Row>
-          <Divider style={{margin: '50px 0 30px 0'}} dashed orientation={'left'}>
+          <Divider style={{margin: '50px 0 30px 0'}} dashed titlePlacement={'left'}>
             Contratos
           </Divider>
           <Empty description={'Nada por aquí'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
