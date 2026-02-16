@@ -49,9 +49,11 @@ const ProductBrandSelector = ({placeholder, ...props}:ProductBrandSelectorProps)
       {...props}
       allowClear
       style={{ minWidth: 120 }}
+      popupMatchSelectWidth={false}
       placeholder={placeholder || 'Elige una marca'}
-      showSearch={true}
-      optionFilterProp={'label'}
+      showSearch={{
+        optionFilterProp:'label'
+      }}
       filterOption={(inputValue, option) =>
         option!.value?.toUpperCase().indexOf(inputValue?.toUpperCase()) !== -1
       }

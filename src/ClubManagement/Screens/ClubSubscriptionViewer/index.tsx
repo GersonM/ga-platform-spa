@@ -227,7 +227,7 @@ const ClubSubscription = () => {
             </Tag>
           </Space>
         }>
-        <Space split={<Divider type={'vertical'}/>}>
+        <Space separator={<Divider orientation={'vertical'}/>}>
           <InfoButton
             icon={<TbCalendarUp className={'icon'}/>}
             caption={dayjs(subscription?.started_at).format(Config.dateFormatUser)}

@@ -50,7 +50,7 @@ const FileActivityForm = ({file, type, time, onCompleted}: FileActivityFormProps
             <>
               <Col md={24}>
                 <Form.Item name={'time'} noStyle>
-                  <InputNumber placeholder="Tiempo" addonAfter={'segundos'} />
+                  <InputNumber placeholder="Tiempo" prefix={'segundos'} />
                 </Form.Item>
               </Col>
             </>

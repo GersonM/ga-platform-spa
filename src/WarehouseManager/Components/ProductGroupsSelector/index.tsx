@@ -48,9 +48,10 @@ const ProductGroupsSelector = ({placeholder, ...props}: ProductGroupsSelectorPro
       popupMatchSelectWidth={false}
       allowClear
       placeholder={placeholder || 'Elige un grupo'}
-      showSearch={true}
+      showSearch={{
+        optionFilterProp:'label'
+      }}
       style={{minWidth: 120}}
-      optionFilterProp={'label'}
       options={groups}
     />
   );

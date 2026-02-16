@@ -248,7 +248,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 texto</Button></>}>
               <HtmlEditor height={230}/>
             </Form.Item>
-            <Divider orientation={'left'}>Información adicional</Divider>
+            <Divider titlePlacement={'left'}>Información adicional</Divider>
             <Form.Item name={'attributes'}>
               <EntityFieldsEditor
                 entity={stock}

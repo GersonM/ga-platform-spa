@@ -37,15 +37,15 @@ const ImportPayments = () => {
             <Statistic title={'Total entradas'} value={responseMessages.total_reviewed}/>
             <Statistic title={'Pagos creados'} value={responseMessages.payments_created}/>
             <Statistic title={'Pagos actualizados'} value={responseMessages.payments_updated}/>
-            <Divider type={'vertical'}/>
+            <Divider orientation={'vertical'}/>
             <Statistic title={'Errores encontrados'}
                        value={responseMessages.failed.filter((e: string) => e.includes('[ERROR]')).length}/>
           </Space>
           {responseMessages.failed.map((m: any, index: number) => (
-            <Alert banner key={index} message={m} type={m.includes('[ERROR]') ? 'error' : 'warning'}/>
+            <Alert banner key={index} title={m} type={m.includes('[ERROR]') ? 'error' : 'warning'}/>
           ))}
           {responseMessages.log.map((m: any, index: number) => (
-            <Alert banner key={index} message={m} type={'info'}/>
+            <Alert banner key={index} title={m} type={'info'}/>
           ))}
           <PrimaryButton
             loading={loading}

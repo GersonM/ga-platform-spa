@@ -47,9 +47,10 @@ const ProductUnitTypesSelector = ({placeholder, ...props}: ProductUnitTypesSelec
       {...props}
       allowClear
       placeholder={placeholder || 'Unidad'}
-      showSearch={true}
+      showSearch={{
+        optionFilterProp:'label'
+      }}
       style={{minWidth: 120}}
-      optionFilterProp={'label'}
       options={groups}
     />
   );

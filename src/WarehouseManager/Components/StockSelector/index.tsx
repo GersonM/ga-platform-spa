@@ -98,7 +98,7 @@ const StockSelector = ({placeholder, currency, mode, refresh, product, status = 
         const stock: StorageStock = option.data.entity;
         const units = stock.is_consumable ? pluralize(stock.variation?.product?.unit_type || 'unit', stock.quantity, true) : 'Ilimitado';
         return <div>
-          <code style={{fontSize:13}}>{stock?.variation?.product?.name} {stock?.variation?.name}</code> <Divider type={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
+          <code style={{fontSize:13}}>{stock?.variation?.product?.name} {stock?.variation?.name}</code> <Divider orientation={'vertical'} /> <MoneyString currency={stock.currency} value={stock.sale_price}/> <Tag bordered={false} color={stock.is_consumable ? 'orange' : 'purple'}>{units}</Tag>
           <small><code>{stock.serial_number} | {stock.variation?.sku}</code></small>
         </div>;
       }}

@@ -16,7 +16,7 @@ const defaultColor = '#009987';
 const defaultColorLight = '#00675b';
 
 const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
-  const {darkMode, preferredMode, setDarkMode} = useContext(AuthContext);
+  const {darkMode} = useContext(AuthContext);
 
   useEffect(() => {
     if (tenant.favicon) {

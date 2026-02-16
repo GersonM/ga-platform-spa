@@ -447,7 +447,7 @@ export type InvoicePayment = {
   transaction_date: string;
   updated_at: string;
   uuid: string;
-  transaction?:WalletTransaction;
+  transaction?: WalletTransaction;
   voucher_code: string;
   method?: PaymentMethod;
   invoice?: Invoice;
@@ -833,8 +833,10 @@ export type ExternalResource = {
   uuid: string;
   name: string;
   uptime?: string;
+  id?: string;
   description?: string;
   type: boolean;
   group: boolean;
+  children?: ExternalResource[];
   created_at: string;
 }

@@ -171,7 +171,7 @@ const LeadMessagesManager = () => {
               <small>{currentLead?.profile.phone} | {currentLead?.profile.personal_email || 'Sin mail'}</small>
             </div>
           </Space>}
-          tools={<Space split={<TbArrowRightToArc/>}>
+          tools={<Space separator={<TbArrowRightToArc/>}>
             <div>
               Asesor asignado: <br/>
             </div>

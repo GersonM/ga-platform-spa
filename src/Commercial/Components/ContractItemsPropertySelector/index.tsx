@@ -50,10 +50,12 @@ const ProductManufacturerSelector = ({placeholder, property, ...props}: ProductM
     <AutoComplete
       {...props}
       allowClear
+      popupMatchSelectWidth={false}
       placeholder={placeholder || 'Elige un valor'}
-      showSearch={true}
       style={{minWidth: 120}}
-      optionFilterProp={'label'}
+      showSearch={{
+        optionFilterProp:'label'
+      }}
       options={manufacturers}
     />
   );

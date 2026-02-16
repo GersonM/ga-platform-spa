@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Input, notification, Popconfirm, Space} from "antd";
+import {Form, Input, notification, Popconfirm, Select, Space, Tooltip} from "antd";
+import {TbBrandMysql, TbKey, TbPencil} from "react-icons/tb";
+import {PiDatabaseDuotone, PiHardDrivesDuotone} from "react-icons/pi";
+import {LuEye, LuPower, LuScan, LuScanLine, LuServer, LuTrash2} from "react-icons/lu";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 import type {
@@ -14,14 +18,12 @@ import ProductManufacturerSelector from "../../../WarehouseManager/Components/Pr
 import TableList from "../../../CommonUI/TableList";
 import CustomTag from "../../../CommonUI/CustomTag";
 import IconButton from "../../../CommonUI/IconButton";
-import {TbPencil} from "react-icons/tb";
 import ModalView from "../../../CommonUI/ModalView";
 import ExternalResourceForm from "../../Components/ExternalResourceForm";
-import {useNavigate} from "react-router-dom";
-import {LuEye, LuPower, LuTrash2} from "react-icons/lu";
 import TablePagination from "../../../CommonUI/TablePagination";
 import ResourceStatus from "../../Components/ResourceStatus";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import {GrMysql} from "react-icons/gr";
 
 const MonitorServicesManager = () => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,7 @@ const MonitorServicesManager = () => {
   const [selectedResource, setSelectedResource] = useState<ExternalResource>();
   const [filters, setFilters] = useState<any>();
   const navigate = useNavigate();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -64,7 +67,36 @@ const MonitorServicesManager = () => {
     axios.post(`external-resources/servers/${uuid}/reset`)
       .then(() => {
         setLoading(false);
-        notification.success({message: 'Reinicio en proceso'});
+        api.info({message: 'Reinicio en proceso'});
+      })
+      .catch((error) => {
+        setLoading(false);
+        ErrorHandler.showNotification(error);
+      })
+  }
+
+  const scanResource = (uuid: string) => {
+    setLoading(true);
+    api.info({message: 'Escaneado en proceso'});
+    axios.post(`external-resources/${uuid}/scan`)
+      .then((response) => {
+        setLoading(false);
+        api.success({message: 'Finalizado', description:<ul>{response.data.map((s:string, index:number) => <li key={index}>{s}</li>)}</ul>});
+        setReload(!reload);
+      })
+      .catch((error) => {
+        api.error({message: 'No se pudo escanear'});
+        setLoading(false);
+        ErrorHandler.showNotification(error, 3, api);
+      })
+  }
+
+  const showAuthKey = (uuid: string) => {
+    setLoading(true);
+    axios.get(`external-resources/${uuid}/auth-key`)
+      .then((response) => {
+        setLoading(false);
+        api.info({message: 'Llave', 'description': response.data.key});
       })
       .catch((error) => {
         setLoading(false);
@@ -77,7 +109,8 @@ const MonitorServicesManager = () => {
     axios.delete(`external-resources/${uuid}`)
       .then(() => {
         setLoading(false);
-        notification.success({message: 'Servicio eliminado'});
+        api.success({message: 'Servicio eliminado'});
+        setReload(!reload);
       })
       .catch((error) => {
         setLoading(false);
@@ -85,11 +118,38 @@ const MonitorServicesManager = () => {
       })
   }
 
+  const getTypeIcon = (type: string) => {
+    const iconSize = 28
+    switch (type) {
+      case 'server':
+      case 'vps':
+      case 'smart7bus_api':
+        return <PiHardDrivesDuotone size={iconSize}/>;
+      case 'smart7bus_api_db':
+        return <PiDatabaseDuotone size={iconSize}/>;
+      case 'mysql_server':
+        return <GrMysql size={iconSize}/>;
+      case 'database_mysql':
+        return <PiDatabaseDuotone size={iconSize}/>;
+      default:
+        return <LuServer/>;
+    }
+  }
+
   const columns = [
+    {
+      title: '',
+      dataIndex: 'type',
+      render: (type: string) => (getTypeIcon(type))
+    },
     {
       title: 'Nombre',
       dataIndex: 'name',
-      width: 100,
+      width: 190,
+      render: (name: string, record: ExternalResource) => (<>
+        {name} <br/>
+        <small>{record.description}</small>
+      </>)
     },
     {
       title: 'Estado',
@@ -100,9 +160,8 @@ const MonitorServicesManager = () => {
     {
       title: 'Tipo',
       dataIndex: 'type',
-      align: 'center',
       width: 100,
-      render: (text: string) => (<CustomTag color={'green'}>{text}</CustomTag>)
+      render: (text: string) => (<CustomTag>{text}</CustomTag>)
     },
     {
       title: 'ID',
@@ -117,11 +176,15 @@ const MonitorServicesManager = () => {
     {
       title: 'Llave',
       dataIndex: 'auth_key_hint',
-      render: (text: string) => (<code>{text}</code>)
+      render: (text: string, record: ExternalResource) => (text ?
+        <Tooltip title={text}><TbKey size={20} onClick={() => showAuthKey(record.uuid)}/></Tooltip> : null)
+    },
+    {
+      title: 'Grupo',
+      dataIndex: 'group'
     },
     {
       title: 'Tiempo activo',
-      width: 210,
       dataIndex: 'uptime'
     },
     {
@@ -134,6 +197,12 @@ const MonitorServicesManager = () => {
             setOpenAddResource(true);
           }}/>
           <IconButton small icon={<LuEye/>} onClick={() => navigate(uuid)}/>
+          <Popconfirm
+            title={'¿Quieres escanear el servicio?'} description={'Buscará servicios soportados y los agregará'}
+            onConfirm={() => scanResource(uuid)}
+          >
+            <IconButton small icon={<LuScanLine/>}/>
+          </Popconfirm>
           <Popconfirm
             title={'¿Quieres reiniciar el servicio?'} description={'Forzar reinicio del sistema'}
             onConfirm={() => resetServer(uuid)}
@@ -153,6 +222,7 @@ const MonitorServicesManager = () => {
 
   return (
     <ModuleContent>
+      {contextHolder}
       <ContentHeader
         title={'Servicio y recursos'}
         loading={loading}
@@ -169,18 +239,33 @@ const MonitorServicesManager = () => {
           <Form.Item name={'search'} label={'Buscar'}>
             <Input.Search
               allowClear
-              placeholder={'Buscar por nombre, código o descripción'}
+              placeholder={'Buscar por nombre, ID o descripción'}
             />
           </Form.Item>
-          <Form.Item name={'ip'} label={'IP'}>
-            <ProductGroupsSelector/>
+          <Form.Item name={'type'} label={'Tipo'}>
+            <Select allowClear placeholder={'Todos'} popupMatchSelectWidth={false} options={[
+              {label: 'server', value: 'server'},
+              {label: 'vps', value: 'vps'},
+              {label: 'smart7bus_api', value: 'smart7bus_api'},
+              {label: 'smart7bus_api_db', value: 'smart7bus_api_db'},
+              {label: 'mysql_server', value: 'mysql_server'},
+              {label: 'database_mysql', value: 'database_mysql'},
+            ]}/>
           </Form.Item>
           <Form.Item name={'manufacturer'}>
             <ProductManufacturerSelector/>
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <TableList customStyle={false} columns={columns} dataSource={resources}/>
+      <TableList
+        customStyle={false}
+        columns={columns}
+        dataSource={resources}
+        expandable={{
+
+          rowExpandable: (record) => record.children?.length,
+        }}
+      />
       {pagination && (
         <TablePagination pagination={pagination} onChange={(page) => setCurrentPage(page)}/>
       )}

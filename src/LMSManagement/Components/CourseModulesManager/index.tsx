@@ -68,8 +68,8 @@ const CourseModulesManager = ({refresh, courseUUID}: CourseModulesManagerProps) 
   return (
     <div>
       <Collapse size={'small'}>
-        {modules?.map((module, _index) => (
-          <Collapse.Panel key={_index} header={module.name}>
+        {modules?.map((module, index) => (
+          <Collapse.Panel key={index} header={module.name}>
             {module.sessions?.length === 0 && (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay sesiones registradas'} />
             )}

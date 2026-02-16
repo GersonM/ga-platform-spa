@@ -210,7 +210,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
           return label;
         } else {
           return <Popover content={<div>
-            <Space direction={'vertical'} split={<Divider style={{margin: '5px 0'}}/>}>
+            <Space orientation={'vertical'} separator={<Divider style={{margin: '5px 0'}}/>}>
               {cart?.map((cI, index) => {
                 return <StorageStockChip key={index} storageStock={cI.stock} quantity={cI.quantity}/>
               })}

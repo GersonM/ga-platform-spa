@@ -170,7 +170,7 @@ const ReservationsManager = () => {
               </Space>
             </div>
             <Collapse
-              destroyInactivePanel
+              destroyOnHidden
               items={groupedTrips[g].trips?.map((trip: MoveTrip) => {
                 return {
                   extra: (

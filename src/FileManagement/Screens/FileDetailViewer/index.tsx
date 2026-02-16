@@ -83,7 +83,7 @@ const FileDetailViewer = () => {
     <div className={'file-detail-wrapper'}>
       <MetaTitle title={file?.name} />
       <div className={'file-detail-container'}>
-        <Space split={<Divider type={'vertical'} />}>
+        <Space separator={<Divider orientation={'vertical'} />}>
           <img src={tenantLogo ? tenantLogo : logo} alt="Logo" className={'logo'} />
           <div>
             <h2 className={'title'}>{file?.name}</h2>

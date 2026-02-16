@@ -56,7 +56,7 @@ const PublicContainerViewer = () => {
     <div className={'container-detail-wrapper'}>
       <MetaTitle title={currentContainer?.name || 'Privado'}/>
       <div className={'container-detail-container'}>
-        <Space split={<Divider type={'vertical'}/>}>
+        <Space separator={<Divider orientation={'vertical'}/>}>
           <img src={tenantLogo ? tenantLogo : logo} alt="Logo" className={'logo'}/>
           <div>
             <h2 className={'title'}>{currentContainer?.name || 'Privado'}</h2>

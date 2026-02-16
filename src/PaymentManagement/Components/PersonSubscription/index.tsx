@@ -238,7 +238,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
               {subscription.is_active ? 'ACTIVO' : 'SUSPENDIDO'}
             </Tag>
           </h2>
-          <Space split={<Divider type={'vertical'}/>}>
+          <Space separator={<Divider type={'vertical'}/>}>
             <InfoButton
               icon={<TbCalendarUp className={'icon'}/>}
               caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}

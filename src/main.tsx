@@ -9,7 +9,6 @@ import 'antd/dist/reset.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import '@ant-design/v5-patch-for-react-19';
 import {configureEcho} from "@laravel/echo-react";
 
 import {AuthContextProvider} from './Context/AuthContext';

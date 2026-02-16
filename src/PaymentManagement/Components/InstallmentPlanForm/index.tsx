@@ -55,7 +55,7 @@ const InstallmentPlanForm = ({contract, onComplete}: InstallmentPlanProps) => {
             <Form.Item label={'Interés mensual'} name={'interest_rate'}>
               <InputNumber
                 min={0}
-                addonAfter={'%'} placeholder={'0'} style={{width: '100%'}}
+                prefix={'%'} placeholder={'0'} style={{width: '100%'}}
                 onChange={value => setInterestRate(value)}/>
             </Form.Item>
             <Form.Item label={'Fecha de inicio'} name={'date_start'}>

@@ -55,24 +55,24 @@ class ErrorHandler {
     this.description = st?.error;
   }
 
-  static showNotification(error: any, time = 3) {
+  static showNotification(error: any, time = 3, api?:any) {
     if (error.message === undefined) return;
     const handler = new ErrorHandler(error);
     if (error.response) {
       if (error.response.config.responseType === 'blob') {
         handler.getBlobError(error).then(() => {
-          handler.show(time);
+          handler.show(time, api);
         });
       } else {
-        handler.show(time);
+        handler.show(time, api);
       }
     } else {
-      handler.show(time);
+      handler.show(time, api);
     }
   }
 
-  show(time: number) {
-    notification.open({
+  show(time: number, api?:any) {
+    api.open({
       // @ts-ignore
       type: this.type,
       duration: this.errors ? 15 : time,

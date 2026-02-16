@@ -122,7 +122,7 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
             </div>
             <InputNumber
               value={cartItem.quantity}
-              min={1} max={999} addonBefore={'Cant.'} placeholder={'1'} style={{width: 110}}
+              min={1} max={999} prefix={'Cant.'} placeholder={'1'} style={{width: 110}}
               onChange={v => {
                 updateQuantity(cartItem, v);
               }}/>

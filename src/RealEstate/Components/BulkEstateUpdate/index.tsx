@@ -18,7 +18,7 @@ const BulkEstateUpdate = () => {
         />
       </Form.Item>
       <Form.Item label={'Progreso'} name={'progress'}>
-        <InputNumber addonAfter={'%'} />
+        <InputNumber suffix={'%'} />
       </Form.Item>
       <PrimaryButton htmlType={'submit'} label={'Guardar'} block />
     </Form>

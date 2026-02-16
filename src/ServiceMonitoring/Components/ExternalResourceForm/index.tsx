@@ -70,6 +70,9 @@ const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFor
           <Input/>
         </Form.Item>
         <Form.Item name={'auth_key'} label={'Llave/Contraseña'}>
+          <Input placeholder={'Sin modificar'}/>
+        </Form.Item>
+        <Form.Item name={'auth_path'} label={'Path'}>
           <Input/>
         </Form.Item>
         <Form.Item label={'Descripción (opcional)'} name={'description'}>

@@ -84,7 +84,7 @@ const SellerCategoriesManager = () => {
       </Row>
       <Drawer
         destroyOnHidden
-        width={600}
+        size={600}
         title={'Porcentajes para ' + selectedCategory?.name}
         open={openCategoryFeesManager} onClose={() => setOpenCategoryFeesManager(false)}>
         {selectedCategory && <CategoryFeesManager category={selectedCategory} />}

@@ -106,7 +106,7 @@ const ClubMembersManagement = () => {
           return <small>Sin productos</small>;
         }
         return <Popover content={<div>
-          <Space direction={'vertical'} split={<Divider style={{margin: '5px 0'}}/>}>
+          <Space orientation={'vertical'} separator={<Divider style={{margin: '5px 0'}}/>}>
             {contract.cart?.map((cI, index) => {
               return <StorageStockChip key={index} storageStock={cI.stock} quantity={cI.quantity}/>
             })}

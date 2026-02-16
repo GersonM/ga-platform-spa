@@ -157,7 +157,7 @@ const ContractItemViewer = ({contractItem, onChange, onEdit, editMode = false}: 
         <small>{contractItem.additional_details}</small>
       </div>
       <div>
-        <Space split={<Divider type={'vertical'}/>}>
+        <Space separator={<Divider orientation={'vertical'}/>}>
           {editMode ? (<>
             {itemTypes[contractItem.type]}
             <IconButton icon={<TbPencil/>} onClick={onEdit}/>

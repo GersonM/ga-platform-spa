@@ -85,7 +85,7 @@ const CsfFirewall = ({resourceUuid}: CsfFirewallProps) => {
       <LoadingIndicator visible={loading} message={'Listando configuración'}/>
       <Form onFinish={submitForm} layout="vertical" onFieldsChange={checkChanges}>
         <div className={'controls'}>
-          <Space split={<Divider type={'vertical'}/>}>
+          <Space separator={<Divider orientation={'vertical'}/>}>
             <PrimaryButton
               loading={loading} htmlType={'submit'} label={'Guardar'}
               disabled={modifiedFields.length == 0}/>

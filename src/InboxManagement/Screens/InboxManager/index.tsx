@@ -93,7 +93,7 @@ const InboxManager = () => {
           <>
             {!selectedAccount.setup_completed && (
               <div style={{padding: 15}}>
-                <Alert message={'Ingresa la contraseña para activar esta cuenta'} type={'warning'} showIcon/>
+                <Alert title={'Ingresa la contraseña para activar esta cuenta'} type={'warning'} showIcon/>
                 <MailSetupForm mailAccount={selectedAccount}/>
               </div>
             )}

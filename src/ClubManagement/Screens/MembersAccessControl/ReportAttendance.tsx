@@ -46,7 +46,7 @@ const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps)
         </Space>
       }
       {!currentProfile?.uuid &&
-        <Alert message={'Esta persona no está registrada, completa sus datos para registrarla como invitado'} showIcon/>
+        <Alert title={'Esta persona no está registrada, completa sus datos para registrarla como invitado'} showIcon/>
       }
       <Form layout={'vertical'} style={{marginTop: 20}} onFinish={registerVisit} initialValues={currentProfile}>
         {!currentProfile?.uuid && <>

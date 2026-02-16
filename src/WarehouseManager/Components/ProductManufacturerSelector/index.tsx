@@ -49,9 +49,10 @@ const ProductManufacturerSelector = ({placeholder, ...props}:ProductManufacturer
       {...props}
       allowClear
       placeholder={placeholder || 'Elige un fabricante o proveedor'}
-      showSearch={true}
+      showSearch={{
+        optionFilterProp:'label'
+      }}
       style={{ minWidth: 120 }}
-      optionFilterProp={'label'}
       options={manufacturers}
     />
   );

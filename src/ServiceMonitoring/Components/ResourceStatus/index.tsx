@@ -7,9 +7,10 @@ import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ResourceStatusProps {
   resourceUuid?: string;
+  autoRefresh?: boolean;
 }
 
-const ResourceStatus = ({resourceUuid}: ResourceStatusProps) => {
+const ResourceStatus = ({resourceUuid, autoRefresh = false}: ResourceStatusProps) => {
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [status, setStatus] = useState<any>();
@@ -17,10 +18,12 @@ const ResourceStatus = ({resourceUuid}: ResourceStatusProps) => {
   const [time, setTime] = useState<any>();
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(Date.now()), 20000);
-    return () => {
-      clearInterval(interval);
-    };
+    if (autoRefresh) {
+      const interval = setInterval(() => setTime(Date.now()), 20000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
   }, []);
 
   useEffect(() => {
