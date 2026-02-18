@@ -139,10 +139,10 @@ const WarehouseStockManager = () => {
     },
     {
       title: 'Tipo',
-      dataIndex: 'type',
-      render: (type: string) => {
-        return <CustomTag color={type == 'rent' ? 'orange' : 'blue'}>
-          <code>{type == 'rent' ? 'Alquiler' : (type == 'sale' ? 'Venta':type)}</code>
+      dataIndex: 'type_label',
+      render: (type_label: string | null, row: StorageStock) => {
+        return type_label && <CustomTag color={row.type == 'rent' ? 'orange' : 'blue'}>
+          <code>{type_label}</code>
         </CustomTag>;
       }
     },
@@ -384,7 +384,7 @@ const WarehouseStockManager = () => {
         <p>Al retirar el stock no se elimina ninguna información relacionada, pero no estará disponible para ventas
           futuras ni en el catalogo</p>
         <StorageStockChip storageStock={selectedStock}/>
-        <Divider />
+        <Divider/>
         <Form layout={'vertical'} onFinish={archiveStock}>
           <Form.Item label={'Motivo del retiro (opcional)'} name={'comment'}>
             <Input.TextArea/>
