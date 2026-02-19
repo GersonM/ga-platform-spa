@@ -38,9 +38,10 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
   const exchangeCurrency = invoice.currency == 'USD' ? 'PEN' : 'USD';
 
   useEffect(() => {
-    if(transactionSelected){
+    if (transactionSelected) {
       const selectedCurrency = transactionSelected?.wallet_to?.currency ?? transactionSelected?.wallet_from?.currency;
       setEnableExchange(!!selectedCurrency && (selectedCurrency != invoice.currency));
+      form.setFieldValue('amount', transactionSelected.amount);
     }
   }, [transactionSelected]);
 
@@ -118,14 +119,22 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
         } : {amount: invoice.pending_payment}}
         layout={'vertical'}
         onFinish={submitForm}>
-        <Form.Item
-          label={'Transacción'}
-          extra={<Button size={"small"} onClick={() => setOpenTransactionForm(true)}>Nueva transacción</Button>}
-          name={'wallet_transaction_uuid'}>
-          <WalletTransactionSelector refresh={reload} onChange={(d, i) => {
-            setTransactionSelected(i.entity);
-          }} currency={invoice.currency || 'PEN'}/>
-        </Form.Item>
+        <p>Transacción</p>
+        <Row gutter={[20, 20]}>
+          <Col xs={15}>
+            <Form.Item
+              noStyle
+              name={'wallet_transaction_uuid'}>
+              <WalletTransactionSelector refresh={reload} onChange={(d, i) => {
+                setTransactionSelected(i.entity);
+              }} currency={invoice.currency || 'PEN'}/>
+            </Form.Item>
+          </Col>
+          <Col xs={9}>
+            <Button type={"primary"} onClick={() => setOpenTransactionForm(true)}>Nueva transacción</Button>
+          </Col>
+        </Row>
+        <br/>
         <Row gutter={[15, 15]} align="middle">
           {selectedCurrency != invoice.currency && (<>
             <Col span={10}>

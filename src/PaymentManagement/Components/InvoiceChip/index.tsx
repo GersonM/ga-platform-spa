@@ -21,11 +21,12 @@ const InvoiceChip = ({invoice, boxed = true}: InvoiceChipProps) => {
           <div className="amounts">
             <div>
               <small>Pagado:</small>
-              <MoneyString currency={currency} value={invoice.amount - invoice.pending_payment}/>
+              {invoice.pending_payment != null ?
+                <MoneyString currency={currency} value={invoice.amount - invoice.pending_payment}/> : 'Sin información'}
             </div>
             <div>
               <small>Pendiente:</small>
-              <MoneyString currency={currency} value={invoice.pending_payment}/>
+              {invoice.pending_payment != null && <MoneyString currency={currency} value={invoice.pending_payment}/>}
             </div>
             <div>
               <small>Total:</small>
