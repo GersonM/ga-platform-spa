@@ -282,6 +282,7 @@ export type ApiFile = {
   container?: Container;
   activity?: Array<FileActivity>;
   source: string;
+  metadata?: any;
   details: string;
   public: string;
   thumbnail?: string;

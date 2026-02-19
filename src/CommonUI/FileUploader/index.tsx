@@ -14,18 +14,21 @@ interface FileUploaderProps {
   showPreview?: boolean;
   imagePath?: string;
   fileUuid?: string;
+  metadataExtract?: 'financial';
   height?: number;
   onChange?: (uuid: string) => void;
 }
 
-const FileUploader = ({
-  height,
-  onChange,
-  onFilesUploaded,
-  imagePath,
-  fileUuid,
-  showPreview = false,
-}: FileUploaderProps) => {
+const FileUploader = (
+  {
+    height,
+    onChange,
+    onFilesUploaded,
+    imagePath,
+    fileUuid,
+    metadataExtract,
+    showPreview = false,
+  }: FileUploaderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>();
   const [progress, setProgress] = useState<number>(0);
@@ -36,13 +39,16 @@ const FileUploader = ({
     const formData = new FormData();
     formData.append('file', file);
     formData.append('document_name', '');
+    if (metadataExtract) {
+      formData.append('metadata_extract', metadataExtract);
+    }
     formData.append('document_type_id', '');
     formData.append('file_type', '');
 
     try {
       setLoading(true);
 
-      const _response = await axios.post(`file-management/files`, formData, {
+      const response = await axios.post(`file-management/files`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -53,9 +59,9 @@ const FileUploader = ({
         },
       });
 
-      setUploadedFile(_response.data);
-      if(onFilesUploaded) onFilesUploaded(_response.data);
-      if(onChange) onChange(_response.data.uuid);
+      setUploadedFile(response.data);
+      if (onFilesUploaded) onFilesUploaded(response.data);
+      if (onChange) onChange(response.data.uuid);
 
       setLoading(false);
       message.success('Archivo cargado!');
@@ -112,26 +118,26 @@ const FileUploader = ({
             {files.map((f, index) => {
               return (
                 <div key={index}>
-                  <IconButton icon={<PaperClipIcon />} />
+                  <IconButton icon={<PaperClipIcon/>}/>
                   {f.name}
                 </div>
               );
             })}
           </span>
         )}
-        {loading && <Progress percent={progress} size={'small'} />}
+        {loading && <Progress percent={progress} size={'small'}/>}
         {(isDragActive || !files) && (
           <div className={'content-label'}>
-            <ArrowUpTrayIcon width={25} />
+            <ArrowUpTrayIcon width={25}/>
             {isDragActive ? <>Suelta tus archivos aquí</> : <>Arrastra archivos aquí</>}
           </div>
         )}
         {showPreview && uploadedFile && (
-          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}} />
+          <div className={'preview'} style={{backgroundImage: 'url(' + uploadedFile.source + ')'}}/>
         )}
         {showPreview && imagePath && (
           <>
-            <div className={'preview'} style={{backgroundImage: 'url(' + imagePath + ')'}} />
+            <div className={'preview'} style={{backgroundImage: 'url(' + imagePath + ')'}}/>
           </>
         )}
       </div>

@@ -5,7 +5,7 @@ import {PiCheck} from 'react-icons/pi';
 import dayjs from "dayjs";
 import axios from 'axios';
 
-import type {Wallet, WalletTransaction} from '../../../Types/api';
+import type {ApiFile, Wallet, WalletTransaction} from '../../../Types/api';
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -23,9 +23,20 @@ interface InvoicePaymentProps {
 
 const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: InvoicePaymentProps) => {
   const [loading, setLoading] = useState(false);
-  const [fileUuid, setFileUuid] = useState<string>();
+  const [uploadedFile, setUploadedFile] = useState<ApiFile>();
   const [selectedWallet, setSelectedWallet] = useState<Wallet|undefined>(wallet);
   const [form] = useForm();
+
+  useEffect(() => {
+    if(uploadedFile && form) {
+      form.setFieldsValue({
+        transaction_date: uploadedFile.metadata?.fecha_pago ? dayjs(uploadedFile.metadata.fecha_pago) : undefined,
+        amount: uploadedFile.metadata?.monto * 100,
+        tracking_id: uploadedFile.metadata?.numero_operacion,
+        currency: uploadedFile.metadata?.moneda,
+      });
+    }
+  }, [uploadedFile, form]);
 
   useEffect(() => {
     if (transaction?.wallet_to) {
@@ -37,7 +48,7 @@ const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: Invoice
 
   const submitForm = (values: any) => {
     const data = {
-      file_uuid: fileUuid,
+      file_uuid: uploadedFile?.uuid,
       type,
       ...values,
     };
@@ -104,8 +115,9 @@ const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: Invoice
         </Form.Item>
         <Form.Item label={'Foto del comprobante'}>
           <FileUploader
+            metadataExtract={'financial'}
             onFilesUploaded={file => {
-              setFileUuid(file.uuid);
+              setUploadedFile(file);
             }}
           />
         </Form.Item>
