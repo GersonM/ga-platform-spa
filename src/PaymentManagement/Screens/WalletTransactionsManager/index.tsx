@@ -40,6 +40,7 @@ import Config from "../../../Config.tsx";
 import WalletTransactionForm from "../../Components/WalletTransactionForm";
 import TransactionPaymentsManager from "../../Components/TransactionPaymentsManager";
 import FilePreview from "../../../CommonUI/FilePreview";
+import PaymentChannelChip from "../../Components/PaymentChannelChip";
 
 const WalletTransactionsManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -141,7 +142,7 @@ const WalletTransactionsManager = () => {
       render: (tracking_id: string, row: WalletTransaction) => {
         return (<>
           <code>{tracking_id}</code>
-          <small>{row.payment_channel}</small>
+          <small><PaymentChannelChip channel={row.payment_channel} /></small>
         </>);
       },
     },
@@ -187,20 +188,12 @@ const WalletTransactionsManager = () => {
       render: (invoice_payments: InvoicePayment[]) => {
         return <>
           {invoice_payments.map((payment: InvoicePayment, index: number) => (
-            <Link to={`/commercial/contracts/${payment.invoice_uuid}`} key={index}>
+            <Link to={`/commercial/contracts/${payment.invoice?.contract_uuid}`} key={index}>
               <CustomTag color={'orange'}>
-                <MoneyString value={payment.amount} currency={payment.exchange_currency}/>
+                {payment.invoice?.tracking_id} : <MoneyString value={payment.amount} currency={payment.exchange_currency}/>
               </CustomTag>
             </Link>
           ))}</>;
-      }
-    },
-    {
-      title: 'Info',
-      width: 200,
-      dataIndex: 'payment_channel',
-      render: (payment_channel?: string) => {
-        return <pre><small>{payment_channel}</small></pre>
       }
     },
     {
@@ -217,7 +210,6 @@ const WalletTransactionsManager = () => {
     {
       title: 'Doc.',
       dataIndex: 'attachments',
-      width: 190,
       render: (attachments: ApiFile[]) => {
         return <Space wrap>
           {attachments?.map(f =>
