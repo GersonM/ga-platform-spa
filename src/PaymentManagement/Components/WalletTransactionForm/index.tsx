@@ -31,7 +31,7 @@ const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: Invoice
     if(uploadedFile && form) {
       form.setFieldsValue({
         transaction_date: uploadedFile.metadata?.fecha_pago ? dayjs(uploadedFile.metadata.fecha_pago) : undefined,
-        amount: uploadedFile.metadata?.monto * 100,
+        amount: uploadedFile.metadata ? uploadedFile.metadata?.monto * 100 : undefined,
         tracking_id: uploadedFile.metadata?.numero_operacion,
         currency: uploadedFile.metadata?.moneda,
       });
