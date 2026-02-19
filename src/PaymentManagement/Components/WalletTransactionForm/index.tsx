@@ -109,7 +109,7 @@ const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: Invoice
             }}
           />
         </Form.Item>
-        <Form.Item name={'description'} label={'Descripción (opcional)'} tooltip={'Información adicional'}>
+        <Form.Item name={'observations'} label={'Descripción (opcional)'} tooltip={'Información adicional'}>
           <Input/>
         </Form.Item>
         <PrimaryButton icon={<PiCheck/>} block loading={loading} label={'Guardar'} htmlType={'submit'}/>

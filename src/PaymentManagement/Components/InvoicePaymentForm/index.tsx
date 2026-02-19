@@ -41,7 +41,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
     if (transactionSelected) {
       const selectedCurrency = transactionSelected?.wallet_to?.currency ?? transactionSelected?.wallet_from?.currency;
       setEnableExchange(!!selectedCurrency && (selectedCurrency != invoice.currency));
-      form.setFieldValue('amount', transactionSelected.amount);
+      form.setFieldValue('amount', transactionSelected.amount > invoice.amount ? invoice.pending_payment : transactionSelected.amount);
     }
   }, [transactionSelected]);
 

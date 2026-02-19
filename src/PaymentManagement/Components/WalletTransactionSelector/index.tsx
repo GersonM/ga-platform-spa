@@ -7,6 +7,10 @@ import type {Wallet, WalletTransaction} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import CustomTag from "../../../CommonUI/CustomTag";
 import MoneyString from "../../../CommonUI/MoneyString";
+import PaymentChannelChip from "../PaymentChannelChip";
+import dayjs from "dayjs";
+import Config from "../../../Config.tsx";
+import WalletChip from "../WalletChip";
 
 interface WalletTransactionSelectorProps {
   placeholder?: string;
@@ -50,7 +54,7 @@ export const WalletTransactionSelector = ({refresh, placeholder, mode, style, cu
                 value: item.uuid,
                 entity: item,
                 label: <Space>
-                  <CustomTag color={item.type=='deposit'?'green':'orange'}><MoneyString currency={currency} value={item.amount}/></CustomTag>{item.tracking_id}  -<code>{item.payment_channel}</code>
+                  <MoneyString currency={currency} value={item.amount}/> - {item.tracking_id} <CustomTag color={item.type=='deposit'?'green':'orange'}> <WalletChip wallet={item.wallet_to} /><WalletChip wallet={item.wallet_from} /></CustomTag>
                 </Space>
               };
             }),
@@ -70,15 +74,22 @@ export const WalletTransactionSelector = ({refresh, placeholder, mode, style, cu
       {...props}
       allowClear
       placeholder={placeholder || 'Elige transacción'}
-      showSearch={true}
-      onSearch={value => setName(value)}
-      filterOption={false}
+      showSearch={{
+        onSearch: value => setName(value)
+      }}
       loading={loading}
       onClear={() => {
         setName('');
       }}
       style={style ? style : {width: '100%'}}
       options={wallets}
+      optionRender={(option: any) => (
+        <>{option.label}
+          <small>
+            {dayjs(option.data.entity.transaction_date).format(Config.dateFormatUser)} | {option.data.entity?.observations} - <PaymentChannelChip channel={option.data.entity?.payment_channel}/>
+          </small>
+        </>
+      )}
       popupMatchSelectWidth={false}
     />
   );
