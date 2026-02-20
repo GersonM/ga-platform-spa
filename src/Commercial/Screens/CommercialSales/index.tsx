@@ -38,13 +38,15 @@ import NewSaleForm from "../../Components/NewSaleForm";
 import StorageStockChip from "../../Components/StorageStockChip";
 import './styles.less';
 import {LuCircleChevronRight} from "react-icons/lu";
-import {TbCancel, TbTrash} from "react-icons/tb";
+import {TbCancel, TbChevronRight, TbTrash} from "react-icons/tb";
 import WarehouseSelector from "../../../WarehouseManager/Components/WarehouseSelector";
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ProductSelector from "../../../WarehouseManager/Components/ProductSelector";
 import ProductVariationSelector from "../../../WarehouseManager/Components/ProductVariationSelector";
 import {ClientSelector} from "../../../PaymentManagement/Components/ClientSelector";
 import ModalView from "../../../CommonUI/ModalView";
+import CustomTag from "../../../CommonUI/CustomTag";
+import PeriodChip from "../../../CommonUI/PeriodChip";
 
 interface CommercialSalesProps {
   mode?: string;
@@ -175,11 +177,16 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
     {
       title: 'N° / Estado',
       dataIndex: 'tracking_id',
-      align: 'center',
       width: 130,
-      render: (tracking_id: string, row: Contract) => <Link to={`/commercial/contracts/${row.uuid}`}>
-        <code>{tracking_id}</code>
-        <ContractStatus contract={row}/></Link>,
+      render: (tracking_id: string, row: Contract) => <>
+        <Link to={`/commercial/contracts/${row.uuid}`} className={'status-link'}>
+          <div>
+            <code>{tracking_id}</code>
+            <ContractStatus contract={row}/>
+          </div>
+          <TbChevronRight/>
+        </Link>
+      </>,
     },
     {
       title: 'ID',
@@ -259,6 +266,9 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
         <>
           <MoneyString currency={'PEN'} value={totals?.PEN}/>
           <MoneyString currency={'USD'} value={totals?.USD}/>
+          <MoneyString currency={'EUR'} value={totals?.EUR}/>
+          <br/>
+          <PeriodChip period={row.period}/>
         </>,
     },
     {
