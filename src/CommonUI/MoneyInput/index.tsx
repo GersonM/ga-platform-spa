@@ -15,9 +15,11 @@ interface MoneyStringProps {
 }
 
 const currencies: any = {
-  'PEN': 'S/',
-  'USD': 'USD $',
-};
+  PEN: 'S/',
+  USD: '$',
+  EUR: '€',
+  AED: 'AED',
+}
 
 const MoneyInput = (
   {

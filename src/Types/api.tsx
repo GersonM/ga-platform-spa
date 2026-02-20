@@ -6,6 +6,7 @@ export type TenantConfig = {
   is_cluster_owner?: boolean;
   version?: string;
   modules: string[];
+  currency: string[];
   favicon?: string;
   favicon_white?: string;
   config: {

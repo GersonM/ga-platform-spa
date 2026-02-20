@@ -10,7 +10,7 @@ import {
   Tooltip
 } from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -176,9 +176,10 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       title: 'N° / Estado',
       dataIndex: 'tracking_id',
       align: 'center',
-      render: (tracking_id: string, row: Contract) => <>
+      width: 130,
+      render: (tracking_id: string, row: Contract) => <Link to={`/commercial/contracts/${row.uuid}`}>
         <code>{tracking_id}</code>
-        <ContractStatus contract={row}/></>,
+        <ContractStatus contract={row}/></Link>,
     },
     {
       title: 'ID',
@@ -254,7 +255,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       title: 'Monto',
       dataIndex: 'totals',
       align: 'right',
-      render: (totals: any) =>
+      render: (totals: any, row: Contract) =>
         <>
           <MoneyString currency={'PEN'} value={totals?.PEN}/>
           <MoneyString currency={'USD'} value={totals?.USD}/>
@@ -407,7 +408,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
         width={1000}
         open={openContractForm}
         onCancel={() => setOpenContractForm(false)}
-        >
+      >
         <NewSaleForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)}/>
       </ModalView>
     </ModuleContent>
