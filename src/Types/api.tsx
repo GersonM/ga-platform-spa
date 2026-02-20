@@ -472,12 +472,15 @@ export type PaymentMethod = {
 
 export type Invoice = {
   uuid: string;
+  secondary_id?: string;
   amount: number;
   amount_string: string;
   tracking_id: string;
   concept: string;
   currency: string;
   apply_taxes?: boolean;
+  include_taxes?: boolean;
+  apply_tax_deduction?: boolean;
   pending_payment: number;
   created_at: string;
   expires_on: string;

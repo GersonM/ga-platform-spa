@@ -29,7 +29,7 @@ const colors: any = {
 const ContractStatus = ({contract}: ContractStatusProps) => {
   const date = contract.created_at || contract.approved_at || contract.date_start || contract.provided_at || contract.cancelled_at;
   return (
-    <Tag variant={'solid'} color={colors[contract.status]}>
+    <Tag variant={'outlined'} color={colors[contract.status]}>
       {statuses[contract.status]}
     </Tag>
   );

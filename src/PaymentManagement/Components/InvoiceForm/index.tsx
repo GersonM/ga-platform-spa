@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Row, Space, Tag} from "antd";
+import {Checkbox, Col, DatePicker, Form, Input, Row, Space, Tag} from "antd";
 import {useForm} from "antd/lib/form/Form";
 import axios from "axios";
 import dayjs, {type Dayjs} from "dayjs";
@@ -86,6 +86,9 @@ const InvoiceForm = (
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label={'Documento tributario'} name={'secondary_id'}>
+          <Input placeholder={'Eje: F1-001'}/>
+        </Form.Item>
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item label={'Fecha de emisión'} name={'issued_on'}>
@@ -101,9 +104,14 @@ const InvoiceForm = (
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={''} name={'apply_taxes'} valuePropName={'checked'}>
+        <Form.Item label={''} name={'apply_taxes'} valuePropName={'checked'} noStyle>
           <Checkbox>Aplicar impuestos (IGV 18%)</Checkbox>
         </Form.Item>
+        <Form.Item label={''} name={'apply_taxes'} valuePropName={'checked'} noStyle>
+          <Checkbox>El monto incluye impuestos</Checkbox>
+        </Form.Item>
+        <br/>
+        <br/>
         <PrimaryButton disabled={!isModified && !!invoice} htmlType={"submit"}
                        label={!invoice ? 'Crear' : 'Guardar cambios'} block/>
       </Form>

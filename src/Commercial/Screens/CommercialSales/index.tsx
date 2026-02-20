@@ -179,12 +179,12 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       dataIndex: 'tracking_id',
       width: 130,
       render: (tracking_id: string, row: Contract) => <>
-        <Link to={`/commercial/contracts/${row.uuid}`} className={'status-link'}>
-          <div>
+        <Link to={`/commercial/contracts/${row.uuid}`}>
+          <div className={'status-link'}>
             <code>{tracking_id}</code>
-            <ContractStatus contract={row}/>
+            <TbChevronRight/>
           </div>
-          <TbChevronRight/>
+          <ContractStatus contract={row}/>
         </Link>
       </>,
     },
@@ -278,34 +278,36 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       render: (approved_at?: string, contract?: Contract) => {
         return approved_at ? <>
           {dayjs(approved_at).fromNow()}
-          <small>{dayjs(approved_at).format(Config.datetimeFormatUser)}</small>
-        </> : <small>Aún no aprobado<br/>{dayjs(contract?.created_at).format(Config.datetimeFormatUser)}</small>
+          <small>{dayjs(approved_at).format(Config.dateFormatUser)}</small>
+        </> : <small>Aún no aprobado<br/>{dayjs(contract?.created_at).format(Config.dateFormatUser)}</small>
       },
     },
     {
-      title: 'Pagos vencidos',
+      title: 'Pagos / Renovación',
       dataIndex: 'invoices',
-      render: (invoices: Invoice[]) => {
-        return invoices?.map((i, index) => {
-          return (
-            <Tooltip
-              key={index}
-              title={
-                <>
-                  Total <MoneyString value={i.amount}/>
-                  {i.pending_payment && (
+      render: (invoices: Invoice[], row: Contract) => {
+        const nextDate = dayjs(row.next_invoice_at);
+        return <>
+          <Space wrap>
+            {invoices?.map((i, index) => {
+              const expiryDate = dayjs(i.expires_on);
+              return (
+                <Tooltip
+                  key={index}
+                  title={
                     <>
-                      Pendiente por pagar: <MoneyString value={i.pending_payment}/>
+                      Vence {dayjs(i.expires_on).fromNow()}
                     </>
-                  )}
-                </>
-              }>
-              <Tag color={i.paid_at ? 'green' : 'red'}>
-                {i.tracking_id}: <MoneyString value={i.pending_payment}/>
-              </Tag>
-            </Tooltip>
-          );
-        });
+                  }>
+                  <Tag color={expiryDate.isBefore() ? 'error' : 'gray'}>
+                      {i.tracking_id}: <MoneyString currency={i.currency} value={i.amount}/>
+                  </Tag>
+                </Tooltip>
+              );
+            })}
+          </Space>
+
+        </>;
       },
     },
     {

@@ -97,16 +97,20 @@ const InvoicesTable = (
   const columns: any = [
     {
       title: 'N°',
-      width: 40,
+      width: 83,
       dataIndex: 'tracking_id',
-      render: (tracking_id: string) => <code>{tracking_id}</code>,
+      render: (tracking_id: string, row: Invoice) => <><code>{tracking_id}</code>
+        <small>{row.secondary_id}</small>
+      </>,
     },
     {
       title: 'Conceptos',
       dataIndex: 'concept',
       render: (concept: string, row: Invoice) => {
         return <>{row.items?.map((i: InvoiceItem) => i.concept).join(', ')}
-          {row.apply_taxes ? <CustomTag style={{marginLeft:5}}>+IGV</CustomTag> : ''}
+          <br/>
+          {row.apply_taxes ? <CustomTag>IGV</CustomTag> : ''}
+          {row.apply_tax_deduction ? <CustomTag color={'magenta'} style={{marginLeft:5}}>Detracción</CustomTag> : ''}
           <small>{concept}</small>
         </>
       }

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Checkbox, Col, DatePicker, Form, Input, Row, Select, Space} from 'antd';
+import {Checkbox, Col, DatePicker, Divider, Form, Input, Row, Select, Space} from 'antd';
 import {TbCheck, TbPencil} from "react-icons/tb";
 import {useForm} from "antd/lib/form/Form";
 import dayjs from "dayjs";
@@ -95,6 +95,15 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 ]}
               />
             </Form.Item>
+            <Form.Item label="Fecha de propuesta" name="created_at">
+              <DatePicker style={{width: '100%'}}/>
+            </Form.Item>
+            <Form.Item label="Fecha de venta" name="approved_at">
+              <DatePicker style={{width: '100%'}} placeholder={'Aún no aprobado'}/>
+            </Form.Item>
+            <Form.Item label="Fecha de finalización" name="terminated_at">
+              <DatePicker style={{width: '100%'}} placeholder={'Activo'}/>
+            </Form.Item>
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
@@ -124,20 +133,15 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 }
               </Col>
             </Row>
-            <Form.Item label="Fecha de propuesta (opcional)" name="created_at">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+            <Divider>Detalles del trabajo</Divider>
+            <Form.Item label="Inicio del trabajo (opcional)" name="date_start">
+              <DatePicker style={{width: '100%'}}/>
             </Form.Item>
-            <Form.Item label="Fecha de venta (opcional)" name="approved_at">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+            <Form.Item label="Fin del trabajo (opcional)" name="date_end">
+              <DatePicker style={{width: '100%'}}/>
             </Form.Item>
-            <Form.Item label="Fecha de inicio (opcional)" name="date_start">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
-            </Form.Item>
-            <Form.Item label="Fecha de entrega - Deadline (opcional)" name="dead_line" help={'Fecha prometida de entrega'}>
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
-            </Form.Item>
-            <Form.Item label="Fecha de finalización (opcional)" name="date_end">
-              <DatePicker style={{width: '100%'}} placeholder={'Hoy'}/>
+            <Form.Item label="Fecha de entrega - Deadline (opcional)" name="dead_line" extra={'Fecha tentativa para entrega'}>
+              <DatePicker style={{width: '100%'}}/>
             </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <PaymentMethodTypesSelector/>
