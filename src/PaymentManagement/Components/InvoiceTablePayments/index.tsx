@@ -119,8 +119,6 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
         style={{marginTop: '10px'}}
         label={'Registrar pago'}
         block
-        ghost
-        size={'small'}
         onClick={() => {
           setOpenInvoiceForm(true);
           setSelectedPayment(undefined);

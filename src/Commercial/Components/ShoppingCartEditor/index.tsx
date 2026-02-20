@@ -70,7 +70,7 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
     if (index !== -1) {
       newCart[index].quantity++;
     } else {
-      newCart.push({uuid: 'new_'+(Math.random() * 10).toString(), unit_amount: null, quantity: 1, stock: data});
+      newCart.push({uuid: 'new_' + (Math.random() * 10).toString(), unit_amount: null, quantity: 1, stock: data});
     }
     setShoppingCart(newCart);
   }
@@ -141,13 +141,15 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
         })}
       </div>
       <br/>
-      <PrimaryButton
-        icon={<TbCheck/>}
-        label={'Guardar cambios'} block onClick={() => {
-        if (onChange) {
-          onChange(shoppingCart);
-        }
-      }}/>
+      {!liveUpdate &&
+        <PrimaryButton
+          icon={<TbCheck/>}
+          label={'Guardar cambios'} block onClick={() => {
+          if (onChange) {
+            onChange(shoppingCart);
+          }
+        }}/>
+      }
     </>
 
   );

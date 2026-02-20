@@ -76,15 +76,20 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
           colorPrimary: tenant.primary_color ? tenant.primary_color : darkMode ? defaultColorLight : defaultColor,
           colorLink: tenant.primary_color ? tenant.primary_color : defaultColor,
           fontFamily: '"Red Hat Text", sans-serif',
+          borderRadius: 10,
         },
         components: {
           Modal: {
+            borderRadiusOuter: 40,
+            borderRadius: 20,
             titleFontSize: 20,
           },
           Button: {
             fontWeight: 600,
-            primaryShadow: 'none'
           },
+          Table: {
+            headerBorderRadius: 0,
+          }
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
       }}>

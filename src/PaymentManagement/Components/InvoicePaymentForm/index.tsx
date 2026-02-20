@@ -69,7 +69,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
   }, [enableExchange]);
 
   useEffect(() => {
-    console.log({exchangeRate});
     if (form && exchangeAmount && paymentAmount) {
       setExchangeRate((paymentAmount / exchangeAmount));
     }
@@ -84,7 +83,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
       data.exchange_currency = exchangeCurrency;
       data.exchange_rate = Math.round((exchangeRate || defaultChangeRate) * 1000);
     }
-    console.log('rate', data.exchange_rate);
     setLoading(true);
     axios
       .request({
@@ -163,7 +161,7 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
               />
             </Form.Item>
             <p>
-              Tipo de cambio SUNAT:
+              Tipo de cambio SUNAT hoy:
               <CustomTag><Tooltip title={exchangeValues?.buy}>Compra:
                 S/ {exchangeValues?.buy_reverse}</Tooltip></CustomTag> {' '}
               <CustomTag>Venta: S/ {exchangeValues?.sell}</CustomTag>
@@ -203,7 +201,6 @@ const InvoicePaymentForm = ({onCompleted, invoice, payment}: InvoicePaymentProps
           setOpenTransactionForm(false);
         }} open={openTransactionForm}>
         <WalletTransactionForm type={'deposit'} onCompleted={(t: any) => {
-          console.log(t)
           setOpenTransactionForm(false);
           setReload(!reload);
         }}/>
