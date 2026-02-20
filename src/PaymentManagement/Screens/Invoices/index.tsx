@@ -227,7 +227,7 @@ const Invoices = () => {
           <FilterForm
             additionalChildren={<>
               <Form.Item label={'Emisión'} layout={'vertical'}>
-                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
+                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
               </Form.Item>
               <Form.Item label={'Vencimiento'} layout={'vertical'}>
                 <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
