@@ -86,7 +86,7 @@ const InvoiceForm = (
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={'Documento tributario'} name={'secondary_id'}>
+        <Form.Item label={'Documento SUNAT'} name={'secondary_id'}>
           <Input placeholder={'Eje: F1-001'}/>
         </Form.Item>
         <Row gutter={[20, 20]}>
