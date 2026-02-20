@@ -82,7 +82,7 @@ const Invoices = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload, dateRangeFilterExpire, filters]);
+  }, [pageSize, search, currentPage, reload, dateRangeFilterExpire, filters, setDateRangeFilter]);
 
   const deleteInvoice = (uuid: string) => {
     axios
