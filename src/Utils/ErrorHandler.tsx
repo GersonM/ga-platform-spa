@@ -72,11 +72,10 @@ class ErrorHandler {
     }
   }
 
-  show(time: number) {
+  show(time?: number, returnOptions: boolean = false) :any{
     const options = {
       title: 'Ocurrio un problema',
-      //duration: this.errors ? 15000 : time*1000,
-      duration: 30000,
+      duration: time ? time * 1000 : undefined,
       description: (
         <div className={'toast-content'}>
           <div>{this.description}</div>
@@ -96,6 +95,8 @@ class ErrorHandler {
         </div>
       ),
     };
+
+    if (returnOptions) return options;
 
     switch (this.type) {
       case 'error':

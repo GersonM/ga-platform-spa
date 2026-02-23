@@ -87,7 +87,8 @@ const MonitorServicesManager = () => {
         },
         error: (error) => {
           ErrorHandler.showNotification(error);
-          return {title: 'Error al eliminar la solicitud de pago.'};
+          const eh = new ErrorHandler(error);
+          return eh.show(6, true);
         },
       }
     );
