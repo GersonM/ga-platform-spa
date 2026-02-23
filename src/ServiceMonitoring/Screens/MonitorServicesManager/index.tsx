@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Input, notification, Popconfirm, Select, Space, Tooltip} from "antd";
-import {TbBrandMysql, TbKey, TbPencil} from "react-icons/tb";
+import {TbKey, TbPencil} from "react-icons/tb";
 import {PiDatabaseDuotone, PiHardDrivesDuotone} from "react-icons/pi";
-import {LuEye, LuPower, LuScan, LuScanLine, LuServer, LuTrash2} from "react-icons/lu";
+import {LuEye, LuPower, LuScanLine, LuServer, LuTrash2} from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
@@ -13,7 +13,6 @@ import type {
 import ModuleContent from "../../../CommonUI/ModuleContent";
 import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
 import FilterForm from "../../../CommonUI/FilterForm";
-import ProductGroupsSelector from "../../../WarehouseManager/Components/ProductGroupsSelector";
 import ProductManufacturerSelector from "../../../WarehouseManager/Components/ProductManufacturerSelector";
 import TableList from "../../../CommonUI/TableList";
 import CustomTag from "../../../CommonUI/CustomTag";
@@ -24,6 +23,7 @@ import TablePagination from "../../../CommonUI/TablePagination";
 import ResourceStatus from "../../Components/ResourceStatus";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import {GrMysql} from "react-icons/gr";
+import {sileo} from "sileo";
 
 const MonitorServicesManager = () => {
   const [loading, setLoading] = useState(false);
@@ -77,18 +77,20 @@ const MonitorServicesManager = () => {
 
   const scanResource = (uuid: string) => {
     setLoading(true);
-    api.info({message: 'Escaneado en proceso'});
-    axios.post(`external-resources/${uuid}/scan`)
-      .then((response) => {
-        setLoading(false);
-        api.success({message: 'Finalizado', description:<ul>{response.data.map((s:string, index:number) => <li key={index}>{s}</li>)}</ul>});
-        setReload(!reload);
-      })
-      .catch((error) => {
-        api.error({message: 'No se pudo escanear'});
-        setLoading(false);
-        ErrorHandler.showNotification(error, 3, api);
-      })
+    sileo.promise(
+      axios.post(`external-resources/${uuid}/scan`),
+      {
+        loading: {title: 'Escaneando servicio...'},
+        success: (response) => {
+          setReload(!reload);
+          return {title: 'Finalizado', description:<ul>{response.data.map((s:string, index:number) => <li key={index}>{s}</li>)}</ul>};
+        },
+        error: (error) => {
+          ErrorHandler.showNotification(error);
+          return {title: 'Error al eliminar la solicitud de pago.'};
+        },
+      }
+    );
   }
 
   const showAuthKey = (uuid: string) => {
