@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Empty, Form, InputNumber, Row, Tag} from "antd";
+import {Col, Empty, Form, Input, InputNumber, Row, Space, Tag} from "antd";
 import {TbCheck, TbTrash} from "react-icons/tb";
 
 import MoneyInput from "../../../CommonUI/MoneyInput";
@@ -9,6 +9,7 @@ import './styles.less';
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import MoneyString from "../../../CommonUI/MoneyString";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ShoppingCartEditorProps {
   onChange?: (value: StorageContractCartItem[]) => void;
@@ -47,7 +48,18 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
     if (newCart) {
       const index = newCart.findIndex(i => i.stock?.uuid === data.stock?.uuid);
       if (index !== -1) {
-        newCart[index].unit_amount = amount != null ? amount : (data.stock?.sale_price || 0);
+        newCart[index].unit_amount = amount ? amount : null;
+        setShoppingCart(newCart);
+      }
+    }
+  }
+
+  const updateDescription = (data: StorageContractCartItem, description?: string) => {
+    const newCart = [...shoppingCart];
+    if (newCart) {
+      const index = newCart.findIndex(i => i.stock?.uuid === data.stock?.uuid);
+      if (index !== -1) {
+        newCart[index].description = description ? description : null;
         setShoppingCart(newCart);
       }
     }
@@ -99,14 +111,14 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
           <Col xs={10}>
             <Form.Item label={'Total'}>
               {cartTotalAmountPen > 0 &&
-                <Tag bordered={false} color={'blue'}>
+                <CustomTag color={'blue'}>
                   <MoneyString currency={'PEN'} value={cartTotalAmountPen}/>
-                </Tag>
+                </CustomTag>
               }
               {cartTotalAmountUSD > 0 &&
-                <Tag bordered={false} color={'green'}>
+                <CustomTag color={'green'}>
                   <MoneyString currency={'USD'} value={cartTotalAmountUSD}/>
-                </Tag>
+                </CustomTag>
               }
             </Form.Item>
           </Col>
@@ -116,9 +128,15 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
         {shoppingCart?.map((cartItem, index) => {
           const name = cartItem.stock?.name || (((cartItem.stock?.variation?.product?.name + ' ') || '') + (cartItem.stock?.variation?.name || ''));
           return <div className={'shopping-cart-item'} key={index}>
+            <small><code>{cartItem.stock?.serial_number}</code></small>
             <div className={'name'}>
-              {name}
-              <small><code>{cartItem.stock?.serial_number}</code></small>
+              <Input.TextArea
+                value={cartItem.description ? cartItem.description : ''}
+                placeholder={name}
+                onChange={v => {
+                  updateDescription(cartItem, v.target.value);
+                }}
+              />
             </div>
             <InputNumber
               value={cartItem.quantity}

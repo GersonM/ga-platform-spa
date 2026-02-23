@@ -13,6 +13,7 @@ import IconButton from "../../../CommonUI/IconButton";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import HtmlEditor from "../../../CommonUI/HtmlEditor";
+import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -81,6 +82,9 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               <Form.Item name={'include_taxes'} noStyle valuePropName={'checked'}>
                 <Checkbox>El monto incluye impuestos</Checkbox>
               </Form.Item>
+            </Form.Item>
+            <Form.Item label={'Moneda para facturación'} >
+              <CurrencySelector />
             </Form.Item>
             <Form.Item label={'Duración'} name={'period'}>
               <Select

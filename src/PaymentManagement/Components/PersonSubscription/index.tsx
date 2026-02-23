@@ -25,6 +25,7 @@ import './styles.less';
 import SubscriptionForm from '../../../ClubManagement/Components/SubscriptionForm';
 import FamilyRelationSelector from '../../../CommonUI/FamilyRelationSelector';
 import MoneyString from "../../../CommonUI/MoneyString";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface PersonSubscriptionProps {
   profileUuid: string;
@@ -142,7 +143,7 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
       dataIndex: 'relation_type',
       render: (relation: string, member: SubscriptionMember) => {
         return (relation === 'SOCIO' || relation === 'SOCIA') ? (
-          <Tag bordered={false} color={'cyan'}>Socio titular</Tag>
+          <CustomTag color={'cyan'}>Socio titular</CustomTag>
         ) : (
           <FamilyRelationSelector
             value={relation}

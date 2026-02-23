@@ -30,7 +30,7 @@ const IconButton = ({title, icon, small, type = 'text', loading, ...props}: Icon
     />
   );
 
-  return title ? <Tooltip title={title}>{button}</Tooltip> : button;
+  return title ? <Tooltip placement={'bottom'} title={title}>{button}</Tooltip> : button;
 };
 
 export default IconButton;

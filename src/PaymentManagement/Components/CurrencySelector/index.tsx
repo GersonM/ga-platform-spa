@@ -13,10 +13,11 @@ const CurrencySelector = ({...props}) => {
   const {config} = useContext(AuthContext);
   return (
     <Select
+      placeholder={'Elige moneda'}
       allowClear
       defaultActiveFirstOption={true}
       popupMatchSelectWidth={false}
-      options={config?.currency.map((currency: string) =>
+      options={config?.currency?.map((currency: string) =>
         ({label: currencyLabels[currency], value: currency})
       )}
       {...props}

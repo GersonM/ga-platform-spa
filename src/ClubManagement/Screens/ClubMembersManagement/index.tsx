@@ -31,6 +31,7 @@ import IconButton from '../../../CommonUI/IconButton';
 import {LuCircleChevronRight} from "react-icons/lu";
 import NewSubscriptionForm from "../../Components/NewSubscriptionForm";
 import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 const ClubMembersManagement = () => {
   const [openAddSubscription, setOpenAddSubscription] = useState(false);
@@ -92,9 +93,9 @@ const ClubMembersManagement = () => {
       align: 'center',
       width: 70,
       render: (code: string, row: Subscription) => {
-        return <Tag color={row.is_active ? 'green' : 'red'} bordered={false}>
+        return <CustomTag color={row.is_active ? 'green' : 'red'}>
           <code>{code}</code>
-        </Tag>;
+        </CustomTag>;
       },
     },
     {
@@ -113,7 +114,7 @@ const ClubMembersManagement = () => {
           </Space>
         </div>}>
           <StorageStockChip storageStock={contract.cart[0].stock} quantity={contract.cart[0].quantity}/>
-          {contract.cart.length > 1 && <Tag bordered={false}>(...{contract.cart.length - 1} más)</Tag>}
+          {contract.cart.length > 1 && <CustomTag>(...{contract.cart.length - 1} más)</CustomTag>}
         </Popover>
       }
     },

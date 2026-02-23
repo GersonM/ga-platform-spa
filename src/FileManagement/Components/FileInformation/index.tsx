@@ -20,6 +20,7 @@ import FileIcon from '../FileIcon';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContainerDropdownActions from "../ContainerDropdownActions";
 import './styles.less';
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface FileInformationProps {
   file?: ApiFile;
@@ -184,9 +185,9 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
               <span className={'label'}>
                 {files[0].name}
                 <small>
-                  <Tag color={'magenta'} bordered={false} style={{marginRight: 5}}>
+                  <CustomTag color={'magenta'} style={{marginRight: 5}}>
                     <FileSize size={files[0].size}/>
-                  </Tag>
+                  </CustomTag>
                   {dayjs(files[0].created_at).format(' D/MM/YYYY [a las] H:mm')}
                 </small>
               </span>

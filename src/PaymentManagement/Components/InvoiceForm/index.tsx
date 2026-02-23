@@ -86,7 +86,7 @@ const InvoiceForm = (
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={'Documento SUNAT'} name={'secondary_id'}>
+        <Form.Item label={'Documento SUNAT N° (opcional)'} name={'secondary_id'}>
           <Input placeholder={'Eje: F1-001'}/>
         </Form.Item>
         <Row gutter={[20, 20]}>
@@ -107,7 +107,7 @@ const InvoiceForm = (
         <Form.Item label={''} name={'apply_taxes'} valuePropName={'checked'} noStyle>
           <Checkbox>Aplicar impuestos (IGV 18%)</Checkbox>
         </Form.Item>
-        <Form.Item label={''} name={'apply_taxes'} valuePropName={'checked'} noStyle>
+        <Form.Item label={''} name={'include_taxes'} valuePropName={'checked'} noStyle>
           <Checkbox>El monto incluye impuestos</Checkbox>
         </Form.Item>
         <br/>

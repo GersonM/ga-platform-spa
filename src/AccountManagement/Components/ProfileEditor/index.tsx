@@ -78,7 +78,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
           //const value = response.data.birthday ? dayjs(response.data.birthday) : null;
           //setProfile(response.data);
           setReload(!reload);
-          onCompleted && onCompleted();
+          if(onCompleted) onCompleted();
         }
       })
       .catch(e => {
@@ -151,7 +151,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
               setReload(!reload);
             }}
           />
-          <Space.Compact block direction={'vertical'}>
+          <Space.Compact block orientation={'vertical'}>
             <PrimaryButton
               icon={<LockClosedIcon width={20} />}
               label={'Actualizar contraseña'}

@@ -38,7 +38,7 @@ import NewSaleForm from "../../Components/NewSaleForm";
 import StorageStockChip from "../../Components/StorageStockChip";
 import './styles.less';
 import {LuCircleChevronRight} from "react-icons/lu";
-import {TbCancel, TbChevronRight, TbTrash} from "react-icons/tb";
+import {TbCancel, TbChevronRight, TbRefresh, TbTrash} from "react-icons/tb";
 import WarehouseSelector from "../../../WarehouseManager/Components/WarehouseSelector";
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ProductSelector from "../../../WarehouseManager/Components/ProductSelector";
@@ -47,6 +47,7 @@ import {ClientSelector} from "../../../PaymentManagement/Components/ClientSelect
 import ModalView from "../../../CommonUI/ModalView";
 import CustomTag from "../../../CommonUI/CustomTag";
 import PeriodChip from "../../../CommonUI/PeriodChip";
+import useContractRenew from "../../Hooks/useContractRenew.tsx";
 
 interface CommercialSalesProps {
   mode?: string;
@@ -67,6 +68,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
   const [contractStats, setContractStats] = useState<any>();
   const [filterProduct, setFilterProduct] = useState<StorageProduct>();
   const [filterVariation, setFilterVariation] = useState<StorageProductVariation>();
+  const {renewContract} = useContractRenew(() => setReload(!reload));
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -225,7 +227,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
             </Space>
           </div>}>
             {label}
-            <Tag bordered={false}>(...{cart.length - 1} más)</Tag>
+            <CustomTag>(...{cart.length - 1} más)</CustomTag>
           </Popover>
         }
       },
@@ -283,12 +285,15 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       },
     },
     {
-      title: 'Pagos / Renovación',
+      title: 'Renovación / Pagos',
       dataIndex: 'invoices',
       render: (invoices: Invoice[], row: Contract) => {
-        const nextDate = dayjs(row.next_invoice_at);
+        const nextDate = row.next_renew_date ? dayjs(row.next_renew_date) : null;
         return <>
           <Space wrap>
+            <Tooltip title={nextDate?.format(Config.dateFormatUser)} placement={'left'}>
+              {nextDate?.fromNow()}
+            </Tooltip>
             {invoices?.map((i, index) => {
               const expiryDate = dayjs(i.expires_on);
               return (
@@ -300,7 +305,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
                     </>
                   }>
                   <Tag color={expiryDate.isBefore() ? 'error' : 'gray'}>
-                      {i.tracking_id}: <MoneyString currency={i.currency} value={i.amount}/>
+                    {i.tracking_id}: <MoneyString currency={i.currency} value={i.amount}/>
                   </Tag>
                 </Tooltip>
               );
@@ -314,12 +319,17 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       dataIndex: 'uuid',
       render: (uuid: string, contract: Contract) => {
         return <Space>
+          <IconButton icon={<LuCircleChevronRight/>} small onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>
           {(contract.status == 'cancelled' || contract.status == 'proposal') &&
             <Popconfirm title={'¿Seguro que quieres eliminar esta propuesta?'} onConfirm={() => deleteContract(uuid)}>
               <IconButton icon={contract.cancelled_at ? <TbTrash/> : <TbCancel/>} danger small/>
             </Popconfirm>
           }
-          <IconButton icon={<LuCircleChevronRight/>} small onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>
+          {(contract.period != 'unique') &&
+            <Popconfirm title={'¿Seguro que quieres renovar esta propuesta?'} onConfirm={() => renewContract(uuid)}>
+              <IconButton title={'Renovar contrato'} icon={<TbRefresh/>} small/>
+            </Popconfirm>
+          }
         </Space>;
       }
     }

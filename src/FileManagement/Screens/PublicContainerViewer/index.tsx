@@ -10,8 +10,8 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import AuthContext from '../../../Context/AuthContext';
 import {version} from '../../../../package.json';
 import MetaTitle from '../../../CommonUI/MetaTitle';
-import FolderItem from "../../Components/ContainerContentViewer/FolderItem.tsx";
-import FileItem from "../../Components/ContainerContentViewer/FileItem.tsx";
+import FolderItem from "../../Components/ContainerContentManager/FolderItem.tsx";
+import FileItem from "../../Components/ContainerContentManager/FileItem.tsx";
 import './styles.less';
 
 const PublicContainerViewer = () => {

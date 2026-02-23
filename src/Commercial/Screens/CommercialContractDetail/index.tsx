@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   Button,
   Col,
@@ -13,7 +13,16 @@ import {
   Tabs, Tooltip,
 } from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
-import {TbCancel, TbCheck, TbChevronCompactRight, TbLock, TbPencil, TbPrinter, TbTrash} from "react-icons/tb";
+import {
+  TbCancel,
+  TbCheck,
+  TbChevronCompactRight,
+  TbLock,
+  TbPencil,
+  TbPrinter,
+  TbRefresh,
+  TbTrash
+} from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
@@ -47,6 +56,7 @@ import InvoiceResumen from "../../../PaymentManagement/Components/InvoiceResumen
 import FileDownloader from "../../../CommonUI/FileDownloader";
 import ShoppingCartEditor from "../../Components/ShoppingCartEditor";
 import './styles.less';
+import useContractRenew from "../../Hooks/useContractRenew.tsx";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -63,6 +73,8 @@ const CommercialContractDetail = () => {
   const [openCartItemForm, setOpenCartItemForm] = useState(false);
   const [openPrintProposal, setOpenPrintProposal] = useState(false);
   const [openPrintContract, setOpenPrintContract] = useState(false);
+  const {renewContract} = useContractRenew(() => setReload(!reload));
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!params.contract) {
@@ -230,6 +242,7 @@ const CommercialContractDetail = () => {
       <ContentHeader
         loading={loading}
         onRefresh={() => setReload(!reload)}
+        onBack={() => navigate('/commercial/sales')}
         showBack
         tools={<><ContractStatus contract={contract}/>
           <PrimaryButton
@@ -245,12 +258,20 @@ const CommercialContractDetail = () => {
           {!contract.provided_at &&
             <PrimaryButton
               danger
-              shape={'round'}
               block
               icon={<PiReceiptXBold size={20}/>}
               disabled={!!contract?.cancelled_at}
               label={'Anular venta'}
               onClick={() => setOpenCancelContract(true)}
+            />
+          }
+          {contract.approved_at &&
+            <PrimaryButton
+              block
+              icon={<TbRefresh size={20}/>}
+              disabled={!!contract?.cancelled_at}
+              label={'Renovar contrato'}
+              onClick={() => renewContract(contract.uuid)}
             />
           }
         </>}
@@ -262,9 +283,13 @@ const CommercialContractDetail = () => {
               </code>
             </div>
             <TbChevronCompactRight/>
-            <span>
-              {contract?.client?.entity?.name} {contract?.client?.entity?.last_name}
-            </span>
+            <div>
+              {
+                contract?.client?.type.includes('Profile') ?
+                  <ProfileChip profile={contract?.client?.entity} showDocument/> :
+                  <CompanyChip company={contract?.client?.entity}/>
+              }
+            </div>
           </Space>
         }>
         {contract?.cancelled_at && (
@@ -351,13 +376,7 @@ const CommercialContractDetail = () => {
       <Row gutter={[20, 20]}>
         <Col md={24} lg={7}>
           <div className={'info-contract-block'}>
-            <Divider titlePlacement={'left'}>Cliente</Divider>
-            {
-              contract?.client?.type.includes('Profile') ?
-                <ProfileChip profile={contract?.client?.entity} showDocument/> :
-                <CompanyChip company={contract?.client?.entity}/>
-            }
-            <Divider titlePlacement={"left"}>Productos </Divider>
+            <Divider titlePlacement={"left"}>Productos</Divider>
             <PrimaryButton icon={<TbPencil/>} block label={'Editar'} size={"small"} ghost onClick={() => {
               setOpenCartItemForm(true);
             }}/>
@@ -519,11 +538,14 @@ const CommercialContractDetail = () => {
           setOpenEditStock(false);
         }}/>
       </ModalView>
-      <ModalView title={'Editar items de contrato'} open={openCartItemForm} onCancel={() => setOpenCartItemForm(false)}>
+      <ModalView
+        width={700}
+        title={'Editar items de contrato'} open={openCartItemForm} onCancel={() => setOpenCartItemForm(false)}>
         <ShoppingCartEditor
           value={contract.cart}
           liveUpdate={false}
           onChange={value => {
+            console.log({value});
             axios
               .request({
                 url: `commercial/contracts/${contract.uuid}`,

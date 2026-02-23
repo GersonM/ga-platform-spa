@@ -4,6 +4,7 @@ import Navigation from '../Navigation';
 import AuthContext from '../Context/AuthContext';
 import LoadingIndicator from '../CommonUI/LoadingIndicator';
 import UploadInformation from "../FileManagement/Components/UploadInformation";
+import {Toaster} from "sileo";
 
 const AuthenticatedLayout = () => {
   const {user, sessionToken} = useContext(AuthContext);
@@ -33,6 +34,7 @@ const AuthenticatedLayout = () => {
           }}
         />
       )}
+      <Toaster position="top-center" options={{fill:'black'}} />
     </>
   );
 };

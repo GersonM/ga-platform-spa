@@ -19,6 +19,7 @@ import FileIcon from '../../FileManagement/Components/FileIcon';
 import SearchProfile from '../SearchProfile';
 import EntityActivityIcon from './EntityActivityIcon';
 import EntityActivityCardViewer from '../../EntityActivity/Components/EntityActivityCardViewer';
+import CustomTag from "../CustomTag";
 import './styles.less';
 
 interface EntityActivityManagerProps {
@@ -188,7 +189,6 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                   return (
                     <Tag
                       icon={<IoAttach size={14} style={{verticalAlign: 'middle'}}/>}
-                      bordered={false}
                       color={'blue'}
                       key={index}
                       closable
@@ -222,7 +222,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
               <div>{a.comment}</div>
               <small>
                 {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
-                {a.assigned_to && <Tag bordered={false} color={'purple'}>Para {a.assigned_to.name}</Tag>}
+                {a.assigned_to && <CustomTag color={'purple'}>Para {a.assigned_to.name}</CustomTag>}
               </small>
               <Image.PreviewGroup>
                 {a.attachments?.map((at: ApiFile) => (

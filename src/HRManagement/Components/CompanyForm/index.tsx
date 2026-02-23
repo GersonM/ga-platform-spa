@@ -6,6 +6,9 @@ import {TbSearch} from "react-icons/tb";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {Company} from "../../../Types/api.tsx";
+import FileUploader from "../../../CommonUI/FileUploader";
+import ApiFileSelector from "../../../FileManagement/Components/ApiFileSelector";
+import {sileo} from "sileo";
 
 interface CompanyFormProps {
   onComplete?: (company: Company) => void;
@@ -40,7 +43,7 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
 
     const searchCompany = () => {
       if (!companyIDSearch || companyIDSearch.length < 8) {
-        notification.error({message: 'Ingresa los 11 digitos el ruc para buscar'})
+        sileo.error({title: 'Ingresa los 11 digitos el ruc para buscar'})
         return;
       }
       setLoadingSearch(true);
@@ -62,12 +65,17 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
 
     return (
       <div>
+        <img src={company?.logo?.source} alt=""/>
         <Form
           form={form}
           layout="vertical"
           initialValues={company}
           onFinish={handleCreate}
         >
+          <Form.Item name={'avatar_uuid'}>
+            <ApiFileSelector filter={'images'} />
+          </Form.Item>
+
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -75,7 +83,7 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
                 name="legal_uid"
               >
                 <Input
-                  addonAfter={<Button type={'link'} loading={loadingSearch} icon={<TbSearch/>} onClick={searchCompany}>Buscar</Button>}
+                  suffix={<Button type={'link'} loading={loadingSearch} icon={<TbSearch/>} onClick={searchCompany}>Buscar</Button>}
                   placeholder={'Buscar RUC'}
                   onChange={evt => setCompanyIDSearch(evt.target.value)}
                   maxLength={11}

@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import type {Contract} from '../../../Types/api';
 import ErrorHandler from '../../../Utils/ErrorHandler';
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ContractTemplateSelectorProps {
   placeholder?: string;
@@ -40,7 +41,7 @@ const ContractTemplateSelector = ({placeholder, mode, refresh, ...props}: Contra
               return {
                 value: item.uuid,
                 entity: item,
-                label: <>{item.title} <Tag bordered={false}>{item.items?.length} valores</Tag></>,
+                label: <>{item.title} <CustomTag>{item.items?.length} valores</CustomTag></>,
               };
             }),
           );

@@ -101,7 +101,8 @@ export type Contract = {
   client?: Client;
   amount_string?: string;
   approved_at?: string;
-  next_invoice_at?: string;
+  next_renew_date?: string;
+  last_renew_date?: string;
   budget_details?: string;
   created_at: string;
   locked_at: string;
@@ -768,6 +769,7 @@ export type StorageProduct = {
 export type StorageContractCartItem = {
   uuid: string;
   quantity: number;
+  description?: string | null;
   stock?: StorageStock;
   unit_amount?: number | null;
   amount_string?: string;

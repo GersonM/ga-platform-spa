@@ -82,7 +82,7 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
           title={'Perfiles encontrados'}
           size={'small'}
           style={{marginBottom: 15}}
-          bordered={false}
+          variant={"borderless"}
           extra={
             <PrimaryButton
               icon={<CheckIcon />}

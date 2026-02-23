@@ -16,7 +16,7 @@ const CompanyChip = ({company}: CompanyChipProps) => {
         <LoadingIndicator visible={!company}/>
         {company && (
           <>
-            <Avatar src={company.logo?.thumbnail} style={{background:'#7ca2c1'}} className={'avatar'}>
+            <Avatar src={company.logo?.source} style={{background:'#7ca2c1'}} className={'avatar'}>
               <LuBuilding2 size={20} style={{marginTop: 6}}/>
             </Avatar>
             <div>

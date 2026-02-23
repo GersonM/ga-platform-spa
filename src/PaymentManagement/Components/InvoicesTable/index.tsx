@@ -17,6 +17,7 @@ import ModalView from "../../../CommonUI/ModalView";
 import InvoiceForm from "../InvoiceForm";
 import logoSunat from "../../../Assets/sunat_icon.png";
 import CustomTag from "../../../CommonUI/CustomTag";
+import useDeleteInvoice from "../../Hooks/useDeleteInvoice.tsx";
 
 interface InvoicesProps {
   order?: string;
@@ -48,6 +49,7 @@ const InvoicesTable = (
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
+  const {deleteInvoice} = useDeleteInvoice(() => setReload(!reload));
 
   useEffect(() => {
     setReload(!reload);
@@ -83,17 +85,6 @@ const InvoicesTable = (
     return cancelTokenSource.cancel;
   }, [pageSize, search, currentPage, reload]);
 
-  const deleteInvoice = (uuid: string) => {
-    axios
-      .delete('payment-management/invoices/' + uuid)
-      .then(() => {
-        setReload(!reload);
-      })
-      .catch(error => {
-        ErrorHandler.showNotification(error);
-      });
-  };
-
   const columns: any = [
     {
       title: 'N°',
@@ -110,7 +101,7 @@ const InvoicesTable = (
         return <>{row.items?.map((i: InvoiceItem) => i.concept).join(', ')}
           <br/>
           {row.apply_taxes ? <CustomTag>IGV</CustomTag> : ''}
-          {row.apply_tax_deduction ? <CustomTag color={'magenta'} style={{marginLeft:5}}>Detracción</CustomTag> : ''}
+          {row.apply_tax_deduction ? <CustomTag color={'magenta'} style={{marginLeft: 5}}>Detracción</CustomTag> : ''}
           <small>{concept}</small>
         </>
       }

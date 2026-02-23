@@ -1,4 +1,5 @@
 import React from 'react';
+import CustomTag from "../CustomTag";
 
 interface PeriodChipProps {
   period?: string;
@@ -20,11 +21,11 @@ const colors: any = {
 
 const PeriodChip = ({period}: PeriodChipProps) => {
 
-  if (!period) return;
+  if (!period || period == 'unique') return;
   return (
-    <span style={{color: colors[period], fontWeight: 500, fontSize: 12, background:'rgba(255, 255, 255, 0.2)', padding: '2px 4px', borderRadius: 4}}>
+    <CustomTag color={colors[period]}>
       {periods[period]}
-    </span>
+    </CustomTag>
   );
 };
 

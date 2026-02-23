@@ -9,6 +9,7 @@ import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import './styles.less';
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ProcessDetailProps {
   entityUuid: string;
@@ -185,7 +186,7 @@ const ProcessDetail = ({entityUuid, type, profile}: ProcessDetailProps) => {
                   <TbClockFilled color={'orange'} size={30}/>
               }
               title={item.name} description={
-              <>{item.description} <br/><Tag bordered={false}>{item.status}</Tag></>
+              <>{item.description} <br/><CustomTag>{item.status}</CustomTag></>
             }/>
           </List.Item>
         )}

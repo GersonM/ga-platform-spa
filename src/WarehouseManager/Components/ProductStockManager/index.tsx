@@ -176,7 +176,7 @@ const ProductStockManager = ({product}: ProductStockManagerProps) => {
     <div>
       <Space>
         <h2>Variaciones para {product.name}</h2>
-        <Tag color={'blue'} bordered={false}>{product.code}</Tag>
+        <CustomTag color={'blue'}>{product.code}</CustomTag>
         <IconButton icon={<TbReload/>} onClick={() => setReload(!reload)}/>
         <PrimaryButton icon={<TbPlus/>} ghost label={'Nueva variación'} onClick={() => {
           setSelectedVariation(undefined);

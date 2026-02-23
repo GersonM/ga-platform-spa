@@ -12,6 +12,7 @@ import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import CreateEmployeeModal from '../CreateEmployeeModal'; // Importar el nuevo modal
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface CompanyEmployeesProps {
   companyUuid: string;
@@ -141,9 +142,9 @@ const CompanyEmployees = ({companyUuid}: CompanyEmployeesProps) => {
       width: 120,
       render: (termination_date: string) => {
         return (
-          <Tag color={!termination_date ? 'green' : 'red'} bordered={false}>
+          <CustomTag color={!termination_date ? 'green' : 'red'}>
             {!termination_date ? 'Activo' : 'Terminado'}
-          </Tag>
+          </CustomTag>
         );
       },
     },

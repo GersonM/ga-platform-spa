@@ -1,5 +1,6 @@
 import React from 'react';
 import {Tag} from "antd";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface StockStatusProps {
   status: string;
@@ -25,7 +26,7 @@ const colors: any = {
 
 const StockStatus = ({status}: StockStatusProps) => {
   return (
-      <Tag style={{marginRight:0}} bordered={false} color={colors[status]}>{statuses[status]}</Tag>
+      <CustomTag style={{marginRight:0}} color={colors[status]}>{statuses[status]}</CustomTag>
   );
 };
 

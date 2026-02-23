@@ -3,6 +3,7 @@ import {Tag, Tooltip} from 'antd';
 
 import type {Contract} from '../../../Types/api';
 import MoneyString from '../../../CommonUI/MoneyString';
+import CustomTag from "../../../CommonUI/CustomTag";
 
 interface ContractFinancialBriefProps {
   contract: Contract;
@@ -29,7 +30,7 @@ const ContractFinancialBrief = ({contract}: ContractFinancialBriefProps) => {
                   )}
                 </>
               }>
-              <Tag bordered={false} color={i.paid_at ? 'green' : 'red'}>{i.tracking_id} {'->'} <MoneyString currency={i.currency || contract.contractable?.currency} value={i.pending_payment} /></Tag>
+              <CustomTag color={i.paid_at ? 'green' : 'red'}>{i.tracking_id} {'->'} <MoneyString currency={i.currency || contract.contractable?.currency} value={i.pending_payment} /></CustomTag>
             </Tooltip>
           </div>
         );

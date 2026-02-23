@@ -1,4 +1,4 @@
-import {notification} from 'antd';
+import {sileo} from "sileo";
 
 class ErrorHandler {
   description: string;
@@ -20,6 +20,7 @@ class ErrorHandler {
           type = 'warning';
           break;
         case 500:
+        case 405:
           type = 'error';
           break;
         default:
@@ -55,31 +56,30 @@ class ErrorHandler {
     this.description = st?.error;
   }
 
-  static showNotification(error: any, time = 3, api?:any) {
+  static showNotification(error: any, time = 3) {
     if (error.message === undefined) return;
     const handler = new ErrorHandler(error);
     if (error.response) {
       if (error.response.config.responseType === 'blob') {
         handler.getBlobError(error).then(() => {
-          handler.show(time, api);
+          handler.show(time);
         });
       } else {
-        handler.show(time, api);
+        handler.show(time);
       }
     } else {
-      handler.show(time, api);
+      handler.show(time);
     }
   }
 
-  show(time: number, api?:any) {
-    api.open({
-      // @ts-ignore
-      type: this.type,
-      duration: this.errors ? 15 : time,
-      message: this.description,
-      description: this.errors ? (
+  show(time: number) {
+    const options = {
+      title: 'Ocurrio un problema',
+      duration: this.errors ? 15000 : time*1000,
+      description: (
         <>
-          {Object.keys(this.errors).map((key: string, indexA) => {
+          <h3>{this.description}</h3>
+          {this.errors && Object.keys(this.errors).map((key: string, indexA) => {
             return (
               <div key={'p_' + indexA}>
                 <strong>{key}</strong>
@@ -93,8 +93,19 @@ class ErrorHandler {
             );
           })}
         </>
-      ) : null,
-    });
+      ),
+    };
+
+    switch (this.type) {
+      case 'error':
+        sileo.error(options);
+        break;
+      case 'warning':
+        sileo.warning(options);
+        break;
+      default:
+        sileo.info(options);
+    }
   }
 }
 

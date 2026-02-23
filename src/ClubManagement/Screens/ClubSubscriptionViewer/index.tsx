@@ -25,6 +25,7 @@ import ProfileDocument from "../../../CommonUI/ProfileTools/ProfileDocument.tsx"
 import FamilyRelationSelector from "../../../CommonUI/FamilyRelationSelector";
 import IconButton from "../../../CommonUI/IconButton";
 import Config from "../../../Config.tsx";
+import CustomTag from "../../../CommonUI/CustomTag";
 
 const ClubSubscription = () => {
   const params = useParams();
@@ -126,7 +127,7 @@ const ClubSubscription = () => {
       dataIndex: 'relation_type',
       render: (relation: string, member: SubscriptionMember) => {
         return (relation === 'SOCIO' || relation === 'SOCIA') ? (
-          <Tag bordered={false} color={'cyan'}>Socio titular</Tag>
+          <CustomTag color={'cyan'}>Socio titular</CustomTag>
         ) : (
           <FamilyRelationSelector
             value={relation}
