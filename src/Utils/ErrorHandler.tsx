@@ -75,10 +75,11 @@ class ErrorHandler {
   show(time: number) {
     const options = {
       title: 'Ocurrio un problema',
-      duration: this.errors ? 15000 : time*1000,
+      //duration: this.errors ? 15000 : time*1000,
+      duration: 30000,
       description: (
-        <>
-          <h3>{this.description}</h3>
+        <div className={'toast-content'}>
+          <div>{this.description}</div>
           {this.errors && Object.keys(this.errors).map((key: string, indexA) => {
             return (
               <div key={'p_' + indexA}>
@@ -92,7 +93,7 @@ class ErrorHandler {
               </div>
             );
           })}
-        </>
+        </div>
       ),
     };
 

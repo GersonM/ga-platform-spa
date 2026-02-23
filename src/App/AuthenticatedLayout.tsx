@@ -34,7 +34,7 @@ const AuthenticatedLayout = () => {
           }}
         />
       )}
-      <Toaster position="top-center" options={{fill:'black'}} />
+      <Toaster position="top-right" theme={'system'} />
     </>
   );
 };
