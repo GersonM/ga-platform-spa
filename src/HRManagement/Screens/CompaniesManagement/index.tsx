@@ -9,9 +9,9 @@ import IconButton from '../../../CommonUI/IconButton';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import FilterForm from '../../../CommonUI/FilterForm';
 import TableList from "../../../CommonUI/TableList";
-import './styles.less';
 import CompanyForm from "../../Components/CompanyForm";
-import type {Company} from "../../../Types/api.tsx";
+import './styles.less';
+import CompanyChip from "../../Components/CompanyChip";
 
 const CompaniesManagement = () => {
   const navigate = useNavigate();
@@ -62,13 +62,16 @@ const CompaniesManagement = () => {
 
   const columns = [
     {
+      title: 'Nombre',
+      dataIndex: 'name',
+      render: (_name: string, record: any) => (
+        <CompanyChip company={record} showDocument={false} />
+      ),
+    },
+    {
       title: 'RUC / UID',
       dataIndex: 'legal_uid',
       width: 110,
-    },
-    {
-      title: 'Nombre',
-      dataIndex: 'name',
     },
     {
       title: 'Email',

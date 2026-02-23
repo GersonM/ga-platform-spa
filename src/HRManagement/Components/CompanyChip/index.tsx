@@ -7,21 +7,24 @@ import {LuBuilding2} from "react-icons/lu";
 
 interface CompanyChipProps {
   company?: Company;
+  showDocument?: boolean;
 }
 
-const CompanyChip = ({company}: CompanyChipProps) => {
+const CompanyChip = ({company, showDocument = true}: CompanyChipProps) => {
   return (
     <Tooltip title={company?.legal_name}>
       <div className={'profile-chip-container'}>
         <LoadingIndicator visible={!company}/>
         {company && (
           <>
-            <Avatar src={company.logo?.source} style={{background:'#7ca2c1'}} className={'avatar'}>
+            <Avatar src={company.logo?.source} style={{background: '#7ca2c1'}} className={'avatar'}>
               <LuBuilding2 size={20} style={{marginTop: 6}}/>
             </Avatar>
             <div>
               {company.name}
-              <small>RUC: {company.legal_uid}</small>
+              {showDocument &&
+                <small>RUC: {company.legal_uid}</small>
+              }
             </div>
           </>
         )}
