@@ -7,8 +7,7 @@ import UploadInformation from "../FileManagement/Components/UploadInformation";
 import {Toaster} from "sileo";
 
 const AuthenticatedLayout = () => {
-  const {user, sessionToken} = useContext(AuthContext);
-  const {openMenu, setOpenMenu} = useContext(AuthContext);
+  const {user, sessionToken, openMenu, setOpenMenu, darkMode} = useContext(AuthContext);
 
   if (!user) {
     if (!sessionToken) {
@@ -34,7 +33,7 @@ const AuthenticatedLayout = () => {
           }}
         />
       )}
-      <Toaster position="top-right" theme={'system'} />
+      <Toaster position="top-right" theme={darkMode?'dark':'light'} />
     </>
   );
 };
