@@ -9,6 +9,7 @@ import IconButton from "../../../CommonUI/IconButton";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import {WarehouseForm} from "../WarehouseForm";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
+import ModalView from "../../../CommonUI/ModalView";
 
 const WarehouseManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -103,7 +104,7 @@ const WarehouseManager = () => {
       </Space>
       <p>Proyecto o ubicaciones donde se agrupan bienes o servicios</p>
       <TableList loading={loading} columns={columns} dataSource={productStock}/>
-      <Modal footer={null} open={openWarehouseForm} onCancel={() => {
+      <ModalView width={800} open={openWarehouseForm} onCancel={() => {
         setOpenWarehouseForm(false);
         setSelectedWarehouse(undefined);
       }}>
@@ -112,7 +113,7 @@ const WarehouseManager = () => {
           setSelectedWarehouse(undefined);
           setReload(!reload);
         }}/>
-      </Modal>
+      </ModalView>
     </div>
   );
 };
