@@ -303,6 +303,7 @@ const WarehouseStockManager = () => {
       >
         <FilterForm
           onSubmit={values => setFilters(values)}
+          onInitialValues={values => setFilters(values)}
           additionalChildren={
             <>
               <Form.Item layout={'vertical'} label={'Producto'} name={'product_uuid'}>
