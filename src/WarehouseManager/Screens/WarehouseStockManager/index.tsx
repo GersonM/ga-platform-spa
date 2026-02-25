@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TbArchive, TbArchiveOff, TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
+import {TbArchive, TbArchiveOff, TbMapPin, TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {
   Divider,
   Drawer,
@@ -19,6 +19,7 @@ import pluralize from "pluralize";
 import axios from "axios";
 
 import type {
+  Point,
   ResponsePagination, StorageProduct, StorageProductVariation,
   StorageStock,
   StorageWarehouse
@@ -135,6 +136,17 @@ const WarehouseStockManager = () => {
       dataIndex: 'serial_number',
       render: (serial_number: string) => {
         return <small><code>{serial_number}</code></small>;
+      }
+    },
+    {
+      title: 'Lo',
+      dataIndex: 'distribution_coordinate',
+      render: (distribution_coordinate:Point) => {
+        if(!distribution_coordinate) return;
+        const link = `https://www.google.com/maps/@${distribution_coordinate.lat},${distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu`;
+        return <Tooltip title={`Ubicación lat: ${distribution_coordinate.lat} lng: ${distribution_coordinate.lng}`}>
+          <a href={link} target={'_blank'} rel={'noreferrer'}><TbMapPin size={20} /></a>
+        </Tooltip>;
       }
     },
     {
