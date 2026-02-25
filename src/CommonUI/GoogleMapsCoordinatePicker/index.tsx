@@ -67,7 +67,7 @@ const GoogleMapsCoordinatePicker = ({value, onChange, height = 280, overlayImage
   const [selectedCoordinate, setSelectedCoordinate] = useState<Point | undefined>(value);
 
   const apiKey = useMemo(() => import.meta.env.VITE_MAPS_KEY || Config.google.apiKey, []);
-  const defaultCenter = useMemo<Point>(() => ({lat: -12.0464, lng: -77.0428}), []);
+  const defaultCenter = useMemo<Point>(() => ({lat: -16.9362287, lng: -70.8908487}), []);
 
   const setCoordinate = (coordinate?: Point, updateParent = true) => {
     setSelectedCoordinate(coordinate);

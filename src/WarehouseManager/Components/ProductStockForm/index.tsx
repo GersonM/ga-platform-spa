@@ -130,6 +130,8 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
     labels.provider = 'Asesor encargado';
   }
 
+  console.log({selectedWarehouseCenter});
+
   return (
     <>
       <h2>{stock ? 'Editar' : 'Registrar'} {stock?.type_label || 'existencia'} {stock &&
@@ -181,6 +183,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             <Form.Item label="Ubicación" name={'distribution_coordinate'}>
               <GoogleMapsCoordinatePicker
                 overlayImageUrl={selectedWarehouse?.distribution_file?.source}
+                center={selectedWarehouseCenter}
                 bounds={{
                   topLeft: selectedWarehouse?.distribution_top_left_bound,
                   bottomRight: selectedWarehouse?.distribution_bottom_right_bound,
