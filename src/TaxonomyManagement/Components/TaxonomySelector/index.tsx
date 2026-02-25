@@ -16,7 +16,6 @@ const TaxonomySelector = ({code, property = 'uuid', onChange, ...props}: ITaxono
   const [taxonomy, setTaxonomy] = useState<TaxonomyDefinition[]>();
 
   useEffect(() => {
-    console.log('TaxonomySelector mounted');
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,

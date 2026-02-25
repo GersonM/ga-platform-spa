@@ -796,12 +796,16 @@ export type StorageProductVariation = {
   created_at: string;
   updated_at: string;
 };
-
+export type Point = {
+  lat: number;
+  lng: number;
+};
 export type StorageStock = {
   uuid: string;
   sku?: string;
   serial_number?: string;
   name?: string;
+  distribution_coordinate?: Point;
   full_name?: string;
   type?: string;
   type_label?: string;
@@ -833,6 +837,9 @@ export type StorageWarehouse = {
   uuid: string;
   name: string;
   address?: string;
+  distribution_file?: ApiFile;
+  distribution_top_left_bound?: Point;
+  distribution_bottom_right_bound?: Point;
   is_physical: boolean;
   created_at: string;
 }

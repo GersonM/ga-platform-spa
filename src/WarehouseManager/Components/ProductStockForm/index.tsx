@@ -5,7 +5,7 @@ import {NavLink} from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 
-import type {StorageProductVariation, StorageStock} from "../../../Types/api.tsx";
+import type {StorageProductVariation, StorageStock, StorageWarehouse} from "../../../Types/api.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler";
 import WarehouseSelector from "../WarehouseSelector";
@@ -21,6 +21,7 @@ import TaxonomySelector from "../../../TaxonomyManagement/Components/TaxonomySel
 import StockStatus from "../ProductStockManager/StockStatus.tsx";
 import Config from "../../../Config";
 import AuthContext from "../../../Context/AuthContext.tsx";
+import GoogleMapsCoordinatePicker from "../../../CommonUI/GoogleMapsCoordinatePicker";
 
 interface ProductStockFormProps {
   stock?: StorageStock;
@@ -34,7 +35,15 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
   const [isConsumable, setIsConsumable] = useState<boolean | undefined>(stock?.is_consumable);
   const [metadata, setMetadata] = useState<any[]>();
   const [selectedType, setSelectedType] = useState<string | undefined>(stock?.type);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<StorageWarehouse>();
   const {config} = useContext(AuthContext);
+  const selectedWarehouseCenter = (
+    selectedWarehouse?.distribution_top_left_bound &&
+    selectedWarehouse?.distribution_bottom_right_bound
+  ) ? {
+    lat: (selectedWarehouse.distribution_top_left_bound.lat + selectedWarehouse.distribution_bottom_right_bound.lat) / 2,
+    lng: (selectedWarehouse.distribution_top_left_bound.lng + selectedWarehouse.distribution_bottom_right_bound.lng) / 2,
+  } : selectedWarehouse?.distribution_top_left_bound;
 
   useEffect(() => {
     if (form) {
@@ -42,7 +51,23 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
     }
   }, [stock, form]);
 
+  useEffect(() => {
+    setSelectedWarehouse(stock?.warehouse);
+  }, [stock]);
+
+  const parseCoordinate = (coordinate: any): number | undefined => {
+    if (typeof coordinate === 'number') {
+      return coordinate;
+    }
+    if (typeof coordinate === 'string' && coordinate.trim() !== '') {
+      const parsed = Number(coordinate);
+      return Number.isNaN(parsed) ? undefined : parsed;
+    }
+    return undefined;
+  };
+
   const submit = (values: any) => {
+
     const data = {
       ...values,
       variation_uuid: variation ? variation.uuid : values.variation_uuid,
@@ -50,7 +75,6 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
       sale_price: values.sale_price,
       metadata: metadata,
     }
-
     axios
       .request({
         url: stock ? `warehouses/stock/${stock.uuid}` : "warehouses/stock",
@@ -99,7 +123,12 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
     return text.trim();
   }
 
-  const formType = config?.id == 'candares' ? 'estate' : 'regular';
+  const labels = {
+    provider: 'Proveedor',
+  };
+  if (config?.id == 'candares') {
+    labels.provider = 'Asesor encargado';
+  }
 
   return (
     <>
@@ -108,6 +137,10 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
       <Form form={form} layout="vertical" initialValues={{
         ...stock,
         expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
+        map_coordinate: ((stock as any)?.latitude != null && (stock as any)?.longitude != null) ? {
+          lat: Number((stock as any)?.latitude),
+          lng: Number((stock as any)?.longitude),
+        } : undefined,
       }} onFinish={submit}>
         <Row gutter={[20, 20]}>
           <Col md={13}>
@@ -123,11 +156,11 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 <Form.Item
                   label="Ubicación" initialValue={stock?.fk_warehouse_uuid} name={'warehouse_uuid'}
                   rules={[{required: true}]}>
-                  <WarehouseSelector/>
+                  <WarehouseSelector onChange={(_uuid, warehouse) => setSelectedWarehouse(warehouse.entity)}/>
                 </Form.Item>
               </Col>
               <Col md={16}>
-                <Form.Item label="Asesor encargado" name={'provider_uuid'} rules={[{required: true}]}>
+                <Form.Item label={labels.provider} name={'provider_uuid'} rules={[{required: true}]}>
                   <CompanySelector style={{maxWidth: 190}} filter={'providers'}
                                    placeholder={stock?.provider?.company?.name}/>
                 </Form.Item>
@@ -145,6 +178,16 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item label="Ubicación" name={'distribution_coordinate'}>
+              <GoogleMapsCoordinatePicker
+                overlayImageUrl={selectedWarehouse?.distribution_file?.source}
+                center={selectedWarehouseCenter}
+                bounds={{
+                  topLeft: selectedWarehouse?.distribution_top_left_bound,
+                  bottomRight: selectedWarehouse?.distribution_bottom_right_bound,
+                }}
+              />
+            </Form.Item>
             <Row gutter={15}>
               <Col md={8}>
                 <Form.Item label={'Tipo de operación'} name={'type'}>
@@ -178,7 +221,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
             <Row gutter={15}>
               <Col md={5}>
                 <Form.Item label="Moneda" name={'currency'}>
-                  <CurrencySelector defaultValue={'PEN'} onChange={(value: string) => setCurrentCurrency(value)}/>
+                  <CurrencySelector onChange={(value: string) => setCurrentCurrency(value)}/>
                 </Form.Item>
               </Col>
               {/*
@@ -204,7 +247,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Col>
               }
             </Row>
-            <Form.Item label="Observaciones (opcional)" name={'observations'}>
+            <Form.Item label="Observaciones internas (opcional)" name={'observations'}>
               <Input.TextArea/>
             </Form.Item>
             <Row gutter={15}>
@@ -225,7 +268,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
             </Row>
-            <Divider titlePlacement={'left'}>Información adicional</Divider>
+            <Divider titlePlacement={'left'}>Atributos personalizados</Divider>
             <Form.Item name={'attributes'}>
               <EntityFieldsEditor
                 entity={stock}
@@ -247,14 +290,14 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               <EntityGalleryEditor/>
             </Form.Item>
             <Form.Item name={'excerpt'} label={'Resumen'}>
-              <HtmlEditor height={140}/>
+              <HtmlEditor/>
             </Form.Item>
             <Form.Item
               name={'commercial_description'}
-              label={<>Información adicional {' - '}<Button type={'primary'} ghost size={'small'}
+              label={<>Información comercial {' - '}<Button type={'primary'} ghost size={'small'}
                                                             onClick={() => copyText(stock?.commercial_description)}>Copiar
                 texto</Button></>}>
-              <HtmlEditor height={230}/>
+              <HtmlEditor/>
             </Form.Item>
           </Col>
         </Row>

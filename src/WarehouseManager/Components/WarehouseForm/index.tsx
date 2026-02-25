@@ -9,6 +9,8 @@ import ErrorHandler from "../../../Utils/ErrorHandler";
 import WarehouseSelector from "../WarehouseSelector";
 import LocationsSelector from "../../../MoveManagement/Components/LocationsSelector";
 import ProductGroupsSelector from "../ProductGroupsSelector";
+import GoogleMapsBoundsPicker from "../../../CommonUI/GoogleMapsBoundsPicker";
+import ApiFileSelector from "../../../FileManagement/Components/ApiFileSelector";
 
 interface WarehouseFormProps {
   warehouse?: StorageWarehouse;
@@ -17,6 +19,9 @@ interface WarehouseFormProps {
 
 export const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
   const [form] = useForm();
+  const distributionFileUrl = warehouse?.distribution_file?.source
+    || warehouse?.distribution_file?.download
+    || warehouse?.distribution_file?.thumbnail;
 
   useEffect(() => {
     if (form) {
@@ -25,11 +30,19 @@ export const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
   }, [warehouse, form]);
 
   const submit = (values: any) => {
+    const data = {
+      ...values,
+      distribution_top_left_bound: values.distribution_bounds?.topLeft,
+      distribution_bottom_right_bound: values.distribution_bounds?.bottomRight,
+    };
+
+    delete data.distribution_bounds;
+
     axios
       .request({
         url: warehouse ? `warehouses/${warehouse.uuid}` : "warehouses",
         method: warehouse ? 'PUT' : 'POST',
-        data: values
+        data
       })
       .then(() => {
         form.resetFields();
@@ -43,7 +56,13 @@ export const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
   };
 
   return (
-    <Form form={form} layout="vertical" initialValues={warehouse} onFinish={submit}>
+    <Form form={form} layout="vertical" initialValues={{
+      ...warehouse,
+      distribution_bounds: {
+        topLeft: warehouse?.distribution_top_left_bound,
+        bottomRight: warehouse?.distribution_bottom_right_bound,
+      }
+    }} onFinish={submit}>
       <h2>{warehouse ? 'Editar almacén' : 'Crear almacén'}</h2>
       <Form.Item label="Nombre" name={'name'}>
         <Input/>
@@ -67,6 +86,12 @@ export const WarehouseForm = ({warehouse, onComplete}: WarehouseFormProps) => {
         <Checkbox defaultChecked>
           Tiene ubicación física
         </Checkbox>
+      </Form.Item>
+      <Form.Item label={'Croquis para superposición'} name={'distribution_file_uuid'}>
+        <ApiFileSelector/>
+      </Form.Item>
+      <Form.Item label="Límites de distribución" name={'distribution_bounds'}>
+        <GoogleMapsBoundsPicker overlayImageUrl={distributionFileUrl} />
       </Form.Item>
       <PrimaryButton block htmlType={'submit'} label={'Guardar'}/>
     </Form>
