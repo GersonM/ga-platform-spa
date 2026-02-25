@@ -804,6 +804,7 @@ export type StorageStock = {
   name?: string;
   full_name?: string;
   type?: string;
+  type_label?: string;
   duration?: string;
   excerpt?: string;
   commercial_description?: string;

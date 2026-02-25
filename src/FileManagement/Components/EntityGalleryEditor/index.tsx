@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
-import {Popconfirm, Space} from "antd";
+import {Empty, Popconfirm, Space} from "antd";
 import axios from "axios";
 
 import type {ApiFile} from "../../../Types/api.tsx";
@@ -8,6 +8,7 @@ import FileUploader from "../FileUploader";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
+import ContainerContentViewer from "../ContainerContentViewer";
 
 interface EntityGalleryEditorProps {
   value?: ApiFile[];
@@ -48,34 +49,39 @@ const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) =
   }
 
   return (
-    <div className={'file-gallery-editor'}>
-      {gallery?.map((item, index) => {
-        return <div
-          className={`file-gallery-item ${item.code}`}
-          style={{backgroundImage: 'url(' + item.thumbnail + ')'}}
-          key={index}>
-          <div className="actions">
-            <Space>
-              {item.code != 'cover' ?
-                <IconButton
-                  icon={<TbPhotoCheck color={'#ffffff'}/>} title={'Usar imagen como portada'}
-                  onClick={() => setAsCover(item, 'cover')}/> :
-                <IconButton icon={<TbPhotoCancel/>} title={'Quitar imagen como portada'}
-                            onClick={() => setAsCover(item, 'public')}/>
-              }
-              <Popconfirm title={'¿Quiere eliminar esta imagen?'} onConfirm={() => deleteImage(item)}>
-                <IconButton icon={<TbTrash/>} danger/>
-              </Popconfirm>
-            </Space>
-          </div>
-        </div>;
-      })}
+    <>
+      {gallery && gallery.length > 0 && (
+        <div className={'file-gallery-editor'}>
+          {gallery?.map((item, index) => {
+            return <div
+              className={`file-gallery-item ${item.code}`}
+              style={{backgroundImage: 'url(' + item.thumbnail + ')'}}
+              key={index}>
+              <div className="actions">
+                <Space>
+                  {item.code != 'cover' ?
+                    <IconButton
+                      icon={<TbPhotoCheck color={'#ffffff'}/>} title={'Usar imagen como portada'}
+                      onClick={() => setAsCover(item, 'cover')}/> :
+                    <IconButton icon={<TbPhotoCancel/>} title={'Quitar imagen como portada'}
+                                onClick={() => setAsCover(item, 'public')}/>
+                  }
+                  <Popconfirm title={'¿Quiere eliminar esta imagen?'} onConfirm={() => deleteImage(item)}>
+                    <IconButton icon={<TbTrash/>} danger/>
+                  </Popconfirm>
+                </Space>
+              </div>
+            </div>;
+          })}
+        </div>
+      )}
+      <br/>
       <FileUploader small multiple clearOnFinish showPreview={false} onChange={(fileUuid, fileData) => {
         const newGallery = gallery ? [...gallery] : [];
         newGallery.push(fileData);
         setGallery(newGallery);
       }}/>
-    </div>
+    </>
   );
 };
 

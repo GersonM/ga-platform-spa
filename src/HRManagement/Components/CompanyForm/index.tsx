@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
-import {Button, Col, Form, Input, message, notification, Row} from "antd";
+import {Button, Col, Form, Input, message, Row} from "antd";
 import axios from "axios";
 import {TbSearch} from "react-icons/tb";
+import {sileo} from "sileo";
 
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {Company} from "../../../Types/api.tsx";
-import FileUploader from "../../../CommonUI/FileUploader";
 import ApiFileSelector from "../../../FileManagement/Components/ApiFileSelector";
-import {sileo} from "sileo";
 
 interface CompanyFormProps {
   onComplete?: (company: Company) => void;
@@ -31,6 +30,7 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
         })
         .then((response) => {
           setLoading(false);
+          sileo.success({title: 'Empresa guardada'});
           if (onComplete) {
             onComplete(response.data);
           }
@@ -65,19 +65,18 @@ const CompanyForm = ({onComplete, company}: CompanyFormProps) => {
 
     return (
       <div>
-        <img src={company?.logo?.source} alt=""/>
         <Form
           form={form}
           layout="vertical"
           initialValues={company}
           onFinish={handleCreate}
         >
-          <Form.Item name={'avatar_uuid'}>
-            <ApiFileSelector filter={'images'} />
-          </Form.Item>
 
           <Row gutter={16}>
             <Col span={12}>
+              <Form.Item name={'avatar_uuid'} label={'Logo'}>
+                <ApiFileSelector filter={'images'} />
+              </Form.Item>
               <Form.Item
                 label={'RUC/RUT/Documento Legal'}
                 name="legal_uid"

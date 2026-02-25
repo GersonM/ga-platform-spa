@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import type {DataNode} from "antd/es/tree";
-import {LuFolder, LuHardDrive} from "react-icons/lu";
+import {LuFolder, LuHardDrive, LuTrash2} from "react-icons/lu";
 import axios from "axios";
 import {Tree} from "antd";
 
@@ -11,9 +11,10 @@ interface ContainersTreeNavigatorProps {
   value?: string;
   onChange?: (value: string, container?: Container) => void;
   refresh?: boolean;
+  showTrash?: boolean;
 }
 
-const ContainersTreeNavigator = ({value, onChange, refresh}: ContainersTreeNavigatorProps) => {
+const ContainersTreeNavigator = ({value, onChange, refresh, showTrash}: ContainersTreeNavigatorProps) => {
   const [treeData, setTreeData] = useState<DataNode[]>();
   const [currentContainer, setCurrentContainer] = useState<string>();
 
@@ -26,7 +27,7 @@ const ContainersTreeNavigator = ({value, onChange, refresh}: ContainersTreeNavig
       .get(`file-management/containers`, config)
       .then(response => {
         if (response) {
-          setTreeData(response.data?.map((c: Container) => ({
+          const parseData: any[] = response.data?.map((c: Container) => ({
             title: c.name, key: c.uuid,
             icon: <LuHardDrive size={18} style={{verticalAlign: 'text-bottom'}}/>,
             isLeaf: !c.num_containers,
@@ -46,7 +47,16 @@ const ContainersTreeNavigator = ({value, onChange, refresh}: ContainersTreeNavig
                 })),
               })),
             })),
-          })));
+          }));
+          if (showTrash) {
+            parseData.push({
+              title: 'Papelera',
+              key: 'trash',
+              isLeaf: true,
+              icon: <LuTrash2 size={18} style={{marginTop: 3}}/>,
+            });
+          }
+          setTreeData(parseData);
         }
       })
       .catch(e => {
@@ -93,9 +103,9 @@ const ContainersTreeNavigator = ({value, onChange, refresh}: ContainersTreeNavig
       loadData={onLoadData}
       treeData={treeData}
       onSelect={keys => {
-        if(keys.length == 0) return;
+        if (keys.length == 0) return;
         setCurrentContainer(keys[0] as string);
-        if (onChange) onChange(keys[0] as  string);
+        if (onChange) onChange(keys[0] as string);
       }}
     />
   );

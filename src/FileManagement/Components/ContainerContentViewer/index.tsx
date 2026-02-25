@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import {Empty} from "antd";
 
 import type {ApiFile, Container, ContainerContent} from "../../../Types/api.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
@@ -15,8 +16,9 @@ interface ContainerContentViewerProps {
   viewMode?: string;
   filter?: string;
   refresh?: boolean;
-  onFolderNavigate?: (container:Container) => void;
-  onFileSelected?: (file: ApiFile) => void;
+  enableActions?: boolean;
+  onFolderNavigate?: (container: Container) => void;
+  onFileSelected?: (file: ApiFile, selection:ApiFile[]) => void;
   onFileExecuted?: (file: ApiFile) => void;
 }
 
@@ -26,10 +28,11 @@ const ContainerContentViewer = (
     searchValue,
     containerUuid,
     refresh,
-    viewMode,
+    viewMode = 'grid',
     onFileExecuted,
     onFolderNavigate,
     onFileSelected,
+    enableActions,
     filter
   }: ContainerContentViewerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
@@ -39,6 +42,9 @@ const ContainerContentViewer = (
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
+    if (!containerUuid && !searchValue) {
+      return;
+    }
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
@@ -65,6 +71,9 @@ const ContainerContentViewer = (
     return cancelTokenSource.cancel;
   }, [containerUuid, refresh, orderBy, searchValue]);
 
+  if(!containerContent?.containers.length && !containerContent?.files.length) {
+    return <Empty description={'No hay contenido en esta ubicación'} image={Empty.PRESENTED_IMAGE_SIMPLE}/>;
+  }
   return (
     <div className={`files-container mode-${viewMode}`}>
       <LoadingIndicator visible={loading}/>
@@ -73,13 +82,13 @@ const ContainerContentViewer = (
           selected={selectedContainer?.uuid == c.uuid}
           size={viewMode == 'grid' ? 45 : 28}
           key={c.uuid}
+          enableActions={enableActions}
           container={c}
           onDoubleClick={() => {
-            if(onFolderNavigate) onFolderNavigate(c);
+            if (onFolderNavigate) onFolderNavigate(c);
           }}
           onChange={() => setReload(!reload)}
           onClick={(selected) => {
-            console.log('asdadsf')
             if (selected) {
               setSelectedContainer(c);
             } else {
@@ -94,18 +103,22 @@ const ContainerContentViewer = (
           key={file.uuid}
           selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
           file={file}
-          //onChange={() => setReload(!reload)}
+          enableActions={enableActions}
+          onChange={() => setReload(!reload)}
           onDoubleClick={() => onFileExecuted?.(file)}
           onClick={(_selected, evt) => {
+            let selection;
             if (evt.shiftKey) {
               if (selectedFiles.findIndex(f => f.uuid === file.uuid) == -1) {
-                setSelectedFiles([...selectedFiles, file]);
+                selection = [...selectedFiles, file];
               } else {
-                setSelectedFiles(selectedFiles.filter(f => f.uuid !== file.uuid));
+                selection = selectedFiles.filter(f => f.uuid !== file.uuid);
               }
             } else {
-              setSelectedFiles([file]);
+              selection = [file];
             }
+            setSelectedFiles(selection);
+            onFileSelected?.(file, selection);
           }}
         />
       ))}

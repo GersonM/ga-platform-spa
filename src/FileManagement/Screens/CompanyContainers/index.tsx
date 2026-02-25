@@ -51,6 +51,7 @@ const CompanyContainers = () => {
         }
         footer={<ServiceStatus/>}>
         <ContainersTreeNavigator
+          showTrash
           refresh={reload}
           onChange={(uuid: string, container?: Container) => navigate(`/file-management/${uuid}`)}
           value={params?.uuid}

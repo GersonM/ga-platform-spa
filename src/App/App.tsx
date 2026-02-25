@@ -242,8 +242,8 @@ const App = () => {
           path={'*'}
           element={
             <div style={{ padding: 30 }}>
-              <h1>Error 404</h1>
-              <p>No content available under this view</p>
+              <h1>Sección en construcción</h1>
+              <p>Está sección está en desarrollo</p>
             </div>
           }
         />

@@ -71,7 +71,7 @@ const EntityFieldValueForm = ({fieldValue, onChange, onRemove}: EntityFieldValue
           <Button icon={<TbMapPin/>}/>
           <Input
           value={selectedFieldValue?.value}
-          placeholder={'Valor'}
+          placeholder={'Lat,Lon'}
           onChange={(e: any) => saveValue('value', e.target.value)}
           suffix={selectedFieldValue?.field?.unit_type}
         />

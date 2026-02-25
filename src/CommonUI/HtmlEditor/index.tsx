@@ -21,6 +21,50 @@ const HtmlEditor = ({placeholder, value, height = 120, ...props}: HtmlEditorProp
       toolbarButtonSize: 'small',
       statusbar: false,
       height: height,
+      buttons: [
+        'bold', 'italic', 'underline', 'strikethrough',
+        '|',
+        'ul', 'ol',
+        '|',
+        'paragraph',
+        '|',
+        'brush',
+        '|',
+        'align'
+      ],
+      buttonsMD: [
+        'bold', 'italic', 'underline', 'strikethrough',
+        '|',
+        'ul', 'ol',
+        '|',
+        'paragraph',
+        '|',
+        'brush',
+        '|',
+        'align'
+      ],
+      buttonsSM: [
+        'bold', 'italic', 'underline', 'strikethrough',
+        '|',
+        'ul', 'ol',
+        '|',
+        'paragraph',
+        '|',
+        'brush',
+        '|',
+        'align'
+      ],
+      buttonsXS: [
+        'bold', 'italic', 'underline', 'strikethrough',
+        '|',
+        'ul', 'ol',
+        '|',
+        'paragraph',
+        '|',
+        'brush',
+        '|',
+        'align'
+      ],
     }),
     [placeholder, darkMode, height]
   );

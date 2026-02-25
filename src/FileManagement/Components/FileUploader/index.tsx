@@ -10,6 +10,7 @@ import type {ApiFile} from "../../../Types/api.tsx";
 interface FileUploaderProps {
   showPreview?: boolean;
   imagePath?: string;
+  showMessage?: boolean;
   fileUuid?: string;
   targetContainerUuid?: string;
   height?: number;
@@ -29,6 +30,7 @@ const FileUploader = (
     small = false,
     targetContainerUuid,
     imagePath,
+    showMessage = true,
     showPreview = false,
     clearOnFinish = true,
   }: FileUploaderProps) => {
@@ -66,14 +68,14 @@ const FileUploader = (
         <input {...getInputProps()} />
         {ownedFilesFilter?.map((item, index) => (
           <div key={index}>
-            {item.file.name}
-            <Progress percent={item.progress} size={'small'} strokeWidth={small ? 3 : undefined}/>
+            {showPreview && item.file.name}
+            <Progress type={small?'circle':'line'} percent={item.progress} size={25} strokeWidth={small ? 8 : undefined}/>
           </div>
         ))}
         {(isDragActive || ownedFilesFilter.length == 0) && (
           <div className={'content-label'}>
-            <ArrowUpTrayIcon width={small ? 18 : 24} style={{marginRight: 10}}/>
-            {isDragActive ? 'Suelta tus archivos aquí' : 'Arrastra archivos aquí'}
+            <ArrowUpTrayIcon width={small ? 18 : 24}/>
+            {(showMessage|| isDragActive) && (isDragActive ? 'Suelta tus archivos aquí' : 'Arrastra archivos aquí')}
           </div>
         )}
         {showPreview && uploadedFile && (

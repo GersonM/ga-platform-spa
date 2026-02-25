@@ -42,7 +42,6 @@ const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [search, setSearch] = useState<string>();
   const [currentPage, setCurrentPage] = useState<number>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [pageSize, setPageSize] = useState<number>(20);
@@ -82,7 +81,7 @@ const Invoices = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, search, currentPage, reload, dateRangeFilterExpire, filters, setDateRangeFilter]);
+  }, [pageSize, currentPage, reload, dateRangeFilterExpire, filters, setDateRangeFilter]);
 
   const deleteInvoice = (uuid: string) => {
     axios
@@ -154,7 +153,6 @@ const Invoices = () => {
     },
     {
       title: 'Contrato',
-      align: 'center',
       dataIndex: 'contract',
       render: (contract?: Contract) => {
         return contract && <Tooltip title={contract.title + ' - ' + contract.status}>
@@ -166,6 +164,17 @@ const Invoices = () => {
       }
     },
     {
+      title: 'Documento SUNAT',
+      dataIndex: 'documents',
+      render: (documents: any, row: Invoice) => {
+        return <>
+          {row.secondary_id ||
+          <PrimaryButton disabled label={'Generar'} shape={'round'} ghost size={"small"}/>
+          }
+        </>;
+      }
+    },
+    {
       title: 'Monto',
       dataIndex: 'amount',
       align: 'right',
@@ -173,16 +182,6 @@ const Invoices = () => {
         return <>
           <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
           <small>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
-        </>;
-      }
-    },
-    {
-      title: 'Documentos tributarios',
-      dataIndex: 'documents',
-      align: 'right',
-      render: (documents: any, row: Invoice) => {
-        return <>
-          <PrimaryButton disabled label={'Generar'} shape={'round'} ghost size={"small"}/>
         </>;
       }
     },
@@ -226,15 +225,15 @@ const Invoices = () => {
           tools={`Total ${pagination?.total}`}>
           <FilterForm
             additionalChildren={<>
-              <Form.Item label={'Emisión'} layout={'vertical'}>
-                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
-              </Form.Item>
-              <Form.Item label={'Vencimiento'} layout={'vertical'}>
-                <DatePicker.RangePicker showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
+              <Form.Item label={'Monto'} name={'amount'} layout={'vertical'}>
+                <InputNumber/>
               </Form.Item>
             </>}
             onSubmit={values => setFilters(values)}>
-            <Form.Item label={'Cliente'} name={'client_uuid'}>
+            <Form.Item name={'voucher_code'}>
+              <Input allowClear placeholder={'Buscar por ID, SUNAT, Concepto'}/>
+            </Form.Item>
+            <Form.Item name={'client_uuid'}>
               <ClientSelector/>
             </Form.Item>
             <Form.Item label={'Estado'} name={'status'}>
@@ -244,11 +243,18 @@ const Invoices = () => {
                 {label: 'Pendientes', value: 'pending'},
               ]}/>
             </Form.Item>
-            <Form.Item name={'voucher_code'}>
-              <Input allowClear placeholder={'Voucher / ID Transacción'}/>
+            <Form.Item label={'Emisión'}>
+              <DatePicker.RangePicker
+                style={{width: 190}}
+                placeholder={['Desde', 'Hasta']}
+                showNow format={'DD/MM/YYYY'}
+                onChange={value => setDateRangeFilter(value)}/>
             </Form.Item>
-            <Form.Item label={'Monto'} name={'amount'}>
-              <InputNumber/>
+            <Form.Item label={'Vencimiento'}>
+              <DatePicker.RangePicker
+                style={{width: 190}}
+                placeholder={['Desde', 'Hasta']}
+                showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
             </Form.Item>
           </FilterForm>
         </ContentHeader>

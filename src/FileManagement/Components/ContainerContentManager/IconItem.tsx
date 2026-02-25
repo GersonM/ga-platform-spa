@@ -20,7 +20,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
   };
 
   return (
-    <a
+    <div
       title={name}
       className={`file-item ${selected ? 'selected' : ''}`}
       onDoubleClick={onDoubleClick}
@@ -32,7 +32,7 @@ const IconItem = ({name, caption, icon, image, selected = false, onClick, onDoub
         <span className={'file-name'}>{name}</span>
         {caption && <code className={'file-caption'}>{caption}</code>}
       </div>
-    </a>
+    </div>
   );
 };
 

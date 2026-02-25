@@ -18,19 +18,20 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import IconButton from '../../../CommonUI/IconButton';
 import MetaTitle from "../../../CommonUI/MetaTitle";
 import './styles.less';
+import ContainerContentViewer from "../ContainerContentViewer";
 
-interface ContainerContentViewerProps {
+interface ContainerContentManagerProps {
   containerUuid: string;
   allowUpload: boolean;
   onChange?: (containerUuid: string, container: Container) => void;
 }
 
-const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: ContainerContentViewerProps) => {
+const ContainerContentManager = ({allowUpload, onChange, containerUuid}: ContainerContentManagerProps) => {
   const [containerContent, setContainerContent] = useState<ContainerContent>();
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [showFileInformation, setShowFileInformation] = useState<boolean>();
-  const [viewMode, setViewMode] = useState<string | number>();
+  const [viewMode, setViewMode] = useState<string>();
   const [orderBy, setOrderBy] = useState('name');
   const [searchValue, setSearchValue] = useState<string>();
   const {addFile, lastFileCompleted} = useContext(UploadContext);
@@ -187,67 +188,29 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
                 <PrimaryButton label={'Vaciar papelera'} icon={<PiRecycle/>} onClick={emptyTrash}/>
               </div>
             )}
+            <ContainerContentViewer
+              containerUuid={containerUuid}
+              viewMode={viewMode}
+              refresh={reload}
+              enableActions={true}
+              orderBy={orderBy}
+              onFolderNavigate={(c) => navigateToFolder(c)}
+              onFileExecuted={(f) => downloadFile(f)}
+              onFileSelected={(_files, selection) => {
+                setSelectedFiles(selection);
+              }}
+              //onChange={() => setReload(!reload)}
+            />
+
             {containerContent.containers.length === 0 && containerContent.files.length === 0 ? (
               <div>
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description={
-                    <>
-                      <span>{containerUuid === 'trash' ? 'No tienes elementos en la papelera':'No hay archivos en esta ubicación'}</span> <br/>
-                      <br/>
-                      {allowUpload && !searchValue && (
-                        <>
-                          <h4>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</h4> <br/>
-                          <Button ghost icon={<PiUploadBold/>} onClick={open} shape={'round'} type={'primary'}>
-                            Cargar archivos
-                          </Button>
-                        </>
-                      )}
-                    </>
-                  }
-                />
+                <h4>Haz clic en "Cargar archivos" o arrastra y suelta algunos aquí</h4> <br/>
+                <Button ghost icon={<PiUploadBold/>} onClick={open} shape={'round'} type={'primary'}>
+                  Cargar archivos
+                </Button>
               </div>
             ) : (
               <div className={`files-container mode-${viewMode}`}>
-                <LoadingIndicator visible={loading}/>
-                {containerContent.containers.map(c => (
-                  <FolderItem
-                    selected={selectedContainer?.uuid == c.uuid}
-                    size={viewMode == 'grid' ? 45 : 28}
-                    key={c.uuid}
-                    container={c}
-                    onDoubleClick={() => navigateToFolder(c)}
-                    onClick={(selected) => {
-                      if (selected) {
-                        setSelectedContainer(c);
-                      } else {
-                        setSelectedContainer(undefined);
-                      }
-                    }}
-                    onChange={() => setReload(!reload)}
-                  />
-                ))}
-                {containerContent.files.map(file => (
-                  <FileItem
-                    size={viewMode == 'grid' ? 45 : 28}
-                    key={file.uuid}
-                    selected={selectedFiles.findIndex(f => f.uuid === file.uuid) != -1}
-                    file={file}
-                    onChange={() => setReload(!reload)}
-                    onDoubleClick={() => downloadFile(file)}
-                    onClick={(_selected, evt) => {
-                      if (evt.shiftKey) {
-                        if (selectedFiles.findIndex(f => f.uuid === file.uuid) == -1) {
-                          setSelectedFiles([...selectedFiles, file]);
-                        } else {
-                          setSelectedFiles(selectedFiles.filter(f => f.uuid !== file.uuid));
-                        }
-                      } else {
-                        setSelectedFiles([file]);
-                      }
-                    }}
-                  />
-                ))}
               </div>
             )}
           </div>
@@ -257,4 +220,4 @@ const ContainerContentViewer = ({allowUpload, onChange, containerUuid}: Containe
   );
 };
 
-export default ContainerContentViewer;
+export default ContainerContentManager;

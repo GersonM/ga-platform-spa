@@ -17,7 +17,7 @@ interface ContainerHeaderProps {
   onChange?: () => void;
   onToggleInformation?: (enabled: boolean) => void;
   upLevel?: () => void;
-  onChangeViewMode?: (viewMode: string | number) => void;
+  onChangeViewMode?: (viewMode: string) => void;
   onSearch?: (search: string) => void;
   onChangeOrder?: (order: string) => void;
   onOpenUpload?: () => void;
@@ -38,7 +38,7 @@ const ContainerHeader = (
     onChangeOrder,
     onReload,
   }: ContainerHeaderProps) => {
-  const [viewMode, setViewMode] = useState<string | number>('grid');
+  const [viewMode, setViewMode] = useState<string>('grid');
   const [informationEnabled, setInformationEnabled] = useState(true);
   const [orderBy, setOrderBy] = useState('date_desc');
 

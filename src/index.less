@@ -27,6 +27,8 @@
 
 html.dark-mode {
   color: #e5e5e5;
+  background-image: radial-gradient(circle, #26282b 70%, var(--primary-color) 240%);
+
   --background-color: #1b1b1b;
   --background-color-input: #313131;
   --background-active-color: #181818;
@@ -37,7 +39,6 @@ html.dark-mode {
   --text-title-color: #ffffff;
   --border-color-body: #3c3c3c;
   --shadow-color: rgba(0, 0, 0, 0.5);
-
 
   /* Track */
 
@@ -65,14 +66,9 @@ html.dark-mode {
   justify-content: stretch;
 }
 
-:root {
-  background: radial-gradient(circle, var(--background-color-body) 70%, var(--primary-color) 240%);
+html {
+  background-color: var(--background-color-body);
 }
-
-html.dark-mode {
-  background: radial-gradient(circle, #26282b 70%, var(--primary-color) 240%);
-}
-
 body {
   height: 100%;
   font-family: var(--font-title), sans-serif;

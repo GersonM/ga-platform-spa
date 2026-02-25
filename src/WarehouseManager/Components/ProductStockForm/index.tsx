@@ -103,7 +103,8 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
 
   return (
     <>
-      <h2>{stock ? 'Editar stock' : 'Registrar stock'} {stock && <StockStatus status={stock.status}/>}</h2>
+      <h2>{stock ? 'Editar' : 'Registrar'} {stock?.type_label || 'existencia'} {stock &&
+        <StockStatus status={stock.status}/>}</h2>
       <Form form={form} layout="vertical" initialValues={{
         ...stock,
         expiration_date: stock?.expiration_date ? dayjs(stock.expiration_date) : null,
@@ -175,7 +176,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
               }
             </Row>
             <Row gutter={15}>
-              <Col md={6}>
+              <Col md={5}>
                 <Form.Item label="Moneda" name={'currency'}>
                   <CurrencySelector defaultValue={'PEN'} onChange={(value: string) => setCurrentCurrency(value)}/>
                 </Form.Item>
@@ -187,7 +188,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
               */}
-              <Col md={9}>
+              <Col md={7}>
                 <Form.Item
                   label="Venta"
                   name={'sale_price'}
@@ -195,6 +196,13 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                   <MoneyInput currency={currentCurrency || stock?.currency}/>
                 </Form.Item>
               </Col>
+              {stock &&
+                <Col md={12}>
+                  <Form.Item name={'update_sales'} valuePropName={'checked'}>
+                    <Checkbox>Actualizar ventas sin precio personalizado</Checkbox>
+                  </Form.Item>
+                </Col>
+              }
             </Row>
             <Form.Item label="Observaciones (opcional)" name={'observations'}>
               <Input.TextArea/>
@@ -217,14 +225,14 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="Orden" name={'order'}>
-              <InputNumber/>
+            <Divider titlePlacement={'left'}>Información adicional</Divider>
+            <Form.Item name={'attributes'}>
+              <EntityFieldsEditor
+                entity={stock}
+                onChange={(values) => {
+                  setMetadata(values);
+                }}/>
             </Form.Item>
-            {stock &&
-              <Form.Item name={'update_sales'} valuePropName={'checked'}>
-                <Checkbox>Actualizar ventas con precio fijo</Checkbox>
-              </Form.Item>
-            }
           </Col>
           <Col md={11}>
             <Form.Item
@@ -247,14 +255,6 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
                                                             onClick={() => copyText(stock?.commercial_description)}>Copiar
                 texto</Button></>}>
               <HtmlEditor height={230}/>
-            </Form.Item>
-            <Divider titlePlacement={'left'}>Información adicional</Divider>
-            <Form.Item name={'attributes'}>
-              <EntityFieldsEditor
-                entity={stock}
-                onChange={(values) => {
-                  setMetadata(values);
-                }}/>
             </Form.Item>
           </Col>
         </Row>
