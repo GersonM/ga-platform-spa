@@ -100,8 +100,10 @@ const InvoicesTable = (
       render: (concept: string, row: Invoice) => {
         return <>{row.items?.map((i: InvoiceItem) => i.concept).join(', ')}
           <br/>
-          {row.apply_taxes ? <CustomTag>IGV</CustomTag> : ''}
-          {row.apply_tax_deduction ? <CustomTag color={'magenta'} style={{marginLeft: 5}}>Detracción</CustomTag> : ''}
+          <>
+            {row.apply_taxes ? <CustomTag>IGV</CustomTag> : null}
+            {row.apply_tax_deduction ? <CustomTag color={'magenta'}>Detracción</CustomTag> : null}
+          </>
           <small>{concept}</small>
         </>
       }
