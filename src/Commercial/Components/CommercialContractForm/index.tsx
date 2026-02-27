@@ -95,7 +95,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 options={[
                   {value: 'unique', label: 'Único'},
                   {value: 'monthly', label: 'Mensual'},
-                  {value: 'annual', label: 'Anual'},
+                  {value: 'yearly', label: 'Anual'},
                 ]}
               />
             </Form.Item>

@@ -13,9 +13,10 @@ import ContainerContentViewer from "../ContainerContentViewer";
 interface EntityGalleryEditorProps {
   value?: ApiFile[];
   onChange?: (value: string[]) => void;
+  allowUpload?: boolean;
 }
 
-const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) => {
+const EntityGalleryEditor = ({value = [], onChange, allowUpload = true}: EntityGalleryEditorProps) => {
   const [gallery, setGallery] = useState<ApiFile[] | undefined | null>(value);
 
   useEffect(() => {
@@ -75,12 +76,14 @@ const EntityGalleryEditor = ({value = [], onChange}: EntityGalleryEditorProps) =
           })}
         </div>
       )}
-      <br/>
-      <FileUploader small multiple clearOnFinish showPreview={false} onChange={(fileUuid, fileData) => {
-        const newGallery = gallery ? [...gallery] : [];
-        newGallery.push(fileData);
-        setGallery(newGallery);
-      }}/>
+      {allowUpload && <>
+        <br/>
+        <FileUploader small multiple clearOnFinish showPreview={false} onChange={(fileUuid, fileData) => {
+          const newGallery = gallery ? [...gallery] : [];
+          newGallery.push(fileData);
+          setGallery(newGallery);
+        }}/>
+      </>}
     </>
   );
 };

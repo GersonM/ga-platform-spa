@@ -13,6 +13,7 @@ import FileUploader from '../../../CommonUI/FileUploader';
 import MoneyInput from "../../../CommonUI/MoneyInput";
 import Config from "../../../Config.tsx";
 import {WalletSelector} from "../WalletSelector";
+import EntityGalleryEditor from "../../../FileManagement/Components/EntityGalleryEditor";
 
 interface InvoicePaymentProps {
   onCompleted?: (t:WalletTransaction) => void;
@@ -113,6 +114,7 @@ const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: Invoice
         <Form.Item name={'tracking_id'} label={'N° Voucher / Operación'}>
           <Input/>
         </Form.Item>
+        <EntityGalleryEditor value={transaction?.attachments} allowUpload={false}/>
         <Form.Item label={'Foto del comprobante'}>
           <FileUploader
             metadataExtract={'financial'}
