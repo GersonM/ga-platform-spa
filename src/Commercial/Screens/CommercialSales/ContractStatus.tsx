@@ -1,6 +1,5 @@
 import React from 'react';
-import dayjs from "dayjs";
-import {Tag, Tooltip} from "antd";
+import {Tag} from "antd";
 
 import type {Contract} from "../../../Types/api.tsx";
 
@@ -15,6 +14,7 @@ const statuses: any = {
   proposal: 'Propuesta',
   completed: 'Completado',
   provided: 'Entregado',
+  terminated: 'Terminado',
 }
 
 const colors: any = {
@@ -24,10 +24,11 @@ const colors: any = {
   proposal: 'orange',
   completed: 'cyan',
   provided: 'lime',
+  terminated: 'default',
 }
 
 const ContractStatus = ({contract}: ContractStatusProps) => {
-  const date = contract.created_at || contract.approved_at || contract.date_start || contract.provided_at || contract.cancelled_at;
+  //const date = contract.created_at || contract.approved_at || contract.date_start || contract.provided_at || contract.cancelled_at;
   return (
     <Tag variant={'outlined'} color={colors[contract.status]}>
       {statuses[contract.status]}

@@ -240,7 +240,6 @@ const CommercialContractDetail = () => {
       <ContentHeader
         loading={loading}
         onRefresh={() => setReload(!reload)}
-        onBack={() => navigate('/commercial/sales')}
         showBack
         tools={<><ContractStatus contract={contract}/>
           <PrimaryButton
