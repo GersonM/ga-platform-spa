@@ -57,6 +57,7 @@ import FileDownloader from "../../../CommonUI/FileDownloader";
 import ShoppingCartEditor from "../../Components/ShoppingCartEditor";
 import './styles.less';
 import useContractRenew from "../../Hooks/useContractRenew.tsx";
+import PeriodChip from "../../../CommonUI/PeriodChip";
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -189,21 +190,9 @@ const CommercialContractDetail = () => {
       children: contract?.approved_at ? dayjs(contract?.approved_at).format(Config.dateFormatUser) : 'Sin aprobación'
     },
     {
-      key: 'date_start',
-      label: 'Fecha de inicio',
-      children: contract?.date_start ? dayjs(contract?.date_start).format(Config.dateFormatUser) : 'No iniciado'
-    },
-    {
-      key: 'deadline',
-      label: 'Fecha estimada de entrega',
-      children: contract?.dead_line ? <>{dayjs(contract?.dead_line).format(Config.dateFormatUser)} <br/>
-          <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
-        <small>No terminado</small>
-    },
-    {
-      key: 'date_end',
-      label: 'Fecha de fin',
-      children: contract?.date_end ? dayjs(contract?.date_end).format(Config.dateFormatUser) :
+      key: 'terminated',
+      label: 'Fecha de terminación',
+      children: contract?.terminated_at ? dayjs(contract?.terminated_at).format(Config.dateFormatUser) :
         <small>No terminado</small>
     },
     {
@@ -215,13 +204,22 @@ const CommercialContractDetail = () => {
       key: 'period',
       label: 'Periodo de contrato',
       children: <>
-        {contract?.period == 'monthly' ? 'Mensual' : 'Único'}
+        {contract && <PeriodChip period={contract.period}/>}
       </>
     },
     {
-      key: 'period',
-      label: 'Periodo de pago',
-      children: contract?.billing_period
+      key: 'progress',
+      label: 'Progreso del trabajo',
+      children: <>
+        Inicio: {contract?.date_start ? dayjs(contract?.date_start).format(Config.dateFormatUser) : 'No iniciado'} <br/>
+        Fin: {contract?.date_end ? dayjs(contract?.date_end).format(Config.dateFormatUser) :
+          <small>No terminado</small>} <br/>
+        <span>
+          Deadline: {contract?.dead_line ? <>{dayjs(contract?.dead_line).format(Config.dateFormatUser)} <br/>
+              <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
+            <small>No definido</small>}
+        </span>
+      </>
     },
     {
       key: 'payment_type',
@@ -438,7 +436,7 @@ const CommercialContractDetail = () => {
           </div>
         </Col>
         <Col md={24} lg={17}>
-          <Tabs centered style={{paddingRight:15}} items={[
+          <Tabs centered style={{paddingRight: 15}} items={[
             {
               key: 'finances',
               label: 'Finanzas',

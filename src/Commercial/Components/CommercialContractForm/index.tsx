@@ -38,6 +38,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
       newFields.dead_line = newFields.dead_line ? dayjs(contract.dead_line) : undefined;
       newFields.approved_at = newFields.approved_at ? dayjs(contract.approved_at) : undefined;
       newFields.provided_at = newFields.provided_at ? dayjs(contract.provided_at) : undefined;
+      newFields.terminated_at = newFields.terminated_at ? dayjs(contract.terminated_at) : undefined;
       setFormData(newFields);
     }
   }, [contract]);
@@ -107,7 +108,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label="Fecha de venta" name="approved_at">
               <DatePicker style={{width: '100%'}} placeholder={'Aún no aprobado'}/>
             </Form.Item>
-            <Form.Item label="Fecha de finalización" name="terminated_at">
+            <Form.Item label="Fecha de terminación de contrato" name="terminated_at">
               <DatePicker style={{width: '100%'}} placeholder={'Activo'}/>
             </Form.Item>
             <Form.Item label={'Observaciones (opcional)'} name={'observations'}>
