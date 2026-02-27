@@ -139,17 +139,6 @@ const WarehouseStockManager = () => {
       }
     },
     {
-      title: 'Lo',
-      dataIndex: 'distribution_coordinate',
-      render: (distribution_coordinate:Point) => {
-        if(!distribution_coordinate) return;
-        const link = `https://www.google.com/maps/@${distribution_coordinate.lat},${distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu`;
-        return <Tooltip title={`Ubicación lat: ${distribution_coordinate.lat} lng: ${distribution_coordinate.lng}`}>
-          <a href={link} target={'_blank'} rel={'noreferrer'}><TbMapPin size={20} /></a>
-        </Tooltip>;
-      }
-    },
-    {
       title: 'Tipo',
       dataIndex: 'type_label',
       render: (type_label: string | null, row: StorageStock) => {
@@ -184,10 +173,24 @@ const WarehouseStockManager = () => {
       title: 'Almacén',
       dataIndex: 'warehouse',
       responsive: ['md'],
-      render: (warehouse?: StorageWarehouse) => <>
-        {warehouse?.name} <br/>
-        <small>{warehouse?.address}</small>
-      </>
+      render: (warehouse?: StorageWarehouse, row:StorageStock) => {
+        const link = row.distribution_coordinate ? `https://www.google.com/maps/@${row.distribution_coordinate.lat},${row.distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu`:null;
+        return <Space>
+          <div>
+            {warehouse?.name} <br/>
+            <small>{warehouse?.address}</small>
+          </div>
+          <div>
+            {
+              link && <>
+                <Tooltip title={`Ubicación lat: ${row.distribution_coordinate?.lat} lng: ${row.distribution_coordinate?.lng}`}>
+                  <a href={link} target={'_blank'} rel={'noreferrer'}><TbMapPin size={20} /></a>
+                </Tooltip>
+              </>
+            }
+          </div>
+        </Space>
+      }
     },
     {
       title: 'Cantidad',
