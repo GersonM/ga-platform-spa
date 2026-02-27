@@ -811,6 +811,7 @@ export type StorageStock = {
   type_label?: string;
   duration?: string;
   excerpt?: string;
+  excerpt_plain?: string;
   commercial_description?: string;
   currency: string;
   cost_price?: number;
@@ -831,6 +832,7 @@ export type StorageStock = {
   variation?: StorageProductVariation;
   warehouse?: StorageWarehouse;
   provider?: Provider;
+  provider_uuid?: string;
 };
 
 export type StorageWarehouse = {

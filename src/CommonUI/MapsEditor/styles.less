@@ -1,0 +1,81 @@
+.marker-tag {
+  padding: 2px;
+  background-color: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 4px;
+  position: absolute;
+  color: #666666;
+  text-wrap: nowrap;
+  transform: translatex(-23%);
+  border: 1px solid #a6a6a6;
+}
+
+.marker-tag-checkpoint {
+  padding: 2px 5px;
+  background-color: #333333;
+  border-radius: 4px;
+  opacity: 0.8;
+  position: absolute;
+  color: #ffffff;
+  text-wrap: nowrap;
+  transform: translate(-50%, -90%);
+  font-weight: 700;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.icon-direction {
+  color: #ffffff;
+  font-size: 12px;
+  background: #e83f03;
+  border-radius: 20px;
+  padding: 2px;
+  line-height: 12px;
+  margin-bottom: -10px;
+}
+
+.marker-tag-point {
+  padding: 2px 5px;
+  border-radius: 20px;
+  background-color: #003968;
+  opacity: 0.8;
+  position: absolute;
+  color: #ffffff;
+  text-wrap: nowrap;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+
+  &.init {
+    background-color: #ff5000;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.lock-button {
+  height: 36px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  outline: 4px solid rgba(228, 228, 228, 0.56);
+
+  &:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+  }
+}

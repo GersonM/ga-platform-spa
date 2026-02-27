@@ -22,6 +22,7 @@ const WarehouseActivityManager = lazy(() => import("../WarehouseManager/Screens/
 const MonitorServicesManager = lazy(() => import("../ServiceMonitoring/Screens/MonitorServicesManager"));
 const Wallets = lazy(() => import("../PaymentManagement/Screens/Wallets"));
 const WarehouseStockManager = lazy(() => import("../WarehouseManager/Screens/WarehouseStockManager"));
+const WarehouseStockLocations = lazy(() => import("../WarehouseManager/Screens/WarehouseStockLocations"));
 
 const GuestLayout = lazy(() => import('./GuestLayout'));
 const AttendanceDashboard = lazy(() => import('../ClubManagement/Screens/AttendanceDashboard'));
@@ -210,6 +211,7 @@ const App = () => {
         </Route>
         <Route path={'warehouse'}>
           <Route path={'stock'} element={<WarehouseStockManager />} />
+          <Route path={'locations'} element={<WarehouseStockLocations />} />
           <Route path={'products'} element={<WarehouseProductsManager />} />
           <Route path={'activity'} element={<WarehouseActivityManager />} />
         </Route>

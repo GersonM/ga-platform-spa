@@ -38,7 +38,7 @@ import {
   TbBuildingWarehouse, TbCalendar, TbContract,
   TbCurrencyDollar,
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor,
-  TbListCheck, TbMapPinBolt, TbMessageUser,
+  TbListCheck, TbMapCheck, TbMapPin, TbMapPin2, TbMapPinBolt, TbMessageUser,
   TbPackage, TbPackageImport,
   TbPigMoney,
   TbRobotFace, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
@@ -204,6 +204,7 @@ const Navigation = () => {
             )}
             <NavItem label={'Inventario'} icon={<TbBuildingWarehouse />} code={'stock'}>
               <NavItem icon={<TbPackageImport />} label={'Stock'} path={'/warehouse/stock'} />
+              <NavItem icon={<TbMapCheck />} label={'Mapa'} path={'/warehouse/locations'} />
               <NavItem icon={<TbPackage />} label={'Catalogo'} path={'/warehouse/products'} />
               <NavItem icon={<TbForklift />} label={'Movimientos'} path={'/warehouse/activity'} />
             </NavItem>
