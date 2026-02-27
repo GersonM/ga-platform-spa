@@ -18,12 +18,13 @@ const AuthenticatedLayout = () => {
 
   return (
     <>
-      <Navigation />
+      <Toaster position="top-right" theme={darkMode ? 'dark' : 'light'}/>
+      <Navigation/>
       <div className="app-content">
-        <Suspense fallback={<LoadingIndicator />}>
-          <Outlet />
+        <Suspense fallback={<LoadingIndicator/>}>
+          <Outlet/>
         </Suspense>
-        <UploadInformation />
+        <UploadInformation/>
       </div>
       {openMenu && (
         <div
@@ -33,7 +34,6 @@ const AuthenticatedLayout = () => {
           }}
         />
       )}
-      <Toaster position="top-right" theme={darkMode?'dark':'light'} />
     </>
   );
 };

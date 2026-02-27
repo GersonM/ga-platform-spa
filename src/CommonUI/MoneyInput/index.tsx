@@ -33,7 +33,7 @@ const MoneyInput = (
       style={block ? {width: '100%'} : {width}}
       onChange={value => {
         if (onChange) {
-          onChange((value != null) ? (returnInteger ? value * 100 : value) : undefined);
+          onChange((value != null) ? (returnInteger ? Math.round(value * 100) : value) : undefined);
         }
       }}
       prefix={currencies[currency]}

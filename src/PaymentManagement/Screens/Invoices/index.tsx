@@ -73,6 +73,9 @@ const Invoices = () => {
         if (response) {
           setInvoices(response.data.data);
           setPagination(response.data.meta);
+          if(selectedInvoice){
+            setSelectedInvoice(response.data.data.find((i:any) => i.uuid === selectedInvoice.uuid));
+          }
         }
       })
       .catch(e => {
@@ -179,9 +182,12 @@ const Invoices = () => {
       dataIndex: 'amount',
       align: 'right',
       render: (amount: number, row: Invoice) => {
+        const pendingTotal = row.pending_payment == row.amount;
         return <>
-          <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
-          <small>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></small>
+          <MoneyString currency={row?.currency || 'PEN'} value={amount}/> <br/>
+          <CustomTag color={row?.pending_payment && row?.pending_payment > 0 ? 'yellow' : 'default'}>
+            <>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></>
+          </CustomTag>
         </>;
       }
     },
@@ -307,7 +313,7 @@ const Invoices = () => {
         }} open={openPaymentsDetail}>
         {selectedInvoice && (
           <>
-            <h3>Pagos</h3>
+            <h3>Pagos para {selectedInvoice.tracking_id}</h3>
             <InvoiceTablePayments invoice={selectedInvoice} onChange={() => setReload(!reload)}/>
           </>
         )}

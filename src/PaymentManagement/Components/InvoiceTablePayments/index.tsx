@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {Modal, Popconfirm, Space, Tooltip} from 'antd';
 import {PiPlusBold} from 'react-icons/pi';
 import {TbPencil, TbTrash} from "react-icons/tb";
@@ -12,6 +12,8 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import InvoicePaymentForm from '../InvoicePaymentForm';
 import IconButton from '../../../CommonUI/IconButton';
 import FilePreview from "../../../CommonUI/FilePreview";
+import {sileo} from "sileo";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 interface InvoiceTablePayments {
   invoice: Invoice;
@@ -23,11 +25,21 @@ const InvoiceTablePayments = ({invoice, onChange}: InvoiceTablePayments) => {
   const [selectedPayment, setSelectedPayment] = useState<InvoicePayment>();
 
   const deletePayment = (uuid: string) => {
-    axios.delete('payment-management/payments/' + uuid).then(() => {
-      if (onChange) {
-        onChange();
+    sileo.promise(
+      axios.delete('payment-management/payments/' + uuid),
+      {
+        loading: {title: 'Escaneando servicio...'},
+        success: () => {
+          onChange?.();
+          return {title: 'Borrado', description:'Pago borrado correctamente'};
+        },
+        error: (error) => {
+          ErrorHandler.showNotification(error);
+          const eh = new ErrorHandler(error);
+          return eh.show(6, true);
+        },
       }
-    });
+    );
   };
 
   const columns = [
