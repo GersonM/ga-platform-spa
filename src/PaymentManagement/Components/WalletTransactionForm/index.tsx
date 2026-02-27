@@ -16,7 +16,7 @@ import {WalletSelector} from "../WalletSelector";
 import EntityGalleryEditor from "../../../FileManagement/Components/EntityGalleryEditor";
 
 interface InvoicePaymentProps {
-  onCompleted?: (t:WalletTransaction) => void;
+  onCompleted?: (t: WalletTransaction) => void;
   transaction?: WalletTransaction;
   wallet?: Wallet;
   type?: 'deposit' | 'withdraw' | 'transfer' | string;
@@ -24,12 +24,13 @@ interface InvoicePaymentProps {
 
 const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: InvoicePaymentProps) => {
   const [loading, setLoading] = useState(false);
+  const [extractImageData, setExtractImageData] = useState<boolean>(true);
   const [uploadedFile, setUploadedFile] = useState<ApiFile>();
-  const [selectedWallet, setSelectedWallet] = useState<Wallet|undefined>(wallet);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(wallet);
   const [form] = useForm();
 
   useEffect(() => {
-    if(uploadedFile && form) {
+    if (uploadedFile && form) {
       form.setFieldsValue({
         transaction_date: uploadedFile.metadata?.fecha_pago ? dayjs(uploadedFile.metadata.fecha_pago) : undefined,
         amount: uploadedFile.metadata ? uploadedFile.metadata?.monto * 100 : undefined,
@@ -112,12 +113,14 @@ const WalletTransactionForm = ({onCompleted, transaction, wallet, type}: Invoice
           </Col>
         </Row>
         <Form.Item name={'tracking_id'} label={'N° Voucher / Operación'}>
-          <Input/>
+          <Input onChange={() => {
+            setExtractImageData(false);
+          }}/>
         </Form.Item>
         <EntityGalleryEditor value={transaction?.attachments} allowUpload={false}/>
         <Form.Item label={'Foto del comprobante'}>
           <FileUploader
-            metadataExtract={'financial'}
+            metadataExtract={extractImageData ? 'financial' : undefined}
             onFilesUploaded={file => {
               setUploadedFile(file);
             }}

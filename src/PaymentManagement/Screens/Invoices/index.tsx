@@ -61,8 +61,8 @@ const Invoices = () => {
         ...filters,
         page: currentPage,
         page_size: pageSize,
-        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
-        expired_date_range: dateRangeFilterExpire ? dateRangeFilterExpire.map(d => d.format(Config.dateFormatServer)) : null,
+        //date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
+        //expired_date_range: dateRangeFilterExpire ? dateRangeFilterExpire.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
     setLoading(true);
@@ -73,8 +73,8 @@ const Invoices = () => {
         if (response) {
           setInvoices(response.data.data);
           setPagination(response.data.meta);
-          if(selectedInvoice){
-            setSelectedInvoice(response.data.data.find((i:any) => i.uuid === selectedInvoice.uuid));
+          if (selectedInvoice) {
+            setSelectedInvoice(response.data.data.find((i: any) => i.uuid === selectedInvoice.uuid));
           }
         }
       })
@@ -172,7 +172,7 @@ const Invoices = () => {
       render: (documents: any, row: Invoice) => {
         return <>
           {row.secondary_id ||
-          <PrimaryButton disabled label={'Generar'} shape={'round'} ghost size={"small"}/>
+            <PrimaryButton disabled label={'Generar'} shape={'round'} ghost size={"small"}/>
           }
         </>;
       }
@@ -235,7 +235,9 @@ const Invoices = () => {
                 <InputNumber/>
               </Form.Item>
             </>}
-            onSubmit={values => setFilters(values)}>
+            onSubmit={values => setFilters(values)}
+            onInitialValues={values => setFilters(values)}
+          >
             <Form.Item name={'voucher_code'}>
               <Input allowClear placeholder={'Buscar por ID, SUNAT, Concepto'}/>
             </Form.Item>
@@ -249,18 +251,20 @@ const Invoices = () => {
                 {label: 'Pendientes', value: 'pending'},
               ]}/>
             </Form.Item>
-            <Form.Item label={'Emisión'}>
+            <Form.Item label={'Emisión'} name={'date_range'}>
               <DatePicker.RangePicker
                 style={{width: 190}}
                 placeholder={['Desde', 'Hasta']}
                 showNow format={'DD/MM/YYYY'}
-                onChange={value => setDateRangeFilter(value)}/>
+              />
             </Form.Item>
-            <Form.Item label={'Vencimiento'}>
+            <Form.Item label={'Vencimiento'} name={'expired_date_range'}>
               <DatePicker.RangePicker
                 style={{width: 190}}
                 placeholder={['Desde', 'Hasta']}
-                showNow format={'DD/MM/YYYY'} onChange={value => setDateRangeFilterExpire(value)}/>
+                showNow format={'DD/MM/YYYY'}
+                //onChange={value => setDateRangeFilterExpire(value)}
+              />
             </Form.Item>
           </FilterForm>
         </ContentHeader>

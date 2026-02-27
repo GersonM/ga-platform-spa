@@ -7,6 +7,8 @@ import {Button, Drawer, Form, Space} from 'antd';
 
 import PrimaryButton from '../PrimaryButton';
 import './styles.less';
+import dayjs from "dayjs";
+import Config from "../../Config.tsx";
 
 interface FilterFormProps {
   children?: ReactNode;
@@ -48,6 +50,7 @@ const FilterForm = (
       }
     }
   }, [screenSize]);
+
   useEffect(() => {
     const handleResize = () => {
       setScreenSize(window.innerWidth);
@@ -63,6 +66,10 @@ const FilterForm = (
       let hasValues = false;
       for (const value of searchParams.keys()) {
         newInitial[value] = searchParams.get(value);
+        if(value.includes('date')) {
+          const v = newInitial[value].split(',');
+          newInitial[value] = [dayjs(v[0]), dayjs(v[1])];
+        }
         hasValues = true;
       }
       if (hasValues) {
@@ -83,6 +90,10 @@ const FilterForm = (
       const url = new URL(window.location.href);
       Object.keys(values).forEach(k => {
         if (values[k]) {
+          const val = values[k];
+          if(k.includes('date')) {
+            values[k] = [dayjs(val[0]).format(Config.dateFormatServer), dayjs(val[1]).format(Config.dateFormatServer)];
+          }
           url.searchParams.set(k, values[k]);
         } else {
           url.searchParams.delete(k);
