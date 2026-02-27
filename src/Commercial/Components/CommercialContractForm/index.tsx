@@ -14,6 +14,7 @@ import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import PaymentMethodTypesSelector from "../../../CommonUI/PaymentMethodTypesSelector";
 import HtmlEditor from "../../../CommonUI/HtmlEditor";
 import CurrencySelector from "../../../PaymentManagement/Components/CurrencySelector";
+import {sileo} from "sileo";
 
 interface CommercialContractFormProps {
   onComplete?: (data: Contract) => void;
@@ -57,6 +58,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
       })
       .then(response => {
         setLoading(false);
+        sileo.success({title: 'Guardado', description: 'El contrato se ha guardado correctamente'});
         if (onComplete) {
           onComplete(response.data);
         }
@@ -73,7 +75,7 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
         <Row gutter={[20, 20]}>
           <Col span={12}>
             <Form.Item name={'title'} label={'Nombre del servicio'}>
-              <Input placeholder={'Opcional'} />
+              <Input placeholder={'Opcional'}/>
             </Form.Item>
             <Form.Item label={'Impuestos'}>
               <Form.Item name={'apply_taxes'} noStyle valuePropName={'checked'}>
@@ -83,8 +85,8 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
                 <Checkbox>El monto incluye impuestos</Checkbox>
               </Form.Item>
             </Form.Item>
-            <Form.Item label={'Moneda para facturación'} >
-              <CurrencySelector />
+            <Form.Item label={'Moneda para facturación'}>
+              <CurrencySelector/>
             </Form.Item>
             <Form.Item label={'Duración'} name={'period'}>
               <Select
@@ -144,17 +146,18 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             <Form.Item label="Fin del trabajo (opcional)" name="date_end">
               <DatePicker style={{width: '100%'}}/>
             </Form.Item>
-            <Form.Item label="Fecha de entrega - Deadline (opcional)" name="dead_line" extra={'Fecha tentativa para entrega'}>
+            <Form.Item label="Fecha de entrega - Deadline (opcional)" name="dead_line"
+                       extra={'Fecha tentativa para entrega'}>
               <DatePicker style={{width: '100%'}}/>
             </Form.Item>
             <Form.Item label={'Método de pago (opcional)'} name={'payment_type'}>
               <PaymentMethodTypesSelector/>
             </Form.Item>
             <Form.Item label={'Cóndiciones de pago (opcional)'} name={'payment_conditions'}>
-              <HtmlEditor />
+              <HtmlEditor/>
             </Form.Item>
             <Form.Item label={'Detalles del servicio (opcional)'} name={'service_details'}>
-              <HtmlEditor />
+              <HtmlEditor/>
             </Form.Item>
           </Col>
         </Row>
