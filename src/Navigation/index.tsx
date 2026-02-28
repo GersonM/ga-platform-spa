@@ -38,7 +38,7 @@ import {
   TbBuildingWarehouse, TbCalendar, TbContract,
   TbCurrencyDollar,
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor,
-  TbListCheck, TbMapCheck, TbMapPin, TbMapPin2, TbMapPinBolt, TbMessageUser,
+  TbListCheck, TbMapCheck, TbMapPinBolt, TbMask, TbMessageUser,
   TbPackage, TbPackageImport,
   TbPigMoney,
   TbRobotFace, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
@@ -58,6 +58,7 @@ import ErrorHandler from '../Utils/ErrorHandler';
 import NavItem from './NavItem';
 import './styles.less';
 import { LuReceipt, LuReceiptText } from "react-icons/lu";
+import {sileo} from "sileo";
 
 const menuItems: ItemType[] = [
   {
@@ -301,8 +302,7 @@ const Navigation = () => {
           </div>
           <Badge count={0}>
             <div className={'user-tool'} onClick={() => {
-              api.success({ message: 'Hola' });
-              console.log('alert');
+              sileo.info({title:'Hola'})
             }}>
               <TbMessageUser />
             </div>
@@ -314,7 +314,7 @@ const Navigation = () => {
               location.reload();
             }
           }}>
-            <TbRobotFace />
+            <TbMask />
           </div>}
           <ScreenModeSelector />
         </Space>

@@ -4,11 +4,11 @@ import {useForm} from 'antd/lib/form/Form';
 import {PiCaretDown, PiCaretUp} from 'react-icons/pi';
 import {TbFilter} from "react-icons/tb";
 import {Button, Drawer, Form, Space} from 'antd';
+import dayjs from "dayjs";
 
 import PrimaryButton from '../PrimaryButton';
-import './styles.less';
-import dayjs from "dayjs";
 import Config from "../../Config.tsx";
+import './styles.less';
 
 interface FilterFormProps {
   children?: ReactNode;

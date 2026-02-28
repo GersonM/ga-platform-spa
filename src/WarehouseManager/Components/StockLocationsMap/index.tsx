@@ -1,5 +1,6 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {AdvancedMarker, APIProvider, useMap} from "@vis.gl/react-google-maps";
+import Draggable from 'react-draggable';
 import {Empty} from 'antd';
 import axios from "axios";
 
@@ -11,6 +12,8 @@ import './styles.less';
 
 type StockLocationsMapProps = {
   warehouse?: StorageWarehouse;
+  status?: string;
+  search?: string;
 };
 
 type MappedPoint = {
@@ -91,7 +94,6 @@ const getOverlayBounds = (warehouse?: StorageWarehouse): OverlayBounds | undefin
 
 const WarehouseImageOverlay = ({warehouse}: { warehouse?: StorageWarehouse }) => {
   const map = useMap('locations-seller');
-
   const imageUrl = warehouse?.distribution_file?.source || warehouse?.distribution_file?.thumbnail;
   const bounds = getOverlayBounds(warehouse);
 
@@ -143,8 +145,9 @@ const MapAutoFit = ({points}: { points: MappedPoint[] }) => {
   return null;
 };
 
-const StockLocationsMap = ({warehouse}: StockLocationsMapProps) => {
+const StockLocationsMap = ({warehouse, search, status}: StockLocationsMapProps) => {
   const [stocks, setStocks] = useState<StorageStock[]>();
+  const nodeRef = useRef(null);
   const [selectedStock, setSelectedStock] = useState<StorageStock>();
   const [selectedStockPoint, setSelectedStockPoint] = useState<string>();
 
@@ -152,7 +155,11 @@ const StockLocationsMap = ({warehouse}: StockLocationsMapProps) => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {warehouse_uuid: warehouse?.uuid},
+      params: {
+        warehouse_uuid: warehouse?.uuid,
+        search,
+        status
+      },
     };
 
     axios
@@ -166,7 +173,7 @@ const StockLocationsMap = ({warehouse}: StockLocationsMapProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [warehouse]);
+  }, [warehouse, status, search]);
 
   useEffect(() => {
     if (!selectedStockPoint) {
@@ -219,12 +226,15 @@ const StockLocationsMap = ({warehouse}: StockLocationsMapProps) => {
   return (
     <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
       <section className={'stock-locations-map'}>
-        <div className={'stock-information'}>
-          {selectedStock && (<StockCard onClose={() => {
-            setSelectedStockPoint(undefined);
-            setSelectedStock(undefined);
-          }} stock={selectedStock}/>)}
-        </div>
+        {selectedStock && (
+          <Draggable nodeRef={nodeRef} handle={'.image-container'}>
+            <div className={'stock-information'} ref={nodeRef}>
+              <StockCard onClose={() => {
+                setSelectedStockPoint(undefined);
+                setSelectedStock(undefined);
+              }} stock={selectedStock}/>
+            </div>
+          </Draggable>)}
         {points.length === 0 ? (
           <div className={'map-empty'}>
             <Empty description={'No hay coordenadas de ubicación para mostrar en este momento.'}/>

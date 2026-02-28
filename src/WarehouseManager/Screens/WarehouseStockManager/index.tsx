@@ -173,7 +173,7 @@ const WarehouseStockManager = () => {
       title: 'Almacén',
       dataIndex: 'warehouse',
       responsive: ['md'],
-      render: (warehouse?: StorageWarehouse, row:StorageStock) => {
+      render: (warehouse: StorageWarehouse, row:StorageStock) => {
         const link = row.distribution_coordinate ? `https://www.google.com/maps/@${row.distribution_coordinate.lat},${row.distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu`:null;
         return <Space>
           <div>

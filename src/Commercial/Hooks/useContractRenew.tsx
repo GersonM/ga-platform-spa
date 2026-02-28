@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useState} from 'react';
-import ErrorHandler from "../../Utils/ErrorHandler.tsx";
 import {sileo} from "sileo";
+import ErrorHandler from "../../Utils/ErrorHandler.tsx";
 
 const useContractRenew = (onComplete?: () => void) => {
   const [loading, setLoading] = useState(false);

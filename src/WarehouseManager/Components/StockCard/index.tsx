@@ -13,6 +13,7 @@ import CustomTag from "../../../CommonUI/CustomTag";
 import ProviderChip from '../../../Commercial/Components/ProviderChip';
 import useAttributeIcon from "../../Hooks/useAttributeIcon.tsx";
 import noImage from '../../../Assets/no-image.webp';
+import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import './styles.less';
 
 interface StockCardProps {
@@ -63,6 +64,7 @@ const StockCard = ({stock, onDetails, onShare, onClose}: StockCardProps) => {
 
   return (
     <div className={'stock-card-container'}>
+      <LoadingIndicator visible={loading}/>
       {onClose && <div className={'close-button'} onClick={onClose}>
         <TbX size={20}/>
       </div>}
@@ -70,19 +72,18 @@ const StockCard = ({stock, onDetails, onShare, onClose}: StockCardProps) => {
         className={`image-container ${stock.attachments?.length ? '' : 'no-image'}`}
         style={stock.attachments?.length ? {backgroundImage: `url(${stock.attachments[0].thumbnail})`} : {backgroundImage: `url(${noImage})`}}>
         <Space>
-          <StockStatus status={stock.status}/> {stock.sale_price === null && <CustomTag color={'red'}>Sin precio</CustomTag>}
-          <CustomTag>
-            {stock.type_label}
-          </CustomTag>
+          <StockStatus status={stock.status}/>
+          {stock.sale_price === null && <CustomTag color={'red'}>Sin precio</CustomTag>}
+          {stock.type_label && <CustomTag>{stock.type_label}</CustomTag>}
         </Space>
         <div className={'price'}>
-          {stock.sale_price != null ? <MoneyString value={stock.sale_price} currency={stock.currency}/> : 'Sin precio de venta'}
+          {stock.sale_price != null ? <MoneyString useMonospace={false} value={stock.sale_price} currency={stock.currency}/> : 'Sin precio de venta'}
           <small>{dayjs(stock.created_at).fromNow()}</small>
         </div>
       </div>
       <div className="info-container">
         <h3>{stock.full_name}</h3>
-        <p>{address?.length ? address?.map((attribute, index) => {
+        <p>{address?.length ? address?.map((attribute) => {
           return attribute.value + ', ';
         }) : ''} {secondaryAddress.join(' ')}
           <small>{stock.warehouse?.name}</small>
@@ -105,7 +106,7 @@ const StockCard = ({stock, onDetails, onShare, onClose}: StockCardProps) => {
         </div>
         {
           contractsRelated?.map((contract: Contract, index: number) => {
-            return <div className={'sold-information'}>
+            return <div className={'sold-information'} key={index}>
               <h4>Informacion de venta</h4>
               <div className={'sold-information-item'}>
                 <small>Contrato</small>
