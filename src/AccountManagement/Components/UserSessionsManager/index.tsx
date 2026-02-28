@@ -9,6 +9,7 @@ import type {Token} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
 import {Space} from 'antd';
+import {TbTrash} from "react-icons/tb";
 
 interface IUserSessionsManager {
   profileUuid: string;
@@ -52,25 +53,32 @@ const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
   const columns = [
     {dataIndex: 'id', title: 'ID'},
     {dataIndex: 'name', title: 'Dispositivo'},
+    {dataIndex: 'ip', title: 'IP'},
     {dataIndex: 'last_used_at', title: 'Último uso', render: (date: string) => dayjs(date).fromNow()},
+    {
+      dataIndex: 'expires_at',
+      title: 'Creado',
+      render: (expires_at: string) => expires_at ? dayjs(expires_at).format('DD-MM-YYYY HH:mm a') : 'No expira'
+    },
     {dataIndex: 'created_at', title: 'Creado', render: (date: string) => dayjs(date).format('DD-MM-YYYY HH:mm a')},
     {
       dataIndex: 'id',
       title: 'Acciones',
       render: (id: number) => {
-        return <IconButton icon={<TrashIcon />} danger onClick={() => deleteToken(id)} />;
+        return <IconButton icon={<TbTrash/>} danger onClick={() => deleteToken(id)}/>;
       },
     },
+
   ];
 
   return (
     <div>
       <Space>
-        <h2>Dispositivos autorizados</h2>
-        <IconButton icon={<IoReload size={18} />} onClick={() => setReload(!reload)} />
+        <h2>Token generados</h2>
+        <IconButton icon={<IoReload size={18}/>} onClick={() => setReload(!reload)}/>
       </Space>
       <p>Estos son los dispositivos donde este usuario a iniciado sesión</p>
-      <TableList rowKey={'id'} columns={columns} dataSource={tokens} />
+      <TableList rowKey={'id'} columns={columns} dataSource={tokens}/>
     </div>
   );
 };

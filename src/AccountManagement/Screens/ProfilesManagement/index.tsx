@@ -47,6 +47,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
   const [filterSubscription, setFilterSubscription] = useState<string>();
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
+  const [filters, setFilters] = useState({});
   const {user} = useContext(AuthContext);
 
   useEffect(() => {
@@ -54,8 +55,9 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        page: currentPage, page_size: pageSize, search, subscription: filterSubscription,
-        filter: type
+        ...filters,
+        filter: 'user',
+        page: currentPage, page_size: pageSize,
       },
     };
     setLoading(true);
@@ -74,7 +76,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, currentPage, pageSize, search, filterSubscription, type]);
+  }, [reload, currentPage, pageSize, filters]);
 
   const getSession = (u?: User) => {
     if (!u) {
@@ -211,18 +213,14 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
           tools={`${pagination?.total} personas encontradas`}
           onAdd={() => setOpenCreateUser(true)}
         >
-          <FilterForm>
-            <Form.Item label={'Buscar'}>
-              <Input.Search
+          <FilterForm onSubmit={values => setFilters(values)}>
+            <Form.Item label={'Buscar'} name={'search'}>
+              <Input
                 allowClear
                 placeholder={'por nombre, documento o correo'}
-                onSearch={value => {
-                  setSearch(value);
-                  setCurrentPage(1);
-                }}
               />
             </Form.Item>
-            <Form.Item>
+            <Form.Item name={'subscription'}>
               <Select
                 allowClear
                 popupMatchSelectWidth={false}
