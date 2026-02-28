@@ -29,6 +29,8 @@ import UpdateUserPassword from "../../Components/UpdateUserPassword";
 import CustomTag from "../../../CommonUI/CustomTag";
 import Cookies from "js-cookie";
 import AuthContext from "../../../Context/AuthContext.tsx";
+import RolesSelector from "../../../Authentication/Components/RolesSelector";
+import CompanySelector from "../../../HRManagement/Components/CompanySelector";
 
 interface ProfilesManagementProps {
   type?: string;
@@ -220,18 +222,11 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
                 placeholder={'por nombre, documento o correo'}
               />
             </Form.Item>
-            <Form.Item name={'subscription'}>
-              <Select
-                allowClear
-                popupMatchSelectWidth={false}
-                placeholder={'Suscripción'}
-                onChange={value => setFilterSubscription(value)}
-                options={[
-                  {label: 'Con alguna subscripción', value: 'any'},
-                  {label: 'Con subscripción activa', value: 'active'},
-                  {label: 'Con subscripción terminada', value: 'terminated'},
-                ]}
-              />
+            <Form.Item name={'roles'}>
+              <RolesSelector placeholder={'Filtrar por roles'} />
+            </Form.Item>
+            <Form.Item name={'company_uuid'} label={'Empresa'}>
+              <CompanySelector />
             </Form.Item>
           </FilterForm>
         </ContentHeader>

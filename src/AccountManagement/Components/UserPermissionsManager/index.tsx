@@ -8,6 +8,7 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import IconButton from '../../../CommonUI/IconButton';
 import {PiPlus} from 'react-icons/pi';
+import useGetRoles from "../../Hooks/useGetRoles.tsx";
 
 interface UserPermissionsManagerProps {
   user: User;
@@ -15,28 +16,9 @@ interface UserPermissionsManagerProps {
 }
 
 const UserPermissionsManager = ({user, onChange}: UserPermissionsManagerProps) => {
-  const [roles, setRoles] = useState<Role[]>();
+  //const [roles, setRoles] = useState<Role[]>();
   const [addingRole, setAddingRole] = useState(false);
-
-  useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
-
-    axios
-      .get(`authentication/roles`, config)
-      .then(response => {
-        if (response) {
-          setRoles(response.data);
-        }
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      });
-
-    return cancelTokenSource.cancel;
-  }, []);
+  const {roles} = useGetRoles();
 
   const assignRole = (roleID: number) => {
     setAddingRole(true);
@@ -44,7 +26,7 @@ const UserPermissionsManager = ({user, onChange}: UserPermissionsManagerProps) =
       .post(`authentication/users/${user.uuid}/add-role`, {role_id: roleID})
       .then(() => {
         setAddingRole(false);
-        onChange && onChange();
+        onChange?.();
       })
       .catch(error => {
         setAddingRole(false);
