@@ -76,14 +76,15 @@ const CompanySelector = (
           {...props}
           allowClear
           placeholder={placeholder || 'Buscar empresa'}
-          showSearch={true}
-          filterOption={false}
+          showSearch={{
+            onSearch: value => setSearchCompany(value),
+            optionFilterProp: 'label'
+          }}
           loading={loading}
           options={companies}
           popupMatchSelectWidth={false}
           onChange={onChange}
           mode={mode || undefined}
-          onSearch={value => setSearchCompany(value)}
           optionRender={(option: any) => {
             return (
               <div>

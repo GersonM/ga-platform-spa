@@ -151,19 +151,20 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
               setReload(!reload);
             }}
           />
-          <Space.Compact block orientation={'vertical'}>
             <PrimaryButton
+              block
               icon={<LockClosedIcon width={20} />}
               label={'Actualizar contraseña'}
               onClick={() => setOpenChangePassword(true)}
             />
             <PrimaryButton
+              block
               icon={<ShieldCheckIcon />}
               label={'Ver permisos'}
               onClick={() => setOpenPermissionsManager(true)}
             />
             {profile.user?.disabled_at ? (
-              <PrimaryButton icon={<HandThumbUpIcon />} label={'Habilitar usuario'} onClick={enableAccount} />
+              <PrimaryButton block icon={<HandThumbUpIcon />} label={'Habilitar usuario'} onClick={enableAccount} />
             ) : (
               <Popconfirm
                 title={'Bloquear usuario'}
@@ -176,7 +177,7 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                     activas y no podrá iniciar sesión
                   </>
                 }>
-                <PrimaryButton danger icon={<NoSymbolIcon />} label={'Bloquear usuario'} />
+                <PrimaryButton block danger icon={<NoSymbolIcon />} label={'Bloquear usuario'} />
               </Popconfirm>
             )}
             <Popconfirm
@@ -189,9 +190,8 @@ const ProfileEditor = ({profileUuid, onCompleted}: ProfileEditorProps) => {
                   Esta acción es irreversible y borrará toda la información <br /> relacionada con este usuario
                 </>
               }>
-              <PrimaryButton danger icon={<TrashIcon />} label={'Eliminar cuenta'} />
+              <PrimaryButton block danger icon={<TrashIcon />} label={'Eliminar cuenta'} />
             </Popconfirm>
-          </Space.Compact>
           {profile.user?.disabled_at && (
             <AlertMessage message={'Este usuario está bloqueado y no podrá iniciar sesión'} />
           )}

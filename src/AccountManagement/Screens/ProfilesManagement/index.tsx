@@ -45,8 +45,6 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState(20);
-  const [search, setSearch] = useState<string>();
-  const [filterSubscription, setFilterSubscription] = useState<string>();
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
   const [filters, setFilters] = useState({});
@@ -58,7 +56,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
       cancelToken: cancelTokenSource.token,
       params: {
         ...filters,
-        filter: 'user',
+        filter: type,
         page: currentPage, page_size: pageSize,
       },
     };
@@ -226,7 +224,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
               <RolesSelector placeholder={'Filtrar por roles'} />
             </Form.Item>
             <Form.Item name={'company_uuid'} label={'Empresa'}>
-              <CompanySelector />
+              <CompanySelector allowCreate={false} />
             </Form.Item>
           </FilterForm>
         </ContentHeader>
