@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Drawer, Form, Input, Modal, Pagination, Select, Space, Tooltip} from 'antd';
+import {Drawer, Form, Input, Space, Tooltip} from 'antd';
 import {
   TbFaceId,
   TbIdBadge2,
@@ -12,6 +12,7 @@ import {
 } from 'react-icons/tb';
 import {NoSymbolIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
+import Cookies from "js-cookie";
 import dayjs from 'dayjs';
 
 import type {Profile, ResponsePagination, User} from '../../../Types/api';
@@ -24,13 +25,16 @@ import TableList from '../../../CommonUI/TableList';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FilterForm from '../../../CommonUI/FilterForm';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
-import './styles.less';
 import UpdateUserPassword from "../../Components/UpdateUserPassword";
 import CustomTag from "../../../CommonUI/CustomTag";
-import Cookies from "js-cookie";
 import AuthContext from "../../../Context/AuthContext.tsx";
 import RolesSelector from "../../../Authentication/Components/RolesSelector";
 import CompanySelector from "../../../HRManagement/Components/CompanySelector";
+import ModalView from "../../../CommonUI/ModalView";
+import ListProfileDuplicates from "../../Components/ListProfileDuplicates";
+import TablePagination from "../../../CommonUI/TablePagination";
+import PrimaryButton from "../../../CommonUI/PrimaryButton";
+import './styles.less';
 
 interface ProfilesManagementProps {
   type?: string;
@@ -48,6 +52,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>();
   const [filters, setFilters] = useState({});
+  const [openDuplicateList, setOpenDuplicateList] = useState(false);
   const {user} = useContext(AuthContext);
 
   useEffect(() => {
@@ -210,7 +215,9 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
             setReload(!reload);
           }}
           title={type == 'user' ? 'Usuarios' : 'Personas'}
-          tools={`${pagination?.total} personas encontradas`}
+          tools={<>
+            <PrimaryButton label={'Ver duplicados'} onClick={() => setOpenDuplicateList(true)}/>
+          </>}
           onAdd={() => setOpenCreateUser(true)}
         >
           <FilterForm onSubmit={values => setFilters(values)}>
@@ -229,25 +236,24 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
           </FilterForm>
         </ContentHeader>
         <TableList scroll={{x: 900}} columns={columns} dataSource={profiles}/>
-        <Pagination
-          align={'center'}
-          showSizeChanger={false}
-          total={pagination?.total}
-          pageSize={pagination?.per_page}
-          current={pagination?.current_page}
+        <TablePagination
+          pagination={pagination}
           onChange={(page, size) => {
             setCurrentPage(page);
             setPageSize(size);
           }}
         />
-        <Modal open={openCreateUser} destroyOnHidden footer={false} onCancel={() => setOpenCreateUser(false)}>
+        <ModalView open={openDuplicateList} onCancel={() => setOpenDuplicateList(false)}>
+          <ListProfileDuplicates />
+        </ModalView>
+        <ModalView open={openCreateUser}onCancel={() => setOpenCreateUser(false)}>
           <CreateUser
             onCompleted={() => {
               setReload(!reload);
               setOpenCreateUser(false);
             }}
           />
-        </Modal>
+        </ModalView>
         <Drawer
           destroyOnHidden
           open={openChangePassword}

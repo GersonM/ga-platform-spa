@@ -4,7 +4,7 @@ import type {ResponsePagination} from "../../Types/api.tsx";
 
 interface TablePaginationProps {
   pagination?: ResponsePagination;
-  onChange?: (page: number) => void;
+  onChange?: (page: number, size: number) => void;
   showTotal?: boolean;
   showSizeChanger?: boolean;
 }
@@ -12,7 +12,7 @@ interface TablePaginationProps {
 const TablePagination = ({pagination, showTotal = true, showSizeChanger = false, ...props}: TablePaginationProps) => {
   return (
     <Pagination
-      style={{marginTop: 10}}
+      style={{margin: '10px 0'}}
       align={'center'}
       total={pagination?.total}
       showTotal={showTotal ? (total) => `${total} en la consulta actual` : undefined}

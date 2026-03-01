@@ -57,8 +57,8 @@ const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
     {dataIndex: 'last_used_at', title: 'Último uso', render: (date: string) => dayjs(date).fromNow()},
     {
       dataIndex: 'expires_at',
-      title: 'Creado',
-      render: (expires_at: string) => expires_at ? dayjs(expires_at).format('DD-MM-YYYY HH:mm a') : 'No expira'
+      title: 'Expiras en',
+      render: (expires_at: string) => expires_at ? dayjs(expires_at).fromNow(true) : 'No expira'
     },
     {dataIndex: 'created_at', title: 'Creado', render: (date: string) => dayjs(date).format('DD-MM-YYYY HH:mm a')},
     {
@@ -74,7 +74,7 @@ const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
   return (
     <div>
       <Space>
-        <h2>Token generados</h2>
+        <h2>Tokens de acceso generados</h2>
         <IconButton icon={<IoReload size={18}/>} onClick={() => setReload(!reload)}/>
       </Space>
       <p>Estos son los dispositivos donde este usuario a iniciado sesión</p>
