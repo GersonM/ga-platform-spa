@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  DatePicker, Divider,
-  Form,
-  Popconfirm, Popover,
-  Progress,
-  Select,
-  Space,
-  Tag,
-  Tooltip
-} from 'antd';
+import {DatePicker, Divider, Form, Popconfirm, Popover, Progress, Select, Space, Tag, Tooltip} from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {Link, useNavigate} from 'react-router-dom';
 import {LuCircleChevronRight} from "react-icons/lu";
@@ -21,12 +12,7 @@ import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import TableList from '../../../CommonUI/TableList';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FilterForm from '../../../CommonUI/FilterForm';
-import type {
-  Client,
-  Contract,
-  Invoice,
-  Profile,
-  ResponsePagination,
+import type {Client, Contract, Invoice, Profile, ResponsePagination,
   StorageContractCartItem, StorageProduct, StorageProductVariation,
 } from '../../../Types/api';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
@@ -49,6 +35,7 @@ import PeriodChip from "../../../CommonUI/PeriodChip";
 import useContractRenew from "../../Hooks/useContractRenew.tsx";
 import TablePagination from "../../../CommonUI/TablePagination";
 import './styles.less';
+import ContractsRenovationList from "../../Components/ContractsRenovationList";
 
 interface CommercialSalesProps {
   mode?: string;
@@ -69,13 +56,11 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
   const [filterProduct, setFilterProduct] = useState<StorageProduct>();
   const [filterVariation, setFilterVariation] = useState<StorageProductVariation>();
   const {renewContract} = useContractRenew(() => setReload(!reload));
+  const [openRenovationList, setOpenRenovationList] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-      params: {...filters}
-    };
+    const config = {cancelToken: cancelTokenSource.token, params: {...filters}};
 
     axios
       .get(`commercial/contracts/stats`, config)
@@ -94,11 +79,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
       cancelToken: cancelTokenSource.token,
-      params: {
-        ...filters,
-        page: currentPage,
-        page_size: pageSize,
-      },
+      params: {...filters, page: currentPage, page_size: pageSize,},
     };
 
     if (mode == 'purchases') {
@@ -229,14 +210,11 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       dataIndex: 'client',
       width: 300,
       render: (client: Client) => {
-        const isCompany = client?.type.includes('Company');
-        const e = client?.entity;
-        if (!e) return 'Sin cliente';
         return (
           <>
-            {isCompany ?
-              <CompanyChip company={e}/> :
-              <ProfileChip profile={e} showDocument/>
+            {client?.type.includes('Company') ?
+              <CompanyChip company={client?.entity}/> :
+              <ProfileChip profile={client?.entity} showDocument/>
             }
           </>
         );
@@ -263,7 +241,7 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
           })}
           <br/>
           <PeriodChip period={row.period}/>
-          {row.is_renewable ? <TbRefreshDot/> : ''}
+          {row.is_renewable ? <Tooltip title={'Renovación automática activa'}><TbRefreshDot/></Tooltip> : ''}
         </>,
     },
     {
@@ -314,12 +292,12 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
         return <Space>
           <IconButton icon={<LuCircleChevronRight/>} small onClick={() => navigate(`/commercial/contracts/${uuid}`)}/>
           {(contract.status == 'cancelled' || contract.status == 'proposal') &&
-            <Popconfirm title={'¿Seguro que quieres eliminar esta propuesta?'} onConfirm={() => deleteContract(uuid)}>
+            <Popconfirm title={'¿Seguro que quieres eliminar esta venta?'} onConfirm={() => deleteContract(uuid)}>
               <IconButton icon={contract.cancelled_at ? <TbTrash/> : <TbCancel/>} danger small/>
             </Popconfirm>
           }
           {(contract.period != 'unique') &&
-            <Popconfirm title={'¿Seguro que quieres renovar esta propuesta?'} onConfirm={() => renewContract(uuid)}>
+            <Popconfirm showCancel={false} okText={'Si'} title={'¿Seguro que quieres renovar esta venta?'} description={'Se renovará el siguiente periodo pendiente'} onConfirm={() => renewContract(uuid)}>
               <IconButton title={'Renovar contrato'} icon={<TbRefresh/>} small/>
             </Popconfirm>
           }
@@ -338,11 +316,15 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
               <PrimaryButton
                 icon={<RiFileExcel2Fill size={18}/>}
                 onClick={exportSelection}
-                size={'small'}
                 loading={downloading}
                 label={'Exportar'}
               />
             </Tooltip>
+            <PrimaryButton
+              icon={<TbRefreshDot size={18}/>}
+              onClick={() => setOpenRenovationList(true)}
+              label={'Ver renovaciones'}
+            />
             {contractStats?.approved} ventas | {contractStats?.active} activas, {contractStats?.proposals} propuestas
             , {contractStats?.cancelled} canceladas y {contractStats?.provided} entregadas
           </>
@@ -412,12 +394,11 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
           setCurrentPage(page);
           setPageSize(size);
         }}/>
-      <ModalView
-        width={1000}
-        open={openContractForm}
-        onCancel={() => setOpenContractForm(false)}
-      >
+      <ModalView width={1000} open={openContractForm} onCancel={() => setOpenContractForm(false)}>
         <NewSaleForm onComplete={contract => navigate(`/commercial/contracts/${contract.uuid}`)}/>
+      </ModalView>
+      <ModalView width={800} open={openRenovationList} onCancel={() => setOpenRenovationList(false)}>
+        <ContractsRenovationList />
       </ModalView>
     </ModuleContent>
   );

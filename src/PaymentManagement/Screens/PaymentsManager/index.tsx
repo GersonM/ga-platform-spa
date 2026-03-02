@@ -37,6 +37,7 @@ import ModalView from "../../../CommonUI/ModalView";
 import InvoicePaymentForm from "../../Components/InvoicePaymentForm";
 import TablePagination from "../../../CommonUI/TablePagination";
 import ReportDownloader from "../../../CommonUI/ReportDownloader";
+import WalletChip from "../../Components/WalletChip";
 
 const PaymentsManager = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -143,8 +144,9 @@ const PaymentsManager = () => {
       dataIndex: 'transaction',
       render: (transaction: WalletTransaction) => {
         return <>
-          {transaction?.wallet_from?.name}
-          {transaction?.wallet_to?.name}</>;
+          <WalletChip wallet={transaction?.wallet_to}/>
+          <WalletChip wallet={transaction?.wallet_from}/>
+          </>;
       },
     },
     {

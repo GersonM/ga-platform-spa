@@ -130,7 +130,7 @@ export type Contract = {
   cart?: StorageContractCartItem[];
   invoices?: Invoice[];
   items?: ContractItem[];
-  totals?: { PEN: number, USD: number };
+  totals?: { PEN: number, USD: number, EUR: number };
   title: string;
   is_template?: boolean;
   template?: Contract;

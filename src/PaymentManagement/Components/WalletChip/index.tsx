@@ -21,7 +21,9 @@ const WalletChip = ({wallet}: WalletChipProps) => {
     return null;
   }
   return (
-    <span>{bankName[wallet.bank_name]}: {wallet.account_number}</span>
+    <span>{bankName[wallet.bank_name]}: <code>{wallet.account_number}</code>
+      <small>{wallet.description}</small>
+    </span>
   );
 };
 
