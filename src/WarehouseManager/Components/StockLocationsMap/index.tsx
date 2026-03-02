@@ -240,7 +240,7 @@ const StockLocationsMap = ({warehouse, search, status}: StockLocationsMapProps) 
             <Empty description={'No hay coordenadas de ubicación para mostrar en este momento.'}/>
           </div>
         ) : (
-          <MapsEditor mapId={'locations-seller'}>
+          <MapsEditor mapId={'locations-seller'} >
             <WarehouseImageOverlay warehouse={warehouse}/>
             <MapAutoFit points={points}/>
             {points?.map((p, i) => {

@@ -168,10 +168,10 @@ const WarehouseProductsManager = () => {
           <Form.Item name={'group'} label={'Grupo'}>
             <ProductGroupsSelector/>
           </Form.Item>
-          <Form.Item name={'brand'}>
+          <Form.Item name={'brand'} label={'Marca'}>
             <ProductBrandSelector/>
           </Form.Item>
-          <Form.Item name={'manufacturer'}>
+          <Form.Item name={'manufacturer'} label={'Proveedor'}>
             <ProductManufacturerSelector/>
           </Form.Item>
         </FilterForm>

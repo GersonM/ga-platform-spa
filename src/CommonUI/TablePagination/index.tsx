@@ -9,13 +9,14 @@ interface TablePaginationProps {
   showSizeChanger?: boolean;
 }
 
-const TablePagination = ({pagination, showTotal = true, showSizeChanger = false, ...props}: TablePaginationProps) => {
+const TablePagination = ({pagination, showTotal = true, showSizeChanger = true, ...props}: TablePaginationProps) => {
   return (
     <Pagination
       style={{margin: '10px 0'}}
       align={'center'}
       total={pagination?.total}
-      showTotal={showTotal ? (total) => `${total} en la consulta actual` : undefined}
+      showSizeChanger={showSizeChanger}
+      showTotal={showTotal ? (total) => `${total} en total` : undefined}
       pageSize={pagination?.per_page}
       current={pagination?.current_page}
       {...props}/>

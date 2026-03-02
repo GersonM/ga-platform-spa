@@ -5,11 +5,11 @@
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
 
-  --background-color-input: #f2f2f2;
-  --background-color-body: #f4f4f4;
   --mobile-breakpoint: 700px;
 
+  --background-color-input: #f2f2f2;
   --background-color: #ffffff;
+  --background-color-body: #f4f4f4;
   --background-active-color: #009987;
   --background-color-higlight: #e9ebed;
   --text-color: #666;
@@ -27,12 +27,11 @@
 
 html.dark-mode {
   color: #e5e5e5;
-  background-image: radial-gradient(circle, #26282b 70%, var(--primary-color) 240%);
 
   --background-color: #1b1b1b;
+  --background-color-body: #272727;
   --background-color-input: #313131;
   --background-active-color: #181818;
-  --background-color-body: #26282b;
   --background-color-higlight: #1c1c1c;
   --border-color: #333333;
   --text-color: #dfdfdf;
@@ -68,13 +67,11 @@ html.dark-mode {
 
 html {
   background-color: var(--background-color-body);
+  background-image: radial-gradient(circle, var(--background-color-body) 60%, var(--primary-color) 240%);
 }
 body {
   height: 100%;
   font-family: var(--font-title), sans-serif;
-  //background: var(--background-color-body);
-  //background: #ff9999;
-  //background: radial-gradient(circle, var(--background-color-body) 70%, var(--primary-color) 240%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 500;
@@ -83,6 +80,7 @@ body {
 
 p {
   line-height: 20px;
+  color: var(--text-color);
 }
 
 a {

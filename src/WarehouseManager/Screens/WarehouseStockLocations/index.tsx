@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Form, Input, Select} from "antd";
 
 import ModuleContent from "../../../CommonUI/ModuleContent";
@@ -16,40 +16,41 @@ const WarehouseStockLocations = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader title="Ubicaciones en el mapa"/>
-      <FilterForm
-        onSubmit={(values) => setFilters(values)}
-        onInitialValues={(values) => {
-          if (values.warehouse_uuid) {
-            getWarehouse(values.warehouse_uuid)
-              .then(warehouse => setSelectedWarehouse(warehouse));
-          }
-          setFilters(values);
-        }}
-      >
-        <Form.Item label={'Buscar'} name={'search'}>
-          <Input placeholder={'Buscar'} allowClear/>
-        </Form.Item>
-        <Form.Item name={'warehouse_uuid'} label={'Ubicaciones'}>
-          <WarehouseSelector onChange={(_uuid: string, w) => {
-            setSelectedWarehouse(w?.entity);
-          }}/>
-        </Form.Item>
-        <Form.Item label="Estado" name={'status'}>
-          <Select
-            allowClear
-            placeholder={'Disponible'}
-            popupMatchSelectWidth={false}
-            options={[
-              {label: 'Disponible', value: 'available'},
-              {label: 'No disponibles', value: 'not_available'},
-              {label: 'Vendidos', value: 'sold'},
-              {label: 'Reservados', value: 'reserved'},
-              {label: 'Dañados', value: 'damaged'},
-              {label: 'Todos', value: 'all'},
-            ]}/>
-        </Form.Item>
-      </FilterForm>
+      <ContentHeader title="Ubicaciones en el mapa">
+        <FilterForm
+          onSubmit={(values) => setFilters(values)}
+          onInitialValues={(values) => {
+            if (values.warehouse_uuid) {
+              getWarehouse(values.warehouse_uuid)
+                .then(warehouse => setSelectedWarehouse(warehouse));
+            }
+            setFilters(values);
+          }}
+        >
+          <Form.Item label={'Buscar'} name={'search'}>
+            <Input placeholder={'Buscar'} allowClear/>
+          </Form.Item>
+          <Form.Item name={'warehouse_uuid'} label={'Ubicaciones'}>
+            <WarehouseSelector onChange={(_uuid: string, w) => {
+              setSelectedWarehouse(w?.entity);
+            }}/>
+          </Form.Item>
+          <Form.Item label="Estado" name={'status'}>
+            <Select
+              allowClear
+              placeholder={'Disponible'}
+              popupMatchSelectWidth={false}
+              options={[
+                {label: 'Disponible', value: 'available'},
+                {label: 'No disponibles', value: 'not_available'},
+                {label: 'Vendidos', value: 'sold'},
+                {label: 'Reservados', value: 'reserved'},
+                {label: 'Dañados', value: 'damaged'},
+                {label: 'Todos', value: 'all'},
+              ]}/>
+          </Form.Item>
+        </FilterForm>
+      </ContentHeader>
       <StockLocationsMap warehouse={selectedWarehouse} {...filters} />
     </ModuleContent>
   );

@@ -121,11 +121,11 @@ const PaymentsManager = () => {
     {
       title: 'N° Voucher/Transacción',
       width: 200,
-      dataIndex: 'voucher_code',
-      render: (voucher_code: string, row: InvoicePayment) => {
+      dataIndex: 'transaction',
+      render: (transaction: WalletTransaction) => {
         return (<>
-          <code>{voucher_code}</code>
-          <small>{row.payment_channel}</small>
+          <code>{transaction?.tracking_id}</code>
+          <small>{transaction?.payment_channel}</small>
         </>);
       },
     },
@@ -142,7 +142,9 @@ const PaymentsManager = () => {
       width: 200,
       dataIndex: 'transaction',
       render: (transaction: WalletTransaction) => {
-        return <>{transaction?.wallet_to?.name}</>;
+        return <>
+          {transaction?.wallet_from?.name}
+          {transaction?.wallet_to?.name}</>;
       },
     },
     {
@@ -174,9 +176,9 @@ const PaymentsManager = () => {
       title: 'Monto',
       dataIndex: 'amount',
       align: 'right',
-      render: (amount: number, row: Invoice) => {
+      render: (amount: number, row: InvoicePayment) => {
         return <>
-          <MoneyString currency={row?.currency || 'PEN'} value={amount}/>
+          <MoneyString currency={row?.invoice?.currency} value={amount}/>
         </>;
       }
     },
@@ -249,7 +251,7 @@ const PaymentsManager = () => {
             <Form.Item name={'voucher_code'} label={'N°'}>
               <Input allowClear placeholder={'N° Voucher/Transacción'}/>
             </Form.Item>
-            <Form.Item name={'client_uuid'}>
+            <Form.Item name={'client_uuid'} label={'Cliente'}>
               <ClientSelector placeholder={'Filtrar por cliente'}/>
             </Form.Item>
             <Form.Item label={'Fecha de pago'}>

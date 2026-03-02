@@ -7,7 +7,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Pagination,
   Popconfirm,
   Row,
   Select,
@@ -30,13 +29,13 @@ import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import FilterForm from "../../../CommonUI/FilterForm";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import CustomTag from "../../../CommonUI/CustomTag";
-import Config from "../../../Config.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import {ClientSelector} from "../../Components/ClientSelector";
 import InvoiceForm from "../../Components/InvoiceForm";
 import InvoiceTableDetails from "../../Components/InvoiceTableDetails";
 import ModalView from "../../../CommonUI/ModalView";
 import InvoiceTablePayments from "../../Components/InvoiceTablePayments";
+import TablePagination from "../../../CommonUI/TablePagination";
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>();
@@ -46,8 +45,6 @@ const Invoices = () => {
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [pageSize, setPageSize] = useState<number>(20);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice>();
-  const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
-  const [dateRangeFilterExpire, setDateRangeFilterExpire] = useState<any[] | null>();
   const [openPaymentsDetail, setOpenPaymentsDetail] = useState(false);
   const [openInvoiceForm, setOpenInvoiceForm] = useState(false);
   const [filters, setFilters] = useState<any>();
@@ -61,8 +58,6 @@ const Invoices = () => {
         ...filters,
         page: currentPage,
         page_size: pageSize,
-        //date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
-        //expired_date_range: dateRangeFilterExpire ? dateRangeFilterExpire.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
     setLoading(true);
@@ -84,7 +79,7 @@ const Invoices = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [pageSize, currentPage, reload, dateRangeFilterExpire, filters, setDateRangeFilter]);
+  }, [pageSize, currentPage, reload, filters]);
 
   const deleteInvoice = (uuid: string) => {
     axios
@@ -136,7 +131,7 @@ const Invoices = () => {
       title: 'Vencimiento',
       width: 110,
       dataIndex: 'expires_on',
-      render: (date: string) => <>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</>,
+      render: (date: string) => <code>{date ? dayjs(date).format('DD/MM/YYYY') : ''}</code>,
     },
     {
       title: 'Concepto',
@@ -168,10 +163,10 @@ const Invoices = () => {
     },
     {
       title: 'Documento SUNAT',
-      dataIndex: 'documents',
-      render: (documents: any, row: Invoice) => {
+      dataIndex: 'secondary_id',
+      render: (secondary_id: string) => {
         return <>
-          {row.secondary_id ||
+          {secondary_id ||
             <PrimaryButton disabled label={'Generar'} shape={'round'} ghost size={"small"}/>
           }
         </>;
@@ -182,10 +177,9 @@ const Invoices = () => {
       dataIndex: 'amount',
       align: 'right',
       render: (amount: number, row: Invoice) => {
-        const pendingTotal = row.pending_payment == row.amount;
         return <>
           <MoneyString currency={row?.currency || 'PEN'} value={amount}/> <br/>
-          <CustomTag color={row?.pending_payment && row?.pending_payment > 0 ? 'yellow' : 'default'}>
+          <CustomTag color={row?.pending_payment && row?.pending_payment > 0 ? 'orange' : 'default'}>
             <>Pendiente: <MoneyString currency={row?.currency || 'PEN'} value={row?.pending_payment}/></>
           </CustomTag>
         </>;
@@ -228,7 +222,7 @@ const Invoices = () => {
           title={'Requerimientos de pago'}
           loading={loading}
           onRefresh={() => setReload(!reload)}
-          tools={`Total ${pagination?.total}`}>
+          >
           <FilterForm
             additionalChildren={<>
               <Form.Item label={'Monto'} name={'amount'} layout={'vertical'}>
@@ -238,10 +232,10 @@ const Invoices = () => {
             onSubmit={values => setFilters(values)}
             onInitialValues={values => setFilters(values)}
           >
-            <Form.Item name={'voucher_code'}>
+            <Form.Item name={'voucher_code'} label={'Buscar'}>
               <Input allowClear placeholder={'Buscar por ID, SUNAT, Concepto'}/>
             </Form.Item>
-            <Form.Item name={'client_uuid'}>
+            <Form.Item name={'client_uuid'} label={'Cliente'}>
               <ClientSelector/>
             </Form.Item>
             <Form.Item label={'Estado'} name={'status'}>
@@ -268,13 +262,11 @@ const Invoices = () => {
             </Form.Item>
           </FilterForm>
         </ContentHeader>
-        <TableList scroll={{x: 1000}} customStyle={false} columns={columns} dataSource={invoices}/>
-        <Pagination
-          style={{marginTop: 10}}
-          align={'center'}
-          total={pagination?.total}
-          pageSize={pagination?.per_page}
-          current={pagination?.current_page}
+        <TableList
+          loading={loading}
+          scroll={{x: 1000}} customStyle={false} columns={columns} dataSource={invoices}/>
+        <TablePagination
+          pagination={pagination}
           onChange={(page, size) => {
             setCurrentPage(page);
             setPageSize(size);

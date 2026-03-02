@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {
   DatePicker, Divider,
   Form,
-  Pagination, Popconfirm, Popover,
+  Popconfirm, Popover,
   Progress,
   Select,
   Space,
@@ -11,6 +11,8 @@ import {
 } from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {Link, useNavigate} from 'react-router-dom';
+import {LuCircleChevronRight} from "react-icons/lu";
+import {TbCancel, TbChevronRight, TbRefresh, TbRefreshDot, TbTrash} from "react-icons/tb";
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -36,9 +38,6 @@ import Config from "../../../Config.tsx";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import NewSaleForm from "../../Components/NewSaleForm";
 import StorageStockChip from "../../Components/StorageStockChip";
-import './styles.less';
-import {LuCircleChevronRight} from "react-icons/lu";
-import {TbCancel, TbChevronRight, TbRefresh, TbTrash} from "react-icons/tb";
 import WarehouseSelector from "../../../WarehouseManager/Components/WarehouseSelector";
 import StockSelector from "../../../WarehouseManager/Components/StockSelector";
 import ProductSelector from "../../../WarehouseManager/Components/ProductSelector";
@@ -48,6 +47,8 @@ import ModalView from "../../../CommonUI/ModalView";
 import CustomTag from "../../../CommonUI/CustomTag";
 import PeriodChip from "../../../CommonUI/PeriodChip";
 import useContractRenew from "../../Hooks/useContractRenew.tsx";
+import TablePagination from "../../../CommonUI/TablePagination";
+import './styles.less';
 
 interface CommercialSalesProps {
   mode?: string;
@@ -64,7 +65,6 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
   const [downloading, setDownloading] = useState(false);
   const [openContractForm, setOpenContractForm] = useState(false);
   const [filters, setFilters] = useState<any>();
-  const [dateRangeFilter, setDateRangeFilter] = useState<any[] | null>();
   const [contractStats, setContractStats] = useState<any>();
   const [filterProduct, setFilterProduct] = useState<StorageProduct>();
   const [filterVariation, setFilterVariation] = useState<StorageProductVariation>();
@@ -73,16 +73,14 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
     const config = {
-      cancelToken: cancelTokenSource.token, params: {
-        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
-      }
+      cancelToken: cancelTokenSource.token,
+      params: {...filters}
     };
 
     axios
       .get(`commercial/contracts/stats`, config)
       .then(response => {
         if (response) {
-          console.log(response.data);
           setContractStats(response.data);
         }
       })
@@ -100,7 +98,6 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
         ...filters,
         page: currentPage,
         page_size: pageSize,
-        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
       },
     };
 
@@ -124,17 +121,12 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       });
 
     return cancelTokenSource.cancel;
-  }, [currentPage, pageSize, reload, filters, dateRangeFilter, mode]);
+  }, [currentPage, pageSize, reload, filters, mode]);
 
   const exportSelection = () => {
     const config = {
       responseType: 'blob',
-      params: {
-        page: currentPage,
-        page_size: pageSize,
-        ...filters,
-        date_range: dateRangeFilter ? dateRangeFilter.map(d => d.format(Config.dateFormatServer)) : null,
-      },
+      params: filters,
     };
 
     setDownloading(true);
@@ -266,11 +258,12 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
       align: 'right',
       render: (totals: any, row: Contract) =>
         <>
-          <MoneyString currency={'PEN'} value={totals?.PEN}/>
-          <MoneyString currency={'USD'} value={totals?.USD}/>
-          <MoneyString currency={'EUR'} value={totals?.EUR}/>
+          {Object.keys(totals).map((key, index) => {
+            return <MoneyString currency={key} key={index} value={totals[key]}/>;
+          })}
           <br/>
           <PeriodChip period={row.period}/>
+          {row.is_renewable ? <TbRefreshDot/> : ''}
         </>,
     },
     {
@@ -356,9 +349,8 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
         }
         onRefresh={() => setReload(!reload)}>
         <FilterForm
-          onSubmit={values => {
-            setFilters(values);
-          }}
+          onSubmit={values => setFilters(values)}
+          onInitialValues={values => setFilters(values)}
           additionalChildren={<>
             <Form.Item layout={'vertical'} label={'Almacen'} name={'warehouse_uuid'}>
               <WarehouseSelector/>
@@ -374,13 +366,15 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
               <StockSelector product={filterProduct} variation={filterVariation} status={'all'}/>
             </Form.Item>
           </>}
-          onInitialValues={values => setFilters(values)}
         >
           <Form.Item label={'Cliente'} name={'client_uuid'}>
             <ClientSelector/>
           </Form.Item>
-          <Form.Item>
-            <DatePicker.RangePicker format={'DD/MM/YYYY'} onChange={value => setDateRangeFilter(value)}/>
+          <Form.Item label={'Fecha de aprobación'} name={'date_range'}>
+            <DatePicker.RangePicker
+              placeholder={['Desde', 'Hasta']}
+              format={'DD/MM/YYYY'}
+              />
           </Form.Item>
           <Form.Item name={'status'} label={'Estado'}>
             <Select
@@ -412,20 +406,12 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
         </FilterForm>
       </ContentHeader>
       <TableList scroll={{x: 1100}} loading={loading} columns={columns} dataSource={clients}/>
-      {pagination && (
-        <Pagination
-          style={{marginTop: 10}}
-          align={'center'}
-          onChange={(page, size) => {
-            setCurrentPage(page);
-            setPageSize(size);
-          }}
-          showTotal={total => `Total ${total}`}
-          total={pagination.total}
-          current={pagination.current_page}
-          pageSize={pagination.per_page}
-        />
-      )}
+      <TablePagination
+        pagination={pagination}
+        onChange={(page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+        }}/>
       <ModalView
         width={1000}
         open={openContractForm}

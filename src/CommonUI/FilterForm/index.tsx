@@ -128,7 +128,7 @@ const FilterForm = (
             onFieldsChange={onFieldsChange}
             initialValues={initialValues}
             onFinish={onSubmitHandler}
-            layout={'inline'}>
+            layout={'vertical'}>
             <div className={'filter-form-items-wrapper'}>
               {children}
               <Space>

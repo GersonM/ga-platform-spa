@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Form, Input, Pagination, Select} from 'antd';
+import {Form, Input, Select} from 'antd';
 import dayjs from "dayjs";
 import axios from "axios";
 
@@ -13,6 +13,7 @@ import StockActivityActionChip from "../../Components/StockActivityActionChip";
 import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
 import CustomTag from "../../../CommonUI/CustomTag";
 import WarehouseSelector from "../../Components/WarehouseSelector";
+import TablePagination from "../../../CommonUI/TablePagination";
 
 const WarehouseActivityManager = () => {
   const [loading, setLoading] = useState(false);
@@ -114,49 +115,38 @@ const WarehouseActivityManager = () => {
         title={'Actividad del inventario'}
         loading={loading}
         onRefresh={() => setReload(!reload)}
-        />
-      <FilterForm
-        onInitialValues={values => setFilters(values)}
-        onSubmit={values => setFilters(values)}
       >
-        <Form.Item name={'search'} label={'Buscar'}>
-          <Input.Search
-            allowClear
-            placeholder={'Buscar por nombre, código o descripción'}
-          />
-        </Form.Item>
-        <Form.Item name={'warehouse_uuid'} label={'Almacen'}>
-          <WarehouseSelector />
-        </Form.Item>
-        <Form.Item name={'action'} label={'Acción'}>
-          <Select
-            allowClear
-            popupMatchSelectWidth={false}
-            placeholder={'Todos'}
-            options={[
-            {label:'Venta', value:'outlet'},
-            {label:'Ingreso', value:'entrance'},
-            {label:'Reserva', value:'reserve'},
-            {label:'Perdida', value:'waste'},
-            {label:'Transporte Salida', value:'moving_out'},
-            {label:'Transporte Ingreso', value:'moving_in'},
-          ]}/>
-        </Form.Item>
-      </FilterForm>
+        <FilterForm
+          onInitialValues={values => setFilters(values)}
+          onSubmit={values => setFilters(values)}
+        >
+          <Form.Item name={'search'} label={'Buscar'}>
+            <Input.Search
+              allowClear
+              placeholder={'Buscar por nombre, código o descripción'}
+            />
+          </Form.Item>
+          <Form.Item name={'warehouse_uuid'} label={'Almacen'}>
+            <WarehouseSelector/>
+          </Form.Item>
+          <Form.Item name={'action'} label={'Acción'}>
+            <Select
+              allowClear
+              popupMatchSelectWidth={false}
+              placeholder={'Todos'}
+              options={[
+                {label: 'Venta', value: 'outlet'},
+                {label: 'Ingreso', value: 'entrance'},
+                {label: 'Reserva', value: 'reserve'},
+                {label: 'Perdida', value: 'waste'},
+                {label: 'Transporte Salida', value: 'moving_out'},
+                {label: 'Transporte Ingreso', value: 'moving_in'},
+              ]}/>
+          </Form.Item>
+        </FilterForm>
+      </ContentHeader>
       <TableList columns={columns} dataSource={products}/>
-      {pagination && (
-        <Pagination
-          showSizeChanger={false}
-          style={{marginTop: 10}}
-          onChange={(page) => {
-            setCurrentPage(page);
-          }}
-          align={'center'}
-          total={pagination.total}
-          showTotal={(total) => `${total} productos en total`}
-          pageSize={pagination.per_page}
-          current={pagination.current_page}/>
-      )}
+      <TablePagination pagination={pagination} onChange={(page) => setCurrentPage(page)}/>
     </ModuleContent>
   );
 };

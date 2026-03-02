@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
-import {TrashIcon} from '@heroicons/react/16/solid';
 import {IoReload} from 'react-icons/io5';
+import {Space} from 'antd';
+import {TbTrash} from "react-icons/tb";
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -8,14 +9,12 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import type {Token} from '../../../Types/api';
 import TableList from '../../../CommonUI/TableList';
 import IconButton from '../../../CommonUI/IconButton';
-import {Space} from 'antd';
-import {TbTrash} from "react-icons/tb";
 
-interface IUserSessionsManager {
+interface UserSessionsManagerProps {
   profileUuid: string;
 }
 
-const UserSessionsManager = ({profileUuid}: IUserSessionsManager) => {
+const UserSessionsManager = ({profileUuid}: UserSessionsManagerProps) => {
   const [tokens, setTokens] = useState<Token[]>();
   const [reload, setReload] = useState(false);
 

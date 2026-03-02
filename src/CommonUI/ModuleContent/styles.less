@@ -26,6 +26,8 @@
 .module-content-wrapper {
   flex: 1;
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: calc(100vw - (var(--main-nav-width) + 60px));
 
   &.with-sidebar {
@@ -56,6 +58,7 @@
     top: 0;
     padding: 15px 20px 0 20px;
     z-index: 3;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 
     .filter-form-container {
       margin: 0 -20px;
@@ -88,10 +91,6 @@
 
     small {
       opacity: 0.6;
-    }
-
-    .content-header-caption {
-      margin-top: 3px;
     }
   }
 }
@@ -127,6 +126,7 @@
 
   .module-content-wrapper {
     width: 100dvw !important;
+    min-height: 90dvh;
 
     .content-header {
       top: 50px;

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Avatar, Badge, Dropdown, notification, Popover, Space, Tag, Tooltip } from 'antd';
+import { Avatar, Badge, Dropdown, Popover, Space, Tag, Tooltip } from 'antd';
 import axios from 'axios';
 import {
   PiBooksLight,
@@ -40,14 +40,15 @@ import {
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor,
   TbListCheck, TbMapCheck, TbMapPinBolt, TbMask, TbMessageUser,
   TbPackage, TbPackageImport,
-  TbPigMoney,
-  TbRobotFace, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
+  TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
 } from 'react-icons/tb';
 import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import type { ItemType } from 'antd/es/menu/interface';
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import { LuReceipt, LuReceiptText } from "react-icons/lu";
 import Cookies from 'js-cookie';
+import {sileo} from "sileo";
 
 import ScreenModeSelector from './ScreenModeSelector';
 import logo from '../Assets/ga_logo.webp';
@@ -57,8 +58,6 @@ import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
 import NavItem from './NavItem';
 import './styles.less';
-import { LuReceipt, LuReceiptText } from "react-icons/lu";
-import {sileo} from "sileo";
 
 const menuItems: ItemType[] = [
   {
@@ -92,7 +91,6 @@ const Navigation = () => {
     activityCount
   } = useContext(AuthContext);
   const { pathname } = useLocation();
-  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     setOpenMenu(false);
@@ -102,7 +100,7 @@ const Navigation = () => {
     axios
       .get(`hr-management/profiles/${user?.profile.uuid}/favorites`)
       .then(response => {
-        console.log(response.data);
+        sileo.info({title:response.data.length + ' favoritos'});
       })
       .catch(error => {
         ErrorHandler.showNotification(error);
@@ -143,7 +141,6 @@ const Navigation = () => {
   const tenantLogo = darkMode ? config?.dark_logo : config?.white_logo;
   return (
     <div className={`navigation-wrapper ${openMenu ? 'open' : ''}`}>
-      {contextHolder}
       <div className={'head'}>
         <Dropdown arrow={true} trigger={['click']} menu={{ items: tenantItems, onClick: setWorkspace }}>
           <Tooltip title={config?.config?.name} placement={"right"}>

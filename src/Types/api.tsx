@@ -102,6 +102,7 @@ export type Contract = {
   amount_string?: string;
   approved_at?: string;
   next_renew_date?: string;
+  is_renewable?: boolean;
   last_renew_date?: string;
   budget_details?: string;
   created_at: string;

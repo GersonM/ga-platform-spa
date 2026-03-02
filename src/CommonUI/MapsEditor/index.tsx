@@ -17,10 +17,11 @@ interface MapEditorProps {
   mapId?: string;
   zoom?: number;
   debug?:boolean;
+  style?: React.CSSProperties;
   onClick?: (position: { lat: number, lng: number } | null, placeId: string | null) => void;
 }
 
-const MapEditor = ({children, center, onClick, zoom = 14, mapId}: MapEditorProps) => {
+const MapEditor = ({children, center, onClick, zoom = 14, mapId, style}: MapEditorProps) => {
   const map = useMap(mapId);
   const [lockCenter, setLockCenter] = useState(true);
 
@@ -47,7 +48,7 @@ const MapEditor = ({children, center, onClick, zoom = 14, mapId}: MapEditorProps
         }}
         disableDefaultUI={true}
         mapId={'6552cc943eb9a0ff948d4665'}
-        style={{height: 'calc(100vh - 140px)'}}
+        style={style}
       >
         {children}
       </Map>
