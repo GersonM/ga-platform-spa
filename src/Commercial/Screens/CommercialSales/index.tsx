@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {DatePicker, Divider, Form, Popconfirm, Popover, Progress, Select, Space, Tag, Tooltip} from 'antd';
+import {DatePicker, Divider, Form, Input, Popconfirm, Popover, Progress, Select, Space, Tag, Tooltip} from 'antd';
 import {RiFileExcel2Fill} from 'react-icons/ri';
 import {Link, useNavigate} from 'react-router-dom';
 import {LuCircleChevronRight} from "react-icons/lu";
@@ -349,6 +349,9 @@ const CommercialSales = ({mode}: CommercialSalesProps) => {
             </Form.Item>
           </>}
         >
+          <Form.Item label={'Buscar'} name={'search'}>
+            <Input />
+          </Form.Item>
           <Form.Item label={'Cliente'} name={'client_uuid'}>
             <ClientSelector/>
           </Form.Item>

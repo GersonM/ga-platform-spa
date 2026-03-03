@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Avatar, Badge, Dropdown, Popover, Space, Tag, Tooltip } from 'antd';
 import axios from 'axios';
@@ -57,26 +57,8 @@ import AuthContext from '../Context/AuthContext';
 import Package from '../../package.json';
 import ErrorHandler from '../Utils/ErrorHandler';
 import NavItem from './NavItem';
+import {createNavigationTranslator} from '../i18n/navigation';
 import './styles.less';
-
-const menuItems: ItemType[] = [
-  {
-    label: 'Mi cuenta',
-    icon: <PiUserCircleCheck size={18} />,
-    key: 'my-account',
-  },
-  {
-    label: 'Favoritos',
-    icon: <PiStar size={18} />,
-    key: 'favorites',
-  },
-  {
-    label: 'Cerrar sesión',
-    icon: <PiSignOut size={18} />,
-    key: 'logout',
-    danger: true,
-  },
-];
 
 const Navigation = () => {
   const {
@@ -91,6 +73,28 @@ const Navigation = () => {
     activityCount
   } = useContext(AuthContext);
   const { pathname } = useLocation();
+  const tenantId = config?.id;
+  const t = useMemo(() => createNavigationTranslator(tenantId), [tenantId]);
+  const menuItems: ItemType[] = useMemo(() => [
+    {
+      label: t('userMenu.myAccount'),
+      icon: <PiUserCircleCheck size={18} />,
+      key: 'my-account',
+    },
+    {
+      label: t('userMenu.favorites'),
+      icon: <PiStar size={18} />,
+      key: 'favorites',
+    },
+    {
+      label: t('userMenu.logout'),
+      icon: <PiSignOut size={18} />,
+      key: 'logout',
+      danger: true,
+    },
+  ], [t]);
+
+  console.log(tenantId);
 
   useEffect(() => {
     setOpenMenu(false);
@@ -156,21 +160,21 @@ const Navigation = () => {
         options={{ scrollbars: { autoHide: 'scroll' } }}>
         <nav>
           <ul className="navigation-list">
-            <NavItem label={'Dashboard'} icon={<TbGridDots />} path={'/'} />
+            <NavItem label={t('nav.dashboard')} icon={<TbGridDots />} path={'/'} />
             <NavItem
-              label={'Mis tareas'}
+              label={t('nav.myTasks')}
               icon={<TbListCheck />}
               path={'/my-tasks'}
               notifications={activityCount?.pending}
             />
             {config?.modules.includes('files') && (
-              <NavItem label={'Gestor de Archivos'} icon={<PiHardDrives />} path={'/file-management'} />
+              <NavItem label={t('nav.fileManager')} icon={<PiHardDrives />} path={'/file-management'} />
             )}
             {config?.modules.includes('attendance') && (
-              <NavItem label={'Asistencia'} icon={<PiClockUser />} code={'attendance'}>
-                <NavItem label={'Reportes'} icon={<PiPresentationChart />} path={'/attendance/dashboard'} />
-                <NavItem label={'Asistencia'} icon={<PiUsersThree />} path={'/attendance/management'} />
-                <NavItem label={'Control de acceso'} icon={<PiUserFocus />} path={'/attendance/access-control'} />
+              <NavItem label={t('nav.attendance')} icon={<PiClockUser />} code={'attendance'}>
+                <NavItem label={t('nav.reports')} icon={<PiPresentationChart />} path={'/attendance/dashboard'} />
+                <NavItem label={t('nav.attendance')} icon={<PiUsersThree />} path={'/attendance/management'} />
+                <NavItem label={t('nav.accessControl')} icon={<PiUserFocus />} path={'/attendance/access-control'} />
               </NavItem>
             )}
             {/*config?.modules.includes('real-estate') && (
@@ -182,102 +186,102 @@ const Navigation = () => {
               </NavItem>
             )*/}
             {config?.modules.includes('crm') && (
-              <NavItem label={'CRM'} icon={<TbHeadset />} notifications={'Beta'} code={'crm'}>
-                <NavItem icon={<PiUserFocus />} label={'Leads & campañas'} path={'/crm/leads'} />
-                <NavItem icon={<TbMessageUser />} label={'Mensajería'} path={'/crm/chat'} />
-                <NavItem icon={<TbContract />} label={'Procesos'} path={'/crm/processes'} />
-                <NavItem icon={<TbAdjustments />} label={'Configuración'} path={'/crm/configuration'} />
+              <NavItem label={t('nav.crm')} icon={<TbHeadset />} notifications={'Beta'} code={'crm'}>
+                <NavItem icon={<PiUserFocus />} label={t('nav.crmLeadsAndCampaigns')} path={'/crm/leads'} />
+                <NavItem icon={<TbMessageUser />} label={t('nav.messaging')} path={'/crm/chat'} />
+                <NavItem icon={<TbContract />} label={t('nav.processes')} path={'/crm/processes'} />
+                <NavItem icon={<TbAdjustments />} label={t('nav.configuration')} path={'/crm/configuration'} />
               </NavItem>
             )}
             {config?.modules.includes('commercial') && (
-              <NavItem label={'Comercial'} icon={<PiHandshake />} code={'commercial'}>
-                <NavItem icon={<PiPresentationChart />} label={'Dashboard'} path={'/commercial/dashboard'} />
-                <NavItem icon={<PiWarningDiamond />} label={'Incidencias'} path={'/commercial/incidents'} />
-                <NavItem icon={<PiUsers />} label={'Clientes'} path={'/commercial/clients'} />
-                <NavItem icon={<TbShoppingCartUp />} label={'Ventas'} path={'/commercial/sales'} />
-                <NavItem icon={<TbShoppingCartDown />} label={'Compras'} path={'/commercial/purchases'} />
-                <NavItem icon={<TbContract />} label={'Plantillas de contrato'} path={'/commercial/contract-templates'} />
-                <NavItem icon={<TbUsersGroup />} label={'Vendedores'} path={'/commercial/sellers'} />
+              <NavItem label={t('nav.commercial')} icon={<PiHandshake />} code={'commercial'}>
+                <NavItem icon={<PiPresentationChart />} label={t('nav.dashboard')} path={'/commercial/dashboard'} />
+                <NavItem icon={<PiWarningDiamond />} label={t('nav.incidents')} path={'/commercial/incidents'} />
+                <NavItem icon={<PiUsers />} label={t('nav.clients')} path={'/commercial/clients'} />
+                <NavItem icon={<TbShoppingCartUp />} label={t('nav.sales')} path={'/commercial/sales'} />
+                <NavItem icon={<TbShoppingCartDown />} label={t('nav.purchases')} path={'/commercial/purchases'} />
+                <NavItem icon={<TbContract />} label={t('nav.contractTemplates')} path={'/commercial/contract-templates'} />
+                <NavItem icon={<TbUsersGroup />} label={t('nav.sellers')} path={'/commercial/sellers'} />
               </NavItem>
             )}
-            <NavItem label={'Inventario'} icon={<TbBuildingWarehouse />} code={'stock'}>
-              <NavItem icon={<TbPackageImport />} label={'Stock'} path={'/warehouse/stock'} />
-              <NavItem icon={<TbMapCheck />} label={'Mapa'} path={'/warehouse/locations'} />
-              <NavItem icon={<TbPackage />} label={'Catalogo'} path={'/warehouse/products'} />
-              <NavItem icon={<TbForklift />} label={'Movimientos'} path={'/warehouse/activity'} />
+            <NavItem label={t('nav.inventory')} icon={<TbBuildingWarehouse />} code={'stock'}>
+              <NavItem icon={<TbPackageImport />} label={t('nav.stock')} path={'/warehouse/stock'} />
+              <NavItem icon={<TbMapCheck />} label={t('nav.map')} path={'/warehouse/locations'} />
+              <NavItem icon={<TbPackage />} label={t('nav.catalog')} path={'/warehouse/products'} />
+              <NavItem icon={<TbForklift />} label={t('nav.movements')} path={'/warehouse/activity'} />
             </NavItem>
             {config?.modules.includes('move') && (
-              <NavItem icon={<PiCarProfile />} label={'Transporte (Move)'} code={'move'}>
-                <NavItem icon={<TbTicket />} label={'Nueva reserva'} path={'/move/reservation'} />
-                <NavItem icon={<QueueListIcon />} label={'Mis reservas'} path={'/move/trips'} />
+              <NavItem icon={<PiCarProfile />} label={t('nav.move')} code={'move'}>
+                <NavItem icon={<TbTicket />} label={t('nav.newReservation')} path={'/move/reservation'} />
+                <NavItem icon={<QueueListIcon />} label={t('nav.myReservations')} path={'/move/trips'} />
                 {user?.roles?.includes('admin') && (
                   <>
                     <NavItem
                       icon={<PiCarLight className={'icon'} />}
-                      label={'Vehículos & conductores'}
+                      label={t('nav.vehiclesAndDrivers')}
                       path={'/move/vehicles'}
                     />
-                    <NavItem icon={<MapPinIcon />} label={'Rutas & lugares'} path={'/move/routes'} />
+                    <NavItem icon={<MapPinIcon />} label={t('nav.routesAndPlaces')} path={'/move/routes'} />
                   </>
                 )}
-                <NavItem icon={<TbCalendar />} label={'Calendario'} path={'/move/schedule'} />
+                <NavItem icon={<TbCalendar />} label={t('nav.calendar')} path={'/move/schedule'} />
               </NavItem>
             )}
-            <NavItem label={'Parada7'} icon={<PiCarProfile />} path={'/parada7/companies'} />
+            <NavItem label={t('nav.parada7')} icon={<PiCarProfile />} path={'/parada7/companies'} />
             {config?.modules.includes('reservations') && (
-              <NavItem icon={<PiCalendarCheckLight />} label={'Reservas'} code={'reservations'}>
-                <NavItem icon={<TbTicket />} label={'Nueva reserva'} path={'/reservations/create'} />
-                <NavItem icon={<QueueListIcon />} label={'Reservas'} path={'/reservations/manager'} />
+              <NavItem icon={<PiCalendarCheckLight />} label={t('nav.reservations')} code={'reservations'}>
+                <NavItem icon={<TbTicket />} label={t('nav.newReservation')} path={'/reservations/create'} />
+                <NavItem icon={<QueueListIcon />} label={t('nav.reservations')} path={'/reservations/manager'} />
                 {user?.roles?.includes('admin') && (
                   <>
                     <NavItem
                       icon={<TbBuildingEstate className={'icon'} />}
-                      label={'Espacios'}
+                      label={t('nav.spaces')}
                       path={'/reservations/vehicles'}
                     />
-                    <NavItem icon={<TbMapPinBolt />} label={'Servicios'} path={'/reservations/routes'} />
+                    <NavItem icon={<TbMapPinBolt />} label={t('nav.services')} path={'/reservations/routes'} />
                   </>
                 )}
-                <NavItem icon={<TbCalendar />} label={'Calendario'} path={'/move/schedule'} />
+                <NavItem icon={<TbCalendar />} label={t('nav.calendar')} path={'/move/schedule'} />
               </NavItem>
             )}
             {config?.modules.includes('club') && (
-              <NavItem label={'Club'} icon={<PiUsers />} code={'club'}>
-                <NavItem label={'Socios'} icon={<PiPerson />} path={'/club/subscriptions'} />
-                <NavItem label={'Importar pagos'} icon={<PiMoney />} path={'/club/payments-import'} />
+              <NavItem label={t('nav.club')} icon={<PiUsers />} code={'club'}>
+                <NavItem label={t('nav.members')} icon={<PiPerson />} path={'/club/subscriptions'} />
+                <NavItem label={t('nav.importPayments')} icon={<PiMoney />} path={'/club/payments-import'} />
               </NavItem>
             )}
-            {user?.roles?.includes('hr') && <NavItem label={'RR. HH.'} icon={<PiUsersThree />} path={'/hr'} />}
+            {user?.roles?.includes('hr') && <NavItem label={t('nav.hr')} icon={<PiUsersThree />} path={'/hr'} />}
             {config?.modules.includes('payments') && (
-              <NavItem label={'Finanzas'} icon={<TbCurrencyDollar />} code={'payments'}>
-                <NavItem label={'Req. de pago'} icon={<LuReceiptText />} path={'/finances/invoices'} />
-                <NavItem label={'Pagos'} icon={<LuReceipt />} path={'/finances/payments'} />
-                <NavItem label={'Ingresos'} icon={<GiReceiveMoney />} path={'/finances/transactions/deposit'} />
-                <NavItem label={'Salidas'} icon={<GiPayMoney />} path={'/finances/transactions/withdraw'} />
-                <NavItem label={'Cuentas'} icon={<TbPigMoney />} path={'/finances/wallet-accounts'} />
+              <NavItem label={t('nav.finance')} icon={<TbCurrencyDollar />} code={'payments'}>
+                <NavItem label={t('nav.paymentRequests')} icon={<LuReceiptText />} path={'/finances/invoices'} />
+                <NavItem label={t('nav.payments')} icon={<LuReceipt />} path={'/finances/payments'} />
+                <NavItem label={t('nav.income')} icon={<GiReceiveMoney />} path={'/finances/transactions/deposit'} />
+                <NavItem label={t('nav.expenses')} icon={<GiPayMoney />} path={'/finances/transactions/withdraw'} />
+                <NavItem label={t('nav.accounts')} icon={<TbPigMoney />} path={'/finances/wallet-accounts'} />
               </NavItem>
             )}
             {config?.modules.includes('lms') && (
-              <NavItem label={'LMS'} icon={<PiGraduationCap />} code={'lms'}>
-                <NavItem label={'Cursos'} icon={<PiBooksLight />} path={'/lms/courses'} />
-                <NavItem label={'Estudiantes'} icon={<PiStudent />} path={'/lms/students'} />
-                <NavItem label={'Profesores'} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
+              <NavItem label={t('nav.lms')} icon={<PiGraduationCap />} code={'lms'}>
+                <NavItem label={t('nav.courses')} icon={<PiBooksLight />} path={'/lms/courses'} />
+                <NavItem label={t('nav.students')} icon={<PiStudent />} path={'/lms/students'} />
+                <NavItem label={t('nav.teachers')} icon={<FaChalkboardTeacher />} path={'/lms/teachers'} />
               </NavItem>
             )}
             {config?.modules.includes('inbox') && (
-              <NavItem label={'E-mail'} icon={<PiMailboxDuotone />} path={'/inbox-management'} />
+              <NavItem label={t('nav.email')} icon={<PiMailboxDuotone />} path={'/inbox-management'} />
             )}
             {config?.modules.includes('resources') && (
-              <NavItem label={'Servicios y recursos'} icon={<TbHeartRateMonitor />} path={'/resources'} />
+              <NavItem label={t('nav.servicesAndResources')} icon={<TbHeartRateMonitor />} path={'/resources'} />
             )}
-            <NavItem label={'Contactos'} icon={<TbBook />} code={'contacts'}>
-              <NavItem label={'Personas'} icon={<TbUser />} path={'/profiles'} />
-              <NavItem label={'Empresas'} icon={<PiBuilding />} path={'/companies'} />
+            <NavItem label={t('nav.contacts')} icon={<TbBook />} code={'contacts'}>
+              <NavItem label={t('nav.people')} icon={<TbUser />} path={'/profiles'} />
+              <NavItem label={t('nav.companies')} icon={<PiBuilding />} path={'/companies'} />
             </NavItem>
             {user?.roles?.includes('admin') && (
-              <NavItem label={'Administración'} icon={<TbBook />} code={'admin'}>
-                <NavItem label={'Usuarios'} icon={<PiFingerprint />} path={'/users'} />
-                <NavItem label={'Configuración'} icon={<PiGear />} path={'/config'} />
+              <NavItem label={t('nav.administration')} icon={<TbBook />} code={'admin'}>
+                <NavItem label={t('nav.users')} icon={<PiFingerprint />} path={'/users'} />
+                <NavItem label={t('nav.configuration')} icon={<PiGear />} path={'/config'} />
               </NavItem>
             )}
           </ul>
@@ -287,11 +291,11 @@ const Navigation = () => {
         <Space>
           <div className={`user-tool ${secureMode ? '' : 'danger'}`} onClick={() => setSecureMode(!secureMode)}>
             <Popover
-              title={<>Modo seguro {secureMode ? <Tag color={'green'}>Activo</Tag> :
-                <Tag color={'red'}>Desactivado</Tag>}</>}
+              title={<>{t('securityMode.title')} {secureMode ? <Tag color={'green'}>{t('securityMode.active')}</Tag> :
+                <Tag color={'red'}>{t('securityMode.inactive')}</Tag>}</>}
               content={
                 <>
-                  Muestra u oculta información que podría ser sensible <br />{' '}
+                  {t('securityMode.description')} <br />{' '}
                 </>
               }>
               {secureMode ? <TbShieldCheck /> : <TbShieldOff color={'red'} />}
