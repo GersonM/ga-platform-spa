@@ -36,7 +36,7 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
     const tColorL = tinyColor(primaryColor);
     const tColorD = tinyColor(primaryColor);
     tColor.darken(16);
-    tColorL.lighten(70);
+    tColorL.lighten(55);
     tColorD.darken(9);
     const r = document.querySelector(':root');
     //@ts-ignore

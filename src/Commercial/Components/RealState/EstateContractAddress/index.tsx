@@ -13,7 +13,7 @@ const EstateContractAddress = ({contract, onEdit, tooltip}: EstateContractAddres
     <InfoButton
       tooltip={tooltip}
       icon={<HomeModernIcon width={20} className={'icon'} />}
-      caption={'Dirección'}
+      value={'Dirección'}
       onEdit={onEdit}
       label={`${contract?.contractable?.sku}`}
     />

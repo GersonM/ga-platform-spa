@@ -142,20 +142,20 @@ const TripPassengersManager = ({trip, onChange}: TripPassengersManagerProps) => 
             <InfoButton
               onEdit={isAbleToAssignDriver ? () => setOpenAssignDriver(true) : undefined}
               icon={<TbSteeringWheel className={'icon'} />}
-              caption={driverCaption}
+              value={driverCaption}
               label={driverLabel}
             />
           </Tooltip>
           <InfoButton
             icon={<TbClock className={'icon'} />}
             onEdit={() => setOpenEditTime(true)}
-            caption={dayjs(trip.arrival_time).format('hh:mm a')}
+            value={dayjs(trip.arrival_time).format('hh:mm a')}
             label={dayjs(trip.departure_time).format('hh:mm a')}
           />
           <InfoButton
             icon={<PiCarLight className={'icon'} />}
             label={`${trip.vehicle?.brand} ${trip.vehicle?.color}`}
-            caption={trip.vehicle?.registration_plate}
+            value={trip.vehicle?.registration_plate}
           />
         </Space>
         <Space wrap>

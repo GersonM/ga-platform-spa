@@ -114,20 +114,20 @@ const ReservationAttendanceManager = ({trip, onChange}: ReservationAttendanceMan
             <InfoButton
               onEdit={isAbleToAssignDriver ? () => setOpenAssignDriver(true) : undefined}
               icon={<FaUserTie className={'icon'}/>}
-              caption={driverCaption}
+              value={driverCaption}
               label={driverLabel}
             />
           </Tooltip>
           <InfoButton
             icon={<TbClock className={'icon'}/>}
             onEdit={() => setOpenEditTime(true)}
-            caption={dayjs(trip.arrival_time).format('hh:mm a')}
+            value={dayjs(trip.arrival_time).format('hh:mm a')}
             label={dayjs(trip.departure_time).format('hh:mm a')}
           />
           <InfoButton
             icon={<TbBuildingEstate className={'icon'}/>}
             label={`${trip.vehicle?.model} ${trip.vehicle?.color}`}
-            caption={trip.vehicle?.brand}
+            value={trip.vehicle?.brand}
           />
         </Space>
         <Space wrap>

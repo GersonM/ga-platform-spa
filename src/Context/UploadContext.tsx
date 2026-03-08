@@ -68,7 +68,7 @@ const UploadContextProvider = ({children}: UploadContextProp) => {
             });
           }
         },
-        baseURL: import.meta.env.VITE_API_UPLOAD,
+        //baseURL: import.meta.env.VITE_API_UPLOAD,
         body: data,
       };
       const response = await axios.post('file-management/chunked-files', formData, config);

@@ -4,7 +4,6 @@ import {
   Image,
   Input,
   Modal,
-  Pagination,
   Popconfirm,
   Progress,
   Select,
@@ -15,7 +14,7 @@ import {
 } from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useNavigate} from 'react-router-dom';
-import {PiCheckBold, PiProhibit} from 'react-icons/pi';
+import {PiProhibit} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -33,6 +32,9 @@ import './styles.less';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import FilterForm from "../../../CommonUI/FilterForm";
+import TablePagination from "../../../CommonUI/TablePagination";
+import {TbCalendarCheck, TbCalendarClock, TbCalendarDue, TbCalendarSad, TbCalendarSmile} from "react-icons/tb";
+import InfoButton from "../../../CommonUI/InfoButton";
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
@@ -48,6 +50,7 @@ const CommercialIncidents = () => {
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
   const [stats, setStats] = useState<EntityActivityStats>();
+  const [filters, setFilters] = useState<any>();
 
   useEffect(() => {
     axios
@@ -70,6 +73,7 @@ const CommercialIncidents = () => {
         page_size: pageSize,
         type: typeFilter,
         status: statusFilter,
+        ...filters,
       },
     };
 
@@ -247,7 +251,7 @@ const CommercialIncidents = () => {
               <Tooltip
                 title={row.completed_at ? 'Marcar como no resuelto' : 'Marcar como resuelto'}
                 placement={'bottom'}>
-                <IconButton icon={row.completed_at ? <PiProhibit size={17}/> : <PiCheckBold size={17}/>}/>
+                <IconButton icon={row.completed_at ? <PiProhibit size={17}/> : <TbCalendarCheck/>}/>
               </Tooltip>
             </Popconfirm>
             <Popconfirm title={'Seguro que quieres eliminar esta incidencia?'} onConfirm={() => deleteTask(uuid)}>
@@ -261,20 +265,39 @@ const CommercialIncidents = () => {
 
   return (
     <ModuleContent>
-      <ContentHeader tools={'Total: ' + pagination?.total} title={'Incidencias'} onRefresh={() => setReload(!reload)}>
-        <FilterForm>
-          <Form.Item>
-            <Input.Search
+      <ContentHeader
+        title={'Incidencias'}
+        onRefresh={() => setReload(!reload)}
+        tools={<Space size={'large'}>
+          {stats && (
+            <>
+              <Progress
+                showInfo
+                type={'dashboard'}
+                size={40}
+                percent={Math.round((stats?.completed * 100) / stats.total)}
+              />
+              <InfoButton icon={<TbCalendarCheck/>} label={'Completadas'} value={stats.completed}/>
+              <InfoButton icon={<TbCalendarClock/>} label={'Pendientes'} value={stats.pending}/>
+              <InfoButton icon={stats.expired ? <TbCalendarSad/> : <TbCalendarSmile/>} label={'Vencidas'} value={stats.expired}/>
+            </>
+          )}
+        </Space>}
+      >
+        <FilterForm
+          onSubmit={values => setFilters(values)}
+          onInitialValues={values => setFilters(values)}
+        >
+          <Form.Item name={'search'} label={'Buscar'}>
+            <Input
               allowClear
-              onSearch={value => setSearchText(value)}
               placeholder={'Buscar por nombre, dni o correo'}
             />
           </Form.Item>
-          <Form.Item>
+          <Form.Item name={'type'} label={'Tipo'}>
             <Select
               placeholder={'Tipo'}
               allowClear
-              onChange={value => setTypeFilter(value)}
               style={{width: 100}}
               options={[
                 {label: 'Alertas', value: 'alert'},
@@ -282,11 +305,10 @@ const CommercialIncidents = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item>
+          <Form.Item name={'status'} label={'Estado'}>
             <Select
               placeholder={'Pendientes'}
               allowClear
-              onChange={value => setStatusFilter(value)}
               style={{width: 120}}
               options={[
                 {label: 'Completados', value: 'completed'},
@@ -297,43 +319,22 @@ const CommercialIncidents = () => {
           </Form.Item>
         </FilterForm>
       </ContentHeader>
-      <Space size={'large'}>
-        {stats && (
-          <>
-            <Progress
-              showInfo
-              type={'dashboard'}
-              size={40}
-              percent={Math.round((stats?.completed * 100) / stats.total)}
-            />
-            <Statistic title={'Pendientes'} value={stats?.pending}/>
-            <Statistic title={'Vencidas'} value={stats?.expired}/>
-          </>
-        )}
-      </Space>
-      <div style={{marginBottom: '10px'}}>
-        <Table
-          rowKey={'uuid'}
-          size="small"
-          scroll={{x: 1200}}
-          loading={loading}
-          columns={columns}
-          dataSource={clients}
-          pagination={false}
-        />
-      </div>
-      {pagination && (
-        <Pagination
-          size="small"
-          onChange={(page, size) => {
-            setCurrentPage(page);
-            setPageSize(size);
-          }}
-          total={pagination.total}
-          current={pagination.current_page}
-          pageSize={pagination.per_page}
-        />
-      )}
+      <Table
+        rowKey={'uuid'}
+        size="small"
+        scroll={{x: 1200}}
+        loading={loading}
+        columns={columns}
+        dataSource={clients}
+        pagination={false}
+      />
+      <TablePagination
+        pagination={pagination}
+        onChange={(page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+        }}
+      />
       <Modal
         open={openActivityEditor}
         title={'Editar actividad'}

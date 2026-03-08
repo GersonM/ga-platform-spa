@@ -231,13 +231,13 @@ const ClubSubscription = () => {
         <Space separator={<Divider orientation={'vertical'}/>}>
           <InfoButton
             icon={<TbCalendarUp className={'icon'}/>}
-            caption={dayjs(subscription?.started_at).format(Config.dateFormatUser)}
+            value={dayjs(subscription?.started_at).format(Config.dateFormatUser)}
             label={'Inicio'}
           />
           {subscription?.terminated_at ?
             <InfoButton
               icon={<PiCalendarX className={'icon'}/>}
-              caption={dayjs(subscription?.terminated_at).format(Config.dateFormatUser)}
+              value={dayjs(subscription?.terminated_at).format(Config.dateFormatUser)}
               label={'Fin'}
             /> :
             <PrimaryButton icon={<TbCalendarX size={18}/>} disabled ghost danger label={'Terminar membresía'}/>
@@ -248,8 +248,8 @@ const ClubSubscription = () => {
               navigate(`/commercial/contracts/${subscription?.contract_uuid}`)
             }}
             icon={<TbReceipt2 className={'icon'}/>}
-            caption={<MoneyString value={subscription?.amount || subscription?.contract?.totals?.PEN}
-                                  currency={subscription?.billing_currency}/>}
+            value={<MoneyString value={subscription?.amount || subscription?.contract?.totals?.PEN}
+                                currency={subscription?.billing_currency}/>}
           />
           <div>
             <span>Marca de agua</span> <br/>

@@ -9,7 +9,6 @@ import Cookies from 'js-cookie';
 import AuthContext from "../../../Context/AuthContext.tsx";
 import MetaTitle from "../../../CommonUI/MetaTitle";
 import AlertMessage from "../../../CommonUI/AlertMessage";
-import tenantAppConfig from "../../../Context/TenantAppConfig.tsx";
 
 const Login = () => {
   const navigate = useNavigate();

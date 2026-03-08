@@ -9,6 +9,7 @@ import ResourceStatus from "../ResourceStatus";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
+import InfoButton from "../../../CommonUI/InfoButton";
 
 interface ResourceInformationProps {
   resourceUuid?: string;
@@ -101,7 +102,7 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
   }, [reload]);
 
   const resetServer = (uuid?: string) => {
-    if(!resourceUuid) return;
+    if (!resourceUuid) return;
     setLoading(true);
     axios.post(`external-resources/servers/${uuid}/reset`)
       .then(() => {
@@ -119,42 +120,15 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
       <Row gutter={24}>
         <Col span={8}>
           <Divider>Hardware</Divider>
-          <div className={'hardware-item'}>
-            <TbWorldWww/>
-            <div>
-              <small>IP pública</small>
-              {resource?.id}
-            </div>
-          </div>
-          <div className={'hardware-item'}>
-            <LuCpu/>
-            <div>
-              <small>CPU</small>
-              {serverInfo?.cpu} <ResourceStatus resourceUuid={resourceUuid}/>
-            </div>
-          </div>
-          <div className={'hardware-item'}>
-            <LuMemoryStick/>
-            <div>
-              <small>Memoria RAM</small>
-              {serverInfo?.memory?.memory.available} disponible de {' '}
-              {serverInfo?.memory?.memory.total}
-            </div>
-          </div>
-          <div className={'hardware-item'}>
-            <TbClockPin/>
-            <div>
-              <small>Zona horaria</small>
-              {serverInfo?.timezone}
-            </div>
-          </div>
-          <div className={'hardware-item'}>
-            <TbTimeline/>
-            <div>
-              <small>Tiempo activo</small>
-              {resource?.uptime}
-            </div>
-          </div>
+          <Space orientation={'vertical'} style={{width: '100%'}}>
+            <InfoButton icon={<TbWorldWww/>} label={'IP pública'} value={resource?.id}/>
+            <InfoButton icon={<LuCpu/>} label={'CPU'}
+                        value={<>{serverInfo?.cpu} <ResourceStatus resourceUuid={resourceUuid}/></>}/>
+            <InfoButton icon={<LuMemoryStick/>} label={'Memoria RAM'}
+                        value={`${serverInfo?.memory?.memory.available} disponible de ${serverInfo?.memory?.memory.total}`}/>
+            <InfoButton icon={<TbClockPin/>} label={'Zona horaria'} value={serverInfo?.timezone}/>
+            <InfoButton icon={<TbTimeline/>} label={'Tiempo activo'} value={resource?.uptime}/>
+          </Space>
           <Divider>Uso de disco</Divider>
           <Space size={'large'}>
             {serverInfo?.disk?.map((d: any) => {

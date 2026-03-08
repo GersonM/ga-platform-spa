@@ -116,7 +116,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
     acceptedFiles.forEach(item => {
       formData.append('file[]', item);
     });
-    const config = {baseURL: import.meta.env.VITE_API_UPLOAD};
+    const config = {};
     setUploading(true);
     axios
       .post('file-management/files', formData, config)

@@ -13,7 +13,7 @@ const ProcessesManagement = () => {
   const [openProcessForm, setOpenProcessForm] = useState(false);
 
   return (
-    <div>
+    <>
       <ModuleContent>
         <ContentHeader
           title={'Procesos'}
@@ -92,7 +92,7 @@ const ProcessesManagement = () => {
           <PrimaryButton icon={<TbPlus/>} label={'Agregar proceso'} block htmlType={'submit'}/>
         </Form>
       </ModalView>
-    </div>
+    </>
   );
 };
 

@@ -242,13 +242,13 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
           <Space separator={<Divider type={'vertical'}/>}>
             <InfoButton
               icon={<TbCalendarUp className={'icon'}/>}
-              caption={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
+              value={dayjs(subscription.started_at).format('DD/MM/YYYY hh:mm a')}
               label={'Inicio'}
             />
             {subscription.terminated_at ?
               <InfoButton
                 icon={<PiCalendarX className={'icon'}/>}
-                caption={
+                value={
                   subscription.terminated_at
                     ? dayjs(subscription.terminated_at).format('DD [de] MMMM [del] YYYY [a las] hh:mm a') +
                     ' - ' +
@@ -262,8 +262,8 @@ const PersonSubscription = ({profileUuid}: PersonSubscriptionProps) => {
             <InfoButton
               label={'Precio del plan'}
               icon={<TbReceipt2 className={'icon'}/>}
-              caption={<MoneyString value={subscription?.amount || subscription?.contract?.totals?.PEN}
-                                    currency={subscription?.billing_currency}/>}
+              value={<MoneyString value={subscription?.amount || subscription?.contract?.totals?.PEN}
+                                  currency={subscription?.billing_currency}/>}
             />
             <div>
               <span>Marca de agua</span> <br/>

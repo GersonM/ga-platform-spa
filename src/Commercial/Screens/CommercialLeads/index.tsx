@@ -97,7 +97,7 @@ const CommercialLeads = () => {
   ];
 
   return (
-    <ModuleContent>
+    <ModuleContent boxed>
       <ContentHeader
         title={'Leads'}
         tools={
