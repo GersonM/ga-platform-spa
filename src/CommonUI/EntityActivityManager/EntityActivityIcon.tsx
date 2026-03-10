@@ -1,6 +1,7 @@
 import type {EntityActivity} from '../../Types/api';
-import {PiCalendarDots, PiInfo, PiWarningDiamond} from 'react-icons/pi';
+import {PiCalendarDots, PiCheckBold, PiInfo, PiWarningDiamond} from 'react-icons/pi';
 import {Tooltip} from "antd";
+import {TbCheck} from "react-icons/tb";
 
 interface EntityActivityIconProps {
   type: string;
@@ -17,10 +18,14 @@ const EntityActivityIcon = ({type, size = 18, activity}: EntityActivityIconProps
 
   if (activity?.completed_at) {
     color = 'green';
+    type = 'completed';
   }
 
   let icon = null;
   switch (type) {
+    case 'completed':
+      icon = <TbCheck size={size} color={color} />;
+      break;
     case 'alert':
       icon = <PiWarningDiamond size={size} color={color} />;
       break;

@@ -8,44 +8,39 @@ import {
   Progress,
   Select,
   Space,
-  Statistic,
   Table,
   Tooltip
 } from 'antd';
 import {TrashIcon} from '@heroicons/react/16/solid';
+import {TbCalendarCheck, TbCalendarClock, TbCalendarSad, TbCalendarSmile} from "react-icons/tb";
 import {useNavigate} from 'react-router-dom';
 import {PiProhibit} from 'react-icons/pi';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
+import type {EntityActivity, EntityActivityStats, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import type {EntityActivity, EntityActivityStats, ApiFile, Profile, ResponsePagination} from '../../../Types/api';
-
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
 import EstateContractAddress from '../../Components/RealState/EstateContractAddress';
 import IconButton from '../../../CommonUI/IconButton';
 import ScheduleActivityForm from '../../../EntityActivity/Components/ScheduleActivityForm';
-import './styles.less';
 import ProfileChip from '../../../CommonUI/ProfileTools/ProfileChip';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
 import FilterForm from "../../../CommonUI/FilterForm";
 import TablePagination from "../../../CommonUI/TablePagination";
-import {TbCalendarCheck, TbCalendarClock, TbCalendarDue, TbCalendarSad, TbCalendarSmile} from "react-icons/tb";
 import InfoButton from "../../../CommonUI/InfoButton";
+import './styles.less';
 
 const CommercialIncidents = () => {
   const [clients, setClients] = useState<Profile[]>();
-  const [searchText, setSearchText] = useState<string>();
   const [pagination, setPagination] = useState<ResponsePagination>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(100);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<string>();
-  const [statusFilter, setStatusFilter] = useState<string>();
   const navigate = useNavigate();
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
@@ -68,11 +63,7 @@ const CommercialIncidents = () => {
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        search: searchText,
-        page: currentPage,
         page_size: pageSize,
-        type: typeFilter,
-        status: statusFilter,
         ...filters,
       },
     };
@@ -93,7 +84,7 @@ const CommercialIncidents = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [searchText, currentPage, pageSize, reload, typeFilter, statusFilter]);
+  }, [currentPage, pageSize, reload]);
 
   const completeTask = (uuid: string, resolve: boolean) => {
     axios

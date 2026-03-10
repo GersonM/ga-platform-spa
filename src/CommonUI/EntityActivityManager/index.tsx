@@ -213,15 +213,16 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
       {activity?.map(a => {
         return (
           <div key={a.uuid} className={`activity-item ${a.type}`}>
-            <div className={'author'}>
-              <EntityActivityIcon type={a.type} size={25}/>
-              <br/>
+            <div className={'icon'}>
+              <EntityActivityIcon type={a.type} size={25} activity={a}/>
               {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
             </div>
             <div className={'message'}>
+              <Tooltip title={dayjs(a.created_at).format(Config.datetimeFormatUser)} placement={'top'}>
+                <small className={'author'}>{a.profile.name} {dayjs(a.created_at).fromNow()}</small>
+              </Tooltip>
               <div>{a.comment}</div>
               <small>
-                {dayjs(a.created_at).format('dddd DD MMMM YYYY hh:mm a')} por {a.profile.name}
                 {a.assigned_to && <CustomTag color={'purple'}>Para {a.assigned_to.name}</CustomTag>}
               </small>
               <Image.PreviewGroup>
@@ -249,7 +250,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                 ))}
               </Image.PreviewGroup>
             </div>
-            <IconButton type={'primary'} onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil/>}/>
+            <IconButton small onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil/>}/>
           </div>
         );
       })}

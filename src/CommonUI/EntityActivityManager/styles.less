@@ -1,30 +1,28 @@
 .activity-wrapper {
   background: var(--background-color);
-  border-radius: var(--border-radius);
   overflow: hidden;
 
   .activity-item {
-    padding: 10px;
+    padding: 10px 0;
     display: flex;
+    gap: 10px;
     transition: all 0.2s;
 
     &:hover {
       background: rgba(0, 0, 0, 0.03);
     }
 
-    &:not(:last-child) {
       border-top: 1px solid var(--border-color);
-    }
 
-    .author {
-      margin-right: 10px;
+    .icon {
     }
 
     .message {
       flex: 1;
       line-height: 18px;
-      small {
-        margin-top: 5px;
+
+      .author {
+        margin-bottom: 3px;
       }
     }
 

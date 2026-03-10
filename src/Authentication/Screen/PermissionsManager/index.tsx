@@ -9,9 +9,8 @@ import ErrorHandler from '../../../Utils/ErrorHandler';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import RolePermissionSwitch from './RolePermissionSwitch';
 import AuthRoleForm from '../../Components/AuthRoleForm';
-
-import './styles.less';
 import ModalView from "../../../CommonUI/ModalView";
+import './styles.less';
 
 const PermissionsManager = () => {
   const [roles, setRoles] = useState<Role[]>();

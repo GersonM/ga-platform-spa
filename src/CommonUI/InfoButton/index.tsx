@@ -4,8 +4,8 @@ import {Tooltip} from 'antd';
 import './styles.less';
 
 interface InfoButtonProps {
-  icon: React.ReactElement;
-  label: string | React.ReactElement;
+  icon?: React.ReactElement;
+  label?: string | React.ReactElement;
   tooltip?: string;
   large?: boolean;
   value?: string | React.ReactElement | number;
@@ -14,11 +14,13 @@ interface InfoButtonProps {
 
 const InfoButton = ({icon, label, onEdit, value, tooltip, large}: InfoButtonProps) => {
   const content = <div className={`info-button ${onEdit ? 'button' : ''} ${large ? 'large' : ''}`} onClick={onEdit}>
-    <div className={'label-icon-wrapper'}>
-      {icon}
-    </div>
+    {icon &&
+      <div className={'label-icon-wrapper'}>
+        {icon}
+      </div>
+    }
     <div className={'button-content'}>
-      <span className={'label'}>{label}</span>
+      {label && <span className={'label'}>{label}</span>}
       {value && <span className={'value'}>{value}</span>}
     </div>
     <div className="icon-wrapper">{onEdit && <TbPencil/>}</div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {TbBath, TbBed, TbCar, TbInfoCircle, TbLayersSelected, TbSquare} from "react-icons/tb";
+import {TbBath, TbBed, TbCar, TbInfoCircle, TbLayersSelected, TbSquare, TbUser} from "react-icons/tb";
 import {PiRectangleDashedDuotone, PiRuler} from "react-icons/pi";
 
 const useAttributeIcon = () => {
@@ -7,6 +7,8 @@ const useAttributeIcon = () => {
     switch (code) {
       case 'dormitorio':
         return <TbBed/>;
+      case 'propietario':
+        return <TbUser/>;
       case 'banos':
         return <TbBath/>;
       case 'area-total':

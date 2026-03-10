@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Card, Form, Input, notification} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {useForm} from 'antd/lib/form/Form';
@@ -7,16 +7,20 @@ import axios from 'axios';
 
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
-import type {Profile} from '../../../Types/api';
+import type {Lead, Profile} from '../../../Types/api';
 import ProfileDocument from '../../../CommonUI/ProfileTools/ProfileDocument';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
+import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
+import ProfileSelector from "../../../CommonUI/ProfileSelector";
+import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
 
 interface CreateLeadFormProps {
   onComplete?: () => void;
   campaignUuid?: string;
+  lead?: Lead;
 }
 
-const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
+const CreateLeadForm = ({onComplete, campaignUuid, lead}: CreateLeadFormProps) => {
   const [searchProfile, setSearchProfile] = useState<string>();
   const lastSearchText = useDebounce(searchProfile, 400);
   const [loading, setLoading] = useState(false);
@@ -40,8 +44,10 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
     axios
       .get('hr-management/profiles', config)
       .then(response => {
-        setLoading(false);
-        setProfiles(response.data.data);
+        if (response) {
+          setLoading(false);
+          setProfiles(response.data.data);
+        }
       })
       .catch(error => {
         setLoading(false);
@@ -59,14 +65,18 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
     const data = {campaign_uuid: campaignUuid, ...values};
     setSaving(true);
     axios
-      .post('commercial/leads', data)
+      .request({
+        url: lead ? `commercial/leads/${lead.uuid}` : 'commercial/leads',
+        method: lead ? 'PUT' : 'POST',
+        data,
+      })
       .then(_res => {
         setSelectedProfile(undefined);
         setSaving(false);
         form.resetFields();
         setProfiles(undefined);
-        if(onComplete) onComplete();
-        notification.success({message: 'Ingreso registrado'});
+        if (onComplete) onComplete();
+        notification.success({message: lead ? 'Ingreso actualizado' : 'Ingreso registrado'});
       })
       .catch(e => {
         setSaving(false);
@@ -76,57 +86,19 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
 
   return (
     <div>
-      <LoadingIndicator visible={saving} message={'Guardando datos'} />
-      {searchProfile && profiles && profiles.length > 0 && (
-        <Card
-          title={'Perfiles encontrados'}
-          size={'small'}
-          style={{marginBottom: 15}}
-          variant={"borderless"}
-          extra={
-            <PrimaryButton
-              icon={<CheckIcon />}
-              ghost
-              size={'small'}
-              onClick={() => {
-                setSelectedProfile(profiles[0]);
-              }}
-              label={'Usar datos'}
-            />
-          }>
-          {loading ? (
-            'Buscando...'
-          ) : (
-            <>
-              {profiles[0].name} {profiles[0].last_name} <br />
-              <ProfileDocument profile={profiles[0]} />
-            </>
-          )}
-        </Card>
-      )}
-      <Form form={form} layout={'vertical'} initialValues={selectedProfile} onFinish={createLead}>
-        <Form.Item name={'doc_number'} label={'DNI'} rules={[{required: true}]}>
-          <Input
-            pattern="[0-9]*"
-            inputMode={'numeric'}
-            size={'large'}
-            type="number"
-            autoFocus
-            onChange={e => setSearchProfile(e.target.value)}
-            placeholder={'DNI'}
-          />
-        </Form.Item>
-        <Form.Item name={'name'} label={'Nombres (opcional)'}>
-          <Input />
-        </Form.Item>
-        <Form.Item name={'last_name'} label={'Apellidos (opcional)'}>
-          <Input />
-        </Form.Item>
-        <Form.Item name={'phone'} label={'Teléfono (opcional)'}>
-          <Input />
+      <LoadingIndicator visible={saving} message={'Guardando datos'}/>
+      <Form form={form} layout={'vertical'} initialValues={lead} onFinish={createLead}>
+        <Form.Item name={'profile_uuid'} label={'Persona'} rules={[{required: true}]}>
+          <ProfileSelector/>
         </Form.Item>
         <Form.Item name={'observations'} label={'Observaciones'}>
-          <Input.TextArea />
+          <Input.TextArea/>
+        </Form.Item>
+        <Form.Item name={'process_stage_uuid'} label={'Etapa'}>
+          <CommercialProcessStageSelector/>
+        </Form.Item>
+        <Form.Item name={'attributes'} label={'Atributos'}>
+          <EntityFieldsEditor entity={lead}/>
         </Form.Item>
         {/*
         <Form.Item name={'email'} label={'E-mail (opcional)'}>
@@ -141,10 +113,10 @@ const CreateLeadForm = ({onComplete, campaignUuid}: CreateLeadFormProps) => {
         </Form.Item>
         */}
         <PrimaryButton
-          icon={<CheckIcon />}
+          icon={<CheckIcon/>}
           loading={saving}
           size={'large'}
-          label={'Registrar ingreso'}
+          label={lead ? 'Guardar cambios' : 'Registrar ingreso'}
           htmlType={'submit'}
           block
         />

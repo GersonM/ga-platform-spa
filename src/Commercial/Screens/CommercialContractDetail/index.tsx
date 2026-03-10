@@ -297,13 +297,13 @@ const CommercialContractDetail = () => {
         current={-1}
         items={[
           {
-            title: 'Propuesta',
+            label: 'Propuesta',
             status: 'finish',
             icon: <TbCheck/>,
             description: <small>{dayjs(contract?.created_at).format('DD/MM/YYYY')}</small>,
           },
           {
-            title: 'Aprobado',
+            label: 'Aprobado',
             status: contract?.approved_at ? 'finish' : 'wait',
             subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
             description:
@@ -317,7 +317,7 @@ const CommercialContractDetail = () => {
                 </Button>,
           },
           {
-            title: 'Inicio',
+            label: 'Inicio',
             status: contract?.date_start ? 'finish' : 'wait',
             description:
               contract?.date_start ? <small>{dayjs(contract?.date_start).format('DD/MM/YYYY')}</small> :
@@ -331,18 +331,18 @@ const CommercialContractDetail = () => {
                 </Button>,
           },
           {
-            title: 'Documentación',
+            label: 'Documentación',
             status: (contract?.document_progress == null || contract?.document_progress == 100) ? 'finish' : 'pending',
             description:
               <small>{contract?.document_progress == null ? 'Sin documentos requeridos' : contract?.document_progress + '%'}</small>,
           },
           contract?.cancelled_at ? {
-              title: 'Anulado',
+              label: 'Anulado',
               status: 'error',
               description: <small>{dayjs(contract?.cancelled_at).format('DD/MM/YYYY')}</small>,
             } :
             {
-              title: 'Entrega',
+              label: 'Entrega',
               status: contract?.provided_at ? 'finish' : 'wait',
               description:
                 !contract?.provided_at ? (

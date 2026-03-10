@@ -3,12 +3,12 @@ import {TbAlertCircle, TbCheck, TbChevronCompactRight, TbClock} from "react-icon
 import './styles.less';
 
 interface StepNavigationProps {
-  items: any[];
+  items: {label: string, description?: string, status?: 'finish' | 'wait' | 'pending' | 'error'}[];
   style?: React.CSSProperties;
   current?: number;
 }
 
-const StepNavigation = ({items, current, style}: StepNavigationProps) => {
+const StepsNavigation = ({items, current, style}: StepNavigationProps) => {
   return (
     <div className={'step-navigation-container'} style={style}>
       {items.map((item: any, index: number) => {
@@ -25,7 +25,7 @@ const StepNavigation = ({items, current, style}: StepNavigationProps) => {
               }
             </div>
             <div className={'content'}>
-              {item.title}
+              {item.label}
               <div className={'description'}>{item.description}</div>
             </div>
             {index < (items.length - 1) && <div><TbChevronCompactRight size={28} style={{opacity:0.5}}/></div>}
@@ -36,4 +36,4 @@ const StepNavigation = ({items, current, style}: StepNavigationProps) => {
   );
 };
 
-export default StepNavigation;
+export default StepsNavigation;

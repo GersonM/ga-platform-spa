@@ -13,6 +13,7 @@ interface TableListProps {
   footer?: any;
   customStyle?: boolean;
   loading?: boolean;
+  bordered?: boolean;
   small?: boolean;
   dataSource?: TableProps['dataSource'];
   expandable?: ExpandableConfig<AnyObject>;
@@ -47,13 +48,6 @@ const TableList = (
       size={small ? 'small' : 'middle'}
       loading={loading}
       className={customStyle ? 'table-list' : undefined}
-      rowClassName={(record, index) => {
-        let rowColor = index % 2 === 0 ? 'table-row-light' : 'table-row-dark';
-        if (record.is_read !== undefined) {
-          rowColor += record.is_read === true ? '' : ' highlighted-row';
-        }
-        return rowColor;
-      }}
       pagination={false}
       rowKey={rowKey}
       expandable={expandable}

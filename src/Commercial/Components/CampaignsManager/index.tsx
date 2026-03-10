@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Col, DatePicker, Form, Input, Row} from 'antd';
-import {TrashIcon} from '@heroicons/react/16/solid';
+import {TbTrash} from "react-icons/tb";
 import {useForm} from 'antd/lib/form/Form';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -69,9 +69,8 @@ const CampaignsManager = () => {
     {dataIndex: 'description', title: 'Descripción'},
     {
       dataIndex: 'uuid',
-      title: 'Actions',
       render: (uuid: string) => {
-        return <IconButton icon={<TrashIcon />} danger onClick={() => deleteCampaigns(uuid)} />;
+        return <IconButton icon={<TbTrash />} danger onClick={() => deleteCampaigns(uuid)} />;
       },
     },
   ];

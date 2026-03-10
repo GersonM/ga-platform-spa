@@ -84,6 +84,8 @@ export type Lead = {
   score: number;
   observations?: string;
   profile: Profile;
+  process_stage_uuid?: string;
+  process_stage?: CommercialProcessStage;
   referer?: Profile;
   campaign?: Campaign;
   created_at: string;
@@ -157,6 +159,21 @@ export type CommercialCategory = {
   name: string;
   description: string;
   code: string;
+  created_at: string;
+}
+export type CommercialProcess = {
+  uuid: string;
+  name: string;
+  description: string;
+  stages: CommercialProcessStage[];
+  created_at: string;
+}
+export type CommercialProcessStage = {
+  uuid: string;
+  name: string;
+  order: number;
+  process?: CommercialProcess;
+  description: string;
   created_at: string;
 }
 export type CommercialCategoryFee = {

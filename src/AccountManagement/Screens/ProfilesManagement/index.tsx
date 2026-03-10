@@ -227,7 +227,7 @@ const ProfilesManagement = ({type}: ProfilesManagementProps) => {
                 placeholder={'por nombre, documento o correo'}
               />
             </Form.Item>
-            <Form.Item name={'roles'}>
+            <Form.Item name={'roles'} label={'Roles'}>
               <RolesSelector placeholder={'Filtrar por roles'} />
             </Form.Item>
             <Form.Item name={'company_uuid'} label={'Empresa'}>

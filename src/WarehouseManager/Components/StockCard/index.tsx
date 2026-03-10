@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Row, Space, Tooltip} from "antd";
+import {Button, Col, Row, Space} from "antd";
 
 import {TbCalendarDot, TbEye, TbShare, TbX} from "react-icons/tb";
-import pluralize from "pluralize";
 import dayjs from "dayjs";
 import axios from "axios";
 
@@ -11,9 +10,9 @@ import MoneyString from "../../../CommonUI/MoneyString";
 import StockStatus from "../ProductStockManager/StockStatus.tsx";
 import CustomTag from "../../../CommonUI/CustomTag";
 import ProviderChip from '../../../Commercial/Components/ProviderChip';
-import useAttributeIcon from "../../Hooks/useAttributeIcon.tsx";
 import noImage from '../../../Assets/no-image.webp';
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
+import AttributesList from "../../../EntityFields/Components/AttributesList";
 import './styles.less';
 
 interface StockCardProps {
@@ -24,7 +23,6 @@ interface StockCardProps {
 }
 
 const StockCard = ({stock, onDetails, onShare, onClose}: StockCardProps) => {
-  const {getIcon} = useAttributeIcon();
   const [loading, setLoading] = useState(false);
   const [contractsRelated, setContractsRelated] = useState<Contract[]>();
 
@@ -92,17 +90,7 @@ const StockCard = ({stock, onDetails, onShare, onClose}: StockCardProps) => {
           {stock.excerpt_plain}
         </p>
         <div className={'attributes'}>
-          {filteredAttributes?.length == 0 && <small>No hay atributos adicionales</small>}
-          {filteredAttributes?.map((attribute, index) => {
-            return <Tooltip title={attribute.field.name} key={index}>
-              <div className={'attr'}>
-                {getIcon(attribute.field.code)}
-                {(attribute.field.type == 'number' && attribute.field.unit_type != 'm2' && attribute.field.unit_type != 'm' && attribute.field.unit_type != 'S/') ?
-                  <>{pluralize(attribute.field.unit_type, parseInt(attribute.value), true)}</> :
-                  <>{attribute.value} {attribute.field.unit_type}</>}
-              </div>
-            </Tooltip>;
-          })}
+          <AttributesList attributes={filteredAttributes}/>
         </div>
         {
           contractsRelated?.map((contract: Contract, index: number) => {

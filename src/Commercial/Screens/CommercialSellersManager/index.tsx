@@ -13,6 +13,7 @@ import type {CommercialCategory, CommercialSeller, Profile, ResponsePagination} 
 import TablePagination from "../../../CommonUI/TablePagination";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import SellerCategoriesManager from "../../Components/SellerCategoriesManager";
+import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 
 const CommercialSellersManager = () => {
   const [openSellerForm, setOpenSellerForm] = useState(false);
@@ -40,7 +41,8 @@ const CommercialSellersManager = () => {
         }
         setLoading(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        ErrorHandler.showNotification(error);
         setLoading(false);
       });
 
