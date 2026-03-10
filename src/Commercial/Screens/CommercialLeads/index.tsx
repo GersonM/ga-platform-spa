@@ -1,7 +1,8 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Drawer, Form, Input, Popconfirm, Select, Space, Steps, Tooltip} from 'antd';
-import {TbArrowsUp, TbListCheck, TbPencil, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
+import {Drawer, Form, Input, Popconfirm, Space, Steps, Tooltip} from 'antd';
+import {TbListCheck, TbPencil, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
 import {useParams} from 'react-router-dom';
+import {FaPeoplePulling} from "react-icons/fa6";
 import {BiCog} from 'react-icons/bi';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -33,11 +34,7 @@ import AttributesList from "../../../EntityFields/Components/AttributesList";
 import EntityActivityManager from "../../../CommonUI/EntityActivityManager";
 import CommercialProcessSelector from "../../../CRMModule/Components/CommercialProcessSelector";
 import CustomTag from "../../../CommonUI/CustomTag";
-import {GiPlayerNext} from "react-icons/gi";
-import {FaPeopleCarry} from "react-icons/fa";
-import {LiaPeopleCarrySolid} from "react-icons/lia";
 import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
-import {FaPeoplePulling} from "react-icons/fa6";
 
 const getProcessStages = (process?: CommercialProcess): CommercialProcessStage[] => {
   if (!process) {
