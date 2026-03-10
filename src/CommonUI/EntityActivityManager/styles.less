@@ -9,8 +9,22 @@
     gap: 10px;
     transition: all 0.2s;
 
+    &.milestone {
+      background: rgba(57, 157, 255, 0.1);
+      margin: 20px 0;
+      border: none;
+      text-align: center;
+    }
+    &.alert{
+      background: rgba(255, 0, 0, 0.04);
+    }
+    &.completed{
+      opacity: 0.5;
+    }
+
     &:hover {
       background: rgba(0, 0, 0, 0.03);
+      opacity: 1;
     }
 
     border-top: 1px solid var(--border-color);

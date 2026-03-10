@@ -212,7 +212,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
       {activity?.length == 0 && <Empty description={'Aún no hay actividad'} image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
       {activity?.map(a => {
         return (
-          <div key={a.uuid} className={`activity-item ${a.type}`}>
+          <div key={a.uuid} className={`activity-item ${a.type} ${a.completed_at ? 'completed' : ''}`}>
             <div className={'icon'}>
               <EntityActivityIcon type={a.type} size={25} activity={a}/>
               {a.expired_at && <small>{dayjs(a.expired_at).format('DD/MM')}</small>}
@@ -250,7 +250,9 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
                 ))}
               </Image.PreviewGroup>
             </div>
-            <IconButton small onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil/>}/>
+            {a.type != 'milestone' &&
+              <IconButton small onClick={() => setSelectedActivityUUID(a.uuid)} icon={<TbPencil/>}/>
+            }
           </div>
         );
       })}
