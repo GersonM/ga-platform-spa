@@ -213,11 +213,11 @@ const CommercialContractDetail = () => {
       children: <>
         Inicio: {contract?.date_start ? dayjs(contract?.date_start).format(Config.dateFormatUser) : 'No iniciado'} <br/>
         Fin: {contract?.date_end ? dayjs(contract?.date_end).format(Config.dateFormatUser) :
-          <small>No terminado</small>} <br/>
+        <small>No terminado</small>} <br/>
         <span>
           Deadline: {contract?.dead_line ? <>{dayjs(contract?.dead_line).format(Config.dateFormatUser)} <br/>
-              <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
-            <small>No definido</small>}
+            <small>{dayjs(contract?.dead_line).fromNow()}</small></> :
+          <small>No definido</small>}
         </span>
       </>
     },

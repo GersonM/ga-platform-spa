@@ -3,7 +3,7 @@ import {TbAlertCircle, TbCheck, TbChevronCompactRight, TbClock} from "react-icon
 import './styles.less';
 
 interface StepNavigationProps {
-  items: {label: string, description?: string, status?: 'finish' | 'wait' | 'pending' | 'error'}[];
+  items: any[];
   style?: React.CSSProperties;
   current?: number;
 }
