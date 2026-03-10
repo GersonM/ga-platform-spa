@@ -87,6 +87,9 @@ const TenantAppConfig = ({tenant, children}: AntConfigProps) => {
           Button: {
             fontWeight: 600,
           },
+          Table: {
+            headerBorderRadius: 0,
+          }
         },
         algorithm: darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
       }}>

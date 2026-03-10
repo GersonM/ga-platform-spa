@@ -296,7 +296,7 @@ const CommercialLeads = () => {
   ];
 
   return (
-    <ModuleContent boxed>
+    <ModuleContent>
       <ContentHeader
         title={'Candidatos'}
         onRefresh={() => setReload(!reload)}
@@ -332,7 +332,7 @@ const CommercialLeads = () => {
         }
       >
         <Steps
-          style={{margin: '10px 0 30px 0'}}
+          style={{margin: '10px -20px 0 -20px'}}
           size={'small'}
           type={'navigation'}
           variant={'outlined'}
@@ -344,7 +344,7 @@ const CommercialLeads = () => {
           }}
         />
       </ContentHeader>
-      <TableList scroll={{x:1000}} columns={columns} dataSource={leads} small/>
+      <TableList scroll={{x:1000}} columns={columns} dataSource={leads}/>
       <TablePagination
         pagination={pagination}
         onChange={(page, size) => {
