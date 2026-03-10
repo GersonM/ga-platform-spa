@@ -29,11 +29,12 @@ const CommercialProcessForm = ({process, onComplete}: CommercialProcessFormProps
   const [saving, setSaving] = useState(false);
 
   const initialValues = useMemo<Partial<CommercialProcessFormValues>>(() => {
-    const source: any = process;
+    if (!process) {
+      return {};
+    }
     return {
-      name: source.name,
-      description: source.description,
-      parent_uuid: source.parent_uuid ?? source.fk_parent_uuid ?? source.parent?.uuid,
+      name: process.name,
+      description: process.description,
       stages: process?.stages.map((stage: any) => ({
         uuid: stage.uuid,
         order: stage.order,
@@ -44,13 +45,15 @@ const CommercialProcessForm = ({process, onComplete}: CommercialProcessFormProps
   }, [process]);
 
   useEffect(() => {
+    if (!process) {
+      return;
+    }
     form.setFieldsValue({
-      name: initialValues.name,
-      description: initialValues.description,
-      parent_uuid: initialValues.parent_uuid,
-      stages: initialValues.stages?.length ? initialValues.stages : [{order: 1, name: '', description: ''}],
+      name: process.name,
+      description: process.description,
+      stages: process.stages?.length ? process.stages : [{order: 1, name: '', description: ''}],
     });
-  }, [form, initialValues]);
+  }, [form, process]);
 
   const submitForm = (values: CommercialProcessFormValues) => {
     setSaving(true);
@@ -153,7 +156,8 @@ const CommercialProcessForm = ({process, onComplete}: CommercialProcessFormProps
                           </Form.Item>
                         </Col>
                       </Row>
-                      <Form.Item name={[field.name, 'description']} label={'Descripción (opcional)'} style={{marginBottom: 0}}>
+                      <Form.Item name={[field.name, 'description']} label={'Descripción (opcional)'}
+                                 style={{marginBottom: 0}}>
                         <Input.TextArea rows={2}/>
                       </Form.Item>
                     </Card>

@@ -194,7 +194,7 @@ const ProcessesManagement = () => {
     <>
       <ModuleContent boxed>
         <ContentHeader
-          title={'Procesos'}
+          title={'Procesos comerciales'}
           onRefresh={() => setReload(!reload)}
           onAdd={() => {
             setSelectedProcess(undefined);

@@ -274,7 +274,7 @@ const CommercialLeads = () => {
       title: 'Campaña',
       width: 120,
       render: (c: Campaign) => {
-        return <CustomTag>{c.name}</CustomTag>;
+        return c && <CustomTag>{c.name}</CustomTag>;
       },
     },
     {
@@ -282,7 +282,7 @@ const CommercialLeads = () => {
       title: 'Etapa',
       width: 150,
       render: (s: CommercialProcessStage) => {
-        return <CustomTag>{s.name}</CustomTag>;
+        return s && <CustomTag>{s.name}</CustomTag>;
       },
     },
     {
@@ -347,7 +347,10 @@ const CommercialLeads = () => {
         }}
       />
       <ModalView open={openLeadForm} onCancel={() => setOpenLeadForm(false)}>
-        <CreateLeadForm lead={selectedLead}/>
+        <CreateLeadForm lead={selectedLead} onComplete={() => {
+          setReload(!reload);
+          setOpenLeadForm(false);
+        }}/>
       </ModalView>
       <ModalView
         open={openPromoteModal}

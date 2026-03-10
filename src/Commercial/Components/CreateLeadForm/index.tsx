@@ -13,6 +13,7 @@ import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
 import ProfileSelector from "../../../CommonUI/ProfileSelector";
 import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
+import {sileo} from "sileo";
 
 interface CreateLeadFormProps {
   onComplete?: () => void;
@@ -75,8 +76,8 @@ const CreateLeadForm = ({onComplete, campaignUuid, lead}: CreateLeadFormProps) =
         setSaving(false);
         form.resetFields();
         setProfiles(undefined);
-        if (onComplete) onComplete();
-        notification.success({message: lead ? 'Ingreso actualizado' : 'Ingreso registrado'});
+        onComplete?.();
+        sileo.success({description: lead ? 'Ingreso actualizado' : 'Ingreso registrado'});
       })
       .catch(e => {
         setSaving(false);

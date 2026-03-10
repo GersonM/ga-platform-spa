@@ -1,7 +1,6 @@
 import {useState} from 'react';
 import {Button, Col, Form, Input, Row, Select} from 'antd';
 import {useForm} from 'antd/lib/form/Form';
-import {TbSearch} from "react-icons/tb";
 import axios from 'axios';
 
 import ErrorHandler from '../../../Utils/ErrorHandler';
@@ -78,20 +77,7 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
         </Col>
         <Col md={14}>
           <Form.Item name={'doc_number'} label={'N° Documento'}>
-            <Input
-              onChange={evt => setProfileDocument(evt.target.value)}
-              addonAfter={
-                <Button
-                  loading={documentSearching}
-                  icon={<TbSearch/>}
-                  disabled={!profileDocument}
-                  onClick={searchExternal}
-                  type="link"
-                >
-                  Buscar
-                </Button>
-              }
-            />
+            <Input/>
           </Form.Item>
         </Col>
       </Row>
@@ -108,8 +94,8 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
         <Input/>
       </Form.Item>
       <Form.Item
-        name={'company_uuid'} label={'Registrar como empleado (opcional)'}
-        help={'Registrará esta persona como empleados de la empresa seleccionada'}>
+        name={'company_uuid'} label={'Asociar a una empresa (opcional)'}
+      >
         <CompanySelector/>
       </Form.Item>
       <br/>
