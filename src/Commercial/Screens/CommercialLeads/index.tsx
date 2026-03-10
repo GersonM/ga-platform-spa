@@ -70,6 +70,7 @@ const CommercialLeads = () => {
   const [selectedLead, setSelectedLead] = useState<Lead>();
   const [selectedProcess, setSelectedProcess] = useState<CommercialProcess>();
   const [selectedStage, setSelectedStage] = useState<CommercialProcessStage>();
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign>();
   const [promoting, setPromoting] = useState(false);
   const [promoteForm] = Form.useForm();
 
@@ -110,8 +111,8 @@ const CommercialLeads = () => {
     const config = {
       cancelToken: cancelTokenSource.token,
       params: {
-        ...filters,
         process_stage_uuid: selectedStage?.uuid,
+        campaign_uuid: selectedCampaign?.uuid,
         page: currentPage,
         page_size: pageSize,
       },
@@ -134,7 +135,7 @@ const CommercialLeads = () => {
       });
 
     return cancelTokenSource.cancel;
-  }, [reload, currentPage, pageSize, filters, selectedStage]);
+  }, [reload, currentPage, pageSize, selectedStage, selectedCampaign]);
 
   const deleteLead = (lead: Lead) => {
     axios.delete(`commercial/leads/${lead.uuid}/leads`, {})
@@ -169,7 +170,7 @@ const CommercialLeads = () => {
     {
       dataIndex: 'uuid',
       fixed: 'left',
-      width: 130,
+      width: 137,
       render: (_uuid: string, lead: Lead) => (
         <Space>
           <IconButton
@@ -300,7 +301,10 @@ const CommercialLeads = () => {
       <ContentHeader
         title={'Candidatos'}
         onRefresh={() => setReload(!reload)}
-        onAdd={() => setOpenLeadForm(true)}
+        onAdd={() => {
+          setOpenLeadForm(true);
+          setSelectedLead(undefined);
+        }}
         loading={loading}
         tools={
           <Space>
@@ -313,6 +317,9 @@ const CommercialLeads = () => {
             />
             <CampaignSelector
               refresh={reload}
+              onChange={(_value, option) => {
+                setSelectedCampaign((option as any)?.entity);
+              }}
               value={params.campaign}
             />
             <InfoButton icon={<TbUsers/>} value={pagination?.total}/>

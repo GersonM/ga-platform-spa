@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Form, Input, notification} from 'antd';
+import {Card, Form, Input} from 'antd';
 import {useDebounce} from '@uidotdev/usehooks';
 import {useForm} from 'antd/lib/form/Form';
 import {CheckIcon} from '@heroicons/react/24/solid';
@@ -14,6 +14,7 @@ import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFie
 import ProfileSelector from "../../../CommonUI/ProfileSelector";
 import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
 import {sileo} from "sileo";
+import CampaignSelector from "../CampaignSelector";
 
 interface CreateLeadFormProps {
   onComplete?: () => void;
@@ -62,6 +63,15 @@ const CreateLeadForm = ({onComplete, campaignUuid, lead}: CreateLeadFormProps) =
     form.resetFields();
   }, [selectedProfile]);
 
+  useEffect(() => {
+    form.setFieldsValue({
+      ...lead,
+      campaign_uuid: lead?.campaign?.uuid ?? campaignUuid,
+      referer_uuid: lead?.referer?.uuid,
+      process_stage_uuid: (lead as any)?.process_stage?.uuid ?? (lead as any)?.process_stage_uuid,
+    });
+  }, [campaignUuid, form, lead]);
+
   const createLead = (values: any) => {
     const data = {campaign_uuid: campaignUuid, ...values};
     setSaving(true);
@@ -87,6 +97,7 @@ const CreateLeadForm = ({onComplete, campaignUuid, lead}: CreateLeadFormProps) =
 
   return (
     <div>
+      <h3>Registrar candidato</h3>
       <LoadingIndicator visible={saving} message={'Guardando datos'}/>
       <Form form={form} layout={'vertical'} initialValues={lead} onFinish={createLead}>
         <Form.Item name={'profile_uuid'} label={'Persona'} rules={[{required: true}]}>
@@ -97,6 +108,12 @@ const CreateLeadForm = ({onComplete, campaignUuid, lead}: CreateLeadFormProps) =
         </Form.Item>
         <Form.Item name={'process_stage_uuid'} label={'Etapa'}>
           <CommercialProcessStageSelector/>
+        </Form.Item>
+        <Form.Item name={'referer_uuid'} label={'Agente encargado'}>
+          <ProfileSelector/>
+        </Form.Item>
+        <Form.Item name={'campaign_uuid'} label={'Campaña'}>
+          <CampaignSelector/>
         </Form.Item>
         <Form.Item name={'attributes'} label={'Atributos'}>
           <EntityFieldsEditor entity={lead}/>
