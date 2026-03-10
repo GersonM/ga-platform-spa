@@ -66,7 +66,6 @@ const CommercialLeads = () => {
   const [openLeadForm, setOpenLeadForm] = useState(false);
   const [openActivityManager, setOpenActivityManager] = useState(false);
   const [openPromoteModal, setOpenPromoteModal] = useState(false);
-  const [filters, setFilters] = useState<any>();
   const [selectedLead, setSelectedLead] = useState<Lead>();
   const [selectedProcess, setSelectedProcess] = useState<CommercialProcess>();
   const [selectedStage, setSelectedStage] = useState<CommercialProcessStage>();
@@ -181,7 +180,7 @@ const CommercialLeads = () => {
             }}
             icon={<TbPencil/>}
           />
-          <Tooltip title={'Editar lugares'}>
+          <Tooltip title={'Ver historial de eventos'}>
             <IconButton
               small
               onClick={() => {
