@@ -221,10 +221,10 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
               <Tooltip title={dayjs(a.created_at).format(Config.datetimeFormatUser)} placement={'top'}>
                 <small className={'author'}>{a.profile.name} {dayjs(a.created_at).fromNow()}</small>
               </Tooltip>
-              <div>{a.comment}</div>
-              <small>
-                {a.assigned_to && <CustomTag color={'purple'}>Para {a.assigned_to.name}</CustomTag>}
-              </small>
+              <div className={'comment'}>{a.comment}</div>
+              <span>
+                {a.assigned_to && <CustomTag color={'purple'}>Asignado: {a.assigned_to.name}</CustomTag>}
+              </span>
               <Image.PreviewGroup>
                 {a.attachments?.map((at: ApiFile) => (
                   <>

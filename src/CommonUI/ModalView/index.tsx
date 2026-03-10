@@ -5,8 +5,8 @@ interface ModalViewProps {
   title?: string|React.ReactNode;
   open: boolean;
   width?: number|string;
-  onCancel: () => void;
-  children: React.ReactNode;
+  onCancel?: () => void;
+  children?: React.ReactNode;
 }
 
 const ModalView = ({title, children, ...props}:ModalViewProps) => {

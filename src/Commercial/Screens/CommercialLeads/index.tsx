@@ -180,7 +180,7 @@ const CommercialLeads = () => {
             }}
             icon={<TbPencil/>}
           />
-          <Tooltip title={'Ver historial de eventos'}>
+          <Tooltip title={'Ver historial de actividades'}>
             <IconButton
               small
               onClick={() => {
@@ -383,7 +383,9 @@ const CommercialLeads = () => {
           />
         </Form>
       </ModalView>
-      <Drawer destroyOnHidden open={openActivityManager} onClose={() => setOpenActivityManager(false)}>
+      <Drawer
+        styles={{body: {padding: 0,},}}
+        destroyOnHidden open={openActivityManager} onClose={() => setOpenActivityManager(false)}>
         {selectedLead &&
           <EntityActivityManager uuid={selectedLead?.uuid} type={'lead'}/>
         }

@@ -734,6 +734,7 @@ export type EntityActivityStats = {
 export type EntityActivity = {
   attachments?: ApiFile[];
   assigned_to?: Profile;
+  subject?: string;
   comment?: string;
   completed_at?: string;
   created_at: string;
