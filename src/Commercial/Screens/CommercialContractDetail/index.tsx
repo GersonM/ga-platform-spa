@@ -196,6 +196,12 @@ const CommercialContractDetail = () => {
         <small>No terminado</small>
     },
     {
+      key: 'renovated',
+      label: 'Fecha de renovación',
+      children: contract?.next_renew_date ? dayjs(contract?.next_renew_date).format(Config.dateFormatUser) :
+        <small>No terminado</small>
+    },
+    {
       key: 'provided_at',
       label: 'Entrega',
       children: contract?.provided_at ? dayjs(contract?.provided_at).format(Config.dateFormatUser) : 'No entregado'

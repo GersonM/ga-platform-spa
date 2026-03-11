@@ -19,6 +19,7 @@ import pluralize from "pluralize";
 import axios from "axios";
 
 import type {
+  EntityFieldValue,
   Point,
   ResponsePagination, StorageProduct, StorageProductVariation,
   StorageStock,
@@ -42,6 +43,7 @@ import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ProductSelector from "../../Components/ProductSelector";
 import StockSelector from "../../Components/StockSelector";
 import FileDownloader from "../../../CommonUI/FileDownloader";
+import AttributesList from "../../../EntityFields/Components/AttributesList";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -140,6 +142,7 @@ const WarehouseStockManager = () => {
     },
     {
       title: 'Tipo',
+      width: 80,
       dataIndex: 'type_label',
       render: (type_label: string | null, row: StorageStock) => {
         return type_label && <CustomTag color={row.type == 'rent' ? 'orange' : 'blue'}>
@@ -147,13 +150,13 @@ const WarehouseStockManager = () => {
         </CustomTag>;
       }
     },
-    {
+    /*{
       title: 'Vence',
       dataIndex: 'expiration_date',
       render: (expiration_date: string) => {
         return expiration_date ? dayjs(expiration_date).fromNow() : <small>No vence</small>;
       }
-    },
+    },*/
     {
       title: 'Estado',
       dataIndex: 'status',
@@ -170,9 +173,9 @@ const WarehouseStockManager = () => {
       </>
     },
     {
-      title: 'Almacén',
+      title: 'Ubicación',
       dataIndex: 'warehouse',
-      responsive: ['md'],
+      width: 130,
       render: (warehouse: StorageWarehouse, row:StorageStock) => {
         const link = row.distribution_coordinate ? `https://www.google.com/maps/@${row.distribution_coordinate.lat},${row.distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu`:null;
         return <Space>
@@ -199,6 +202,14 @@ const WarehouseStockManager = () => {
         is_consumable ?
           pluralize(row.variation?.product?.unit_type || 'unidad', row.quantity, true) :
           <CustomTag>Sin límite</CustomTag>
+    },
+    {
+      dataIndex: 'attributes',
+      width: 220,
+      title: 'Atributos',
+      render: (attributes: EntityFieldValue[]) => {
+        return <AttributesList attributes={attributes}/>;
+      },
     },
     {
       title: 'Precio de venta',
