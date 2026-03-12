@@ -737,6 +737,9 @@ export type EntityActivity = {
   subject?: string;
   comment?: string;
   completed_at?: string;
+  work_started_at?: number;
+  work_accumulated_minutes?: number;
+  work_session_started_at?: number;
   created_at: string;
   entity?: any;
   entity_type: string;
