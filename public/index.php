@@ -43,13 +43,13 @@ $whiteLogo = null;
 $coverImage = null;
 try {
   if (!in_array($tenantCode, $excludedNames)) {
-    $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version?referer'.urlencode($uri)));
+    $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version?referer='.urlencode($host.'/'.$uri)));
     $tenantNames = $tenantInfo->config->name;
     $favicon = $tenantInfo->favicon;
     $whiteLogo = $tenantInfo->white_logo;
     $coverImage = $tenantInfo->cover_image;
   }else{
-    header('Location: https://geekadvice.pe/platform', true, 301);
+    header('Location: https://geekadvice.pe/platform');
   }
 } catch (exception $e) {
 
