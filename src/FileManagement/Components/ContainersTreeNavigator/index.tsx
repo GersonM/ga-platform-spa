@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import type {DataNode} from "antd/es/tree";
 import {LuFolder, LuHardDrive, LuTrash2} from "react-icons/lu";
 import axios from "axios";
-import {Tree} from "antd";
+import {Input, Tree, type TreeDataNode} from "antd";
 
 import type {Container} from "../../../Types/api.tsx";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
@@ -17,6 +17,7 @@ interface ContainersTreeNavigatorProps {
 const ContainersTreeNavigator = ({value, onChange, refresh, showTrash}: ContainersTreeNavigatorProps) => {
   const [treeData, setTreeData] = useState<DataNode[]>();
   const [currentContainer, setCurrentContainer] = useState<string>();
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -95,19 +96,58 @@ const ContainersTreeNavigator = ({value, onChange, refresh, showTrash}: Containe
     });
   };
 
+  const searchTreeData = useMemo(() => {
+    const loop = (data: TreeDataNode[]): TreeDataNode[] =>
+      data.map((item) => {
+        const strTitle = item.title as string;
+        const index = strTitle.indexOf(search);
+        const beforeStr = strTitle.substring(0, index);
+        const afterStr = strTitle.slice(index + search.length);
+        const title =
+          index > -1 ? (
+            <span key={item.key}>
+              {beforeStr}
+              <span className="site-tree-search-value" style={{color:'#ff0000'}}>{search}</span>
+              {afterStr}
+            </span>
+          ) : (
+            <span key={item.key}>{strTitle}</span>
+          );
+        if (item.children) {
+          return {title, key: item.key, children: loop(item.children)};
+        }
+
+        return {
+          title,
+          key: item.key,
+        };
+      });
+
+    if (treeData && search) {
+      return loop(treeData);
+    } else {
+      return treeData;
+    }
+  }, [search, treeData]);
+
   return (
-    <Tree.DirectoryTree
-      rootStyle={{backgroundColor: 'transparent'}}
-      selectedKeys={value ? [value as React.Key] : [currentContainer as React.Key]}
-      showLine
-      loadData={onLoadData}
-      treeData={treeData}
-      onSelect={keys => {
-        if (keys.length == 0) return;
-        setCurrentContainer(keys[0] as string);
-        if (onChange) onChange(keys[0] as string);
-      }}
-    />
+    <>
+      <Input.Search placeholder="Buscar" allowClear value={search} onChange={e => setSearch(e.target.value)}/>
+      <Tree.DirectoryTree
+        rootStyle={{backgroundColor: 'transparent'}}
+        selectedKeys={value ? [value as React.Key] : [currentContainer as React.Key]}
+        showLine
+        autoExpandParent={true}
+        defaultExpandParent={true}
+        loadData={onLoadData}
+        treeData={searchTreeData}
+        onSelect={keys => {
+          if (keys.length == 0) return;
+          setCurrentContainer(keys[0] as string);
+          if (onChange) onChange(keys[0] as string);
+        }}
+      />
+    </>
   );
 };
 

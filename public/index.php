@@ -9,19 +9,21 @@ $tenantCode = match ($host) {
   default => explode('.', $host)[0],
 };
 
-/*$tenantNames = match ($host) {
-  'platform.fbgroup.pe' => 'FB Group',
-  'cobrify.geekadvice.pe' => 'Alma Quinta',
-  'manager.cobrify.lat' => 'Alma Quinta',
-  'fireworks.geekadvice.pe' => 'Fireworks',
-  'villa-primavera.geekadvice.pe' => 'Villa Primavera',
-  'localhost:5173' => 'Geek Advice',
-  'publiefectiva.geekadvice.pe' => 'Publi Efectiva',
-  'wayra.geekadvice.pe' => 'Wayra Constructora',
-  'country-club.geekadvice.pe' => 'Country Club La Villa - Ilo',
-  'country-moquegua.geekadvice.pe' => 'Country Club La Villa - Moquegua',
-  default => 'Geek Advice',
-};*/
+$excludedNames = [
+  'connect-dev',
+  'connect-staging',
+  'losportales',
+  'connect',
+  'fernando',
+  'clientes',
+  'carrera-avon',
+  'drivers',
+  'smart7bus',
+  'galilea',
+  'tienda',
+  'webdisk',
+  'core',
+];
 
 $tenantDescriptions = match ($host) {
   'cobrify.geekadvice.pe' => 'Alma Quinta',
@@ -34,11 +36,15 @@ $favicon = '/src/Assets/GeekAdvice_favicon.webp';
 $whiteLogo = null;
 $coverImage = null;
 try {
-  $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version'));
-  $tenantNames = $tenantInfo->config->name;
-  $favicon = $tenantInfo->favicon;
-  $whiteLogo = $tenantInfo->white_logo;
-  $coverImage = $tenantInfo->cover_image;
+  if (!in_array($tenantCode, $excludedNames)) {
+    $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version'));
+    $tenantNames = $tenantInfo->config->name;
+    $favicon = $tenantInfo->favicon;
+    $whiteLogo = $tenantInfo->white_logo;
+    $coverImage = $tenantInfo->cover_image;
+  }else{
+    header('Location: https://geekadvice.pe/platform', true, 301);
+  }
 } catch (exception $e) {
 
 }

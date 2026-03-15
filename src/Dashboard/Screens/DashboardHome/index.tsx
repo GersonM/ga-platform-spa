@@ -6,6 +6,7 @@ import ActivityLogViewer from "../../../ActivityLog/Components/ActivityLogViewer
 
 import '/node_modules/react-grid-layout/css/styles.css';
 import '/node_modules/react-resizable/css/styles.css';
+import SystemInsights from "../../Components/SystemInsights";
 
 const DashboardHome = () => {
 
@@ -26,6 +27,11 @@ const DashboardHome = () => {
             <Card title={'Almacenamiento'} size={'small'}>
               <ServiceStatus/>
             </Card>
+          </Col>
+          <Col md={24}>
+           <Card title={'Notificaciones'} size={'small'}>
+             <SystemInsights />
+           </Card>
           </Col>
         </Row>
       </ModuleContent>
