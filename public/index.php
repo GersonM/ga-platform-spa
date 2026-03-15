@@ -6,6 +6,7 @@ $uri = $_SERVER['REQUEST_URI'];
 $tenantCode = match ($host) {
   'localhost:5173' => 'app',
   'manager.cobrify.lat' => 'cobrify',
+  'oficina.candares.com' => 'candares',
   default => explode('.', $host)[0],
 };
 
@@ -13,6 +14,11 @@ $excludedNames = [
   'connect-dev',
   'connect-staging',
   'losportales',
+  'manager',
+  'dev-core',
+  'sf',
+  'oficina',
+  'inmobiliaria',
   'connect',
   'fernando',
   'clientes',
@@ -37,7 +43,7 @@ $whiteLogo = null;
 $coverImage = null;
 try {
   if (!in_array($tenantCode, $excludedNames)) {
-    $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version'));
+    $tenantInfo = json_decode(file_get_contents('https://platform-v2.geekadvice.pe/' . $tenantCode . '/api/v1/version?referer'.urlencode($uri)));
     $tenantNames = $tenantInfo->config->name;
     $favicon = $tenantInfo->favicon;
     $whiteLogo = $tenantInfo->white_logo;
