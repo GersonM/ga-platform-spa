@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ContentHeader from '../CommonUI/ModuleContent/ContentHeader';
+import type {ExternalResource} from "../Types/api.tsx";
 
 const Parada7Manager = () => {
-  const [companies, setCompanies] = useState([]);
+  const [companies, setCompanies] = useState<ExternalResource[]>();
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -22,6 +23,9 @@ const Parada7Manager = () => {
         onRefresh={() => setReload(!reload)}
       />
       <p>Bienvenido al módulo de Parada 7.</p>
+      {companies?.map(c => {
+        return (<div>{c.name}</div>)
+      })}
     </div>
   );
 };

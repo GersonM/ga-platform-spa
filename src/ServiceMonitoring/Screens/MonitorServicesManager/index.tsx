@@ -4,7 +4,10 @@ import {TbKey, TbPencil} from "react-icons/tb";
 import {PiDatabaseDuotone, PiHardDrivesDuotone} from "react-icons/pi";
 import {LuEye, LuPower, LuScanLine, LuServer, LuTrash2} from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
+import {GrMysql} from "react-icons/gr";
+import {sileo} from "sileo";
 import axios from "axios";
+import icon_s7b from "../../../Assets/icon_s7b.png";
 
 import type {
   ExternalResource,
@@ -22,8 +25,6 @@ import ExternalResourceForm from "../../Components/ExternalResourceForm";
 import TablePagination from "../../../CommonUI/TablePagination";
 import ResourceStatus from "../../Components/ResourceStatus";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import {GrMysql} from "react-icons/gr";
-import {sileo} from "sileo";
 
 const MonitorServicesManager = () => {
   const [loading, setLoading] = useState(false);
@@ -112,7 +113,7 @@ const MonitorServicesManager = () => {
     axios.delete(`external-resources/${uuid}`)
       .then(() => {
         setLoading(false);
-        api.success({message: 'Servicio eliminado'});
+        sileo.success({title: 'Servicio eliminado'});
         setReload(!reload);
       })
       .catch((error) => {
@@ -122,14 +123,15 @@ const MonitorServicesManager = () => {
   }
 
   const getTypeIcon = (type: string) => {
-    const iconSize = 28
+    const iconSize = 22;
     switch (type) {
       case 'server':
       case 'vps':
-      case 'smart7bus_api':
         return <PiHardDrivesDuotone size={iconSize}/>;
+      case 'smart7bus_api':
+        return <img src={icon_s7b} width={iconSize} height={iconSize} alt={'Smart7bus'}/>;
       case 'smart7bus_api_db':
-        return <PiDatabaseDuotone size={iconSize}/>;
+        return <img src={icon_s7b} width={iconSize} height={iconSize} alt={'Smart7bus'}/>;
       case 'mysql_server':
         return <GrMysql size={iconSize}/>;
       case 'database_mysql':
@@ -158,7 +160,15 @@ const MonitorServicesManager = () => {
       title: 'Estado',
       dataIndex: 'uuid',
       width: 100,
-      render: (uuid: string) => (<ResourceStatus resourceUuid={uuid}/>)
+      render: (uuid: string, row:ExternalResource) => {
+        switch (row.type) {
+          case 'vps':
+          case 'server':
+            return row.auth_key_hint ? <ResourceStatus resourceUuid={uuid}/>:'';
+          default:
+            return '';
+        }
+      }
     },
     {
       title: 'Tipo',

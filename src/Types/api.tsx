@@ -875,8 +875,10 @@ export type ExternalResource = {
   uptime?: string;
   id?: string;
   description?: string;
-  type: boolean;
+  type: string;
   group: boolean;
+  auth_key_hint?: string;
+  auth_key?: string;
   children?: ExternalResource[];
   created_at: string;
 }

@@ -1,22 +1,22 @@
 import React, {useState} from 'react';
 import axios from "axios";
-import {Form, Input, Select, Space} from "antd";
-import {TbCheck, TbPencil} from "react-icons/tb";
+import {Form, Input, Select} from "antd";
+import {TbCheck} from "react-icons/tb";
 import {useForm} from "antd/lib/form/Form";
 
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import type {ExternalResource} from "../../../Types/api.tsx";
 import EntityFieldsEditor from "../../../TaxonomyManagement/Components/EntityFieldsEditor";
+import ExternalResourceSelector from "../ExternalResourceSelector";
 
 interface ExternalResourceFormProps {
   externalResource?: ExternalResource;
-  onComplete?: (data:ExternalResource) => void;
+  onComplete?: (data: ExternalResource) => void;
 }
 
-const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFormProps) => {
+const ExternalResourceForm = ({externalResource, onComplete}: ExternalResourceFormProps) => {
   const [loading, setLoading] = useState(false);
-  const [chooseSeller, setChooseSeller] = useState(false);
   const [type, setType] = useState<string>();
   const [form] = useForm();
 
@@ -54,6 +54,9 @@ const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFor
             options={[
               {value: 'server', label: 'Servidor'},
               {value: 'domain', label: 'Dominio'},
+              {value: 'mysql_server', label: 'Servidor MySQL'},
+              {value: 'database_mysql', label: 'Base de datos MySQL'},
+              {value: 'smart7bus_api_db', label: 'Smart7Bus API DB'},
               {value: 'namecheap_domain', label: 'Dominio en Namecheap '},
               {value: 'vps', label: 'VPS'},
               {value: 'crm', label: 'CRM'},
@@ -65,6 +68,9 @@ const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFor
         </Form.Item>
         <Form.Item name={'id'} label={'Identificador'}>
           <Input/>
+        </Form.Item>
+        <Form.Item name={'parent_uuid'} label={'Padre'}>
+          <ExternalResourceSelector/>
         </Form.Item>
         <Form.Item name={'auth_user'} label={'Usuario'}>
           <Input/>
@@ -79,7 +85,7 @@ const ExternalResourceForm = ({externalResource, onComplete}:ExternalResourceFor
           <Input.TextArea/>
         </Form.Item>
         <Form.Item label={'Descripción (opcional)'} name={'attributes'}>
-          <EntityFieldsEditor entity={externalResource} />
+          <EntityFieldsEditor entity={externalResource}/>
         </Form.Item>
         <PrimaryButton
           icon={<TbCheck/>} loading={loading} block htmlType={'submit'}
