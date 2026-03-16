@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {Button, Card, Col, Divider, notification, Popconfirm, Progress, Row, Space} from "antd";
+import {Button, Card, Col, Divider, Popconfirm, Progress, Row, Space} from "antd";
+import {sileo} from "sileo";
 import {LuCpu, LuMemoryStick} from "react-icons/lu";
 
 import CustomTag from "../../../CommonUI/CustomTag";
@@ -8,8 +9,8 @@ import {TbClockPin, TbPower, TbReload, TbTimeline, TbWorldWww} from "react-icons
 import ResourceStatus from "../ResourceStatus";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
-import './styles.less';
 import InfoButton from "../../../CommonUI/InfoButton";
+import './styles.less';
 
 interface ResourceInformationProps {
   resourceUuid?: string;
@@ -107,7 +108,7 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
     axios.post(`external-resources/servers/${uuid}/reset`)
       .then(() => {
         setLoading(false);
-        notification.success({message: 'Reinicio en proceso'});
+        sileo.success({title: 'Reinicio en proceso'});
       })
       .catch((error) => {
         setLoading(false);
@@ -167,13 +168,12 @@ const ResourceInformation = ({resourceUuid}: ResourceInformationProps) => {
         </Col>
         <Col span={16}>
           <Card>
-            Última actividad del sistema
-            <small>
-
-              <code>
-                {serverLog?.raw}
-              </code>
-            </small>
+            <h3>Última actividad del sistema</h3>
+            <div className={'server-log-output'}>
+              {serverLog?.raw.split('\n').reverse().map((l: string, i: number) => <code className={'line'}
+                                                                                        key={i}><span>{l.split(': ')[0]}</span>{l.split(': ')[1]}
+              </code>)}
+            </div>
           </Card>
         </Col>
       </Row>
