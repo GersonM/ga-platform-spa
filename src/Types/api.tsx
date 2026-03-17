@@ -304,6 +304,7 @@ export type ApiFile = {
   source: string;
   metadata?: any;
   details: string;
+  order?: number;
   public: string;
   thumbnail?: string;
   download?: string;

@@ -178,7 +178,12 @@ const ContainerContentManager = ({allowUpload, onChange, containerUuid}: Contain
                 container={selectedContainer}
                 fileContainer={containerContent.container}
                 files={selectedFiles}
-                onChange={() => {
+                onChange={(action) => {
+                  switch (action) {
+                    case 'delete-selection':
+                      setSelectedFiles([]);
+                      break;
+                  }
                   setReload(!reload);
                 }}
               />

@@ -55,19 +55,7 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
     setSelectedWarehouse(stock?.warehouse);
   }, [stock]);
 
-  const parseCoordinate = (coordinate: any): number | undefined => {
-    if (typeof coordinate === 'number') {
-      return coordinate;
-    }
-    if (typeof coordinate === 'string' && coordinate.trim() !== '') {
-      const parsed = Number(coordinate);
-      return Number.isNaN(parsed) ? undefined : parsed;
-    }
-    return undefined;
-  };
-
   const submit = (values: any) => {
-
     const data = {
       ...values,
       variation_uuid: variation ? variation.uuid : values.variation_uuid,
@@ -282,11 +270,11 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
           <Col md={11}>
             <Form.Item
               name={'attachments'}
+              help={<NavLink target={'_blank'} to={`/file-management/${stock?.attachments_container_uuid}`}>
+                <Button size={'small'} type={'primary'} ghost>Ver carpeta</Button>
+              </NavLink>}
               label={<>
-                Galería de imagenes {' - '}
-                <NavLink target={'_blank'} to={`/file-management/${stock?.attachments_container_uuid}`}>
-                  <Button size={'small'} type={'primary'} ghost>Ver carpeta</Button>
-                </NavLink>
+                Galería de imagenes
               </>}
             >
               <EntityGalleryEditor/>

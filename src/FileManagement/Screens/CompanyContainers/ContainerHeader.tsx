@@ -129,6 +129,7 @@ const ContainerHeader = (
             {label: 'antiguos primero', value: 'date_asc'},
             {label: 'pesados primero', value: 'size_desc'},
             {label: 'ligeros primero', value: 'size_asc'},
+            {label: 'personalizado', value: 'custom'},
           ]}
         />
         <Segmented

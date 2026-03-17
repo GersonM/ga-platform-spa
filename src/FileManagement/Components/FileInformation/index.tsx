@@ -21,13 +21,14 @@ import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ContainerDropdownActions from "../ContainerDropdownActions";
 import './styles.less';
 import CustomTag from "../../../CommonUI/CustomTag";
+import {sileo} from "sileo";
 
 interface FileInformationProps {
   file?: ApiFile;
   files?: ApiFile[];
   fileContainer?: Container;
   container?: Container;
-  onChange?: () => void;
+  onChange?: (action?: string) => void;
 }
 
 const FileInformation = ({fileContainer, files, onChange, container}: FileInformationProps) => {
@@ -133,6 +134,25 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
     }
   };
 
+  const deleteSelectedFiles = () => {
+    if (!files) return;
+    sileo.promise(
+      axios.delete(`file-management/files/delete-selection`, {data: {files: files?.map(f => f.uuid)}}),
+      {
+        loading: {title: 'Eliminando archivos...'},
+        success: () => {
+          onChange?.('delete-selection');
+          return {title: 'Borrado', description: 'Los archivos se eliminaron'};
+        },
+        error: (error) => {
+          ErrorHandler.showNotification(error);
+          const eh = new ErrorHandler(error);
+          return eh.show(6, true);
+        },
+      }
+    );
+  }
+
   const detailImageLink = files?.length == 1 ? location.origin + '/storage/files/' + files[0]?.uuid : '';
   const containerLink = container ? location.origin + '/storage/containers/' + container.uuid : '';
 
@@ -150,9 +170,7 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
               </span>
             </div>
             <ContainerDropdownActions
-              onChange={() => {
-                if (onChange) onChange();
-              }}
+              onChange={onChange}
               trigger={['click']}
               container={container}>
               <IconButton icon={<BsThreeDotsVertical/>}/>
@@ -193,9 +211,7 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
               </span>
             </div>
             <FileDropdownActions
-              onChange={() => {
-                if (onChange) onChange();
-              }}
+              onChange={onChange}
               trigger={['click']}
               file={files[0]}>
               <IconButton icon={<BsThreeDotsVertical/>}/>
@@ -325,7 +341,7 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
           <OverlayScrollbarsComponent defer options={{scrollbars: {autoHide: 'scroll'}}}>
             <div className="information-content">
               {files.map(f => (
-                <div key={f.uuid} className={'selected-file-item'} onClick={() => onChange && onChange()}>
+                <div key={f.uuid} className={'selected-file-item'}>
                   <FileIcon size={19} file={f}/>
                   <div className={'file-info'}>
                     <span className={'name'}>{f.name}</span>
@@ -338,7 +354,8 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
               <br/>
               <Space>
                 <PrimaryButton disabled label={'Descargar'} href={files[0].download} block size={'small'}/>
-                <PrimaryButton disabled label={'Borrar ' + files.length + ' archivos'} danger block size={'small'}/>
+                <PrimaryButton label={'Borrar ' + files.length + ' archivos'} onClick={deleteSelectedFiles} danger
+                               block/>
               </Space>
             </div>
           </OverlayScrollbarsComponent>
