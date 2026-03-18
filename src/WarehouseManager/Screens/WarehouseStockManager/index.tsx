@@ -2,11 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {TbArchive, TbArchiveOff, TbMapPin, TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {
   Divider,
-  Drawer,
   Form, Image,
   Input,
   InputNumber,
-  Pagination,
   Popover,
   Progress,
   Select,
@@ -14,14 +12,12 @@ import {
   Table,
   Tooltip
 } from "antd";
-import dayjs from "dayjs";
 import pluralize from "pluralize";
 import axios from "axios";
 
 import type {
   ApiFile,
   EntityFieldValue,
-  Point,
   ResponsePagination, StorageProduct, StorageProductVariation,
   StorageStock,
   StorageWarehouse
@@ -45,6 +41,7 @@ import ProductSelector from "../../Components/ProductSelector";
 import StockSelector from "../../Components/StockSelector";
 import FileDownloader from "../../../CommonUI/FileDownloader";
 import AttributesList from "../../../EntityFields/Components/AttributesList";
+import TablePagination from "../../../CommonUI/TablePagination";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -140,7 +137,13 @@ const WarehouseStockManager = () => {
       width: 60,
       render: (attachments?: ApiFile[]) => {
         const cover = attachments?.filter(f => f.code == 'cover');
-        return cover?.length ? <Image preview={false} src={cover[0].thumbnail} width={50}/> : <small>Sin imagen</small>;
+        return cover?.length ? <Image preview={false} src={cover[0].thumbnail} style={{
+          width: 50,
+          height: 50,
+          overflow: 'hidden',
+          objectFit: 'cover',
+          borderRadius: 8
+        }}/> : <small>Sin imagen</small>;
       }
     },
     {
@@ -186,8 +189,8 @@ const WarehouseStockManager = () => {
       title: 'Ubicación',
       dataIndex: 'warehouse',
       width: 130,
-      render: (warehouse: StorageWarehouse, row:StorageStock) => {
-        const link = row.distribution_coordinate ? `https://www.google.com/maps/@${row.distribution_coordinate.lat},${row.distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu`:null;
+      render: (warehouse: StorageWarehouse, row: StorageStock) => {
+        const link = row.distribution_coordinate ? `https://www.google.com/maps/@${row.distribution_coordinate.lat},${row.distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu` : null;
         return <Space>
           <div>
             {warehouse?.name} <br/>
@@ -196,8 +199,9 @@ const WarehouseStockManager = () => {
           <div>
             {
               link && <>
-                <Tooltip title={`Ubicación lat: ${row.distribution_coordinate?.lat} lng: ${row.distribution_coordinate?.lng}`}>
-                  <a href={link} target={'_blank'} rel={'noreferrer'}><TbMapPin size={20} /></a>
+                <Tooltip
+                  title={`Ubicación lat: ${row.distribution_coordinate?.lat} lng: ${row.distribution_coordinate?.lng}`}>
+                  <a href={link} target={'_blank'} rel={'noreferrer'}><TbMapPin size={20}/></a>
                 </Tooltip>
               </>
             }
@@ -389,20 +393,14 @@ const WarehouseStockManager = () => {
         }}
         pagination={false} rowKey={'uuid'} size={"middle"} loading={loading}
         columns={columns} dataSource={productStock}/>
-      {pagination && (
-        <Pagination
-          style={{marginTop: 15}}
-          align={'center'}
-          showTotal={(total) => `${total} productos en total`}
-          current={pagination.current_page}
-          pageSize={pagination.per_page}
-          total={pagination.total}
-          onChange={(page, size) => {
-            setCurrentPage(page);
-            setPageSize(size);
-          }}
-        />
-      )}
+      <TablePagination
+        pagination={pagination}
+        onChange={(page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+        }}
+      />
+
       <ModalView
         open={openStockForm}
         width={1100}

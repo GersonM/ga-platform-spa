@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {TbImageInPicture, TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
+import {TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
 import {Popconfirm, Space} from "antd";
+import {RiImageAiFill} from "react-icons/ri";
+import {sileo} from "sileo";
 import axios from "axios";
 
 import type {ApiFile} from "../../../Types/api.tsx";
@@ -8,8 +10,6 @@ import FileUploader from "../FileUploader";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import './styles.less';
-import {RiImageAiFill} from "react-icons/ri";
-import {sileo} from "sileo";
 
 interface EntityGalleryEditorProps {
   value?: ApiFile[];

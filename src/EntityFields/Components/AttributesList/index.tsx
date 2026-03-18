@@ -16,12 +16,14 @@ const AttributesList = ({attributes}:AttributesListProps) => {
     <div className={'attributes-list-wrapper'}>
       {attributes?.length == 0 && <small>No hay atributos adicionales</small>}
       {attributes?.map((attribute, index) => {
-        return <Tooltip title={attribute.field.name} key={index}>
+        return <Tooltip title={`${attribute.field.name}: ${attribute.value}`} key={index}>
           <span className={'attribute-item'}>
             {getIcon(attribute.field.code)}
+            <span className={'attribute-value'}>
             {(attribute.field.type == 'number' && attribute.field.unit_type != 'm2' && attribute.field.unit_type != 'm' && attribute.field.unit_type != 'S/') ?
               <>{pluralize(attribute.field.unit_type, parseInt(attribute.value), true)}</> :
               <>{attribute.value} {attribute.field.unit_type}</>}
+            </span>
           </span>
         </Tooltip>;
       })}
