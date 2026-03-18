@@ -3,7 +3,7 @@ import {TbArchive, TbArchiveOff, TbMapPin, TbPencil, TbRecycle, TbRecycleOff, Tb
 import {
   Divider,
   Drawer,
-  Form,
+  Form, Image,
   Input,
   InputNumber,
   Pagination,
@@ -19,6 +19,7 @@ import pluralize from "pluralize";
 import axios from "axios";
 
 import type {
+  ApiFile,
   EntityFieldValue,
   Point,
   ResponsePagination, StorageProduct, StorageProductVariation,
@@ -133,6 +134,15 @@ const WarehouseStockManager = () => {
   }
 
   const columns: any[] = [
+    {
+      title: 'Portada',
+      dataIndex: 'attachments',
+      width: 60,
+      render: (attachments?: ApiFile[]) => {
+        const cover = attachments?.filter(f => f.code == 'cover');
+        return cover?.length ? <Image preview={false} src={cover[0].thumbnail} width={50}/> : <small>Sin imagen</small>;
+      }
+    },
     {
       title: 'N° Serie / ID',
       dataIndex: 'serial_number',

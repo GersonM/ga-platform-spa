@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {TbImageInPicture, TbPhotoCancel, TbPhotoCheck, TbTrash} from "react-icons/tb";
 import {Popconfirm, Space} from "antd";
 import axios from "axios";
@@ -20,6 +20,8 @@ interface EntityGalleryEditorProps {
 const EntityGalleryEditor = ({value = [], onChange, allowUpload = true}: EntityGalleryEditorProps) => {
   const [gallery, setGallery] = useState<ApiFile[] | undefined | null>(value);
   const [draggedUuid, setDraggedUuid] = useState<string | null>(null);
+  const dragStartGalleryRef = useRef<ApiFile[] | null>(null);
+  const dropHandledRef = useRef(false);
 
   useEffect(() => {
     if (onChange && gallery) {
@@ -52,27 +54,25 @@ const EntityGalleryEditor = ({value = [], onChange, allowUpload = true}: EntityG
       })
   }
 
-  const moveItem = (fromIndex: number, toIndex: number) => {
-    if (!gallery || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) {
-      return null;
+  const reorderGallery = (items: ApiFile[], fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) {
+      return items;
     }
 
-    const newGallery = [...gallery];
+    const newGallery = [...items];
     const [movedItem] = newGallery.splice(fromIndex, 1);
     newGallery.splice(toIndex, 0, movedItem);
 
-    const reorderedGallery = newGallery.map((item, index) => ({
+    return newGallery.map((item, index) => ({
       ...item,
       order: index + 1,
     }));
-
-    setGallery(reorderedGallery);
-
-    return {newGallery: reorderedGallery};
   };
 
   const handleDragStart = (uuid: string, event: React.DragEvent<HTMLDivElement>) => {
     setDraggedUuid(uuid);
+    dropHandledRef.current = false;
+    dragStartGalleryRef.current = gallery ? [...gallery] : null;
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', uuid);
   };
@@ -82,28 +82,49 @@ const EntityGalleryEditor = ({value = [], onChange, allowUpload = true}: EntityG
     event.dataTransfer.dropEffect = 'move';
   };
 
+  const handleDragEnter = (targetUuid: string) => {
+    if (!draggedUuid) {
+      return;
+    }
+
+    setGallery((prevGallery) => {
+      if (!prevGallery || prevGallery.length === 0) {
+        return prevGallery;
+      }
+
+      const fromIndex = prevGallery.findIndex(item => item.uuid === draggedUuid);
+      const toIndex = prevGallery.findIndex(item => item.uuid === targetUuid);
+      if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) {
+        return prevGallery;
+      }
+
+      return reorderGallery(prevGallery, fromIndex, toIndex);
+    });
+  };
+
   const handleDrop = (targetUuid: string, event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    dropHandledRef.current = true;
 
     const sourceUuid = event.dataTransfer.getData('text/plain') || draggedUuid;
     if (!sourceUuid || !gallery || sourceUuid === targetUuid) {
       setDraggedUuid(null);
+      dragStartGalleryRef.current = null;
       return;
     }
 
-    const fromIndex = gallery.findIndex(item => item.uuid === sourceUuid);
-    const toIndex = gallery.findIndex(item => item.uuid === targetUuid);
-
-    const previousGallery = [...gallery];
-    const movedData = moveItem(fromIndex, toIndex);
+    const previousGallery = dragStartGalleryRef.current ? [...dragStartGalleryRef.current] : [...gallery];
+    const currentGallery = [...gallery];
     setDraggedUuid(null);
 
-    if (!movedData) {
+    const hasChanged = previousGallery.map(item => item.uuid).join('|') !== currentGallery.map(item => item.uuid).join('|');
+    if (!hasChanged) {
+      dragStartGalleryRef.current = null;
       return;
     }
 
     axios.post('file-management/files/update-order', {
-      files: movedData.newGallery.map((item, index) => ({
+      files: currentGallery.map((item, index) => ({
         uuid: item.uuid,
         order: index + 1,
       })),
@@ -114,7 +135,20 @@ const EntityGalleryEditor = ({value = [], onChange, allowUpload = true}: EntityG
       .catch((err) => {
         setGallery(previousGallery);
         ErrorHandler.showNotification(err);
+      })
+      .finally(() => {
+        dragStartGalleryRef.current = null;
       });
+  };
+
+  const handleDragEnd = () => {
+    if (!dropHandledRef.current && dragStartGalleryRef.current) {
+      setGallery(dragStartGalleryRef.current);
+    }
+
+    setDraggedUuid(null);
+    dropHandledRef.current = false;
+    dragStartGalleryRef.current = null;
   };
 
   return (
@@ -129,8 +163,9 @@ const EntityGalleryEditor = ({value = [], onChange, allowUpload = true}: EntityG
               draggable
               onDragStart={(event) => handleDragStart(item.uuid, event)}
               onDragOver={handleDragOver}
+              onDragEnter={() => handleDragEnter(item.uuid)}
               onDrop={(event) => handleDrop(item.uuid, event)}
-              onDragEnd={() => setDraggedUuid(null)}>
+              onDragEnd={handleDragEnd}>
               <div className={'order-tag'}>{item.order || '-'} {item.code == 'cover' &&
                 <RiImageAiFill size={12}/>}</div>
               <div className="actions">

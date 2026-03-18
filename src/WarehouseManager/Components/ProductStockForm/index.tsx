@@ -118,8 +118,6 @@ const ProductStockForm = ({variation, stock, onComplete}: ProductStockFormProps)
     labels.provider = 'Asesor encargado';
   }
 
-  console.log({selectedWarehouseCenter});
-
   return (
     <>
       <h2>{stock ? 'Editar' : 'Registrar'} {stock?.type_label || 'existencia'} {stock &&
