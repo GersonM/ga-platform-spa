@@ -39,6 +39,7 @@ const CreateProfile = ({onCompleted}: CreateUserProps) => {
         setDocumentSearching(false);
         ErrorHandler.showNotification(error);
       });
+
   }
 
   const submitForm = (values: any) => {

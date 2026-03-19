@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, {useEffect, useState} from 'react';
 
+
 const SystemInsights = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>();
@@ -13,6 +14,7 @@ const SystemInsights = () => {
       };
 
       setLoading(true);
+
 
       axios
         .get(`workspaces/system-insights`, config)
