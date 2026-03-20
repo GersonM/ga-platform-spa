@@ -82,7 +82,7 @@ const ShoppingCartEditor = ({onChange, value, liveUpdate = true}: ShoppingCartEd
     if (index !== -1) {
       newCart[index].quantity++;
     } else {
-      newCart.push({uuid: 'new_' + (Math.random() * 10).toString(), unit_amount: null, quantity: 1, stock: data});
+      newCart.push({uuid: 'new_' + (Math.random() * 10).toString(), unit_amount: null, quantity: 1, stock: data, stock_amount:0});
     }
     setShoppingCart(newCart);
   }

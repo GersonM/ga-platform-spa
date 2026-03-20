@@ -219,6 +219,22 @@ const CommercialLeads = () => {
       },
     },
     {
+      dataIndex: 'campaign',
+      title: 'Campaña',
+      width: 110,
+      render: (c: Campaign) => {
+        return c && <CustomTag>{c.name}</CustomTag>;
+      },
+    },
+    {
+      dataIndex: 'process_stage',
+      title: 'Etapa',
+      width: 150,
+      render: (s: CommercialProcessStage) => {
+        return s && <CustomTag>{s.name}</CustomTag>;
+      },
+    },
+    {
       dataIndex: 'profile',
       title: 'Candidato',
       width: 190,
@@ -267,22 +283,6 @@ const CommercialLeads = () => {
           <small>{last_activity?.profile?.name} {dayjs(last_activity?.created_at).fromNow()}</small>
           {last_activity?.comment}
         </>;
-      },
-    },
-    {
-      dataIndex: 'campaign',
-      title: 'Campaña',
-      width: 120,
-      render: (c: Campaign) => {
-        return c && <CustomTag>{c.name}</CustomTag>;
-      },
-    },
-    {
-      dataIndex: 'process_stage',
-      title: 'Etapa',
-      width: 150,
-      render: (s: CommercialProcessStage) => {
-        return s && <CustomTag>{s.name}</CustomTag>;
       },
     },
     {
