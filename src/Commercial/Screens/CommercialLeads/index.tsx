@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import {Drawer, Form, Input, Popconfirm, Space, Steps, Tooltip} from 'antd';
-import {TbListCheck, TbPencil, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
+import {TbDownload, TbListCheck, TbPencil, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
 import {useParams} from 'react-router-dom';
 import {FaPeoplePulling} from "react-icons/fa6";
 import {BiCog} from 'react-icons/bi';
@@ -325,8 +325,11 @@ const CommercialLeads = () => {
             <PrimaryButton
               icon={<BiCog size={17}/>}
               label={'Gestionar campañas'}
-              ghost
               onClick={() => setOpenCampaignManager(true)}
+            />
+            <PrimaryButton
+              icon={<TbDownload size={17}/>}
+              label={'Importar candidatos'}
             />
           </Space>
         }

@@ -832,6 +832,7 @@ export type StorageStock = {
   name?: string;
   distribution_coordinate?: Point;
   full_name?: string;
+  single_name?: string;
   type?: string;
   type_label?: string;
   duration?: string;

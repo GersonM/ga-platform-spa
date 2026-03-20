@@ -1,4 +1,4 @@
-import {Fragment, useContext, useEffect, useState} from 'react';
+import {Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {Avatar, Image, Popconfirm, Progress, Space, Tooltip} from 'antd';
 import {PiCheckBold, PiProhibit} from 'react-icons/pi';
 import dayjs from 'dayjs';
@@ -10,7 +10,6 @@ import {DndProvider, useDrag, useDrop} from 'react-dnd'
 import type {EntityActivity, ApiFile, ResponsePagination} from '../../../Types/api';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
-import EntityActivityIcon from '../../../CommonUI/EntityActivityManager/EntityActivityIcon';
 import IconButton from '../../../CommonUI/IconButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileIcon from '../../../FileManagement/Components/FileIcon';
@@ -24,6 +23,12 @@ import './styles.less';
 const DRAG_TYPE_ACTIVITY = 'activity-card';
 type BoardStatus = 'pending' | 'in-progress' | 'completed';
 
+const getActivityStatus = (activity: EntityActivity): BoardStatus => {
+  if (activity.completed_at) return 'completed';
+  if (activity.work_session_started_at) return 'in-progress';
+  return 'pending';
+};
+
 const MyTasks = () => {
   const [activities, setActivities] = useState<EntityActivity[]>();
   const [searchText, _setSearchText] = useState<string>();
@@ -36,13 +41,25 @@ const MyTasks = () => {
   const [statusFilter, _setStatusFilter] = useState<string>();
   const [selectedActivity, setSelectedActivity] = useState<EntityActivity>();
   const [openActivityEditor, setOpenActivityEditor] = useState(false);
+  const recentlyDroppedRef = useRef<{uuid?: string; at: number}>({at: 0});
   const {updateActivityCount, activityCount} = useContext(AuthContext);
 
-  const pendingActivities =
-    activities?.filter(activity => !activity.completed_at && !activity.work_session_started_at) ?? [];
-  const inProgressActivities =
-    activities?.filter(activity => !activity.completed_at && !!activity.work_session_started_at) ?? [];
-  const completedActivities = activities?.filter(activity => !!activity.completed_at) ?? [];
+  const pendingActivities = useMemo(
+    () => activities?.filter(activity => !activity.completed_at && !activity.work_session_started_at) ?? [],
+    [activities]
+  );
+  const inProgressActivities = useMemo(
+    () => activities?.filter(activity => !activity.completed_at && !!activity.work_session_started_at) ?? [],
+    [activities]
+  );
+  const completedActivities = useMemo(
+    () => activities?.filter(activity => !!activity.completed_at) ?? [],
+    [activities]
+  );
+  const activityByUUID = useMemo(
+    () => new Map((activities ?? []).map(activity => [activity.uuid, activity])),
+    [activities]
+  );
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -75,7 +92,7 @@ const MyTasks = () => {
     return cancelTokenSource.cancel;
   }, [searchText, currentPage, pageSize, reload, typeFilter, statusFilter]);
 
-  const completeTask = (uuid: string, resolve: boolean, options?: {skipReload?: boolean}) => {
+  const completeTask = useCallback((uuid: string, resolve: boolean, options?: {skipReload?: boolean}) => {
     axios
       .post(resolve ? `entity-activity/${uuid}/pending` : `entity-activity/${uuid}/complete`, {})
       .then(_response => {
@@ -89,9 +106,9 @@ const MyTasks = () => {
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
-  };
+  }, [updateActivityCount]);
 
-  const startWorkSession = (uuid: string, options?: {skipReload?: boolean}) => {
+  const startWorkSession = useCallback((uuid: string, options?: {skipReload?: boolean}) => {
     axios
       .post(`entity-activity/${uuid}/start-work`, {})
       .then(_response => {
@@ -102,9 +119,9 @@ const MyTasks = () => {
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
-  };
+  }, []);
 
-  const stopWorkSession = (uuid: string, options?: {skipReload?: boolean}) => {
+  const stopWorkSession = useCallback((uuid: string, options?: {skipReload?: boolean}) => {
     axios
       .post(`entity-activity/${uuid}/stop-work`, {})
       .then(_response => {
@@ -115,9 +132,9 @@ const MyTasks = () => {
       .catch(e => {
         ErrorHandler.showNotification(e);
       });
-  };
+  }, []);
 
-  const moveActivityTo = (activity: EntityActivity, targetStatus: BoardStatus) => {
+  const moveActivityTo = useCallback((activity: EntityActivity, targetStatus: BoardStatus) => {
     setActivities(prevActivities => {
       if (!prevActivities) return prevActivities;
       return prevActivities.map(item => {
@@ -158,38 +175,43 @@ const MyTasks = () => {
     if (targetStatus === 'pending' && activity.work_session_started_at) {
       stopWorkSession(activity.uuid, {skipReload: true});
     }
-  };
+  }, [completeTask, startWorkSession, stopWorkSession]);
 
   const ActivityCard = ({activity}: {activity: EntityActivity}) => {
+    const activityStatus = getActivityStatus(activity);
     const [{isDragging}, dragRef] = useDrag(
       () => ({
         type: DRAG_TYPE_ACTIVITY,
-        item: {uuid: activity.uuid},
+        item: {uuid: activity.uuid, status: activityStatus},
+        end: (_item, monitor) => {
+          if (monitor.didDrop()) {
+            recentlyDroppedRef.current = {uuid: activity.uuid, at: Date.now()};
+          }
+        },
         collect: monitor => ({
           isDragging: monitor.isDragging(),
         }),
       }),
-      [activity.uuid]
+      [activity.uuid, activityStatus]
     );
 
     return (
       <div
         // @ts-ignore
         ref={dragRef}
-        className="activity-card"
+        className={`activity-card ${isDragging ? 'dragging' : ''}`}
         style={{opacity: isDragging ? 0.5 : 1}}
         onClick={() => {
+          const droppedRecently =
+            recentlyDroppedRef.current.uuid === activity.uuid && Date.now() - recentlyDroppedRef.current.at < 220;
+          if (droppedRecently) return;
           setSelectedActivity(activity);
           setOpenActivityEditor(true);
         }}>
-        <small>
-          <EntityActivityIcon type={activity.type} size={15} activity={activity}/>
-          por {activity.profile?.name} {dayjs(activity.expired_at).fromNow()}
-        </small>
         {activity.completed_at && <CustomTag color={'green'}>Completado</CustomTag>}
         <div className="content">
           {activity.comment}
-          <small>{dayjs(activity.expired_at).fromNow()}</small>
+          <small>Vence {dayjs(activity.expired_at).fromNow()}</small>
         </div>
         <div className="tools">
           <Image.PreviewGroup>
@@ -238,6 +260,9 @@ const MyTasks = () => {
           </div>
           <CustomTag>{activity.work_accumulated_minutes}</CustomTag>
         </Space>
+        <small>
+          {activity.profile?.name} {dayjs(activity.created_at).fromNow()}
+        </small>
       </div>
     );
   };
@@ -251,26 +276,37 @@ const MyTasks = () => {
     title: string;
     items: EntityActivity[];
   }) => {
-    const [{isOver}, dropRef] = useDrop(
+    const [{isOver, canDrop}, dropRef] = useDrop(
       () => ({
         accept: DRAG_TYPE_ACTIVITY,
-        drop: (item: {uuid: string}) => {
-          const activity = activities?.find(target => target.uuid === item.uuid);
+        canDrop: (item: {uuid: string; status: BoardStatus}) => item.status !== status,
+        drop: (item: {uuid: string; status: BoardStatus}) => {
+          if (item.status === status) return;
+          const activity = activityByUUID.get(item.uuid);
           if (!activity) return;
           moveActivityTo(activity, status);
         },
         collect: monitor => ({
-          isOver: monitor.isOver(),
+          isOver: monitor.isOver({shallow: true}),
+          canDrop: monitor.canDrop(),
         }),
       }),
-      [activities, status]
+      [activityByUUID, moveActivityTo, status]
     );
 
     return (
-      // @ts-ignore
-      <div ref={dropRef} className={`board-list ${status}`}>
+      <div
+        // @ts-ignore
+        ref={dropRef}
+        className={`board-list ${status} ${isOver ? 'is-over' : ''} ${canDrop ? 'can-drop' : 'cant-drop'}`}>
         <div className="title"><CustomTag>{items.length}</CustomTag> {title}</div>
-        <div className="items" style={{background: isOver ? 'rgba(0,0,0,0.03)' : undefined}}>
+        <div className="items">
+          {isOver && canDrop && <div className="drop-feedback valid">Suelta para mover la tarea</div>}
+          {items.length === 0 && (
+            <div className="empty-column-message">
+              Arrastra tareas aquí
+            </div>
+          )}
           {items.map(activity => (
             <ActivityCard key={activity.uuid} activity={activity}/>
           ))}

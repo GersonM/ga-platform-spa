@@ -39,7 +39,7 @@ const InvoiceResumen = (
       {items.map((item, index) => (
         <div key={index} className="invoice-resumen-item">
           <span className={'label-item'}>
-            {item.stock?.full_name} {item.quantity && <span>(x{item.quantity})</span>}
+            {item.stock?.name} {item.quantity && <span>(x{item.quantity})</span>}
             {item.stock?.serial_number && <><br/><span>{item.stock.serial_number}</span></>}
           </span>
           <span className={'spacer'}></span>
