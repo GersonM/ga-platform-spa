@@ -1,32 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {
-  Button,
   Col,
   Descriptions,
   type DescriptionsProps,
   Divider,
   Form,
   Input,
-  List, Popconfirm,
-  Row, Space,
-  Tabs, Tooltip,
+  Row,
+  Space,
+  Tabs,
 } from 'antd';
 import {PiPlusBold, PiReceiptXBold} from 'react-icons/pi';
 import {
   TbCancel,
   TbCheck,
   TbChevronCompactRight,
-  TbLock,
   TbPencil,
   TbPrinter,
   TbRefresh,
-  TbTrash
 } from "react-icons/tb";
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import type {Contract, StorageStock} from '../../../Types/api';
+import type {Contract} from '../../../Types/api';
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader';
 import ModuleContent from '../../../CommonUI/ModuleContent';
 import EntityActivityManager from '../../../CommonUI/EntityActivityManager';
@@ -45,19 +42,18 @@ import StepsNavigation from "../../../CommonUI/StepsNavigation";
 import ContractStatus from "../CommercialSales/ContractStatus.tsx";
 import InstallmentPlanForm from "../../../PaymentManagement/Components/InstallmentPlanForm";
 import NewSaleForm from "../../Components/NewSaleForm";
-import IconButton from "../../../CommonUI/IconButton";
 import CompanyChip from "../../../HRManagement/Components/CompanyChip";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import LoadingIndicator from "../../../CommonUI/LoadingIndicator";
 import Config from "../../../Config.tsx";
 import MetaTitle from "../../../CommonUI/MetaTitle";
-import ProductStockForm from "../../../WarehouseManager/Components/ProductStockForm";
 import InvoiceResumen from "../../../PaymentManagement/Components/InvoiceResumen";
 import FileDownloader from "../../../CommonUI/FileDownloader";
 import ShoppingCartEditor from "../../Components/ShoppingCartEditor";
-import './styles.less';
 import useContractRenew from "../../Hooks/useContractRenew.tsx";
 import PeriodChip from "../../../CommonUI/PeriodChip";
+import InfoButton from "../../../CommonUI/InfoButton";
+import './styles.less';
 
 const CommercialContractDetail = () => {
   const params = useParams();
@@ -69,13 +65,10 @@ const CommercialContractDetail = () => {
   const [openCancelContract, setOpenCancelContract] = useState(false);
   const [openEditContract, setOpenEditContract] = useState(false);
   const [openInstallmentFom, setOpenInstallmentFom] = useState(false);
-  const [selectedStock, setSelectedStock] = useState<StorageStock>();
-  const [openEditStock, setOpenEditStock] = useState(false);
   const [openCartItemForm, setOpenCartItemForm] = useState(false);
   const [openPrintProposal, setOpenPrintProposal] = useState(false);
   const [openPrintContract, setOpenPrintContract] = useState(false);
   const {renewContract} = useContractRenew(() => setReload(!reload));
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!params.contract) {
@@ -145,32 +138,8 @@ const CommercialContractDetail = () => {
       });
   };
 
-  const removeCartItem = (uuid: string) => {
-    axios.delete(`commercial/cart-items/${uuid}`)
-      .then(() => {
-        setReload(!reload);
-      })
-      .catch(e => {
-        ErrorHandler.showNotification(e);
-      })
-  }
-
   if (!contract) {
     return <LoadingIndicator message={'Cargando información de contrato'}/>;
-  }
-
-  const totals: any = {};
-
-  if (contract.cart) {
-    for (const cartItem of contract.cart) {
-      if (cartItem.stock?.currency) {
-        if (!totals[cartItem.stock.currency]) {
-          totals[cartItem.stock.currency] = 0;
-        }
-        const amount = cartItem.unit_amount || cartItem.stock.sale_price
-        totals[cartItem.stock.currency] += (amount || 0) * cartItem.quantity;
-      }
-    }
   }
 
   const contractDetails: DescriptionsProps['items'] = [
@@ -207,13 +176,6 @@ const CommercialContractDetail = () => {
       children: contract?.provided_at ? dayjs(contract?.provided_at).format(Config.dateFormatUser) : 'No entregado'
     },
     {
-      key: 'period',
-      label: 'Periodo de contrato',
-      children: <>
-        {contract && <PeriodChip period={contract.period}/>}
-      </>
-    },
-    {
       key: 'progress',
       label: 'Progreso del trabajo',
       children: <>
@@ -241,7 +203,7 @@ const CommercialContractDetail = () => {
   ];
 
   return (
-    <ModuleContent>
+    <ModuleContent boxed>
       <MetaTitle title={`Contrato: ${contract?.tracking_id}`}/>
       <ContentHeader
         loading={loading}
@@ -282,7 +244,9 @@ const CommercialContractDetail = () => {
           <Space>
             <div>
               <code>{contract?.title || contract.tracking_id}
-                <br/><small>{contract?.tracking_id}</small>
+                {contract?.title &&
+                  <><br/><small>{contract?.tracking_id}</small></>
+                }
               </code>
             </div>
             <TbChevronCompactRight/>
@@ -298,141 +262,103 @@ const CommercialContractDetail = () => {
         {contract?.cancelled_at && (
           <AlertMessage message={'Este contrato fué anulado'} caption={contract?.cancellation_reason} type={'error'}/>
         )}
-      </ContentHeader>
-      <StepsNavigation
-        current={-1}
-        items={[
-          {
-            label: 'Propuesta',
-            status: 'finish',
-            icon: <TbCheck/>,
-            description: <small>{dayjs(contract?.created_at).format('DD/MM/YYYY')}</small>,
-          },
-          {
-            label: 'Aprobado',
-            status: contract?.approved_at ? 'finish' : 'wait',
-            subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
-            description:
-              contract.approved_at ? <small>{dayjs(contract?.approved_at).format('DD/MM/YYYY')}</small> :
-                <Button
-                  onClick={submitApprove}
-                  size={"small"}
-                  icon={<TbCheck/>} shape={"round"} variant="outlined" type={"primary"}
-                  color={'blue'}>
-                  Aprobar
-                </Button>,
-          },
-          {
-            label: 'Inicio',
-            status: contract?.date_start ? 'finish' : 'wait',
-            description:
-              contract?.date_start ? <small>{dayjs(contract?.date_start).format('DD/MM/YYYY')}</small> :
-                <Button
-                  size={"small"}
-                  onClick={submitStart}
-                  disabled={!contract.approved_at}
-                  icon={<TbCheck/>} shape={"round"} variant="outlined" type={"primary"}
-                  color={'blue'}>
-                  Iniciar
-                </Button>,
-          },
-          {
-            label: 'Documentación',
-            status: (contract?.document_progress == null || contract?.document_progress == 100) ? 'finish' : 'pending',
-            description:
-              <small>{contract?.document_progress == null ? 'Sin documentos requeridos' : contract?.document_progress + '%'}</small>,
-          },
-          contract?.cancelled_at ? {
-              label: 'Anulado',
-              status: 'error',
-              description: <small>{dayjs(contract?.cancelled_at).format('DD/MM/YYYY')}</small>,
-            } :
+        <StepsNavigation
+          current={-1}
+          items={[
             {
-              label: 'Entrega',
-              status: contract?.provided_at ? 'finish' : 'wait',
-              description:
-                !contract?.provided_at ? (
-                  <Button
-                    onClick={() => setOpenContractProvideForm(true)}
-                    disabled={!!contract?.cancelled_at || !contract.date_start}
-                    size={"small"} icon={<TbCheck/>}
-                    shape={"round"}
-                    variant="outlined" type={"primary"}
-                    color={'blue'}>
-                    Registrar entrega
-                  </Button>
-                ) : (
-                  <Button
-                    size={'small'}
-                    disabled={!!contract?.cancelled_at && !contract?.provided_at}
-                    icon={<TbCancel/>}
-                    onClick={() => setOpenProvisionRevert(true)}
-                    shape={"round"}
-                    variant="outlined" type={"primary"}
-                    color={'blue'}>
-                    Revertir entrega
-                  </Button>
-                ),
+              label: 'Propuesta',
+              status: 'finish',
+              description: <small>{dayjs(contract?.created_at).format('DD/MM/YYYY')}</small>,
             },
-        ]}
-      />
+            {
+              label: contract.approved_at ? 'Aprobado' : '',
+              status: contract?.approved_at ? 'finish' : 'wait',
+              subTitle: contract?.approved_at && dayjs(contract?.approved_at).format('DD/MM/YYYY'),
+              description:
+                contract.approved_at ? <small>{dayjs(contract?.approved_at).format('DD/MM/YYYY')}</small> :
+                  <PrimaryButton
+                    onClick={submitApprove}
+                    size={"small"}
+                    label={'Aprobar'}
+                    icon={<TbCheck/>} shape={"round"}/>,
+            },
+            {
+              label: contract?.date_start ? 'Inicio' : undefined,
+              status: contract?.date_start ? 'finish' : 'wait',
+              description:
+                contract?.date_start ? <small>{dayjs(contract?.date_start).format('DD/MM/YYYY')}</small> :
+                  <PrimaryButton
+                    size={"small"}
+                    onClick={submitStart}
+                    disabled={!contract.approved_at}
+                    icon={<TbCheck/>} shape={"round"}
+                    label={'Iniciar'}/>
+            },
+            {
+              label: 'Documentación',
+              status: (contract?.document_progress == null || contract?.document_progress == 100) ? 'finish' : 'pending',
+              description:
+                <small>{contract?.document_progress == null ? 'Sin documentos requeridos' : contract?.document_progress + '%'}</small>,
+            },
+            contract?.cancelled_at ? {
+                label: 'Anulado',
+                status: 'error',
+                description: <small>{dayjs(contract?.cancelled_at).format('DD/MM/YYYY')}</small>,
+              } :
+              {
+                label: contract?.provided_at ? <>Entregado <PrimaryButton
+                  size={'small'}
+                  disabled={!!contract?.cancelled_at && !contract?.provided_at}
+                  icon={<TbCancel/>}
+                  onClick={() => setOpenProvisionRevert(true)}
+                  shape={"round"}
+                  label={'Revertir'}/></> : '',
+                status: contract?.provided_at ? 'finish' : 'wait',
+                description:
+                  !contract?.provided_at ? (
+                    <PrimaryButton
+                      label={'Registrar entrega'}
+                      onClick={() => setOpenContractProvideForm(true)}
+                      disabled={!!contract?.cancelled_at || !contract.date_start}
+                      size={"small"} icon={<TbCheck/>}
+                      shape={"round"}/>
+                  ) : (
+                    <small>{dayjs(contract?.provided_at).format('DD/MM/YYYY')}</small>
+                  ),
+              },
+          ]}
+        />
+      </ContentHeader>
       <Row gutter={[20, 20]}>
         <Col md={24} lg={7}>
           <div className={'info-contract-block'}>
             <Divider titlePlacement={"left"}>Productos</Divider>
-            <PrimaryButton icon={<TbPencil/>} block label={'Editar'} size={"small"} ghost onClick={() => {
+            {contract.cart &&
+              <InvoiceResumen
+                includeTaxes={contract.include_taxes}
+                applyTaxes={contract.apply_taxes}
+                items={contract.cart}
+                showTotal={false}
+                currency={'PEN'}/>}
+            <Space style={{margin: '15px 0'}}>
+              {contract.totals?.PEN && <InfoButton boxed={false} large label={'Total'}
+                                                   value={<MoneyString currency={'PEN'}
+                                                                       value={contract.totals?.PEN}/>}/>}
+              {contract.totals?.USD && <InfoButton boxed={false} large label={'Total'}
+                                                   value={<MoneyString currency={'USD'}
+                                                                       value={contract.totals.USD}/>}/>}
+              {contract.totals?.EUR && <InfoButton boxed={false} large label={'Total'}
+                                                   value={<MoneyString currency={'EUR'}
+                                                                       value={contract.totals.EUR}/>}/>}
+              {contract && <PeriodChip period={contract.period}/>}
+            </Space>
+
+            <PrimaryButton
+              icon={<TbPencil/>}
+              block
+              label={'Editar productos'} size={"small"} ghost onClick={() => {
               setOpenCartItemForm(true);
             }}/>
-            <List
-              size={"small"}
-              style={{margin: '0 -15px'}}
-              dataSource={contract.cart}
-              renderItem={(cartItem) => {
-                return <List.Item>
-                  <List.Item.Meta
-                    title={<div>
-                      <Tooltip title={'Editar stock'}>
-                        <a onClick={() => {
-                          setOpenEditStock(true);
-                          setSelectedStock(cartItem.stock);
-                        }}>
-                          {cartItem.stock?.serial_number}
-                        </a>
-                      </Tooltip>
-                      <small>{cartItem.stock?.variation?.name || cartItem.stock?.variation?.product?.name}</small>
-                    </div>}
-                  />
-                  <Space>
-                    <small style={{display: 'flex', alignItems: 'center'}}>
-                      {cartItem.unit_amount == null && <TbLock/>}
-                      <MoneyString
-                        currency={cartItem.stock?.currency}
-                        value={cartItem.unit_amount == null ? cartItem.stock?.sale_price : cartItem.unit_amount}
-                      />{' '}x {cartItem.quantity}
-                    </small>
-                    {!contract.locked_at &&
-                      <>
-                        <Popconfirm
-                          title={'¿Seguro que quieres eliminar este producto?'}
-                          description={'Esto modificará el monto total del contrato'}
-                          onConfirm={() => removeCartItem(cartItem.uuid)}
-                        >
-                          <IconButton icon={<TbTrash/>} danger small/>
-                        </Popconfirm>
-                      </>}
-                  </Space>
-                </List.Item>;
-              }}/>
-            {contract.totals?.PEN &&
-              <InvoiceResumen
-                includeTaxes={contract.include_taxes}
-                applyTaxes={contract.apply_taxes}
-                items={[{label: 'Total', amount: contract.totals.PEN}]} currency={'PEN'}/>}
-            {contract.totals?.USD &&
-              <InvoiceResumen
-                includeTaxes={contract.include_taxes}
-                applyTaxes={contract.apply_taxes}
-                items={[{label: 'Total', amount: contract.totals.USD}]} currency={'USD'}/>}
             <Divider titlePlacement={'left'}>Detalles</Divider>
             <Descriptions
               column={1}
@@ -534,12 +460,6 @@ const CommercialContractDetail = () => {
             }}
           />
         )}
-      </ModalView>
-      <ModalView width={900} open={openEditStock} onCancel={() => setOpenEditStock(false)}>
-        <ProductStockForm stock={selectedStock} onComplete={() => {
-          setReload(!reload);
-          setOpenEditStock(false);
-        }}/>
       </ModalView>
       <ModalView
         width={700}

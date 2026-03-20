@@ -8,12 +8,13 @@ interface InfoButtonProps {
   label?: string | React.ReactElement;
   tooltip?: string;
   large?: boolean;
+  boxed?: boolean;
   value?: string | React.ReactElement | number;
   onEdit?: () => void;
 }
 
-const InfoButton = ({icon, label, onEdit, value, tooltip, large}: InfoButtonProps) => {
-  const content = <div className={`info-button ${onEdit ? 'button' : ''} ${large ? 'large' : ''}`} onClick={onEdit}>
+const InfoButton = ({icon, label, onEdit, value, tooltip, large, boxed=true}: InfoButtonProps) => {
+  const content = <div className={`info-button ${onEdit ? 'button' : ''} ${large ? 'large' : ''} ${boxed ? 'boxed' : ''}`} onClick={onEdit}>
     {icon &&
       <div className={'label-icon-wrapper'}>
         {icon}

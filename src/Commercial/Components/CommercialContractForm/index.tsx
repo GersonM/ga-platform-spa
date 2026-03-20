@@ -84,7 +84,12 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
               </Form.Item>
               <Form.Item name={'include_taxes'} noStyle valuePropName={'checked'}>
                 <Checkbox>El monto incluye impuestos</Checkbox>
-              </Form.Item>
+              </Form.Item><br/>
+              {(period && period != 'unique') &&
+                <Form.Item name={'is_renewable'} noStyle valuePropName={'checked'}>
+                  <Checkbox>Renovar automáticamente</Checkbox>
+                </Form.Item>
+              }
             </Form.Item>
             <Form.Item label={'Moneda para facturación'}>
               <CurrencySelector/>
@@ -131,15 +136,6 @@ const CommercialContractForm = ({onComplete, contract, isTemplate = false}: Comm
             )}
           </Col>
           <Col span={12}>
-            <Row gutter={[20, 20]}>
-              <Col span={15}>
-                {(period && period != 'unique') &&
-                  <Form.Item label={' '} name={'is_renewable'} valuePropName={'checked'}>
-                    <Checkbox>Renovar automáticamente</Checkbox>
-                  </Form.Item>
-                }
-              </Col>
-            </Row>
             <Divider>Detalles del trabajo</Divider>
             <Form.Item label="Inicio del trabajo (opcional)" name="date_start">
               <DatePicker style={{width: '100%'}}/>

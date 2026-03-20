@@ -796,6 +796,7 @@ export type StorageContractCartItem = {
   description?: string | null;
   stock?: StorageStock;
   unit_amount?: number | null;
+  stock_amount: number;
   amount_string?: string;
   created_at?: string;
 };

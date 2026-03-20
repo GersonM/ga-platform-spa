@@ -1,47 +1,40 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TbArchive, TbArchiveOff, TbMapPin, TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
+import {TbArchive, TbArchiveOff, TbPencil, TbRecycle, TbRecycleOff, TbShredder} from "react-icons/tb";
 import {
   Divider,
-  Form, Image,
+  Form,
   Input,
   InputNumber,
-  Popover,
   Progress,
   Select,
   Space,
   Table,
   Tooltip
 } from "antd";
-import pluralize from "pluralize";
 import axios from "axios";
 
 import type {
-  ApiFile,
-  EntityFieldValue,
   ResponsePagination, StorageProduct, StorageProductVariation,
   StorageStock,
   StorageWarehouse
 } from "../../../Types/api.tsx";
-import MoneyString from "../../../CommonUI/MoneyString";
 import IconButton from "../../../CommonUI/IconButton";
 import ErrorHandler from "../../../Utils/ErrorHandler.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
 import ModalView from "../../../CommonUI/ModalView";
-import StockStatus from "../../Components/ProductStockManager/StockStatus.tsx";
 import ProductStockForm from "../../Components/ProductStockForm";
 import ModuleContent from "../../../CommonUI/ModuleContent";
 import ContentHeader from "../../../CommonUI/ModuleContent/ContentHeader.tsx";
 import FilterForm from "../../../CommonUI/FilterForm";
 import WarehouseSelector from "../../Components/WarehouseSelector";
 import StorageStockChip from "../../../Commercial/Components/StorageStockChip";
-import CustomTag from "../../../CommonUI/CustomTag";
 import ProductVariationSelector from "../../Components/ProductVariationSelector";
 import PrimaryButton from "../../../CommonUI/PrimaryButton";
 import ProductSelector from "../../Components/ProductSelector";
 import StockSelector from "../../Components/StockSelector";
 import FileDownloader from "../../../CommonUI/FileDownloader";
-import AttributesList from "../../../EntityFields/Components/AttributesList";
 import TablePagination from "../../../CommonUI/TablePagination";
+import useStockColumns from "./useStockColumns.tsx";
 
 const WarehouseStockManager = () => {
   const [productStock, setProductStock] = useState<StorageStock[]>();
@@ -55,7 +48,7 @@ const WarehouseStockManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [stockStats, setStockStats] = useState<any>();
-  const {user} = useContext(AuthContext);
+  const {user, config} = useContext(AuthContext);
   const [openStockReport, setOpenStockReport] = useState(false);
   const [filterWarehouse, setFilterWarehouse] = useState<StorageWarehouse>();
   const [filterProduct, setFilterProduct] = useState<StorageProduct>();
@@ -64,6 +57,7 @@ const WarehouseStockManager = () => {
   const [downloadingReport, setDownloadingReport] = useState(false);
   const [tempURL, setTempURL] = useState<string>();
   const [openArchiveStock, setOpenArchiveStock] = useState(false);
+  const {getColumns} = useStockColumns()
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -130,161 +124,42 @@ const WarehouseStockManager = () => {
       });
   }
 
-  const columns: any[] = [
-    {
-      title: 'Portada',
-      dataIndex: 'attachments',
-      width: 60,
-      render: (attachments?: ApiFile[]) => {
-        const cover = attachments?.filter(f => f.code == 'cover');
-        return cover?.length ? <Image preview={false} src={cover[0].thumbnail} style={{
-          width: 50,
-          height: 50,
-          overflow: 'hidden',
-          objectFit: 'cover',
-          borderRadius: 8
-        }}/> : <small>Sin imagen</small>;
-      }
-    },
-    {
-      title: 'N° Serie / ID',
-      dataIndex: 'serial_number',
-      render: (serial_number: string) => {
-        return <small><code>{serial_number}</code></small>;
-      }
-    },
-    {
-      title: 'Tipo',
-      width: 80,
-      dataIndex: 'type_label',
-      render: (type_label: string | null, row: StorageStock) => {
-        return type_label && <CustomTag color={row.type == 'rent' ? 'orange' : 'blue'}>
-          <code>{type_label}</code>
-        </CustomTag>;
-      }
-    },
-    /*{
-      title: 'Vence',
-      dataIndex: 'expiration_date',
-      render: (expiration_date: string) => {
-        return expiration_date ? dayjs(expiration_date).fromNow() : <small>No vence</small>;
-      }
-    },*/
-    {
-      title: 'Estado',
-      dataIndex: 'status',
-      width: 100,
-      render: (status: string) => {
-        return <StockStatus status={status}/>;
-      }
-    },
-    {
-      title: 'Producto',
-      dataIndex: 'uuid',
-      render: (_uuid: string, row: StorageStock) => <>
-        <StorageStockChip storageStock={row}/>
-      </>
-    },
-    {
-      title: 'Ubicación',
-      dataIndex: 'warehouse',
-      width: 130,
-      render: (warehouse: StorageWarehouse, row: StorageStock) => {
-        const link = row.distribution_coordinate ? `https://www.google.com/maps/@${row.distribution_coordinate.lat},${row.distribution_coordinate.lng},761m/data=!3m1!1e3?entry=ttu` : null;
-        return <Space>
-          <div>
-            {warehouse?.name} <br/>
-            <small>{warehouse?.address}</small>
-          </div>
-          <div>
-            {
-              link && <>
-                <Tooltip
-                  title={`Ubicación lat: ${row.distribution_coordinate?.lat} lng: ${row.distribution_coordinate?.lng}`}>
-                  <a href={link} target={'_blank'} rel={'noreferrer'}><TbMapPin size={20}/></a>
-                </Tooltip>
-              </>
-            }
-          </div>
-        </Space>
-      }
-    },
-    {
-      title: 'Cantidad',
-      dataIndex: 'is_consumable',
-      render: (is_consumable: boolean, row: StorageStock) =>
-        is_consumable ?
-          pluralize(row.variation?.product?.unit_type || 'unidad', row.quantity, true) :
-          <CustomTag>Sin límite</CustomTag>
-    },
-    {
-      dataIndex: 'attributes',
-      width: 220,
-      title: 'Atributos',
-      render: (attributes: EntityFieldValue[]) => {
-        return <AttributesList attributes={attributes}/>;
-      },
-    },
-    {
-      title: 'Precio de venta',
-      dataIndex: 'sale_price',
-      render: (sale_price: number, row: StorageStock) => {
-        const earn = (row.sale_price || 0) - (row.cost_price || 0);
-        return <>
-          <Popover content={<>
-            Ganancia: <MoneyString value={earn} currency={row.currency}/> <br/>
-            Porcentaje: {((earn * 100) / (row.sale_price || 1)).toFixed(2)}%
-          </>}>
-            <div>
-              {sale_price != null ?
-                <MoneyString value={sale_price} currency={row.currency}/> :
-                <CustomTag color={'orange'}>Sin precio de venta</CustomTag>
-              }
-              {row.cost_price != null && <small>
-                Costo: <MoneyString value={row.cost_price} currency={row.currency}/>
-              </small>}
-            </div>
-          </Popover>
-        </>;
-      }
-    },
-    {
-      title: '',
-      dataIndex: 'uuid',
-      width: 70,
-      render: (uuid: string, stock: StorageStock) => {
-        const isDamaged = stock.status == 'damaged';
-        const isArchived = stock.status == 'not_available';
-        return <Space>
-          <IconButton small icon={<TbPencil/>} onClick={() => {
-            setSelectedStock(stock);
-            setOpenStockForm(true);
-          }}/>
-          {user?.roles?.includes('admin') &&
-            <Tooltip title={'Destruir registro'}>
-              <IconButton small icon={<TbShredder/>} danger onClick={() => deleteStock(uuid, true)}/>
-            </Tooltip>
-          }
-          <Tooltip title={isDamaged ? 'Recuperar stock' : 'Registrar como dañado'}>
-            <IconButton
-              small icon={isDamaged ? <TbRecycle color={'green'}/> : <TbRecycleOff/>}
-              danger={!isDamaged}
-              onClick={() => deleteStock(uuid)}/>
+  const actionsCol = {
+    title: '',
+    dataIndex: 'uuid',
+    width: 70,
+    render: (uuid: string, stock: StorageStock) => {
+      const isDamaged = stock.status == 'damaged';
+      const isArchived = stock.status == 'not_available';
+      return <Space>
+        <IconButton small icon={<TbPencil/>} onClick={() => {
+          setSelectedStock(stock);
+          setOpenStockForm(true);
+        }}/>
+        {user?.roles?.includes('admin') &&
+          <Tooltip title={'Destruir registro'}>
+            <IconButton small icon={<TbShredder/>} danger onClick={() => deleteStock(uuid, true)}/>
           </Tooltip>
-          {stock.status == 'available' &&
-            <Tooltip title={isArchived ? 'Recuperar' : 'Retirar'}>
-              <IconButton
-                small icon={isArchived ? <TbArchiveOff color={'green'}/> : <TbArchive/>}
-                onClick={() => {
-                  setSelectedStock(stock);
-                  setOpenArchiveStock(true);
-                }}/>
-            </Tooltip>
-          }
-        </Space>;
-      }
+        }
+        <Tooltip title={isDamaged ? 'Recuperar stock' : 'Registrar como dañado'}>
+          <IconButton
+            small icon={isDamaged ? <TbRecycle color={'green'}/> : <TbRecycleOff/>}
+            danger={!isDamaged}
+            onClick={() => deleteStock(uuid)}/>
+        </Tooltip>
+        {stock.status == 'available' &&
+          <Tooltip title={isArchived ? 'Recuperar' : 'Retirar'}>
+            <IconButton
+              small icon={isArchived ? <TbArchiveOff color={'green'}/> : <TbArchive/>}
+              onClick={() => {
+                setSelectedStock(stock);
+                setOpenArchiveStock(true);
+              }}/>
+          </Tooltip>
+        }
+      </Space>;
     }
-  ]
+  };
 
   const getStockReport = () => {
     setDownloadingReport(true);
@@ -392,7 +267,8 @@ const WarehouseStockManager = () => {
           }
         }}
         pagination={false} rowKey={'uuid'} size={"middle"} loading={loading}
-        columns={columns} dataSource={productStock}/>
+        columns={[...getColumns(config?.id), actionsCol]}
+        dataSource={productStock}/>
       <TablePagination
         pagination={pagination}
         onChange={(page, size) => {

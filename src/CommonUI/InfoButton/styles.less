@@ -2,18 +2,23 @@
   background: var(--background-color-body);
   border-radius: 10px;
   corner-shape: superellipse(1.2);
-  padding: 5px 8px;
   display: flex;
   align-items: center;
   transition: all 0.3s;
   gap: 8px;
 
+  &.boxed {
+    padding: 5px 8px;
+  }
+
   &.button {
     cursor: pointer;
   }
 
-  &.large {
+  &.large.boxed {
     padding: 10px 12px;
+  }
+  &.large {
     .label-icon-wrapper {
       font-size: 30px;
       min-width: 35px;

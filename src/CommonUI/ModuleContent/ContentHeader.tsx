@@ -43,26 +43,19 @@ const ContentHeader = (
 
   useEffect(() => {
     const shortcutHandler = (e: KeyboardEvent) => {
+      console.log(e.key, e.ctrlKey);
       if (e.ctrlKey) {
         if (e.key.toLowerCase() === 'r') {
-          if (onRefresh) {
-            onRefresh();
-          }
+          onRefresh?.();
         }
         if (e.key.toLowerCase() === 'n') {
-          if (onAdd) {
-            onAdd();
-          }
+          onAdd?.();
         }
         if (e.key.toLowerCase() === 'e') {
-          if (onEdit) {
-            onEdit();
-          }
+          onEdit?.();
         }
-      }
-      if (e.key.toLowerCase() === 'Escape') {
-        if (onBack) {
-          onBack();
+        if (e.key.toLowerCase() === 'b') {
+          goBack();
         }
       }
     };
@@ -73,20 +66,22 @@ const ContentHeader = (
     };
   }, []);
 
+  const goBack = () => {
+    if (backLocation) {
+      navigate(backLocation);
+    } else {
+      if (onBack) onBack()
+      else navigate(-1);
+    }
+  }
+
   return (
     <div className={`content-header ${bordered ? 'bordered' : ''}`}>
-      <Space wrap style={bordered ? {}:{marginBottom: '10px'}}>
+      <Space wrap style={bordered ? {} : {marginBottom: '15px'}}>
         {(onBack || backLocation || showBack) && (
           <Tooltip title={'Back'}>
             <IconButton
-              onClick={() => {
-                if (backLocation) {
-                  navigate(backLocation);
-                } else {
-                  if (onBack) onBack()
-                  else navigate(-1);
-                }
-              }}
+              onClick={goBack}
               icon={<TbArrowLeft/>}
             />
           </Tooltip>

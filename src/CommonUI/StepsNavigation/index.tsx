@@ -1,6 +1,11 @@
 import React, {Fragment} from 'react';
-import {TbAlertCircle, TbCheck, TbChevronCompactRight, TbClock} from "react-icons/tb";
+import {TbChevronCompactRight} from "react-icons/tb";
 import './styles.less';
+import {
+  PiCheckCircleDuotone,
+  PiClockDuotone,
+  PiWarningCircleDuotone
+} from "react-icons/pi";
 
 interface StepNavigationProps {
   items: any[];
@@ -16,10 +21,10 @@ const StepsNavigation = ({items, current, style}: StepNavigationProps) => {
           <div className={`step-navigation-item ${item.status} ${current === index ? 'active' : ''}`}>
             <div className="icon">
               {item.status ? <>
-                {item.status === 'finish' && <TbCheck size={20}/>}
-                {item.status === 'wait' && <TbClock size={20}/>}
-                {item.status === 'pending' && <TbClock size={20}/>}
-                {item.status === 'error' && <TbAlertCircle size={20} />}
+                {item.status === 'finish' && <PiCheckCircleDuotone/>}
+                {item.status === 'wait' && <PiClockDuotone />}
+                {item.status === 'pending' && <PiClockDuotone />}
+                {item.status === 'error' && <PiWarningCircleDuotone />}
                 </> :
                 index + 1
               }

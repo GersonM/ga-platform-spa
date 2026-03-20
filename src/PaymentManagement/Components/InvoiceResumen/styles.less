@@ -1,33 +1,36 @@
 .invoice-resumen-container {
 
-  td {
-    padding: 3px 0;
-  }
-  .invoice-resumen-items {
-    width: 100%;
+  .invoice-resumen-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
 
-    .total td{
+    &.total {
       padding-top: 15px;
       font-weight: 700 !important;
     }
 
-    .label {
-      display: flex;
+    .label-item {
       font-size: 13px;
+
+      span {
+        font-size: 11px;
+        opacity: 0.5;
+      }
     }
 
     .spacer {
+      min-width: 50px;
       flex: 1;
-      display: block;
+      height: 2px;
       border-bottom: 2px dotted var(--border-color-active);
-      height: 9px;
-      margin: 0 10px;
       opacity: 0.4;
     }
 
     .amount {
-      width: 1%;
       text-align: right;
+      font-size: 13px;
     }
   }
 }

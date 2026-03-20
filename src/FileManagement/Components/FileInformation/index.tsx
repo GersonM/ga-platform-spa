@@ -5,7 +5,7 @@ import {BsThreeDotsVertical} from 'react-icons/bs';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {PiDownload, PiEye} from 'react-icons/pi';
 import dayjs from 'dayjs';
-import {TbCheck, TbRefreshDot, TbReload} from "react-icons/tb";
+import {TbCheck, TbDownload, TbRefreshDot, TbReload} from "react-icons/tb";
 import axios from 'axios';
 
 import type {Container, ApiFile, FileActivity} from '../../../Types/api';
@@ -151,6 +151,33 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
         },
       }
     );
+  }
+
+  const downloadSelectedFiles = () => {
+    if (!files) return;
+      axios({
+        url: 'file-management/files/download-selection',
+        params: {files: files?.map(f => f.uuid)},
+        method: 'POST',
+        responseType: 'blob',
+      })
+        .then(response => {
+          if (response) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'download_' + dayjs().format('D-M-YYYY') + '.zip';
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          }
+        })
+        .catch(e => {
+          ErrorHandler.showNotification(e);
+        });
   }
 
   const detailImageLink = files?.length == 1 ? location.origin + '/storage/files/' + files[0]?.uuid : '';
@@ -353,7 +380,7 @@ const FileInformation = ({fileContainer, files, onChange, container}: FileInform
               ))}
               <br/>
               <Space>
-                <PrimaryButton disabled label={'Descargar'} href={files[0].download} block size={'small'}/>
+                <PrimaryButton icon={<TbDownload/>} label={'Descargar'} block onClick={downloadSelectedFiles}/>
                 <PrimaryButton label={'Borrar ' + files.length + ' archivos'} onClick={deleteSelectedFiles} danger
                                block/>
               </Space>

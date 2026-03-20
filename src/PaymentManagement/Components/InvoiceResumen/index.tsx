@@ -1,10 +1,12 @@
 import React from 'react';
 import MoneyString from "../../../CommonUI/MoneyString";
+import type {StorageContractCartItem} from "../../../Types/api.tsx";
 import './styles.less';
 
 interface InvoiceResumenProps {
-  items: { label: string, amount: number }[];
+  items: StorageContractCartItem[];
   currency: 'PEN' | 'USD' | string;
+  total?: number;
   includeTaxes?: boolean;
   applyTaxes?: boolean;
   showTotal?: boolean;
@@ -14,57 +16,53 @@ const InvoiceResumen = (
   {
     items,
     currency,
+    total,
     showTotal = true,
     includeTaxes = false,
     applyTaxes = false
   }: InvoiceResumenProps) => {
-  let total = items.reduce((acc, cur) => acc + cur.amount, 0);
+
+  let calculatedTotal = items.reduce((acc, cur) => acc + ((cur.unit_amount || 0) * (cur.quantity || 1)), 0);
   let taxes = 0;
   if (applyTaxes) {
     if (includeTaxes) {
-      taxes = total - (total / 1.18);
+      taxes = calculatedTotal - (calculatedTotal / 1.18);
       //total -= taxes;
     } else {
-      taxes = total * 0.18;
-      total += taxes;
+      taxes = calculatedTotal * 0.18;
+      calculatedTotal += taxes;
     }
   }
 
   return (
     <div className="invoice-resumen-container">
-      <>
-        <table className="invoice-resumen-items">
-          <tbody>
-          {items.map((item, index) => (
-            <tr key={index}>
-              <td className={'label'}>{item.label}
-                <div className={'spacer'}></div>
-              </td>
-              <td className={'amount'}><MoneyString currency={currency} value={item.amount}/></td>
-            </tr>
-          ))}
-          {applyTaxes && (
-            <tr>
-              <td className={'label'}>IGV (18%)
-                <div className={'spacer'}></div>
-              </td>
-              <td className={'amount'}><MoneyString currency={currency} value={taxes}/></td>
-            </tr>
-          )}
-          </tbody>
-          <tfoot>
-          {showTotal && (
-            <tr className="total">
-              <td className={'label'}>Total
-                <div className={'spacer'}></div>
-              </td>
-              <td className={'amount'}><MoneyString currency={currency} value={total}/></td>
-            </tr>
-          )}
-          </tfoot>
-        </table>
-      </>
-
+      {items.map((item, index) => (
+        <div key={index} className="invoice-resumen-item">
+          <span className={'label-item'}>
+            {item.stock?.full_name} {item.quantity && <span>(x{item.quantity})</span>}
+            {item.stock?.serial_number && <><br/><span>{item.stock.serial_number}</span></>}
+          </span>
+          <span className={'spacer'}></span>
+          <div className={'amount'}><MoneyString currency={item.stock?.currency} value={(item.unit_amount || 0) * (item.quantity || 1)}/>
+          </div>
+        </div>
+      ))}
+      {applyTaxes && (
+        <div className="invoice-resumen-item">
+          <div className={'label'}>IGV (18%)</div>
+          <div className={'spacer'}></div>
+          <div className={'amount'}><MoneyString currency={items[0].stock?.currency} value={taxes}/></div>
+        </div>
+      )}
+      {showTotal && (
+        <div className="invoice-resumen-item total">
+          <div className={'label'}>
+            Total
+          </div>
+          <div className={'spacer'}></div>
+          <div className={'amount'}><MoneyString currency={currency} value={total ?? calculatedTotal}/></div>
+        </div>
+      )}
     </div>
   );
 };
