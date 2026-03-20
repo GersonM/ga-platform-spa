@@ -43,7 +43,6 @@ const ContentHeader = (
 
   useEffect(() => {
     const shortcutHandler = (e: KeyboardEvent) => {
-      console.log(e.key, e.ctrlKey);
       if (e.ctrlKey) {
         if (e.key.toLowerCase() === 'r') {
           onRefresh?.();

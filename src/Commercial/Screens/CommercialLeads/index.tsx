@@ -35,6 +35,7 @@ import EntityActivityManager from "../../../CommonUI/EntityActivityManager";
 import CommercialProcessSelector from "../../../CRMModule/Components/CommercialProcessSelector";
 import CustomTag from "../../../CommonUI/CustomTag";
 import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
+import pluralize from "pluralize";
 
 const getProcessStages = (process?: CommercialProcess): CommercialProcessStage[] => {
   if (!process) {
@@ -84,9 +85,9 @@ const CommercialLeads = () => {
     return stages.map((stage, index) => ({
       key: stage.uuid || `${index + 1}`,
       title: stage.name || `Etapa ${index + 1}`,
-      description: <small>3 contactos</small>,
+      description: <small>{pluralize('contactos', stage.leads_count, true)}</small>,
     }));
-  }, [selectedProcess]);
+  }, [selectedProcess, reload]);
 
   useEffect(() => {
     setSelectedStage(processStages[0]);
@@ -308,6 +309,7 @@ const CommercialLeads = () => {
         tools={
           <Space>
             <CommercialProcessSelector
+              refresh={reload}
               value={selectedProcess?.uuid}
               onChange={(_value, option) => {
                 const selectedOption = Array.isArray(option) ? option[0] : option;

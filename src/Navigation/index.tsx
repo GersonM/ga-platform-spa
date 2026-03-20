@@ -187,6 +187,7 @@ const Navigation = () => {
             )*/}
             {config?.modules.includes('crm') && (
               <NavItem label={t('nav.crm')} icon={<TbHeadset />} notifications={'Beta'} code={'crm'}>
+                <NavItem icon={<PiPresentationChart />} label={t('nav.crmDashboard')} path={'/crm/dashboard'} />
                 <NavItem icon={<PiUserFocus />} label={t('nav.crmLeadsAndCampaigns')} path={'/crm/leads'} />
                 <NavItem icon={<TbMessageUser />} label={t('nav.messaging')} path={'/crm/chat'} />
                 <NavItem icon={<TbContract />} label={t('nav.processes')} path={'/crm/processes'} />

@@ -18,6 +18,7 @@ const PaymentsManager = lazy(() => import("../PaymentManagement/Screens/Payments
 const CompaniesManagement = lazy(() => import("../HRManagement/Screens/CompaniesManagement"));
 const PublicContainerViewer = lazy(() => import("../FileManagement/Screens/PublicContainerViewer"));
 const ProcessesManagement = lazy(() => import("../CRMModule/Screens/ProcessesManagement"));
+const CRMDashboard = lazy(() => import('../CRMModule/Screens/Dashboard'))
 const WarehouseActivityManager = lazy(() => import("../WarehouseManager/Screens/WarehouseActivityManager"));
 const MonitorServicesManager = lazy(() => import("../ServiceMonitoring/Screens/MonitorServicesManager"));
 const Wallets = lazy(() => import("../PaymentManagement/Screens/Wallets"));
@@ -195,6 +196,7 @@ const App = () => {
           <Route path={'access-control'} element={<MembersAccessControl />} />
         </Route>
         <Route path={'crm'}>
+          <Route path={'dashboard'} element={<CRMDashboard />} />
           <Route path={'processes'} element={<ProcessesManagement />} />
           <Route path={'chat/:lead?'} element={<LeadMessagesManager />} />
           <Route path={'leads/:campaign?'} element={<CommercialLeads />} />

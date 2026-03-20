@@ -172,6 +172,7 @@ export type CommercialProcessStage = {
   uuid: string;
   name: string;
   order: number;
+  leads_count?: number;
   process?: CommercialProcess;
   description: string;
   created_at: string;
