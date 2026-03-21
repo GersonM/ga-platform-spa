@@ -83,8 +83,13 @@ export type Lead = {
   uuid: string;
   score: number;
   observations?: string;
+  disqualified_at?: string;
+  disqualified_reason_code?: string;
+  disqualified_reason_label?: string;
   profile: Profile;
   process_stage_uuid?: string;
+  contract_uuid?: string;
+  contract?: Contract;
   process_stage?: CommercialProcessStage;
   referer?: Profile;
   campaign?: Campaign;
@@ -93,6 +98,13 @@ export type Lead = {
 export type Campaign = {
   uuid: string;
   name: string;
+  public_endpoint: string;
+  start_date?: string;
+  end_date?: string;
+  token?: string;
+  group?: string;
+  closed_at?: string;
+  allowed_origins?: string;
   description?: string;
 };
 export type Contract = {

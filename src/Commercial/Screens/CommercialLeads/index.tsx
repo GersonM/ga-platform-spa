@@ -397,6 +397,7 @@ const CommercialLeads = () => {
       </Drawer>
       <Drawer
         title={'Campañas'}
+        size={700}
         open={openCampaignManager}
         onClose={() => {
           setOpenCampaignManager(false);

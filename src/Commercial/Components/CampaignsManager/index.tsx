@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
-import {Col, DatePicker, Form, Input, Row} from 'antd';
-import {TbTrash} from "react-icons/tb";
+import {Col, DatePicker, Form, Input, message, Row, Space, Tooltip} from 'antd';
+import {TbCopy, TbTrash} from "react-icons/tb";
 import {useForm} from 'antd/lib/form/Form';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -59,8 +59,45 @@ const CampaignsManager = () => {
       });
   };
 
+  const copyPublicEndpoint = async (publicEndpoint?: string) => {
+    if (!publicEndpoint) {
+      message.warning('La campaña no tiene public_endpoint');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(publicEndpoint);
+      message.success('Endpoint copiado');
+    } catch (_error) {
+      message.error('No se pudo copiar el endpoint');
+    }
+  };
+
   const columns = [
-    {dataIndex: 'name', title: 'Nombre'},
+    {
+      dataIndex: 'name',
+      title: 'Campaña',
+      render: (name: string, campaign: any) => {
+        const public_endpoint = campaign?.public_endpoint as string | undefined;
+        return (
+          <Space direction={'vertical'} size={2}>
+            <strong>{name || '-'}</strong>
+            <Space>
+              <small>{public_endpoint || '-'}</small>
+              {public_endpoint && (
+                <Tooltip title={'Copiar url'}>
+                  <IconButton
+                    icon={<TbCopy />}
+                    small
+                    onClick={() => copyPublicEndpoint(public_endpoint)}
+                  />
+                </Tooltip>
+              )}
+            </Space>
+          </Space>
+        );
+      },
+    },
     {
       dataIndex: 'start_date',
       title: 'Inicio',
