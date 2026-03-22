@@ -24,11 +24,11 @@ const ProfileChip = ({profile, caption, showDocument = false, small = false}: IP
               <TbUserSquareRounded size={22} style={{marginTop: 6}}/>
             </Avatar>
           }
-          <div>
+          <div className={'info'}>
             {profile.name} {!small && profile.last_name}
             {!small && <>
               {showDocument ? <small><ProfileDocument profile={profile}/> </small> : (
-                <small>{caption ? caption : profile.email}</small>
+                <small className={'caption'}>{caption ? caption : profile.email}</small>
               )}
             </>}
           </div>

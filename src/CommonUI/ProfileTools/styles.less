@@ -1,18 +1,30 @@
-.profile-chip-container * {
-}
 .profile-chip-container {
   display: flex;
+  gap: 8px;
   align-items: center;
-  line-height: 1.2;
+  line-height: 1.1;
 
   .avatar {
-    outline: 1px solid rgba(0, 0, 0, 0.1);
+    outline: 2px solid rgba(0, 0, 0, 0.1);
     min-width: 30px;
-    margin-right: 8px;
-
   }
 
-  small {
-    display: block;
+  .info {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .caption {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+    }
+
+    small {
+      display: block;
+    }
   }
+
 }

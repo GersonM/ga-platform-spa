@@ -83,37 +83,50 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
           const d = sankeyLayout.linkPath(link)
           const stroke = link.isDisqualified ? '#dc2626' : '#94a3b8'
           const begin = `${(index * 0.035).toFixed(3)}s`
+          const labelX = (Number(link.source.x1) + Number(link.target.x0)) / 2
+          const labelY = (Number(link.y0) + Number(link.y1)) / 2
 
           return (
-            <path
-              key={`link-${animationKey}-${index}`}
-              d={d || ''}
-              fill='none'
-              stroke={stroke}
-              strokeOpacity={0.3}
-              strokeWidth={link.width}
-              pathLength={1}
-              strokeDasharray={1}
-              strokeDashoffset={1}
-            >
-              <animate
-                attributeName='stroke-dashoffset'
-                from='1'
-                to='0'
-                dur='0.55s'
-                begin={begin}
-                fill='freeze'
-              />
-              <animate
-                attributeName='opacity'
-                from='0'
-                to='1'
-                dur='0.25s'
-                begin={begin}
-                fill='freeze'
-              />
-              <title>{`${link.label}: ${link.realValue} (${link.percentage}%)`}</title>
-            </path>
+            <g key={`link-${animationKey}-${index}`}>
+              <path
+                d={d || ''}
+                fill='none'
+                stroke={stroke}
+                strokeOpacity={0.3}
+                strokeWidth={link.width}
+                pathLength={1}
+                strokeDasharray={1}
+                strokeDashoffset={1}
+              >
+                <animate
+                  attributeName='stroke-dashoffset'
+                  from='1'
+                  to='0'
+                  dur='0.55s'
+                  begin={begin}
+                  fill='freeze'
+                />
+                <animate
+                  attributeName='opacity'
+                  from='0'
+                  to='1'
+                  dur='0.25s'
+                  begin={begin}
+                  fill='freeze'
+                />
+                <title>{`${link.label}: ${link.realValue} (${link.percentage}%)`}</title>
+              </path>
+              <text
+                x={labelX}
+                y={labelY}
+                textAnchor='middle'
+                dominantBaseline='middle'
+                fontSize={10}
+                fill={link.isDisqualified ? '#b91c1c' : '#0f172a'}
+              >
+                {new Intl.NumberFormat('es-PE').format(Number(link.realValue || 0))}
+              </text>
+            </g>
           )
         })}
         {sankeyLayout.nodes.map((node, index) => {

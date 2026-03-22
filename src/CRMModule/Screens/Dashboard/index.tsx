@@ -167,13 +167,18 @@ const CRMSankeyDashboard = () => {
     const step2 = filteredLeads.filter(hasCommercialContractUuid)
     const step3 = step2.filter(hasValidContract)
 
+    // Exclusive disqualification buckets to avoid duplicated flow counts across levels.
+    const disqStep1 = step1.filter(lead => isDisqualified(lead) && !hasCommercialContractUuid(lead))
+    const disqStep2 = step2.filter(lead => isDisqualified(lead) && !hasValidContract(lead))
+    const disqStep3 = step3.filter(isDisqualified)
+
     return {
       step1,
       step2,
       step3,
-      disqStep1: step1.filter(isDisqualified),
-      disqStep2: step2.filter(isDisqualified),
-      disqStep3: step3.filter(isDisqualified),
+      disqStep1,
+      disqStep2,
+      disqStep3,
       validFinal: step3.filter(lead => !isDisqualified(lead)),
     }
   }, [filteredLeads])
@@ -234,7 +239,7 @@ const CRMSankeyDashboard = () => {
       createLink('n2', 'dq2', stepData.disqStep2.length, totalStep2, 'Nivel 2 -> Descalificados N2', true),
       createLink('n3', 'ok', stepData.validFinal.length, totalStep3, 'Nivel 3 -> Resultado válido'),
       createLink('n3', 'dq3', stepData.disqStep3.length, totalStep3, 'Nivel 3 -> Descalificados N3', true),
-    ]
+    ].filter(link => link.realValue > 0)
 
     return { nodes, links }
   }, [stepData])

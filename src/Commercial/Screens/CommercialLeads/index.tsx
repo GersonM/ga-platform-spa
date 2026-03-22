@@ -271,8 +271,8 @@ const CommercialLeads = () => {
       dataIndex: 'referer',
       title: 'Agente',
       width: 190,
-      render: (profile: Profile) => {
-        return <ProfileChip profile={profile}/>;
+      render: (profile?: Profile) => {
+        return profile ? <ProfileChip profile={profile}/>:<small>No asignado</small>;
       },
     },
     {
