@@ -12,6 +12,9 @@ interface ModalViewProps {
 const ModalView = ({title, children, ...props}:ModalViewProps) => {
   return (
     <Modal
+      mask={{
+        blur: true,
+      }}
       destroyOnHidden
       footer={null}
       {...props}

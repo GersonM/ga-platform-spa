@@ -10,7 +10,7 @@ interface CustomTagProps {
 
 const CustomTag = ({children, color = 'blue', variant = 'filled', ...props}: CustomTagProps) => {
   return (
-    <Tag variant={variant} style={{margin: 0}} color={color} {...props}>
+    <Tag variant={variant} color={color} {...props} style={{textWrap:'wrap'}}>
       {children}
     </Tag>
   );

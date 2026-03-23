@@ -51,14 +51,13 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
   const sankeyLayout = useMemo(() => {
     const width = Math.max(360, containerWidth)
     const height = width < 640 ? 420 : 560
-    const rightPadding = width < 640 ? 120 : 260
 
     const generator = d3Sankey<any, any>()
       .nodeId((d: any) => d.id)
       .nodeAlign(sankeyLeft)
       .nodeWidth(10)
       .nodePadding(20)
-      .extent([[20, 20], [Math.max(220, width - rightPadding), height - 20]])
+      .extent([[20, 20], [Math.max(220, width - 20), height - 20]])
 
     const graph = generator({
       nodes: chartInput.nodes.map(node => ({...node})),
@@ -75,6 +74,8 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
     }
   }, [chartInput, containerWidth])
 
+  console.log({chartInput});
+
   return (
     <div ref={containerRef} style={{height: sankeyLayout.height, overflow: 'hidden'}}>
       <svg viewBox={`0 0 ${sankeyLayout.width} ${sankeyLayout.height}`}
@@ -83,8 +84,6 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
           const d = sankeyLayout.linkPath(link)
           const stroke = link.isDisqualified ? '#dc2626' : '#94a3b8'
           const begin = `${(index * 0.035).toFixed(3)}s`
-          const labelX = (Number(link.source.x1) + Number(link.target.x0)) / 2
-          const labelY = (Number(link.y0) + Number(link.y1)) / 2
 
           return (
             <g key={`link-${animationKey}-${index}`}>
@@ -114,25 +113,17 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
                   begin={begin}
                   fill='freeze'
                 />
-                <title>{`${link.label}: ${link.realValue} (${link.percentage}%)`}</title>
               </path>
-              <text
-                x={labelX}
-                y={labelY}
-                textAnchor='middle'
-                dominantBaseline='middle'
-                fontSize={10}
-                fill={link.isDisqualified ? '#b91c1c' : '#0f172a'}
-              >
-                {new Intl.NumberFormat('es-PE').format(Number(link.realValue || 0))}
-              </text>
             </g>
           )
         })}
         {sankeyLayout.nodes.map((node, index) => {
-          const textX = Number(node.x1) + 8
+          const isNearLeftEdge = Number(node.x0) < 170
+          const textX = isNearLeftEdge ? Number(node.x1) + 8 : Number(node.x0) - 8
+          const textAnchor = isNearLeftEdge ? 'start' : 'end'
           const textY = Number(node.y0) + Math.max((Number(node.y1) - Number(node.y0)) / 2, 8)
           const height = Math.max(1, Number(node.y1) - Number(node.y0))
+          const nodeCount = new Intl.NumberFormat('es-PE').format(Number(node.value || 0))
 
           return (
             <g key={`node-${animationKey}-${index}`} opacity={0}>
@@ -163,8 +154,13 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
               >
                 <title>{`${node.name}: ${new Intl.NumberFormat('es-PE').format(Number(node.value || 0))}`}</title>
               </rect>
-              <text x={textX} y={textY} fontSize={11} fill='#111827' dominantBaseline='middle'>
-                {node.name}
+              <text x={textX} y={textY} textAnchor={textAnchor} fill='var(--text-title-color)' dominantBaseline='middle'>
+                <tspan x={textX} dy='-0.4em' fontSize={11}>
+                  {node.name}
+                </tspan>
+                <tspan x={textX} dy='1.35em' fontSize={14} fontWeight={700}>
+                  {nodeCount}
+                </tspan>
               </text>
             </g>
           )

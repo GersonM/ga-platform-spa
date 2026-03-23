@@ -1,18 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
-import { DatePicker, Empty, Select, Spin, Statistic } from 'antd'
-import { PiCheckCircle, PiUsers } from 'react-icons/pi'
+import {useEffect, useMemo, useState} from 'react'
+import {DatePicker, Empty, Select, Space, Spin, Statistic} from 'antd'
+import {PiCheckCircle, PiFileDoc, PiFilePdf, PiTrendUp, PiUsers} from 'react-icons/pi'
 import axios from 'axios'
-import dayjs, { type Dayjs } from 'dayjs'
+import dayjs, {type Dayjs} from 'dayjs'
 
 import ModuleContent from '../../../CommonUI/ModuleContent'
 import ContentHeader from '../../../CommonUI/ModuleContent/ContentHeader'
 import ErrorHandler from '../../../Utils/ErrorHandler'
-import { type Lead } from '../../../Types/api.tsx'
-import LeadsFlowGraph, { type LeadsFlowLinkInput, type LeadsFlowNodeInput } from './LeadsFlowGraph'
+import {type Lead} from '../../../Types/api.tsx'
+import LeadsFlowGraph, {type LeadsFlowLinkInput, type LeadsFlowNodeInput} from './LeadsFlowGraph'
 import LeadsDate from './LeadsDate'
+import ProcessStagesSankey from './ProcessStagesSankey'
+import InfoButton from "../../../CommonUI/InfoButton";
 
 interface ProcessStageRecord {
   uuid: string
+  name: string
+  order: number
 }
 
 interface ProcessRecord {
@@ -46,9 +50,13 @@ const extractProcesses = (payload: any): ProcessRecord[] => {
     return {
       uuid: process?.uuid ?? '',
       name: process?.name ?? 'Proceso',
-      stages: rawStages.map((stage: any, index: number) => ({
-        uuid: stage?.uuid ?? `${process?.uuid ?? 'process'}-stage-${index + 1}`,
-      })),
+      stages: rawStages
+        .map((stage: any, index: number) => ({
+          uuid: stage?.uuid ?? `${process?.uuid ?? 'process'}-stage-${index + 1}`,
+          name: stage?.name ?? `Etapa ${index + 1}`,
+          order: Number(stage?.order ?? index + 1),
+        }))
+        .sort((a, b) => a.order - b.order),
     } as ProcessRecord
   })
 }
@@ -56,8 +64,9 @@ const extractProcesses = (payload: any): ProcessRecord[] => {
 const getLastPage = (payload: any): number => Number(payload?.meta?.last_page ?? payload?.last_page ?? 1)
 const getCurrentPage = (payload: any, fallback: number): number => Number(payload?.meta?.current_page ?? payload?.current_page ?? fallback)
 
-const hasCommercialContractUuid = (lead: Lead): boolean =>
-  lead.contract_uuid !== null && lead.contract_uuid !== undefined
+const EXCLUDED_CONTRACT_STATUSES = new Set(['proposal', 'cancelled', 'terminated', 'voided'])
+
+const hasCommercialContract = (lead: Lead): boolean => !!lead.contract_uuid
 
 const getCampaignName = (lead: Lead): string => {
   const campaignName = lead.campaign?.name?.trim()
@@ -67,8 +76,7 @@ const getCampaignName = (lead: Lead): string => {
 const hasValidContract = (lead: Lead): boolean => {
   const contract = lead.contract
   if (!contract) return false
-  const status = String(contract.status ?? '').toLowerCase()
-  return status !== 'voided' && status !== 'proposal'
+  return !EXCLUDED_CONTRACT_STATUSES.has(String(contract.status ?? '').toLowerCase())
 }
 
 const isDisqualified = (lead: Lead): boolean => Boolean(lead.disqualified_at)
@@ -164,11 +172,10 @@ const CRMSankeyDashboard = () => {
 
   const stepData = useMemo(() => {
     const step1 = filteredLeads
-    const step2 = filteredLeads.filter(hasCommercialContractUuid)
+    const step2 = filteredLeads.filter(hasCommercialContract)
     const step3 = step2.filter(hasValidContract)
 
-    // Exclusive disqualification buckets to avoid duplicated flow counts across levels.
-    const disqStep1 = step1.filter(lead => isDisqualified(lead) && !hasCommercialContractUuid(lead))
+    const disqStep1 = step1.filter(lead => isDisqualified(lead) && !hasCommercialContract(lead))
     const disqStep2 = step2.filter(lead => isDisqualified(lead) && !hasValidContract(lead))
     const disqStep3 = step3.filter(isDisqualified)
 
@@ -203,13 +210,13 @@ const CRMSankeyDashboard = () => {
 
     const nodes: LeadsFlowNodeInput[] = [
       ...campaignNodes,
-      { id: 'n1', name: '1) Todos los leads', color: '#1d4ed8' },
-      { id: 'n2', name: '2) Propuesta enviada', color: '#1e40af' },
-      { id: 'n3', name: '3) Propuesta aprobada', color: '#1e3a8a' },
-      { id: 'dq1', name: 'Descalificados N1', color: '#dc2626' },
-      { id: 'dq2', name: 'Descalificados N2', color: '#dc2626' },
-      { id: 'ok', name: 'Venta cerrada', color: '#16a34a' },
-      { id: 'dq3', name: 'Descalificados N3', color: '#dc2626' },
+      {id: 'n1', name: 'Todos los leads', color: '#1d4ed8'},
+      {id: 'n2', name: 'Propuesta enviada', color: '#1e40af'},
+      {id: 'n3', name: 'Propuesta aprobada', color: '#1e3a8a'},
+      {id: 'dq1', name: 'Descalificados N1', color: '#dc2626'},
+      {id: 'dq2', name: 'Descalificados N2', color: '#dc2626'},
+      {id: 'ok', name: 'Venta cerrada', color: '#16a34a'},
+      {id: 'dq3', name: 'Descalificados N3', color: '#dc2626'},
     ]
 
     const createLink = (
@@ -222,7 +229,7 @@ const CRMSankeyDashboard = () => {
     ): LeadsFlowLinkInput => ({
       source,
       target,
-      value: toVisibleFlow(realValue),
+      value: realValue,
       realValue,
       percentage: getPercentage(realValue, base),
       label,
@@ -239,10 +246,26 @@ const CRMSankeyDashboard = () => {
       createLink('n2', 'dq2', stepData.disqStep2.length, totalStep2, 'Nivel 2 -> Descalificados N2', true),
       createLink('n3', 'ok', stepData.validFinal.length, totalStep3, 'Nivel 3 -> Resultado válido'),
       createLink('n3', 'dq3', stepData.disqStep3.length, totalStep3, 'Nivel 3 -> Descalificados N3', true),
-    ].filter(link => link.realValue > 0)
+    ].filter(link => !link.isDisqualified || link.realValue > 0)
 
-    return { nodes, links }
+    return {nodes, links}
   }, [stepData])
+
+  const selectedProcessForStages = useMemo(() => {
+    if (selectedProcessUuid === 'all') return null
+    return processes.find(process => process.uuid === selectedProcessUuid) ?? null
+  }, [processes, selectedProcessUuid])
+
+  const stageFlowLeads = useMemo(() => {
+    if (!selectedProcessForStages) return []
+
+    return leads.filter(lead => {
+      if (!isWithinDateRange(lead.created_at, dateRange)) return false
+      const stageUuid = lead.process_stage_uuid ?? lead.process_stage?.uuid
+      if (!stageUuid) return false
+      return stageToProcessMap.get(stageUuid) === selectedProcessForStages.uuid
+    })
+  }, [leads, selectedProcessForStages, stageToProcessMap, dateRange])
 
   const conversionCount = stepData.step1.filter(isConverted).length
   const conversionRate = stepData.step1.length > 0
@@ -259,10 +282,9 @@ const CRMSankeyDashboard = () => {
           <>
             <Select
               value={selectedProcessUuid}
-              style={{ width: 320 }}
               options={[
-                { value: 'all', label: 'Todos los procesos' },
-                ...processes.map(process => ({ value: process.uuid, label: process.name })),
+                {value: 'all', label: 'Todos los procesos'},
+                ...processes.map(process => ({value: process.uuid, label: process.name})),
               ]}
               onChange={value => setSelectedProcessUuid(value)}
             />
@@ -278,23 +300,20 @@ const CRMSankeyDashboard = () => {
       <p>Seguimiento de progreso de leads</p>
 
       <Spin spinning={loading}>
-        {stepData.step1.length === 0 && <Empty description='No hay datos suficientes para graficar' />}
+        {stepData.step1.length === 0 && <Empty description='No hay datos suficientes para graficar'/>}
 
         {stepData.step1.length > 0 && (
           <>
-            <div className={'grid-layout-fit'}>
-              <Statistic title='Leads Totales' value={stepData.step1.length} prefix={<PiUsers />} />
-              <Statistic title='Nivel 2' value={stepData.step2.length} />
-              <Statistic title='Nivel 3' value={stepData.step3.length} />
-              <Statistic title='Resultado Válido' value={stepData.validFinal.length} prefix={<PiCheckCircle />} />
-              <div>
-                <Statistic title='Conversión' value={conversionRate} suffix='%' />
-                <small>{conversionCount} leads con contrato aprobado</small>
-              </div>
-            </div>
-
-            <LeadsFlowGraph chartInput={chartInput} />
-            <LeadsDate leads={stepData.step1} />
+            <Space>
+              <InfoButton icon={<PiUsers/>} label={'Leads totales'} value={stepData.step1.length} large/>
+              <InfoButton icon={<PiFilePdf/>} label={'Propuestas enviadas'} value={stepData.step2.length} large/>
+              <InfoButton icon={<PiCheckCircle/>} label={'Aprobaciones'} value={stepData.step3.length} large/>
+              <InfoButton icon={<PiTrendUp/>} label={'Conversión'} value={conversionRate+'%'} large/>
+            </Space>
+            <LeadsFlowGraph chartInput={chartInput}/>
+            <h3 style={{marginTop: 24, marginBottom: 8}}>Flujo entre etapas del proceso</h3>
+            <ProcessStagesSankey process={selectedProcessForStages} leads={stageFlowLeads}/>
+            <LeadsDate leads={stepData.step1}/>
           </>
         )}
       </Spin>

@@ -57,7 +57,7 @@ const MembersAccessControl = () => {
   };
 
   return (
-    <ModuleContent>
+    <ModuleContent boxed>
       <ContentHeader title={'Control de acceso'}/>
       <p>Acerca la credencial a la camara para escanearla o digital el DNI en el campo</p>
       <Row justify={'center'}>

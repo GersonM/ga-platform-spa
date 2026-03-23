@@ -5,6 +5,7 @@ import type {Contract} from "../../../Types/api.tsx";
 
 interface ContractStatusProps {
   contract: Contract;
+  showTrackingId?: boolean;
 }
 
 const statuses: any = {
@@ -27,10 +28,10 @@ const colors: any = {
   terminated: 'default',
 }
 
-const ContractStatus = ({contract}: ContractStatusProps) => {
-  //const date = contract.created_at || contract.approved_at || contract.date_start || contract.provided_at || contract.cancelled_at;
+const ContractStatus = ({contract, showTrackingId = false}: ContractStatusProps) => {
   return (
     <Tag variant={'outlined'} color={colors[contract.status]}>
+      {showTrackingId && <code>{contract.tracking_id}: </code>}
       {statuses[contract.status]}
     </Tag>
   );

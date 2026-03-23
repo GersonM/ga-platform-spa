@@ -62,11 +62,13 @@ const ReportAttendance = ({profile, member, onCompleted}: ReportAttendanceProps)
         </>}
         <Form.Item label={'Lugar a visitar (opcional)'} name={'area_uuid'}>
           <Select
-            placeholder={'Ingreso al club'}
+            showSearch
+            placeholder={'Ingreso'}
             options={[
+              {value: 'Otro', label: 'Otro'},
               {value: 'Restaurante', label: 'Restaurante'},
               {value: 'Oficia de atención', label: 'Oficia de atención'},
-              {value: 'Club', label: 'Club'},
+              {value: 'Caja', label: 'Caja'},
             ]}
             style={{width: '100%'}}
           />

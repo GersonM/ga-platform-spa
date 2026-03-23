@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import {Drawer, Form, Input, Popconfirm, Space, Steps, Tooltip} from 'antd';
-import {TbDownload, TbListCheck, TbPencil, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
+import {TbDownload, TbListCheck, TbPencil, TbPlus, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
 import {useParams} from 'react-router-dom';
 import {FaPeoplePulling} from "react-icons/fa6";
 import {BiCog} from 'react-icons/bi';
@@ -14,6 +14,7 @@ import type {
   Campaign,
   CommercialProcess,
   CommercialProcessStage,
+  Contract,
   EntityActivity,
   EntityFieldValue,
   Lead,
@@ -24,6 +25,7 @@ import TableList from '../../../CommonUI/TableList';
 import CampaignsManager from '../../Components/CampaignsManager';
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import CreateLeadForm from '../../Components/CreateLeadForm';
+import NewSaleForm from '../../Components/NewSaleForm';
 import CampaignSelector from '../../Components/CampaignSelector';
 import ModalView from "../../../CommonUI/ModalView";
 import TablePagination from "../../../CommonUI/TablePagination";
@@ -36,6 +38,7 @@ import CommercialProcessSelector from "../../../CRMModule/Components/CommercialP
 import CustomTag from "../../../CommonUI/CustomTag";
 import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
 import pluralize from "pluralize";
+import ContractStatus from "../CommercialSales/ContractStatus";
 
 const getProcessStages = (process?: CommercialProcess): CommercialProcessStage[] => {
   if (!process) {
@@ -67,6 +70,7 @@ const CommercialLeads = () => {
   const [openLeadForm, setOpenLeadForm] = useState(false);
   const [openActivityManager, setOpenActivityManager] = useState(false);
   const [openPromoteModal, setOpenPromoteModal] = useState(false);
+  const [openProposalModal, setOpenProposalModal] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead>();
   const [selectedProcess, setSelectedProcess] = useState<CommercialProcess>();
   const [selectedStage, setSelectedStage] = useState<CommercialProcessStage>();
@@ -166,6 +170,22 @@ const CommercialLeads = () => {
       });
   };
 
+  const assignContractToLead = (contract: Contract) => {
+    if (!selectedLead?.uuid || !contract?.uuid) {
+      return;
+    }
+
+    axios
+      .put(`commercial/leads/${selectedLead.uuid}`, {contract_uuid: contract.uuid})
+      .then(() => {
+        setOpenProposalModal(false);
+        setReload(!reload);
+      })
+      .catch(error => {
+        ErrorHandler.showNotification(error);
+      });
+  };
+
   const columns = [
     {
       dataIndex: 'uuid',
@@ -191,7 +211,7 @@ const CommercialLeads = () => {
               icon={<TbListCheck/>}
             />
           </Tooltip>
-          <Popconfirm title={'Eliminar ruta'} onConfirm={() => deleteLead(lead)}>
+          <Popconfirm title={'Registrar desistimiento'} onConfirm={() => deleteLead(lead)}>
             <IconButton small danger icon={<TbTrash/>}/>
           </Popconfirm>
           <IconButton
@@ -222,7 +242,7 @@ const CommercialLeads = () => {
     {
       dataIndex: 'campaign',
       title: 'Campaña',
-      width: 110,
+      width: 140,
       render: (c: Campaign) => {
         return c && <CustomTag>{c.name}</CustomTag>;
       },
@@ -230,10 +250,29 @@ const CommercialLeads = () => {
     {
       dataIndex: 'process_stage',
       title: 'Etapa',
-      width: 150,
+      width: 140,
       render: (s: CommercialProcessStage) => {
-        return s && <CustomTag>{s.name}</CustomTag>;
+        return s ? <CustomTag>{s.name}</CustomTag>:<small>No asignado</small>  ;
       },
+    },
+    {
+      dataIndex: 'contract',
+      title: 'Propuesta',
+      align: 'center',
+      width: 160,
+      render: (contract: Contract, lead: Lead) => {
+        return contract ? <ContractStatus contract={contract} showTrackingId/> :
+          <PrimaryButton
+            size={'small'}
+            icon={<TbPlus />}
+            ghost
+            label={'Propuesta'}
+            onClick={() => {
+              setSelectedLead(lead);
+              setOpenProposalModal(true);
+            }}
+          />
+      }
     },
     {
       dataIndex: 'profile',
@@ -272,7 +311,7 @@ const CommercialLeads = () => {
       title: 'Agente',
       width: 190,
       render: (profile?: Profile) => {
-        return profile ? <ProfileChip profile={profile}/>:<small>No asignado</small>;
+        return profile ? <ProfileChip profile={profile}/> : <small>No asignado</small>;
       },
     },
     {
@@ -349,7 +388,7 @@ const CommercialLeads = () => {
           }}
         />
       </ContentHeader>
-      <TableList scroll={{x:1000}} columns={columns} dataSource={leads}/>
+      <TableList scroll={{x: 1000}} columns={columns} dataSource={leads}/>
       <TablePagination
         pagination={pagination}
         onChange={(page, size) => {
@@ -374,10 +413,10 @@ const CommercialLeads = () => {
             label={'Etapa destino'}
             rules={[{required: true, message: 'Selecciona una etapa'}]}
           >
-            <CommercialProcessStageSelector />
+            <CommercialProcessStageSelector/>
           </Form.Item>
           <Form.Item name={'message'} label={'Mensaje'}>
-            <Input.TextArea rows={4} placeholder={'Escribe un mensaje para el candidato'} />
+            <Input.TextArea rows={4} placeholder={'Escribe un mensaje para el candidato'}/>
           </Form.Item>
           <PrimaryButton
             block
@@ -387,6 +426,13 @@ const CommercialLeads = () => {
             icon={<TbThumbUp/>}
           />
         </Form>
+      </ModalView>
+      <ModalView
+        open={openProposalModal}
+        width={1100}
+        onCancel={() => setOpenProposalModal(false)}
+      >
+        <NewSaleForm onComplete={assignContractToLead}/>
       </ModalView>
       <Drawer
         styles={{body: {padding: 0,},}}
