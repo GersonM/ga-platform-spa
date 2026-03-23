@@ -39,6 +39,7 @@ import CustomTag from "../../../CommonUI/CustomTag";
 import CommercialProcessStageSelector from "../../../CRMModule/Components/CommercialProcessStageSelector";
 import pluralize from "pluralize";
 import ContractStatus from "../CommercialSales/ContractStatus";
+import ImportLeadsForm from "../../Components/ImportLeadsForm";
 
 const getProcessStages = (process?: CommercialProcess): CommercialProcessStage[] => {
   if (!process) {
@@ -61,6 +62,7 @@ const getProcessStages = (process?: CommercialProcess): CommercialProcessStage[]
 const CommercialLeads = () => {
   const [leads, setLeads] = useState<Lead[]>();
   const [openCampaignManager, setOpenCampaignManager] = useState(false);
+  const [openImportModal, setOpenImportModal] = useState(false);
   const [reload, setReload] = useState(false);
   const params = useParams();
   const [pagination, setPagination] = useState<ResponsePagination>();
@@ -371,6 +373,7 @@ const CommercialLeads = () => {
             <PrimaryButton
               icon={<TbDownload size={17}/>}
               label={'Importar candidatos'}
+              onClick={() => setOpenImportModal(true)}
             />
           </Space>
         }
@@ -441,6 +444,17 @@ const CommercialLeads = () => {
           <EntityActivityManager uuid={selectedLead?.uuid} type={'lead'}/>
         }
       </Drawer>
+      <ModalView
+        open={openImportModal}
+        onCancel={() => setOpenImportModal(false)}
+      >
+        <ImportLeadsForm
+          onComplete={() => {
+            setReload(!reload);
+            setOpenImportModal(false);
+          }}
+        />
+      </ModalView>
       <Drawer
         title={'Campañas'}
         size={700}
