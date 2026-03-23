@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react'
-import {DatePicker, Empty, Select, Space, Spin, Statistic} from 'antd'
-import {PiCheckCircle, PiFileDoc, PiFilePdf, PiTrendUp, PiUsers} from 'react-icons/pi'
+import {DatePicker, Empty, Select, Space, Spin} from 'antd'
+import {PiCheckCircle, PiFilePdf, PiTrendUp, PiUsers} from 'react-icons/pi'
 import axios from 'axios'
 import dayjs, {type Dayjs} from 'dayjs'
 
@@ -26,7 +26,6 @@ interface ProcessRecord {
 }
 
 const isArray = (value: unknown): value is unknown[] => Array.isArray(value)
-const toVisibleFlow = (value: number): number => (value > 0 ? value : 1)
 const getPercentage = (value: number, total: number): number => (total > 0 ? Number(((value / total) * 100).toFixed(1)) : 0)
 
 const extractLeads = (payload: any): Lead[] => {
@@ -56,7 +55,7 @@ const extractProcesses = (payload: any): ProcessRecord[] => {
           name: stage?.name ?? `Etapa ${index + 1}`,
           order: Number(stage?.order ?? index + 1),
         }))
-        .sort((a, b) => a.order - b.order),
+        .sort((a:any, b:any) => a.order - b.order),
     } as ProcessRecord
   })
 }

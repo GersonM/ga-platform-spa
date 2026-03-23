@@ -173,7 +173,9 @@ const CommercialLeads = () => {
   };
 
   const assignContractToLead = (contract: Contract) => {
+    console.log('CONTA', contract.uuid);
     if (!selectedLead?.uuid || !contract?.uuid) {
+      console.log('fallo');
       return;
     }
 
