@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {XMarkIcon} from '@heroicons/react/24/solid';
 import {InformationCircleIcon} from '@heroicons/react/24/solid';
 import {PiCheck, PiExclamationMark, PiWarningDiamond} from 'react-icons/pi';
@@ -7,7 +7,7 @@ import IconButton from '../IconButton';
 import './styles.less';
 
 interface IAlertMessageProps {
-  message: string;
+  message: string | React.ReactNode;
   caption?: string;
   type?: 'success' | 'warning' | 'error' | 'info';
   float?: boolean;
@@ -23,17 +23,17 @@ const AlertMessage = ({children, message, caption, type = 'warning', float, dism
   return (
     <div className={`alert-message-wrapper ${type} ${float ? 'float' : ''}`}>
       <div className={'icon'}>
-        {type === 'success' && <PiCheck size={20} />}
-        {type === 'warning' && <PiExclamationMark size={20} />}
-        {type === 'info' && <InformationCircleIcon width={25} />}
-        {type === 'error' && <PiWarningDiamond size={25} />}
+        {type === 'success' && <PiCheck size={20}/>}
+        {type === 'warning' && <PiExclamationMark size={20}/>}
+        {type === 'info' && <InformationCircleIcon width={25}/>}
+        {type === 'error' && <PiWarningDiamond size={25}/>}
       </div>
       <div className={'content'}>
         {message}
         {caption && <div className={'caption'}>{caption}</div>}
         {children && <div className={'caption'}>{children}</div>}
       </div>
-      {dismissible && <IconButton icon={<XMarkIcon color={'#000000'} />} onClick={() => setDismiss(true)} />}
+      {dismissible && <IconButton icon={<XMarkIcon color={'#000000'}/>} onClick={() => setDismiss(true)}/>}
     </div>
   );
 };

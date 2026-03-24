@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Alert, Form, Typography} from 'antd';
+import {Alert, Form, Space, Typography} from 'antd';
 import {TbUpload} from 'react-icons/tb';
 import axios from 'axios';
 
@@ -8,6 +8,9 @@ import CommercialProcessSelector from '../../../CRMModule/Components/CommercialP
 import PrimaryButton from '../../../CommonUI/PrimaryButton';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 import FileUploader from "../../../FileManagement/Components/FileUploader";
+import ApiFileSelector from "../../../FileManagement/Components/ApiFileSelector";
+import CustomTag from "../../../CommonUI/CustomTag";
+import AlertMessage from "../../../CommonUI/AlertMessage";
 
 interface ImportLeadsFormProps {
   onComplete?: (result: any) => void;
@@ -30,7 +33,7 @@ const ImportLeadsForm = ({onComplete}: ImportLeadsFormProps) => {
       })
       .then(response => {
         setResult(response.data);
-        onComplete?.(response.data);
+        //onComplete?.(response.data);
       })
       .catch(error => {
         ErrorHandler.showNotification(error);
@@ -40,6 +43,7 @@ const ImportLeadsForm = ({onComplete}: ImportLeadsFormProps) => {
       });
   };
 
+  console.log(result, 'result')
   return (
     <Form form={form} layout={'vertical'} onFinish={handleSubmit}>
       <Typography.Title level={5} style={{marginTop: 0}}>
@@ -69,35 +73,53 @@ const ImportLeadsForm = ({onComplete}: ImportLeadsFormProps) => {
         label={'Archivo (CSV o Excel)'}
         rules={[{required: true, message: 'Selecciona un archivo'}]}
       >
-        <FileUploader />
+        <ApiFileSelector/>
       </Form.Item>
-
-      {result && (
-        <Alert
-          style={{marginBottom: 16}}
-          type={'success'}
-          showIcon
-          message={`Importación completada`}
-          description={
-            typeof result === 'object' ? (
-              <ul style={{margin: 0, paddingLeft: 20}}>
-                {result.imported !== undefined && <li>Importados: {result.imported}</li>}
-                {result.skipped !== undefined && <li>Omitidos: {result.skipped}</li>}
-                {result.errors !== undefined && <li>Errores: {result.errors}</li>}
-                {result.message && <li>{result.message}</li>}
+      <Form.Item label={'Orden de columnas para la importación'}>
+        <Space wrap>
+          <CustomTag color={'purple'}>A) Nombre</CustomTag>
+          <CustomTag color={'purple'}>B) Apellidos</CustomTag>
+          <CustomTag color={'purple'}>C) Email</CustomTag>
+          <CustomTag color={'purple'}>D) Telefono</CustomTag>
+          <CustomTag color={'purple'}>E) Tipo de documento</CustomTag>
+          <CustomTag color={'purple'}>F) Número de documento</CustomTag>
+          <CustomTag color={'purple'}>G) Apuntes</CustomTag>
+          <CustomTag color={'purple'}>H) Otros</CustomTag>
+        </Space>
+      </Form.Item>
+      {result && (<>
+          <Alert
+            style={{marginBottom: 16}}
+            type={'success'}
+            showIcon
+            title={`Importación completada`}
+            description={
+              <ul>
+                <li>Importados: {result.created}</li>
+                <li>Omitidos: {result.duplicates}</li>
+                <li>Errores: {result.failed}</li>
+                <li>Total de registros procesados: {result.total_reviewed}</li>
               </ul>
-            ) : String(result)
-          }
-        />
+            }
+          />
+        </>
       )}
 
-      <PrimaryButton
-        block
-        loading={loading}
-        label={'Importar candidatos'}
-        htmlType={'submit'}
-        icon={<TbUpload/>}
-      />
+      {result ? <PrimaryButton
+          block
+          label={'Cerrar'}
+          onClick={() => {
+            onComplete?.(result);
+          }}
+        /> :
+        <PrimaryButton
+          block
+          loading={loading}
+          label={'Importar candidatos'}
+          htmlType={'submit'}
+          icon={<TbUpload/>}
+        />
+      }
     </Form>
   );
 };

@@ -70,7 +70,6 @@ const NewSaleForm = ({onComplete, contract}: NewSaleFormProps) => {
       })
       .then(response => {
         setLoading(false);
-        console.log('responseeeeeee', response.data);
         if (onComplete) {
           onComplete(response.data);
         }
