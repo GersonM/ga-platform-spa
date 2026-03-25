@@ -47,7 +47,7 @@ const MapEditor = ({children, center, onClick, zoom = 14, mapId, style}: MapEdit
           }
         }}
         disableDefaultUI={true}
-        mapId={'6552cc943eb9a0ff948d4665'}
+        mapId={'6552cc943eb9a0ff3ac2f6eb'}
         style={style}
       >
         {children}
