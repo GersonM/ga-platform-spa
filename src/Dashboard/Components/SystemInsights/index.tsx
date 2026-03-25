@@ -1,29 +1,110 @@
 import axios from "axios";
 import {useEffect, useState} from 'react';
-import {Descriptions} from 'antd';
+import {Badge, Space, Tag} from 'antd';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
+type InsightLevel = 'low' | 'medium' | 'high';
+
+type Insight = {
+  name: string;
+  level: InsightLevel;
+  handler: string;
+  results: any[] | Record<string, any[]>;
+};
+
+type SystemInsightsData = {
+  total_alerts: number;
+  timestamp: string;
+  insights: Insight[];
+};
+
+const levelColor: Record<InsightLevel, string> = {
+  low: 'blue',
+  medium: 'orange',
+  high: 'red',
+};
+
+const insightLabel: Record<string, string> = {
+  'duplicated-profiles': 'Perfiles duplicados',
+  'expired-invoices': 'Facturas vencidas',
+  'expiring-contracts': 'Contratos por vencer',
+  'stock-alerts': 'Alertas de stock',
+  'invoice-documents': 'Facturas sin documento',
+  'incomplete-payment-alerts': 'Pagos incompletos',
+};
+
+const getClientName = (invoice: any): string => {
+  const entity = invoice?.client?.entity;
+  if (!entity) return '—';
+  return [entity.name, entity.last_name].filter(Boolean).join(' ') || entity.name || '—';
+};
+
+const renderResults = (insight: Insight) => {
+  const {name, results} = insight;
+
+  if (!Array.isArray(results)) {
+    // duplicated-profiles: results is { personal_email: [], email: [], doc_number: [] }
+    const counts = Object.entries(results as Record<string, any[]>).map(([key, arr]) => (
+      <div key={key}>
+        <small style={{color: '#888'}}>{key}:</small> <strong>{arr.length}</strong>
+      </div>
+    ));
+    const total = Object.values(results as Record<string, any[]>).reduce((s, a) => s + a.length, 0);
+    return total === 0
+      ? <span style={{color: '#52c41a'}}>Sin duplicados</span>
+      : <Space direction="vertical" size={2}>{counts}</Space>;
+  }
+
+  if (results.length === 0) {
+    return <span style={{color: '#52c41a'}}>Sin alertas</span>;
+  }
+
+  if (name === 'expired-invoices') {
+    return (
+      <Space direction="vertical" size={2} style={{width: '100%'}}>
+        {results.map((inv: any) => (
+          <div key={inv.uuid} style={{fontSize: 12}}>
+            <Tag color="default">#{inv.tracking_id}</Tag>
+            <span style={{marginRight: 8}}>{getClientName(inv)}</span>
+            <span style={{color: '#888'}}>{inv.currency} {inv.amount?.toLocaleString()}</span>
+            <span style={{marginLeft: 8, color: '#f5222d'}}>{inv.expires_on}</span>
+          </div>
+        ))}
+      </Space>
+    );
+  }
+
+  // stock-alerts, invoice-documents, incomplete-payment-alerts: [{type, level, message, data}]
+  return (
+    <Space direction="vertical" size={2} style={{width: '100%'}}>
+      {results.map((item: any, i: number) => (
+        <div key={i} style={{fontSize: 12}}>
+          <Tag color={levelColor[item.level as InsightLevel] ?? 'default'}>{item.level}</Tag>
+          <span style={{marginRight: 8}}>{item.message}</span>
+          {item.data?.tracking_id && <span style={{color: '#888'}}>#{item.data.tracking_id}</span>}
+          {item.data?.name && <span style={{color: '#888'}}> {item.data.name}</span>}
+        </div>
+      ))}
+    </Space>
+  );
+};
+
 const SystemInsights = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<SystemInsightsData>();
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
-    const config = {
-      cancelToken: cancelTokenSource.token,
-    };
+    const config = {cancelToken: cancelTokenSource.token};
 
     setLoading(true);
-
     axios
       .get(`workspaces/system-insights`, config)
       .then(response => {
-        if (response) {
-          setData(response.data);
-        }
         setLoading(false);
+        if (response) setData(response.data);
       })
       .catch(e => {
         setLoading(false);
@@ -33,24 +114,36 @@ const SystemInsights = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
-  const renderValue = (value: any): string => {
-    if (value === null || value === undefined) return '—';
-    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
-    if (typeof value === 'object') return JSON.stringify(value);
-    return String(value);
-  };
-
   return (
     <div style={{position: 'relative'}}>
       <LoadingIndicator visible={loading} overlay/>
       {data && (
-        <Descriptions bordered size={'small'} column={2}>
-          {Object.entries(data).map(([key, value]) => (
-            <Descriptions.Item key={key} label={key}>
-              {renderValue(value)}
-            </Descriptions.Item>
-          ))}
-        </Descriptions>
+        <>
+          <div style={{marginBottom: 12, color: '#888', fontSize: 12}}>
+            {data.timestamp} &mdash; <strong>{data.total_alerts}</strong> alertas totales
+          </div>
+          <Space direction="vertical" size={12} style={{width: '100%'}}>
+            {data.insights.map(insight => {
+              const count = Array.isArray(insight.results)
+                ? insight.results.length
+                : Object.values(insight.results).reduce((s: number, a) => s + (a as any[]).length, 0);
+              return (
+                <div key={insight.name}>
+                  <div style={{marginBottom: 4}}>
+                    <Badge count={count} size="small" offset={[4, 0]}>
+                      <Tag color={levelColor[insight.level]}>
+                        {insightLabel[insight.name] ?? insight.name}
+                      </Tag>
+                    </Badge>
+                  </div>
+                  <div style={{paddingLeft: 8, borderLeft: '2px solid #f0f0f0'}}>
+                    {renderResults(insight)}
+                  </div>
+                </div>
+              );
+            })}
+          </Space>
+        </>
       )}
     </div>
   );
