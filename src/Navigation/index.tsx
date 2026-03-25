@@ -9,13 +9,11 @@ import {
   PiCaretUpDown,
   PiCarLight,
   PiCarProfile,
-  PiClockUser,
   PiDotsThreeVerticalBold,
   PiFingerprint,
   PiGear,
   PiGraduationCap,
   PiHandshake,
-  PiHardDrives,
   PiMailboxDuotone,
   PiMoney,
   PiPerson,
@@ -38,7 +36,7 @@ import {
   TbBuildingWarehouse, TbCalendar, TbContract,
   TbCurrencyDollar,
   TbForklift, TbGridDots, TbHeadset, TbHeartRateMonitor,
-  TbListCheck, TbMapCheck, TbMapPinBolt, TbMask, TbMessageUser,
+  TbMapCheck, TbMapPinBolt, TbMask, TbMessageUser,
   TbPackage, TbPackageImport,
   TbPigMoney, TbShieldCheck, TbShieldOff, TbShoppingCartDown, TbShoppingCartUp, TbTicket, TbUser, TbUsersGroup,
 } from 'react-icons/tb';
@@ -46,7 +44,7 @@ import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
 import { FaChalkboardTeacher } from 'react-icons/fa';
 import type { ItemType } from 'antd/es/menu/interface';
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { LuReceipt, LuReceiptText } from "react-icons/lu";
+import {LuHardDrive, LuListChecks, LuPhoneCall, LuReceipt, LuReceiptText} from "react-icons/lu";
 import Cookies from 'js-cookie';
 import {sileo} from "sileo";
 
@@ -163,15 +161,15 @@ const Navigation = () => {
             <NavItem label={t('nav.dashboard')} icon={<TbGridDots />} path={'/'} />
             <NavItem
               label={t('nav.myTasks')}
-              icon={<TbListCheck />}
+              icon={<LuListChecks />}
               path={'/my-tasks'}
               notifications={activityCount?.pending}
             />
             {config?.modules.includes('files') && (
-              <NavItem label={t('nav.fileManager')} icon={<PiHardDrives />} path={'/file-management'} />
+              <NavItem label={t('nav.fileManager')} icon={<LuHardDrive />} path={'/file-management'} />
             )}
             {config?.modules.includes('attendance') && (
-              <NavItem label={t('nav.attendance')} icon={<PiClockUser />} code={'attendance'}>
+              <NavItem label={t('nav.attendance')} code={'attendance'}>
                 <NavItem label={t('nav.reports')} icon={<PiPresentationChart />} path={'/attendance/dashboard'} />
                 <NavItem label={t('nav.attendance')} icon={<PiUsersThree />} path={'/attendance/management'} />
                 <NavItem label={t('nav.accessControl')} icon={<PiUserFocus />} path={'/attendance/access-control'} />
@@ -190,6 +188,7 @@ const Navigation = () => {
                 <NavItem icon={<PiPresentationChart />} label={t('nav.crmDashboard')} path={'/crm/dashboard'} />
                 <NavItem icon={<PiUserFocus />} label={t('nav.crmLeadsAndCampaigns')} path={'/crm/leads'} />
                 <NavItem icon={<TbMessageUser />} label={t('nav.messaging')} path={'/crm/chat'} />
+                <NavItem icon={<LuPhoneCall />} label={t('nav.calls')} path={'/crm/calls'} />
                 <NavItem icon={<TbContract />} label={t('nav.processes')} path={'/crm/processes'} />
                 <NavItem icon={<TbAdjustments />} label={t('nav.configuration')} path={'/crm/configuration'} />
               </NavItem>

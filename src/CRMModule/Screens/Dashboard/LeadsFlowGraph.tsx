@@ -24,6 +24,63 @@ interface LeadsFlowGraphProps {
   }
 }
 
+const splitLongWord = (word: string, maxChars: number): string[] => {
+  if (word.length <= maxChars) return [word]
+  const chunks: string[] = []
+  for (let index = 0; index < word.length; index += maxChars) {
+    chunks.push(word.slice(index, index + maxChars))
+  }
+  return chunks
+}
+
+const truncateWithEllipsis = (line: string, maxChars: number): string => {
+  if (line.length <= maxChars) return line
+  return `${line.slice(0, Math.max(1, maxChars - 1)).trimEnd()}…`
+}
+
+const wrapLabelByWidth = (text: string, maxWidthPx: number, maxLines = 3): string[] => {
+  const safeWidth = Math.max(40, maxWidthPx)
+  const avgCharWidthPx = 6.1
+  const maxChars = Math.max(6, Math.floor(safeWidth / avgCharWidthPx))
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .flatMap(word => splitLongWord(word, maxChars))
+
+  if (!words.length) return ['']
+
+  const lines: string[] = []
+  let current = ''
+
+  words.forEach(word => {
+    const next = current ? `${current} ${word}` : word
+    if (next.length <= maxChars) {
+      current = next
+      return
+    }
+
+    if (current) {
+      lines.push(current)
+      current = word
+      return
+    }
+
+    lines.push(word)
+  })
+
+  if (current) {
+    lines.push(current)
+  }
+
+  if (lines.length <= maxLines) {
+    return lines
+  }
+
+  const visible = lines.slice(0, maxLines)
+  visible[maxLines - 1] = truncateWithEllipsis(visible[maxLines - 1], maxChars)
+  return visible
+}
+
 const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [containerWidth, setContainerWidth] = useState(1000)
@@ -74,8 +131,6 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
     }
   }, [chartInput, containerWidth])
 
-  console.log({chartInput});
-
   return (
     <div ref={containerRef} style={{height: sankeyLayout.height, overflow: 'hidden'}}>
       <svg viewBox={`0 0 ${sankeyLayout.width} ${sankeyLayout.height}`}
@@ -124,6 +179,13 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
           const textY = Number(node.y0) + Math.max((Number(node.y1) - Number(node.y0)) / 2, 8)
           const height = Math.max(1, Number(node.y1) - Number(node.y0))
           const nodeCount = new Intl.NumberFormat('es-PE').format(Number(node.value || 0))
+          const availableLabelWidth = isNearLeftEdge
+            ? Math.max(56, sankeyLayout.width - textX - 12)
+            : Math.max(56, textX - 12)
+          const constrainedLabelWidth = Math.min(160, availableLabelWidth)
+          const labelLines = wrapLabelByWidth(String(node.name || ''), constrainedLabelWidth)
+          const firstLabelOffset = index === 0 ? 1.5 : 0
+          const titleDy = `${(-0.4 - ((labelLines.length - 1) * 0.58) - firstLabelOffset).toFixed(2)}em`
 
           return (
             <g key={`node-${animationKey}-${index}`} opacity={0}>
@@ -155,9 +217,16 @@ const LeadsFlowGraph = ({chartInput}: LeadsFlowGraphProps) => {
                 <title>{`${node.name}: ${new Intl.NumberFormat('es-PE').format(Number(node.value || 0))}`}</title>
               </rect>
               <text x={textX} y={textY} textAnchor={textAnchor} fill='var(--text-title-color)' dominantBaseline='middle'>
-                <tspan x={textX} dy='-0.4em' fontSize={11}>
-                  {node.name}
-                </tspan>
+                {labelLines.map((line, lineIndex) => (
+                  <tspan
+                    key={`node-${index}-label-${lineIndex}`}
+                    x={textX}
+                    dy={lineIndex === 0 ? titleDy : '1.15em'}
+                    fontSize={11}
+                  >
+                    {line}
+                  </tspan>
+                ))}
                 <tspan x={textX} dy='1.35em' fontSize={14} fontWeight={700}>
                   {nodeCount}
                 </tspan>

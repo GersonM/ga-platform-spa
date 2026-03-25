@@ -84,7 +84,8 @@ const ImportLeadsForm = ({onComplete}: ImportLeadsFormProps) => {
           <CustomTag color={'purple'}>E) Tipo de documento</CustomTag>
           <CustomTag color={'purple'}>F) Número de documento</CustomTag>
           <CustomTag color={'purple'}>G) Apuntes</CustomTag>
-          <CustomTag color={'purple'}>H) Otros</CustomTag>
+          <CustomTag color={'purple'}>H) Fecha de creación</CustomTag>
+          <CustomTag color={'purple'}>I...) Otros</CustomTag>
         </Space>
       </Form.Item>
       {result && (<>

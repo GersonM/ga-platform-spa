@@ -4,7 +4,7 @@ import {TbChevronDown} from "react-icons/tb";
 
 interface NavItemProps {
   label: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   children?: ReactNode[];
   path?: string;
   code?: string;

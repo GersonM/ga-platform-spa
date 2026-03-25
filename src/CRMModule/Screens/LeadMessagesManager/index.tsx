@@ -28,6 +28,7 @@ import IconButton from "../../../CommonUI/IconButton";
 import {useParams} from "react-router-dom";
 import ProfileChip from "../../../CommonUI/ProfileTools/ProfileChip.tsx";
 import AuthContext from "../../../Context/AuthContext.tsx";
+import ChannelIcon from "../../Components/ChannelIcon";
 
 const LeadMessagesManager = () => {
   const [leads, setLeads] = useState<Lead[]>();
@@ -135,7 +136,7 @@ const LeadMessagesManager = () => {
         actions={<>
           <IconButton
             disabled={!selectedCampaign} icon={<TbPlus/>} small
-                      onClick={() => setOpenLeadForm(true)}/>
+            onClick={() => setOpenLeadForm(true)}/>
           <IconButton
             icon={<TbReload/>} small
             onClick={() => setReload(!reload)}/>
@@ -151,12 +152,21 @@ const LeadMessagesManager = () => {
           {threads?.map((t: any, index) => (
             <NavListItem
               key={index}
-              icon={<TbUser/>}
-              name={t.meta?.sender?.name}
-              tools={<Space>
-                <CustomTag>{t.meta?.assignee?.name}</CustomTag>
-              </Space>}
-              caption={t.last_non_activity_message.content + ' | ' + dayjs(t.last_activity_at, 'timestamp').fromNow()}
+              icon={<><TbUser/>
+                <small>
+                  <ChannelIcon channel={t.meta.channel}/>
+                </small>
+              </>}
+              name={<>
+                <small>{t.meta?.sender?.name} :: {dayjs.unix(t.last_activity_at).fromNow()}</small>
+                {t.last_non_activity_message.content.substr(0, 100)}
+                {t.last_non_activity_message.content.length > 100 && (
+                  <Badge count={'...'}/>
+                )}
+                </>}
+              caption={<>
+                  Atendido por: {t.meta?.assignee?.name}
+              </>}
               path={"/crm/chat/" + t.id}/>
           ))}
         </NavList>
@@ -194,7 +204,7 @@ const LeadMessagesManager = () => {
             key: 'mail',
             label: 'Correos',
             children: <>
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay correos enviados'} />
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'No hay correos enviados'}/>
             </>
           },
         ]}/>

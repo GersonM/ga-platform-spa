@@ -214,7 +214,6 @@ const CRMSankeyDashboard = () => {
       {id: 'n3', name: 'Propuesta aprobada', color: '#1e3a8a'},
       {id: 'dq1', name: 'Descalificados N1', color: '#dc2626'},
       {id: 'dq2', name: 'Descalificados N2', color: '#dc2626'},
-      {id: 'ok', name: 'Venta cerrada', color: '#16a34a'},
       {id: 'dq3', name: 'Descalificados N3', color: '#dc2626'},
     ]
 
@@ -243,7 +242,7 @@ const CRMSankeyDashboard = () => {
       createLink('n1', 'dq1', stepData.disqStep1.length, totalStep1, 'Nivel 1 -> Descalificados N1', true),
       createLink('n2', 'n3', stepData.step3.length, totalStep2, 'Nivel 2 -> Nivel 3'),
       createLink('n2', 'dq2', stepData.disqStep2.length, totalStep2, 'Nivel 2 -> Descalificados N2', true),
-      createLink('n3', 'ok', stepData.validFinal.length, totalStep3, 'Nivel 3 -> Resultado válido'),
+      //createLink('n3', 'ok', stepData.validFinal.length, totalStep3, 'Nivel 3 -> Resultado válido'),
       createLink('n3', 'dq3', stepData.disqStep3.length, totalStep3, 'Nivel 3 -> Descalificados N3', true),
     ].filter(link => !link.isDisqualified || link.realValue > 0)
 

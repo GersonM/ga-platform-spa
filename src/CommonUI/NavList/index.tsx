@@ -11,7 +11,7 @@ import {TbDotsVertical} from "react-icons/tb";
 interface NavItemProps {
   name: string | ReactNode;
   tools?: string | ReactNode;
-  caption?: string;
+  caption?: string|ReactNode;
   path: string;
   image?: string;
   icon?: ReactNode;
