@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useEffect, useState} from 'react';
-import {Badge, Space, Tag} from 'antd';
+import {Badge, Col, Collapse, Row, Space, Tag} from 'antd';
 import LoadingIndicator from '../../../CommonUI/LoadingIndicator';
 import ErrorHandler from '../../../Utils/ErrorHandler';
 
@@ -23,6 +23,12 @@ const levelColor: Record<InsightLevel, string> = {
   low: 'blue',
   medium: 'orange',
   high: 'red',
+};
+
+const levelLabel: Record<InsightLevel, string> = {
+  low: 'Bajo',
+  medium: 'Medio',
+  high: 'Alto',
 };
 
 const insightLabel: Record<string, string> = {
@@ -80,7 +86,7 @@ const renderResults = (insight: Insight) => {
     <Space direction="vertical" size={2} style={{width: '100%'}}>
       {results.map((item: any, i: number) => (
         <div key={i} style={{fontSize: 12}}>
-          <Tag color={levelColor[item.level as InsightLevel] ?? 'default'}>{item.level}</Tag>
+          <Tag color={levelColor[item.level as InsightLevel] ?? 'default'}>{levelLabel[item.level as InsightLevel] ?? item.level}</Tag>
           <span style={{marginRight: 8}}>{item.message}</span>
           {item.data?.tracking_id && <span style={{color: '#888'}}>#{item.data.tracking_id}</span>}
           {item.data?.name && <span style={{color: '#888'}}> {item.data.name}</span>}
@@ -114,6 +120,11 @@ const SystemInsights = () => {
     return cancelTokenSource.cancel;
   }, [reload]);
 
+  const getCount = (insight: Insight): number =>
+    Array.isArray(insight.results)
+      ? insight.results.length
+      : Object.values(insight.results).reduce((s: number, a) => s + (a as any[]).length, 0);
+
   return (
     <div style={{position: 'relative'}}>
       <LoadingIndicator visible={loading} overlay/>
@@ -122,27 +133,32 @@ const SystemInsights = () => {
           <div style={{marginBottom: 12, color: '#888', fontSize: 12}}>
             {data.timestamp} &mdash; <strong>{data.total_alerts}</strong> alertas totales
           </div>
-          <Space direction="vertical" size={12} style={{width: '100%'}}>
+          <Row gutter={[12, 12]}>
             {data.insights.map(insight => {
-              const count = Array.isArray(insight.results)
-                ? insight.results.length
-                : Object.values(insight.results).reduce((s: number, a) => s + (a as any[]).length, 0);
+              const count = getCount(insight);
+              const label = insightLabel[insight.name] ?? insight.name;
               return (
-                <div key={insight.name}>
-                  <div style={{marginBottom: 4}}>
-                    <Badge count={count} size="small" offset={[4, 0]}>
-                      <Tag color={levelColor[insight.level]}>
-                        {insightLabel[insight.name] ?? insight.name}
-                      </Tag>
-                    </Badge>
-                  </div>
-                  <div style={{paddingLeft: 8, borderLeft: '2px solid #f0f0f0'}}>
-                    {renderResults(insight)}
-                  </div>
-                </div>
+                <Col key={insight.name} xs={24} md={12}>
+                  <Collapse
+                    size="small"
+                    items={[{
+                      key: insight.name,
+                      label: (
+                        <Space size={6}>
+                          <Tag color={levelColor[insight.level]} style={{margin: 0}}>
+                            {levelLabel[insight.level]}
+                          </Tag>
+                          <span>{label}</span>
+                          <Badge count={count} color={count === 0 ? '#52c41a' : undefined} showZero/>
+                        </Space>
+                      ),
+                      children: renderResults(insight),
+                    }]}
+                  />
+                </Col>
               );
             })}
-          </Space>
+          </Row>
         </>
       )}
     </div>
