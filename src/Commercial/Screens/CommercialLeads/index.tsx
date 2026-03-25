@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import {Drawer, Form, Input, Popconfirm, Space, Steps, Tooltip} from 'antd';
-import {TbDownload, TbListCheck, TbPencil, TbPlus, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
+import {TbDownload, TbListCheck, TbPencil, TbPhone, TbPlus, TbThumbUp, TbTrash, TbUsers} from "react-icons/tb";
 import {useParams} from 'react-router-dom';
 import {FaPeoplePulling} from "react-icons/fa6";
 import {BiCog} from 'react-icons/bi';
@@ -40,6 +40,15 @@ import CommercialProcessStageSelector from "../../../CRMModule/Components/Commer
 import pluralize from "pluralize";
 import ContractStatus from "../CommercialSales/ContractStatus";
 import ImportLeadsForm from "../../Components/ImportLeadsForm";
+import PhoneCaller from "../../../CRMModule/Components/PhoneCaller";
+import ProfileCard from "../../../AccountManagement/Components/ProfileCard";
+import useRegisterEntityActivity from "../../../EntityActivity/Hooks/useRegisterEntityActivity.tsx";
+
+const formatDuration = (seconds: number): string => {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+};
 
 const getProcessStages = (process?: CommercialProcess): CommercialProcessStage[] => {
   if (!process) {
@@ -78,7 +87,10 @@ const CommercialLeads = () => {
   const [selectedStage, setSelectedStage] = useState<CommercialProcessStage>();
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign>();
   const [promoting, setPromoting] = useState(false);
+  const [activityRefresh, setActivityRefresh] = useState(false);
   const [promoteForm] = Form.useForm();
+
+  const {registerActivity} = useRegisterEntityActivity();
 
   const processStages = useMemo(() => getProcessStages(selectedProcess), [selectedProcess]);
 
@@ -290,8 +302,20 @@ const CommercialLeads = () => {
       dataIndex: 'profile',
       title: 'Teléfono',
       width: 190,
-      render: (profile: Profile) => {
-        return profile.phone;
+      render: (profile: Profile, lead: Lead) => {
+        return (
+          <Space>
+            <IconButton
+              small
+              icon={<TbPhone/>}
+              onClick={() => {
+                setSelectedLead(lead);
+                setOpenActivityManager(true);
+              }}
+            />
+            {profile.phone}
+          </Space>
+        );
       },
     },
     {
@@ -321,11 +345,11 @@ const CommercialLeads = () => {
     {
       dataIndex: 'last_activity',
       title: 'Actividad',
-      width: 220,
+      width: 280,
       render: (last_activity: EntityActivity) => {
         return last_activity && <>
           <small>{last_activity?.profile?.name} {dayjs(last_activity?.created_at).fromNow()}</small>
-          {last_activity?.comment}
+          {(last_activity?.comment?.length ?? 0) > 100 ? `${last_activity.comment!.slice(0, 100)}...` : last_activity?.comment}
         </>;
       },
     },
@@ -442,8 +466,31 @@ const CommercialLeads = () => {
       <Drawer
         styles={{body: {padding: 0,},}}
         destroyOnHidden open={openActivityManager} onClose={() => setOpenActivityManager(false)}>
-        {selectedLead &&
-          <EntityActivityManager uuid={selectedLead?.uuid} type={'lead'}/>
+        {selectedLead && <>
+            <ProfileCard profile={selectedLead.profile} />
+            <PhoneCaller
+              profile={selectedLead.profile}
+              onCall={() => {
+                registerActivity(
+                  selectedLead.uuid,
+                  'lead',
+                  `📞 Iniciando llamada a ${selectedLead.profile.name} (${selectedLead.profile.phone}).`,
+                  'call-ring',
+                );
+                setActivityRefresh(r => !r);
+              }}
+              onEndCall={(durationSeconds, transcription) => {
+                registerActivity(
+                  selectedLead.uuid,
+                  'lead',
+                  `Llamada completada con ${selectedLead.profile.name} (${selectedLead.profile.phone}).\nDuración: ${formatDuration(durationSeconds)}\n\n📝 Transcripción:\n${transcription}`,
+                  'call',
+                );
+                setActivityRefresh(r => !r);
+              }}
+            />
+            <EntityActivityManager uuid={selectedLead?.uuid} type={'lead'} refresh={activityRefresh}/>
+          </>
         }
       </Drawer>
       <ModalView

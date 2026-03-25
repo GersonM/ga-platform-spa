@@ -8,6 +8,7 @@ import {IoAttach} from 'react-icons/io5';
 import dayjs, {Dayjs} from 'dayjs';
 import {CalendarDaysIcon, ChatBubbleLeftIcon} from '@heroicons/react/24/outline';
 import {TbPaperclip, TbPencil, TbSend} from "react-icons/tb";
+import {sileo} from "sileo";
 
 import ErrorHandler from '../../Utils/ErrorHandler';
 import PrimaryButton from '../PrimaryButton';
@@ -21,6 +22,7 @@ import EntityActivityIcon from './EntityActivityIcon';
 import EntityActivityCardViewer from '../../EntityActivity/Components/EntityActivityCardViewer';
 import CustomTag from "../CustomTag";
 import './styles.less';
+import useRegisterEntityActivity from "../../EntityActivity/Hooks/useRegisterEntityActivity.tsx";
 
 interface EntityActivityManagerProps {
   uuid: string;
@@ -39,6 +41,7 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
   const [loading, setLoading] = useState(false);
   const [_uploading, setUploading] = useState(false);
   const [selectedActivityUUID, setSelectedActivityUUID] = useState<string>();
+  const {registerActivity} = useRegisterEntityActivity(() => resetMessageBox());
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -66,27 +69,28 @@ const EntityActivityManager = ({uuid, type, refresh}: EntityActivityManagerProps
   }, [reload, refresh]);
 
   const submitMessage = () => {
-    axios
-      .post(`entity-activity`, {
-        message,
-        entity_type: type,
-        expired_at: messageDate?.format(Config.dateFormatServer),
-        type: messageType,
-        assigned_uuid: messageAssignedTo,
-        uuid,
-        files: files.map(f => f.uuid),
-      })
-      .then(() => {
-        setMessage(undefined);
-        setReload(!reload);
-        setMessageDate(undefined);
-        setMessageAssignedTo(undefined);
-        setFiles([]);
-      })
-      .catch(error => {
-        ErrorHandler.showNotification(error);
-      });
+    if(!message) {
+      sileo.warning({title:'Ingresa un mensaje para registrarlo'});
+      return;
+    }
+    registerActivity(
+      uuid,
+      type,
+      message,
+      messageType,
+      messageDate,
+      files,
+      messageAssignedTo,
+    )
   };
+
+  const resetMessageBox = () => {
+    setMessage(undefined);
+    setReload(!reload);
+    setMessageDate(undefined);
+    setMessageAssignedTo(undefined);
+    setFiles([]);
+  }
 
   const items: MenuProps['items'] = [
     {

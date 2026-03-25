@@ -2,7 +2,7 @@ import type {EntityActivity} from '../../Types/api';
 import {PiCalendarDots, PiCheckBold, PiInfo, PiWarningDiamond} from 'react-icons/pi';
 import {Tooltip} from "antd";
 import {TbCheck} from "react-icons/tb";
-import {LuMilestone} from "react-icons/lu";
+import {LuMilestone, LuPhone, LuPhoneCall, LuPhoneIncoming} from "react-icons/lu";
 
 interface EntityActivityIconProps {
   type: string;
@@ -38,6 +38,12 @@ const EntityActivityIcon = ({type, size = 18, activity}: EntityActivityIconProps
       break;
     case 'milestone':
       icon = <LuMilestone size={size} color={color} />;
+      break;
+    case 'call':
+      icon = <LuPhone size={size} color={color} />;
+      break;
+    case 'call-ring':
+      icon = <LuPhoneIncoming size={size} color={color} />;
       break;
     default:
       icon = <PiInfo size={size} color={color} />;
