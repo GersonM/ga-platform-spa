@@ -1,25 +1,37 @@
-import {useContext} from 'react';
+import React, { useContext } from 'react';
 import AuthContext from '../Context/AuthContext';
-import {TbMoon, TbSun} from "react-icons/tb";
+import { TbMoon, TbSun, TbDeviceDesktop } from "react-icons/tb";
 
 const ScreenModeSelector = () => {
-  const {darkMode, setPreferredMode} = useContext(AuthContext);
+  const { darkMode, preferredMode, setPreferredMode } = useContext(AuthContext);
 
-  let nextMode = 'light';
+  const toggleMode = () => {
+    if (preferredMode === 'light') {
+      setPreferredMode('dark');
+    } else {
+      setPreferredMode('light');
+    }
+  };
 
-  if (darkMode) {
-    nextMode = 'auto';
-  } else {
-    nextMode = 'dark';
-  }
+  const renderIcon = () => {
+    if (preferredMode === 'light') return <TbSun />;
+    if (preferredMode === 'dark') return <TbMoon />;
+    return <TbDeviceDesktop />
+  };
 
   return (
     <div
-      className={'user-tool'}
-      onClick={() => {
-        setPreferredMode(nextMode);
-      }}>
-      {darkMode ? <TbSun /> : <TbMoon />}
+      className="user-tool"
+      onClick={toggleMode}
+      style={{ 
+        cursor: 'pointer', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        fontSize: '20px' 
+      }}
+    >
+      {renderIcon()}
     </div>
   );
 };

@@ -6,6 +6,8 @@ import {notification} from 'antd';
 import {version} from '../../package.json';
 import type {EntityActivityStats, SessionUser, TenantConfig} from '../Types/api';
 import ErrorHandler from '../Utils/ErrorHandler';
+import { TbAutomation } from "react-icons/tb";
+import { ColorScheme } from '@vis.gl/react-google-maps';
 
 interface AuthContextDefaults {
   user: SessionUser | null;
