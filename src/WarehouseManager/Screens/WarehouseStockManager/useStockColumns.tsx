@@ -133,6 +133,8 @@ const useStockColumns = () => {
   const getColumns = (tenant?: string) => {
     switch (tenant) {
       case 'candares':
+      case 'palmadelrio':
+      case 'demo':
         return [
           coverCol,
           serialNumberCol,
